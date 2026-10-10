@@ -1,0 +1,55 @@
+# Episodio 6: Receptores
+[MORSE CQ]
+## Qué se le pide a un receptor
+L: Episodio seis: receptores. El transmisor fabrica la señal; el receptor tiene que rescatarla, a veces cuando es un susurro entre millones de señales. Y para juzgar un receptor, el examen utiliza varios conceptos.
+P: Los típicos: sensibilidad, selectividad...
+L: Primero, la sensibilidad: la señal más débil que el receptor puede detectar y hacer inteligible. Se expresa en microvoltios para una determinada relación señal a ruido. Cuanto menor sea ese número, mejor receptor. Segundo, la selectividad: la capacidad de separar la señal que quieres de las vecinas. Depende sobre todo del ancho de banda del filtro. Y tercero, la estabilidad: que no se desplace de frecuencia.
+P: ¿Y qué ancho de banda corresponde a cada modo?
+L: Para CW, unos 500 Hz. Para SSB, unos 2,4 kHz. Para AM, unos 6 kHz. Y para FM de banda estrecha, entre 12 y 15 kHz. Si el filtro es más ancho de lo necesario, entra más ruido y más interferencia. Si es más estrecho, cortas la información.
+## El receptor de conversión directa
+L: El receptor más sencillo de los modernos es el de conversión directa. Un oscilador local se sitúa justo en la frecuencia de la señal, y un mezclador la baja directamente a audio. Es sencillo, barato, y la selectividad la da el filtro de audio. Pero tiene un inconveniente: recibe las dos bandas laterales a la vez, y es sensible a interferencias. Es muy popular entre los aficionados que construyen sus equipos, sobre todo en CW.
+## El superheterodino
+P: Y el rey: el superheterodino.
+L: El superheterodino es el esquema que domina desde hace cien años. La idea es genial: sea cual sea la frecuencia que sintonices, la conviertes a una frecuencia fija, la frecuencia intermedia, o FI, y ahí haces todo el filtrado y toda la amplificación.
+L: El camino de la señal es este. Antena. Un filtro preselector, que deja pasar la banda deseada. Un amplificador de radiofrecuencia, de bajo ruido. El mezclador, donde se encuentra con el oscilador local. El filtro de FI, que da la selectividad. Los amplificadores de FI, que dan la mayor parte de la ganancia. El detector, que recupera la información. Y por último, el amplificador de audio y el altavoz.
+P: ¿Y por qué una FI fija?
+L: Porque es mucho más fácil construir un filtro excelente para una sola frecuencia que uno que se desplace por todo el espectro. Los valores típicos son 455 kHz para AM, 9 MHz para SSB, y 10,7 MHz para FM.
+P: ¿Cómo sabe el receptor a qué frecuencia poner el oscilador local?
+L: La frecuencia intermedia es la diferencia entre la del oscilador local y la de la señal: `fFI = fOL − fRF`. Si quieres recibir 7,1 MHz con una FI de 9 MHz, el oscilador local se coloca en 16,1 MHz. Al mezclarse, salen la diferencia, 9 MHz, y la suma, 23,2 MHz, y el filtro se queda con la primera.
+## La frecuencia imagen
+P: He oído que el superheterodino tiene un punto débil: la frecuencia imagen.
+L: Sí, y es un clásico del examen. Mira: con el oscilador local en 16,1 MHz y la FI de 9 MHz, hay otra frecuencia que también produce 9 MHz de diferencia: la que está al otro lado del oscilador, 9 MHz por encima, es decir, 25,1 MHz. Esa es la frecuencia imagen. Una emisora en 25,1 MHz se colaría exactamente igual que la que quieres, y sería imposible separarlas después de la mezcla.
+P: ¿Cómo se calcula?
+L: La frecuencia imagen es la deseada más dos veces la FI, si el oscilador está por encima: `fim = fRF + 2 · fFI`. Con 7,1 más dieciocho, 25,1 MHz. Si el oscilador estuviera por debajo, sería la deseada menos dos veces la FI. Otro ejemplo: recibes 145 MHz con una FI de 10,7 MHz y oscilador por debajo, 134,3 MHz. La imagen cae en 145 menos 21,4, es decir, 123,6 MHz.
+P: ¿Y cómo se elimina?
+L: Con el filtro preselector antes del mezclador: tiene que frenar la imagen. Y cuanto más alta es la FI, más lejos está la imagen y más fácil es filtrarla. Por eso los receptores buenos usan doble conversión: una primera FI alta para eliminar la imagen, y una segunda FI baja, para tener una selectividad muy fina.
+## Detectores y circuitos auxiliares
+L: Vamos con los detectores, el último eslabón. En AM, un detector de envolvente: un diodo y un circuito RC que siguen la forma de la señal. En SSB y CW, un detector de producto, con un oscilador de frecuencia de batido, el BFO, que repone la portadora ausente. En FM, un discriminador, o un detector de relación, o un lazo de fase, que convierten las variaciones de frecuencia en tensión. Y antes del detector, un limitador que recorta la amplitud, para que el receptor ignore el ruido de amplitud.
+P: ¿Y qué es el control automático de ganancia?
+L: El CAG, o AGC, ajusta la ganancia del receptor para que el volumen sea parecido, tanto si la señal es débil como si es fuerte. Es lo que mueve el medidor S. El silenciador, o squelch, en FM, corta el audio mientras no haya señal, para que no oigas ese ruido constante. Y otras ayudas son el supresor de impulsos para el ruido de chispas, el filtro notch para un tono molesto, y el RIT, que permite ajustar la frecuencia del receptor sin tocar la del transmisor.
+## Ruido y sensibilidad
+P: Si el receptor está bien hecho, ¿por qué sigue habiendo ruido?
+L: Porque el ruido térmico es inevitable: el movimiento de los electrones en cualquier componente genera una pequeña señal. Su potencia depende de la temperatura y del ancho de banda. A temperatura ambiente, es de menos 174 dBm por cada hercio de ancho de banda. Con 2,4 kHz de ancho de banda, el suelo de ruido está sobre menos 140 dBm.
+P: Entonces, reducir el ancho de banda reduce el ruido.
+L: Exactamente. Si pasas de 3 kHz a 300 Hz, el ancho de banda se divide entre diez, y la relación señal a ruido mejora en 10 dB. Por eso el CW es tan eficaz con señales débiles. Y la cifra de ruido mide cuánto empeora el receptor la relación señal a ruido: cuanto menor, mejor.
+L: En VHF y UHF, donde el ruido externo es bajo, el ruido del propio receptor importa. Un preamplificador de bajo ruido colocado junto a la antena es mucho mejor que otro en el receptor, porque amplifica antes de que el cable atenúe la señal. En HF, en cambio, domina el ruido atmosférico e industrial, y un preamplificador no ayuda.
+## Señales fuertes
+L: El problema inverso: una señal muy fuerte. Hay tres efectos que debes reconocer. El bloqueo, o desensibilización: una señal fuerte, aunque esté en otra frecuencia, reduce la ganancia del receptor y las débiles desaparecen. La modulación cruzada: la modulación de la señal fuerte se transfiere a la señal deseada, y oyes dos conversaciones. Y la intermodulación: dos señales fuertes generan señales falsas en frecuencias nuevas.
+P: ¿Cuáles?
+L: Los productos de tercer orden, que son los más molestos, porque caen cerca. Con dos señales, `f1` y `f2`, aparecen `2 · f1 − f2` y `2 · f2 − f1`. Por ejemplo, con señales en 7,050 y 7,100 MHz, salen productos en 7,000 y en 7,150 MHz, dentro de la misma banda. Se reducen con un atenuador de entrada, con menos ganancia de RF, o con mejores filtros.
+P: Y la última moda: los SDR.
+L: Los receptores definidos por software digitalizan la señal casi en la antena y hacen la sintonía, los filtros y la demodulación con un procesador. Lo que en un superheterodino es hardware, aquí es programa. Y permiten ver el espectro entero en pantalla.
+## Resumen del episodio
+L: Sensibilidad: señal mínima. Selectividad: filtro. El superheterodino convierte todo a una FI fija. Frecuencia imagen: deseada más o menos dos veces la FI. BFO para SSB y CW. AGC para el volumen estable. Reducir el ancho de banda reduce el ruido. Y las señales fuertes causan bloqueo, modulación cruzada e intermodulación.
+## Preguntas relámpago
+P: Primera. Recibes 14,2 MHz con una FI de 9 MHz y el oscilador por encima. ¿Cuál es la frecuencia imagen?
+[PAUSA 7]
+L: La deseada más dos veces la FI: catorce coma dos más dieciocho, 32,2 MHz.
+P: Segunda. Si reduces el filtro de 3 kHz a 300 Hz, ¿cuántos decibelios mejora la relación señal a ruido?
+[PAUSA 6]
+L: Una reducción de diez veces, 10 dB.
+P: Tercera. ¿Qué circuito repone la portadora en la recepción de SSB?
+[PAUSA 4]
+L: El oscilador de frecuencia de batido, el BFO, junto al detector de producto.
+P: Cerramos el lado radio con las antenas.
+L: Y es el siguiente episodio, uno de los grandes.

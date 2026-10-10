@@ -1,0 +1,48 @@
+# Episodio 8: Propagación
+[MORSE CQ]
+## Cómo viajan las ondas
+L: Episodio ocho: propagación. Es el capítulo más bonito del temario, porque explica por qué una señal de 5 W puede cruzar el océano. Y aquí también tenemos el famoso «hoy las bandas no van».
+P: Primera pregunta: ¿por dónde pueden viajar las ondas?
+L: Por varios caminos. La onda de superficie, o de tierra, que sigue la curvatura del suelo. La onda directa, o de visibilidad, que va en línea recta de antena a antena. La onda ionosférica, que rebota en la ionosfera. Y los efectos de la troposfera, que a veces curva las señales de VHF y UHF. Cada banda prefiere uno de ellos.
+## La ionosfera
+L: La ionosfera es una región de la atmósfera, entre unos 60 y más de 400 kilómetros de altura, donde la radiación del Sol, ultravioleta y rayos X, arranca electrones a los átomos y deja gas ionizado. Ese gas ionizado actúa como un espejo curvo para las ondas de HF.
+P: Y tiene capas, ¿no?
+L: Tres capas principales. La capa D, la más baja, a unos 60 o 90 kilómetros. Solo existe de día, no refleja HF, pero absorbe las frecuencias bajas, y por eso las bandas de 160 y 80 metros no sirven para largas distancias durante el día. Luego, la capa E, a unos 100 o 120 kilómetros, que también aparece sobre todo de día. Y la capa F, a partir de 150 kilómetros, que es la reina de las comunicaciones lejanas. De día se divide en F1 y F2; de noche se juntan en una sola.
+P: ¿Qué pasa por la noche?
+L: Sin Sol, la capa D desaparece casi por completo, y la absorción baja. Por eso las bandas bajas se abren por la noche. La capa F se mantiene, aunque menos densa, así que las frecuencias más altas dejan de reflejarse. El resultado es el ritmo diario de las bandas: de día se usan las altas, 20, 15, 10 metros; de noche, las bajas, 80, 40 y 160.
+## Frecuencia crítica y MUF
+L: Hay un concepto central: no todas las frecuencias rebotan. Si lanzas una onda hacia arriba en vertical, solo regresa si su frecuencia es menor que un límite que se llama frecuencia crítica, que depende de la densidad de electrones. Por encima, atraviesa la capa y se pierde en el espacio.
+P: Pero con un ángulo inclinado, sí que se refleja a frecuencias mayores, ¿verdad?
+L: Exactamente. Cuanto más rasante es la onda, mayor frecuencia puede reflejarse. La frecuencia máxima utilizable, la MUF, es la mayor frecuencia que vuelve a la Tierra para un trayecto concreto: `MUF = fc / cos θ`, donde `θ` es el ángulo de incidencia respecto a la vertical. Por ejemplo, con una frecuencia crítica de 6 MHz y un ángulo de 70 grados, el coseno vale cero coma treinta y cuatro, y la MUF sale 17,5 MHz.
+P: ¿Y si uso una frecuencia por encima de la MUF?
+L: La señal atraviesa la ionosfera y no vuelve. Y si uso una frecuencia demasiado baja, por debajo de la LUF, la frecuencia mínima utilizable, la absorción de la capa D se la come. Entre las dos queda la ventana de trabajo. La frecuencia óptima de trabajo es aproximadamente el 85 por ciento de la MUF.
+## Zona de silencio y salto
+L: La onda de superficie se agota a cierta distancia, y la onda ionosférica vuelve a tierra más lejos. La región intermedia, donde no se recibe nada, es la zona de silencio. La distancia de salto es el punto donde la onda ionosférica vuelve a tocar el suelo. Cuanto mayor es la frecuencia, más grande es la distancia de salto. Un solo salto por la capa F puede cubrir hasta unos 4000 kilómetros, y con varios saltos entre ionosfera y suelo, se da la vuelta al mundo.
+P: ¿Y la propagación por la línea gris?
+L: La línea gris es el borde entre el día y la noche. En ese entorno, la capa D ya se ha ido, y la F sigue activa, así que la propagación mejora mucho para trayectos a lo largo de esa línea. Los cazadores de DX, es decir, contactos lejanos, la aprovechan.
+## El Sol manda
+P: Siempre se habla de manchas solares.
+L: Las manchas solares son regiones más frías del Sol, asociadas a una actividad mayor. El número de manchas varía en un ciclo de unos 11 años. Cuando hay muchas, la radiación ultravioleta crece, la ionosfera se ioniza más, y la MUF sube: se abren las bandas altas, 10, 12, 15 y 17 metros, para DX. Cuando hay pocas, en el mínimo solar, sólo van bien las bandas bajas y medias, 40, 30 y 20 metros.
+L: Hay índices que lo miden. El flujo solar, medido a 10,7 centímetros, es una buena indicación: más alto es mejor para HF. El índice K y el índice A miden la actividad geomagnética: números altos significan tormenta, y mala propagación, sobre todo en latitudes altas. Y las llamaradas solares pueden producir apagones de radio, que bloquean HF en el lado iluminado de la Tierra durante minutos u horas.
+## Capa E esporádica y VHF
+P: Y las bandas altas, ¿cómo se propagan?
+L: Normalmente, VHF y UHF atraviesan la ionosfera. Se comunican en visibilidad directa. El horizonte de radio, que es algo mayor que el óptico por la refracción en la atmósfera, se calcula con `d = 4,12 · (√h1 + √h2)` kilómetros, con las alturas en metros. Con antenas a 25 y a 10 metros, cuatro coma doce por cinco más tres coma dieciséis, unos 34 km. Con un repetidor en una montaña de 1000 metros y un portátil a 1,5 metros, unos 135 km.
+P: Pero todos sabemos que a veces se hacen contactos de 1000 kilómetros en VHF.
+L: Por varios fenómenos. La capa E esporádica son nubes de ionización intensa en la capa E que aparecen sobre todo en verano y reflejan señales de 50 y hasta 144 MHz, y permiten contactos de unos 1000 a 2000 kilómetros. Los conductos troposféricos aparecen cuando una capa de aire cálido se coloca sobre otra fría, inversión de temperatura, y atrapa la señal como en un tubo. Permiten contactos de cientos de kilómetros en VHF, UHF y microondas. También están la dispersión por meteoros, que usa la estela ionizada de un meteoro, en ráfagas breves; las auroras, que reflejan VHF con una señal distorsionada; y el rebote lunar, EME, que requiere antenas grandes y mucha potencia.
+## Desvanecimientos y otros efectos
+L: Las señales de HF oscilan en intensidad. Es el desvanecimiento o QSB, y se debe a que la señal llega por varios caminos y se suman o se anulan. También existe el efecto Doppler, que desplaza la frecuencia cuando el emisor y el receptor se mueven: se nota en satélites, donde hay que ir corrigiendo la frecuencia durante el paso. Y la rotación de Faraday, que gira la polarización de las señales que atraviesan la ionosfera, y provoca desvanecimientos en comunicaciones por satélite. Por encima de 10 GHz, la lluvia absorbe la señal de forma notable.
+## Resumen del episodio
+P: Resumen, Lucía.
+L: Capa D: absorbe de día. Capa E: esporádica, abre VHF en verano. Capa F: DX en HF. MUF igual a la frecuencia crítica entre el coseno del ángulo. De día, bandas altas; de noche, bajas. Ciclo solar: máximo, bandas altas abiertas. VHF y UHF, visibilidad, con horizonte por la fórmula de cuatro coma doce. Y conductos troposféricos, meteoros y EME para casos especiales.
+## Preguntas relámpago
+P: Primera. ¿Qué capa ionosférica absorbe las frecuencias bajas de HF durante el día?
+[PAUSA 5]
+L: La capa D.
+P: Segunda. La frecuencia crítica es 5 MHz y el coseno del ángulo de incidencia vale 0,5. ¿Cuál es la MUF?
+[PAUSA 6]
+L: Cinco entre cero coma cinco, 10 MHz.
+P: Tercera. Dos antenas están a 16 y 4 metros de altura. ¿Qué alcance tienen en visibilidad radioeléctrica?
+[PAUSA 7]
+L: Raíz de dieciséis es cuatro, raíz de cuatro es dos, suman seis, por cuatro coma doce, unos 24,7 km.
+P: Y ahora, un episodio práctico.
+L: Medidas, interferencias y seguridad. Pasamos de la teoría a ensuciarse las manos.

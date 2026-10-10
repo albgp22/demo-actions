@@ -1,0 +1,64 @@
+# Episodio 5: Transmisores y modulación
+[MORSE CQ]
+## Cómo es un transmisor por dentro
+L: Episodio cinco: transmisores. Hasta ahora hemos visto componentes y circuitos. Ahora los juntamos para construir un transmisor, y para entender qué es modular.
+P: Antes que nada, ¿por qué hay que modular? ¿No se puede mandar la voz tal cual por una antena?
+L: Mala idea, por dos motivos. Primero, las frecuencias de audio son tan bajas que necesitarías antenas de decenas de kilómetros. Segundo, todas las emisoras se pisarían unas a otras, porque todas usarían las mismas frecuencias. La solución es montar el audio sobre una señal de alta frecuencia, que se llama portadora, y que además es la que da la dirección en el dial. Modular es variar alguna característica de la portadora al ritmo de la información.
+P: Y esa característica puede ser la amplitud, la frecuencia o la fase.
+L: Exacto. Antes de ver los tipos, el diagrama de bloques. Un oscilador genera la portadora. Un amplificador separador, o buffer, lo aísla. Un modulador mezcla la portadora con el audio del micrófono. Después, un excitador, o driver, y un amplificador final de potencia. Y a la salida, un filtro paso bajo que elimina armónicos, y la antena. En telegrafía, no hay micrófono: un manipulador enciende y apaga la señal.
+## Telegrafía: CW
+P: Empecemos por el modo más antiguo, el Morse.
+L: En telegrafía, la portadora se enciende y se apaga con el manipulador. Los puntos y las rayas son simplemente trozos cortos y largos de portadora. Es el modo con menor ancho de banda, unos cien o doscientos hercios según la velocidad, y por eso es tan eficaz con poca potencia y en condiciones difíciles. Su designación oficial es A1A.
+P: ¿Y qué defectos puede tener?
+L: Si la señal se enciende y se apaga demasiado bruscamente, se generan chasquidos en frecuencias cercanas, que se llaman clics de manipulación. Se evitan suavizando los flancos con un filtro. Otro defecto es el pitido inestable o chirrido, que ocurre cuando la frecuencia del oscilador cambia al manipular.
+## Modulación de amplitud: AM
+L: La AM varía la amplitud de la portadora al ritmo del audio. Imagina una bombilla cuyo brillo cambia siguiendo la música. La portadora permanece constante en frecuencia, pero su tamaño sube y baja.
+P: ¿Qué se genera en el espectro?
+L: La portadora, y a ambos lados dos bandas laterales, que son la suma y la diferencia entre la portadora y el audio. Si moduláramos con una nota de 1 kHz una portadora de 7 MHz, tendríamos tres señales: 7 MHz, siete megahercios más un kilohercio y siete megahercios menos un kilohercio. El ancho de banda de AM es el doble de la frecuencia de audio más alta. Con audio hasta 3 kHz, 6 kHz de ancho de banda.
+P: ¿Y qué es la profundidad de modulación?
+L: Es la proporción entre la amplitud del audio y la de la portadora, expresada en porcentaje. Al cien por cien es el máximo. Si te pasas, la señal se distorsiona y se ensancha, y esa invasión de las frecuencias vecinas se llama sobremodulación.
+P: Y la potencia, que seguro que hay un cálculo.
+L: Hay uno clásico. La potencia total es la de portadora multiplicada por uno más `m²` entre dos: `Pt = Pc · (1 + m² / 2)`. Con modulación al cien por cien, `m` vale uno, y queda uno coma cinco por la potencia de portadora. Una portadora de 100 W da 150 W en total, y las bandas laterales se llevan 25 W cada una. Con una modulación del 50 por ciento, `m` es cero coma cinco, y queda cien por uno coma ciento veinticinco, es decir, 112,5 W.
+P: Es decir, que dos tercios de la potencia se van en la portadora, que no lleva información.
+L: Cierto. Por eso a la AM le salió un competidor mucho más eficiente.
+## Banda lateral única: SSB
+L: Si la información está solo en las bandas laterales, y las dos son copia una de la otra, ¿para qué transmitir la portadora y las dos bandas? En SSB se suprime la portadora y se elimina una de las bandas laterales. Toda la potencia se aprovecha en la información. Y el ancho de banda baja a unos 2,4 o 3 kHz, la mitad que en AM.
+P: Y las bandas laterales, las llaman USB y LSB.
+L: Banda lateral superior e inferior. Por convenio, por debajo de 10 MHz se usa LSB, y por encima, USB. Los dos corresponsales tienen que usar la misma banda lateral, o no se entienden. Se genera con un modulador balanceado, que elimina la portadora, y un filtro, normalmente de cristal, que elimina la otra banda.
+P: Y en la recepción, ¿qué pasa con la portadora que falta?
+L: El receptor la reinserta con un oscilador local, que se llama BFO. Si la frecuencia del BFO está desajustada, la voz sale distorsionada, como la de un dibujo animado.
+L: Un detalle de potencia: en SSB, cuando no hablas, no hay señal. Por eso la potencia se mide en el pico de la envolvente, la famosa PEP, o potencia de cresta. La potencia media con voz es mucho menor. Y los amplificadores de SSB tienen que ser lineales: si saturas el amplificador, aparecen productos de intermodulación y salpicaduras, que se oyen como ruido en frecuencias vecinas. Para comprobar la linealidad se hace la prueba de los dos tonos.
+## Modulación de frecuencia: FM
+P: Y la FM, que se usa en los repetidores de VHF.
+L: En FM, la amplitud de la portadora es constante, y lo que varía con el audio es su frecuencia. Imagina un cantante: en AM, subes y bajas el volumen; en FM, cambias el tono. La desviación es cuánto se aparta la frecuencia de su valor central. Cuanto más fuerte es el audio, más desviación. Cuanto más agudo es, más rápido oscila.
+P: ¿Hay fórmulas de FM en el examen?
+L: Dos. El índice de modulación es la desviación entre la frecuencia de audio: `m = Δf / fm`. Y el ancho de banda lo da la regla de Carson: `B = 2 · (Δf + fm)`. Por ejemplo, en FM de banda estrecha, con una desviación máxima de 2,5 kHz y audio hasta 3 kHz, el ancho de banda es dos por cinco coma cinco, 11 kHz. Por eso los canales de VHF están separados 12,5 kHz.
+P: ¿Y por qué es tan popular la FM?
+L: Porque como la información va en la frecuencia y no en la amplitud, es inmune a la mayoría del ruido. Y tiene el efecto captura: si dos señales coinciden, el receptor se queda con la más fuerte. Como contrapartida, ocupa más ancho de banda que SSB y necesita señal mínima para funcionar bien.
+P: Y la modulación de fase, la PM.
+L: Es muy parecida: en lugar de variar la frecuencia, varía la fase. Se genera de forma más sencilla, y a efectos prácticos, un circuito con un modulador de fase y un corrector de audio produce FM. Para mejorar la relación señal a ruido, en FM se aplica preénfasis a los agudos en el transmisor, y desénfasis en el receptor.
+## Modos digitales y designación de emisiones
+P: ¿Y los modos digitales? FT8, RTTY...
+L: Se generan casi siempre con un ordenador y un transceptor en SSB: el ordenador genera tonos de audio que el transmisor traslada a radiofrecuencia. RTTY usa desplazamiento de frecuencia, FSK, entre dos tonos. PSK31 desplaza la fase, y ocupa unos 31 hercios. FT8 ocupa unos 50.
+L: Hay una nomenclatura oficial para clasificar las emisiones. Es un código de tres símbolos. La primera letra indica el tipo de modulación: A para AM de doble banda lateral, J para banda lateral única con portadora suprimida, F para modulación de frecuencia, G para modulación de fase. El número indica la naturaleza de la señal: uno, digital sin subportadora; dos, con subportadora; tres, analógica. Y la última letra, el tipo de información: A, telegrafía para recepción auditiva, B, telegrafía automática, D, datos, E, telefonía, F, televisión.
+P: A ver si lo clavo. Telefonía en banda lateral única.
+L: Jota, tres, e: J3E. Telegrafía en CW: A1A. FM telefonía: F3E. AM telefonía: A3E. RTTY: F1B.
+## Repetidores
+P: Un último tema que cae: los repetidores.
+L: Un repetidor es una estación que escucha en una frecuencia y retransmite en otra, normalmente desde un punto alto. Así permite que estaciones pequeñas lleguen mucho más lejos. En la banda de 2 metros, la separación entre las dos frecuencias, o desplazamiento, es de 600 kHz. Para evitar que se active por señales ajenas, el acceso se controla con un tono subaudible, el CTCSS, o con un tono de 1750 Hz. Y se identifica automáticamente.
+P: Es lo que llaman acceder al repetidor.
+L: Y recuerda que una buena práctica es dejar pausas entre transmisiones para que otros puedan acceder.
+## Resumen del episodio
+L: Modular es variar la portadora con la información. En AM hay portadora y dos bandas laterales, con el doble de ancho de banda del audio. En SSB, solo una banda, y lo importante es la linealidad. En FM, la frecuencia varía, y el ancho de banda lo da Carson. CW es la más estrecha, y las emisiones se clasifican con el código A1A, J3E, F3E.
+## Preguntas relámpago
+P: Primera. Una portadora de AM de 100 W se modula al cien por cien. ¿Cuál es la potencia total?
+[PAUSA 6]
+L: Uno coma cinco por cien, 150 W.
+P: Segunda. En FM, la desviación máxima es 5 kHz y el audio llega a 3 kHz. ¿Qué ancho de banda ocupa según Carson?
+[PAUSA 7]
+L: Dos por cinco más tres, 16 kHz.
+P: Tercera. ¿Qué designación corresponde a la telefonía en banda lateral única con portadora suprimida?
+[PAUSA 5]
+L: J3E.
+P: ¡Perfecto! Y ahora, al otro lado: los receptores.
+L: Con el siguiente episodio, completamos el recorrido de la señal.

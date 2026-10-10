@@ -1,0 +1,33 @@
+# Bienvenida y mapa del examen
+[MORSE CQ CQ]
+## Quiénes somos y qué vamos a hacer
+L: ¡Hola, y bienvenida o bienvenido a CQ Examen, el podcast para preparar el examen de radioaficionado! Yo soy Lucía, llevo muchos años en el aire, y durante las próximas dos horas voy a ser tu profesora.
+P: Y yo soy Pablo. Estoy en tu misma situación: preparándome el examen. Me han dejado sentarme aquí para hacer todas esas preguntas que seguro que tú también te haces, y que a veces dan vergüenza.
+L: Aquí no hay preguntas tontas. Y fíjate en el nombre del podcast: CQ es la llamada general que se hace en radio. Significa, más o menos, «a quien quiera escuchar». Pues eso hacemos hoy: llamar a todo el que quiera aprobar.
+P: Antes de empezar, Lucía, un aviso de transparencia, que me parece importante.
+L: Tienes razón. Tanto Pablo como yo somos voces sintéticas, generadas con inteligencia artificial, y el guion lo ha preparado también una inteligencia artificial a partir del temario. Úsalo como un complemento para estudiar, no como sustituto de los textos oficiales. Y sobre todo, las cifras de la normativa, como potencias y bandas, contrástalas siempre con el BOE antes del examen.
+P: Dicho lo cual, ¡al lío! ¿Cómo es el examen? Porque yo me lo imagino como un tribunal con cuarenta señores serios mirándome.
+## El examen por dentro
+L: Nada de eso. En España, el examen lo organiza el ministerio responsable de las telecomunicaciones, y se hace en las Jefaturas Provinciales de Inspección de Telecomunicaciones. Es una prueba individual, en un ordenador, tipo test.
+P: Tipo test. Eso ya me tranquiliza un poco.
+L: Tiene dos partes. La primera es de electricidad y radioelectricidad, con treinta preguntas. La segunda es de normativa y procedimientos, con otras treinta. Cada pregunta tiene cuatro opciones y solo una es correcta. En total, sesenta preguntas en unos noventa minutos.
+P: ¿Y cuántas hay que acertar?
+L: Según el procedimiento vigente, hay que sacar al menos quince aciertos de treinta, es decir, el cincuenta por ciento, en cada una de las dos partes. Y ojo, hay que aprobar las dos. No sirve compensar una con la otra.
+P: Es decir, que puedo ser un genio de la normativa, pero si suspendo la parte técnica, no paso.
+L: Exacto. Por eso hoy dedicamos mucho más tiempo a la parte técnica, que es donde la gente más se atasca. La normativa es más memorizar, y la dejaremos para casi el final.
+P: Una cosa que me preocupa: ¿hay que saber Morse?
+L: No. Desde hace años no hay prueba de telegrafía. Eso no significa que no puedas aprenderlo después, ¡es precioso! Pero para el examen, no.
+P: Y si apruebo, ¿qué pasa? ¿Me dan un carné?
+L: Te dan el certificado HAREC, que es el certificado armonizado europeo de radioaficionado. Con él solicitas, pagando las tasas correspondientes, la autorización administrativa, y te asignan tu indicativo, tu nombre en el aire. Tanto la tasa del examen como la de la autorización se pagan con el modelo setecientos noventa. Las cuantías las fija la ley cada año, así que míralas en la web del ministerio.
+P: Entonces, mi misión es sacar quince de treinta en cada parte. No parece imposible.
+L: No lo es. Pero un cincuenta por ciento tiene truco: no basta con saberse la teoría, hay que entenderla, porque las preguntas se disfrazan. Ahora te cuento cómo vamos a trabajar.
+## Cómo usar este podcast
+L: Después de esta bienvenida hay once episodios. Los episodios van en orden porque cada uno se apoya en el anterior: primero electricidad, después señales, componentes, circuitos, transmisores, receptores, antenas, propagación, medidas y seguridad, luego la normativa, y por último una estrategia de examen con un repaso final.
+P: Y en cada episodio haremos lo mismo, ¿verdad?
+L: Sí, y esto es lo que hace que funcione. Primero, la idea con una analogía sencilla. Después, ejemplos con números, resueltos paso a paso. Luego, las trampas típicas de examen. Y al final, un resumen y tres preguntas relámpago.
+P: Esas preguntas son la parte divertida. Y la parte sufrida.
+L: Cuando hagamos una pregunta, oirás un pequeño tic y después un silencio. Ese silencio es para ti. Pausa el podcast si necesitas más tiempo, intenta resolverlo, y después escucha nuestra respuesta. Esa es la clave: recordar activamente es lo que de verdad graba la información en la memoria.
+P: Mi consejo de alumno: no intentes escucharlo todo del tirón. Escucha un episodio, resuelve el ejercicio con papel y lápiz, y mañana repasa los tres minutos finales.
+L: Muy bien dicho. Y una promesa: no necesitas ser ingeniero ni haber estudiado electrónica. Con una calculadora científica sencilla, mucha calma y un poco de práctica, todo esto está al alcance de cualquiera.
+P: ¡Pues vamos allá! Empezamos por lo más básico de todo.
+L: Empezamos por la electricidad, el idioma en el que habla la radio.

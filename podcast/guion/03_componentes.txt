@@ -1,0 +1,92 @@
+# Episodio 3: Componentes, resonancia y semiconductores
+[MORSE CQ]
+## Resistencias y su código de colores
+L: Episodio tres: los componentes. Es el más largo del bloque de teoría, así que respira hondo. Vamos de lo sencillo a lo menos sencillo, y al final todo encaja.
+P: Empecemos por la resistencia, que ya nos suena.
+L: La resistencia limita la corriente y convierte la energía eléctrica en calor. Tiene tres datos importantes: el valor en ohmios, la tolerancia, que es cuánto se puede desviar del valor nominal, y la potencia máxima que aguanta sin quemarse. Por ejemplo, un cuarto de vatio.
+P: Y ese código de colores que tienen pintados encima, ¿hay que aprendérselo?
+L: Sí, es una pregunta frecuente. Cada color es un dígito. Negro es cero, marrón uno, rojo dos, naranja tres, amarillo cuatro, verde cinco, azul seis, violeta siete, gris ocho y blanco nueve. Las dos primeras bandas son dos cifras, la tercera es el multiplicador, es decir, cuántos ceros le añades, y la cuarta es la tolerancia: oro es cinco por ciento, plata es diez por ciento.
+P: A ver. Marrón, negro, rojo, oro.
+L: Marrón uno, negro cero: diez. Rojo, dos ceros: mil. Un kiloohmio, con cinco por ciento de tolerancia. Es decir, entre 950 Ω y 1050 Ω.
+P: Perfecto, ya sé leer resistencias. Pasamos al condensador.
+## El condensador
+L: El condensador es como un depósito de carga eléctrica. Imagina un tubo de agua con una membrana de goma en medio. El agua no atraviesa la membrana, pero la membrana se estira y se encoge, y mientras lo hace, parece que el agua circula. Así se comporta un condensador: en corriente continua, bloquea el paso. En corriente alterna, deja pasar la señal.
+P: ¿Y cómo está hecho por dentro?
+L: Dos placas metálicas separadas por un aislante, que se llama dieléctrico. Su capacidad se mide en faradios, aunque un faradio es enorme, así que usamos microfaradios, nanofaradios y picofaradios. Cuanto mayores sean las placas, y cuanto más cerca estén, mayor capacidad.
+P: ¿Y qué tipos hay?
+L: Los cerámicos y de mica, para radiofrecuencia, de valores pequeños. Los de poliéster, para audio. Los electrolíticos, para valores grandes, como filtrar fuentes de alimentación. Y los variables, que se usan para sintonizar. Con los electrolíticos, cuidado: tienen polaridad. Si los conectas al revés, pueden explotar.
+P: Ahora lo que más me cuesta: ¿cómo se asocian?
+L: Al revés que las resistencias. En paralelo, las capacidades se suman: `C = C1 + C2`. Diez microfaradios con veintidós microfaradios en paralelo, 32 µF. En serie, funciona como las resistencias en paralelo: dos iguales dan la mitad. Dos condensadores de 100 pF en serie dan 50 pF. Para dos distintos, producto entre suma.
+P: Resumen: en los condensadores, paralelo suma, serie reduce.
+L: Perfecto. Ahora, un clásico: la constante de tiempo. Si cargas un condensador a través de una resistencia, tarda un tiempo en cargarse. Ese tiempo característico es `τ = R · C`. Con 10 kΩ y 100 µF, la constante vale un segundo. Tras una constante de tiempo, el condensador alcanza el 63 por ciento de su carga final. Y tras cinco constantes de tiempo, se considera cargado del todo.
+## La bobina
+P: Y ahora la bobina.
+L: Un hilo enrollado. Almacena energía en forma de campo magnético, y se resiste a los cambios de corriente. Si el condensador era una membrana elástica, la bobina es un volante de inercia, una rueda pesada: cuesta ponerla en marcha, y cuesta frenarla. Por eso, en corriente continua deja pasar la corriente, y en alterna se opone cuanto más rápido cambie.
+P: O sea, justo lo contrario al condensador.
+L: Totalmente complementarios. La inductancia se mide en henrios, aunque aquí lo normal son milihenrios y microhenrios. Crece con el número de espiras, y de hecho con el cuadrado del número de espiras, con el diámetro, y con el material del núcleo. Núcleos de aire, de ferrita o de polvo de hierro.
+P: ¿Y se asocian al revés que los condensadores?
+L: Se asocian como las resistencias. En serie suman, en paralelo bajan. Con la condición de que no estén acoplados magnéticamente entre ellas.
+## Reactancia
+L: Aquí viene lo importante. Cuando una bobina o un condensador está en un circuito de alterna, se opone al paso de la corriente de una forma que depende de la frecuencia. A esa oposición la llamamos reactancia, y también se mide en ohmios.
+L: En la bobina, la reactancia inductiva es `XL = 2 π f L`. Crece con la frecuencia: a más frecuencia, más se resiste. En el condensador, la reactancia capacitiva es `XC = 1 / (2 π f C)`. Disminuye con la frecuencia: a más frecuencia, más fácilmente pasa.
+P: Eso es justo lo que decías antes: la bobina bloquea las señales rápidas, el condensador las deja pasar.
+L: Exacto. Y por eso tienen tantos usos en los filtros. Vamos con ejemplos. Una bobina de 10 µH a 7 MHz tiene una reactancia de dos por pi por siete millones por diez microhenrios, unos 440 Ω. Un condensador de 100 pF a la misma frecuencia: uno entre dos pi por siete millones por cien picofaradios, unos 227 Ω.
+P: Con la calculadora, ¿cómo meto los picofaradios sin liarme?
+L: Escribe el valor en unidades base. Cien picofaradios son diez elevado a menos diez faradios. Y multiplica con cuidado. Si se te escapa el prefijo, te equivocas en un millón.
+P: ¿Y si duplico la frecuencia?
+L: La reactancia de la bobina se duplica, y la del condensador se reduce a la mitad. Pregunta típica de examen.
+L: Un detalle más: la fase. En una bobina, la corriente va retrasada respecto a la tensión, noventa grados. En un condensador, la corriente va adelantada noventa grados. Un truco: la bobina no quiere que la corriente cambie, y por eso le cuesta arrancar. El condensador se carga con la corriente, y por eso la tensión llega después. Con una resistencia pura, corriente y tensión van en fase.
+## Impedancia
+P: Entonces, ¿qué es la impedancia?
+L: La impedancia, que se escribe con la letra `Z`, es la oposición total al paso de la corriente alterna, combinando resistencia y reactancia. También se mide en ohmios. Cuando la resistencia y la reactancia están en serie, no se suman directamente, porque están desfasadas noventa grados. Se combinan como los catetos de un triángulo: `Z = √(R² + X²)`.
+P: Pitágoras en la radio. Dame un número.
+L: Una resistencia de 30 Ω en serie con una reactancia de 40 Ω. Treinta al cuadrado más cuarenta al cuadrado, novecientos más mil seiscientos, dos mil quinientos. Raíz, 50 Ω. Este triángulo tres, cuatro, cinco, es el que más sale.
+L: Y si una bobina y un condensador están en serie, sus reactancias se restan, porque son opuestas: `X = XL − XC`. Con 440 Ω y 227 Ω, queda una reactancia neta de 213 Ω, de carácter inductivo, porque gana la bobina.
+## Resonancia
+L: Y ahora viene la estrella: la resonancia. Piensa en un columpio. Tiene una frecuencia natural a la que oscila, y si lo empujas justo a ese ritmo, con muy poco esfuerzo alcanzas una gran amplitud. Con la bobina y el condensador pasa lo mismo.
+L: La resonancia ocurre en la frecuencia en que la reactancia de la bobina iguala a la del condensador: `XL = XC`. Si lo despejas, sale `f = 1 / (2 π √(L · C))`.
+P: Qué fórmula más fea.
+L: Pues apréndela, porque cae seguro. Vamos con un ejemplo: bobina de 1 µH y condensador de 100 pF. L por C es diez a la menos dieciséis, su raíz es diez a la menos ocho, por dos pi, y la inversa son 15,9 MHz.
+P: ¿Y si quiero bajar esa frecuencia a la mitad?
+L: Como la frecuencia depende de la raíz del producto, para dividirla entre dos necesitas multiplicar `L · C` por cuatro. Por ejemplo, un condensador cuatro veces mayor. O una bobina cuatro veces mayor. Y para subirla al doble, cuatro veces menos.
+P: Entonces hay dos tipos de circuito resonante.
+L: Sí, el serie y el paralelo, y se comportan de forma opuesta. En el circuito resonante serie, a la frecuencia de resonancia la impedancia es mínima, y se queda en el valor de la resistencia: la corriente es máxima. En el paralelo, la impedancia es máxima y la corriente que toma de la fuente es mínima. El paralelo se llama circuito tanque.
+P: Mínima en serie, máxima en paralelo. Lo apunto.
+L: Ahora, el factor de calidad, la letra `Q`: cuanto mayor es, más selectivo es el circuito. Se calcula como la frecuencia de resonancia entre el ancho de banda: `Q = f0 / B`. Si resuena a 7 MHz con una `Q` de 100, su ancho de banda es setenta kilohercios. Un cristal de cuarzo es un resonador con una `Q` altísima, de decenas de miles, y por eso se usa en osciladores y filtros muy estrechos.
+## Transformadores
+P: Siguiente: transformadores.
+L: Dos bobinas, el primario y el secundario, que comparten un mismo núcleo. Solo funcionan con corriente alterna: se necesita variación para transferir energía. La relación de tensiones es igual a la relación de espiras: `Vp / Vs = Np / Ns`. Y como la potencia se conserva, la corriente se reparte al contrario: si baja la tensión, sube la corriente.
+P: Ejemplo, por favor.
+L: Un transformador con 1150 espiras en el primario, alimentado a 230 V, para obtener 12 V. El secundario tendrá doce entre doscientos treinta por 1150, 60 espiras. Si el secundario entrega 5 A, el primario consume cinco por doce entre doscientos treinta, unos 0,26 A.
+L: Hay otra propiedad que a un radioaficionado le interesa mucho: el transformador adapta impedancias. La relación de impedancias es el cuadrado de la relación de espiras: `Zp / Zs = (Np / Ns)²`. Para adaptar 50 Ω a 200 Ω, una relación de impedancias de cuatro, necesitas una relación de espiras de dos a uno. Así funcionan los balunes de cuatro a uno.
+## Diodos
+P: Pasamos a los semiconductores.
+L: Empezamos con el diodo. Es una unión de dos materiales semiconductores, uno de tipo `P` y otro de tipo `N`, y deja pasar la corriente en un solo sentido: del ánodo al cátodo. Es como una válvula antirretorno de una tubería. Para que conduzca, necesita una pequeña tensión umbral: unos 0,7 V en silicio, unos 0,3 V en germanio. La banda pintada en el cuerpo del diodo marca el cátodo.
+P: ¿Y para qué se usa?
+L: Principalmente para rectificar, es decir, convertir alterna en continua. Hay otros diodos con funciones especiales. El diodo zener se usa a propósito en polarización inversa, y mantiene una tensión estable en sus bornes: sirve para estabilizar. El diodo LED emite luz y necesita una resistencia en serie. El varicap, o diodo de capacidad variable, cambia su capacidad según la tensión inversa que le apliques: sirve para sintonizar. Y el diodo PIN se utiliza como conmutador de radiofrecuencia.
+P: Zener, estabiliza. Varicap, sintoniza. ¿Y el diodo Schottky?
+L: Tiene una caída de tensión baja, de 0,3 V aproximadamente, y es muy rápido: se utiliza en mezcladores y en fuentes conmutadas.
+## Transistores
+L: El transistor es el componente que cambió el mundo. En esencia, una pequeña señal controla una grande. Es como un grifo que abres con un dedo y deja pasar un chorro. El transistor bipolar tiene tres terminales: base, colector y emisor. Existen dos tipos, NPN y PNP. En el NPN, la corriente entra por el colector y sale por el emisor, y la base la controla.
+P: ¿Hay alguna fórmula?
+L: Dos. La corriente de colector es la ganancia de corriente, que se llama beta, por la corriente de base: `Ic = β · Ib`. Y la corriente de emisor es la suma de las otras dos: `Ie = Ib + Ic`. Con una beta de 100 y una corriente de base de 0,1 mA, el colector da 10 mA, y el emisor, 10,1 mA. Además, la tensión entre base y emisor de un transistor de silicio es de unos 0,7 V.
+P: Y el otro tipo, el FET.
+L: El transistor de efecto de campo tiene puerta, drenador y fuente. A diferencia del bipolar, se controla con tensión y no con corriente: la puerta casi no consume, así que tiene una impedancia de entrada altísima. Los hay de canal N y de canal P, y los MOSFET son los más habituales en radiofrecuencia y en etapas de potencia.
+P: ¿Y las válvulas?
+L: Las válvulas termoiónicas siguen en amplificadores lineales de alta potencia. Tienen cátodo, rejilla y ánodo, y trabajan con tensiones muy altas, de cientos o miles de voltios. Mucho cuidado con eso, lo veremos en seguridad.
+L: Y por último, los circuitos integrados: cientos o miles de transistores en una pastilla. El más conocido, el amplificador operacional.
+## Resumen del episodio
+P: Lucía, resúmeme todo esto.
+L: Uno: en el condensador, paralelo suma y serie reduce; en la bobina y la resistencia, al revés. Dos: la reactancia de la bobina crece con la frecuencia, la del condensador decrece. Tres: la resonancia ocurre cuando las dos reactancias son iguales, `f = 1 / (2 π √(L · C))`; serie, impedancia mínima; paralelo, máxima. Cuatro: el transformador convierte tensiones y corrientes, y adapta impedancias con el cuadrado de la relación de espiras. Y cinco: diodo, un solo sentido; transistor, una señal pequeña controla una grande.
+## Preguntas relámpago
+P: Primera. Dos condensadores de 100 pF conectados en serie, ¿qué capacidad total dan?
+[PAUSA 6]
+L: Como dos resistencias iguales en paralelo: la mitad, 50 pF.
+P: Segunda. Para bajar a la mitad la frecuencia de resonancia de un circuito, ¿qué hay que hacer con el condensador?
+[PAUSA 6]
+L: Multiplicar su capacidad por cuatro.
+P: Tercera. Un transformador tiene 1000 espiras en el primario y 100 en el secundario. Con 230 V en el primario, ¿qué tensión sale en el secundario?
+[PAUSA 6]
+L: La relación es diez a uno, así que sale la décima parte: 23 V.
+P: Todo un episodio de componentes, ¡y no hemos soldado nada!
+L: Pues en el siguiente verás cómo se combinan para formar circuitos: filtros, fuentes de alimentación, amplificadores y osciladores.

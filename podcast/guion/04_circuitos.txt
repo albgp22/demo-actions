@@ -1,0 +1,62 @@
+# Episodio 4: Circuitos, fuentes, filtros, amplificadores y osciladores
+[MORSE CQ]
+## Del componente al circuito
+L: Episodio cuatro. En el tres conocimos a los jugadores, y en este vemos las jugadas. Cuatro circuitos que aparecen una y otra vez en cualquier equipo de radio: la fuente de alimentación, los filtros, los amplificadores y los osciladores. Y añadiremos dos extras: los mezcladores y la electrónica digital.
+P: Un menú con muchos platos. Empecemos por el que alimenta a todos: la fuente.
+## La fuente de alimentación
+L: La mayoría de los equipos funcionan con corriente continua, pero de la red sale alterna. La fuente tiene cuatro etapas en fila. Primero, el transformador, que reduce la tensión. Segundo, el rectificador, formado por diodos, que convierte la alterna en continua pulsante. Tercero, el filtro, un condensador grande que alisa los pulsos. Y cuarto, el regulador, que mantiene la salida estable aunque cambie la carga o la red.
+P: Veamos el rectificador. ¿Cuántos tipos hay?
+L: El de media onda, con un solo diodo, deja pasar solo los semiciclos positivos. El de onda completa aprovecha los dos semiciclos, y el más común es el puente de cuatro diodos. La diferencia importante es la frecuencia del rizado, que es lo que queda de ondulación tras filtrar. En media onda, el rizado tiene la misma frecuencia que la red, 50 Hz. En onda completa, el doble: 100 Hz.
+P: Eso suena a pregunta de examen.
+L: Cae seguro. Vamos con un cálculo típico. Un transformador entrega 12 V eficaces en el secundario, y lo rectificamos con un puente. El pico es doce por uno coma cuatro uno cuatro, unos 17 V. Pero en cada momento conducen dos diodos, y cada uno se queda unos 0,7 V, así que el pico rectificado ronda los 15,6 V. Con un condensador de filtro, esa será aproximadamente la tensión continua de salida.
+P: ¿Y qué condiciones debe cumplir el diodo?
+L: Debe soportar una tensión inversa mayor que el pico de la señal, y una corriente mayor que la que consume la carga. Y mientras mayor sea el condensador, menor será el rizado.
+P: ¿Y el regulador?
+L: El más simple es un diodo zener con una resistencia en serie. El más habitual, un regulador integrado de tres terminales, como los de la serie setenta y ocho. Un setenta y ocho doce da 12 V estables. Pero tiene un precio: la diferencia de tensión se disipa en forma de calor. Si le entran 18 V, le salen 12 V y pasa 1 A, se queman seis voltios por un amperio, 6 W. Por eso lleva disipador.
+P: Y las fuentes conmutadas, que son ligeras y eficientes.
+L: Trabajan encendiendo y apagando un interruptor a decenas o cientos de kilohercios, así que son más pequeñas y eficientes. El problema para nosotros es que ese conmutado genera ruido de radiofrecuencia, que puede interferir en un receptor. Lo retomaremos en interferencias. Por cierto, la tensión estándar de los equipos de radioaficionado es 13,8 V.
+## Filtros
+P: Hablemos de filtros.
+L: Un filtro deja pasar unas frecuencias y frena otras. Hay cuatro tipos. El paso bajo deja pasar las frecuencias por debajo de la de corte. El paso alto, las que están por encima. El paso banda deja pasar una banda concreta. Y el filtro de rechazo, o notch, elimina una banda.
+P: ¿Y qué es la frecuencia de corte?
+L: Es la frecuencia donde la potencia cae a la mitad, o sea, 3 dB por debajo del nivel en la banda de paso. Un filtro RC sencillo, con una resistencia y un condensador, tiene su corte en `fc = 1 / (2 π R C)`. Con 1 kΩ y 159 nF, queda 1 kHz.
+P: ¿Y para qué sirven en la práctica?
+L: Cuatro ejemplos clave. En la salida de un transmisor, un filtro paso bajo elimina los armónicos. En la entrada de un televisor, un filtro paso alto bloquea las emisiones de HF del radioaficionado. En un receptor, filtros paso banda eligen la banda deseada. Y en SSB, un filtro de cristal selecciona solo una banda lateral.
+L: Un detalle más: un filtro en forma de pi, con un condensador, una bobina y otro condensador, es lo que se usa como red de salida en muchos amplificadores de potencia, porque además de filtrar, adapta impedancias.
+## Amplificadores
+P: Ahora los amplificadores. Entiendo que hacen la señal más grande.
+L: Sí, y la ganancia se mide en decibelios, como vimos. Pero lo importante en el examen son las clases de funcionamiento. La clase A conduce durante todo el ciclo, trescientos sesenta grados. Es la más lineal, o sea, la que menos distorsiona, pero la menos eficiente, con un rendimiento por debajo del 50 por ciento. La clase B conduce medio ciclo, ciento ochenta grados, y su rendimiento puede acercarse al 78 por ciento. La clase AB es un compromiso entre las dos. Y la clase C conduce menos de medio ciclo: es muy eficiente, pero muy poco lineal.
+P: ¿Y cuál se usa para qué?
+L: Si la señal tiene que conservar su forma, como en SSB, hace falta linealidad: clase A, AB o B en contrafase. Si la envolvente es constante, como en FM o en telegrafía, se puede usar clase C y aprovechar su eficiencia. Si usas clase C con SSB, distorsionas y generas productos de intermodulación, que interfieren en frecuencias vecinas.
+P: ¿Qué es eso del contrafase?
+L: Es un montaje con dos transistores, uno amplifica cada semiciclo. Cancela además los armónicos pares.
+P: Y las configuraciones del transistor, que siempre me lío.
+L: Tres. Emisor común: es la más usada, da ganancia de tensión y de corriente, e invierte la fase, ciento ochenta grados. Colector común, o seguidor de emisor: no amplifica tensión, pero tiene alta impedancia de entrada y baja de salida, así que sirve de separador. Y base común, que se usa mucho en VHF y UHF.
+L: Y el amplificador operacional, un integrado con dos entradas, una inversora y otra no inversora. En configuración inversora, la ganancia es menos `Rf / R1`, donde `Rf` es la resistencia de realimentación y `R1` la de entrada. Con 100 kΩ de realimentación y 10 kΩ de entrada, la ganancia es menos diez. En configuración no inversora, es `1 + Rf / R1`, o sea, once. Y recuerda que una ganancia de tensión de diez son 20 dB.
+## Osciladores
+P: Y ahora, los osciladores, que generan la señal.
+L: Un oscilador es un amplificador que se realimenta a sí mismo. Una parte de la salida vuelve a la entrada en fase, es decir, realimentación positiva, y con ganancia suficiente para compensar las pérdidas. Lo que determina la frecuencia es un circuito resonante.
+P: ¿Qué osciladores debo reconocer?
+L: Tres. El Colpitts, que usa un divisor capacitivo, dos condensadores, para la realimentación. El Hartley, que usa una bobina con toma intermedia. Y el oscilador de cristal, con un cuarzo, mucho más estable, porque el cuarzo tiene una Q altísima. Un oscilador de frecuencia variable, o VFO, es más cómodo, pero menos estable, y se ve afectado por la temperatura y la tensión de alimentación.
+P: Y los sintetizadores de frecuencia, que están en todos los equipos modernos.
+L: Se basan en un lazo de enganche de fase, o PLL. Tiene un oscilador controlado por tensión, un divisor de frecuencia, un comparador de fase y un filtro. El comparador mide la diferencia entre la referencia y la salida dividida, y corrige el oscilador hasta que coinciden. Resultado: la salida es la referencia multiplicada por el factor de división. Con una referencia de 12,5 kHz y un divisor de 11600, la salida es 145 MHz. La estabilidad del cristal de referencia pasa a toda la gama.
+## Mezcladores y electrónica digital
+L: Un mezclador combina dos señales y produce la suma y la diferencia de sus frecuencias. Si mezclas una señal de 7,1 MHz con un oscilador local de 16,1 MHz, obtienes 9 MHz, la diferencia, y 23,2 MHz, la suma. El filtro elige una. Es la base del receptor superheterodino, que veremos en dos episodios.
+P: Y lo digital, que lo mencionan en el temario.
+L: Lo básico. Un convertidor analógico digital muestrea la señal y la convierte en números. Para no perder información, hay que muestrear al menos al doble de la frecuencia más alta de la señal: es el teorema de Nyquist. Cuantos más bits, más resolución: cada bit aporta unos 6 dB de margen dinámico. Y los DSP, procesadores digitales de señal, hacen con matemáticas lo que antes hacían filtros y circuitos, y por eso los equipos actuales son tan versátiles.
+P: ¿Algo de números binarios?
+L: Cada posición vale una potencia de dos: uno, dos, cuatro, ocho. El número uno uno cero uno son ocho más cuatro más uno: 13. Y las puertas lógicas: la AND da uno solo si las dos entradas son uno; la OR, si alguna es uno; y la NOT invierte.
+## Resumen del episodio
+L: Fuente: transformador, rectificador, filtro, regulador. Rizado de 100 Hz en onda completa. Filtros: paso bajo en el transmisor, paso alto en la televisión. Amplificadores: clase A lineal pero ineficiente; clase C eficiente pero no lineal; SSB necesita linealidad. Osciladores: Colpitts, Hartley, cristal; PLL multiplica la referencia. Mezclador: suma y diferencia. Y muestreo: al menos el doble.
+## Preguntas relámpago
+P: Primera. Una fuente de onda completa se alimenta de la red de 50 Hz. ¿Qué frecuencia tiene el rizado?
+[PAUSA 6]
+L: 100 Hz, el doble.
+P: Segunda. Queremos amplificar una señal de banda lateral única con fidelidad. ¿Qué clase de amplificador usamos?
+[PAUSA 6]
+L: Uno lineal: clase A, AB o B en contrafase. La clase C la distorsionaría.
+P: Tercera. Si digitalizas una señal de audio de hasta 3 kHz, ¿cuál es la frecuencia de muestreo mínima?
+[PAUSA 6]
+L: El doble, 6 kHz.
+P: Bien, ya conocemos los circuitos. Ahora toca ver cómo se usan en un transmisor.
+L: Exacto. El siguiente es el de transmisores y modulación.

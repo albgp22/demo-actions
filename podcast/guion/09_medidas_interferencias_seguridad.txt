@@ -1,0 +1,61 @@
+# Episodio 9: Medidas, interferencias y seguridad
+[MORSE CQ]
+## Los instrumentos del radioaficionado
+L: Episodio nueve: medidas, interferencias y seguridad. Es un episodio muy práctico, y sus preguntas suelen ser las más agradecidas del examen, porque se resuelven con sentido común.
+P: Empecemos por los aparatos. El polímetro es el que todos conocemos.
+L: El polímetro, o multímetro, mide tensión, corriente y resistencia. Y la regla de oro es cómo se conecta. La tensión se mide en paralelo, poniendo las puntas en los dos extremos del componente. La corriente se mide en serie, abriendo el circuito e intercalando el aparato. Y la resistencia se mide con el circuito apagado y el componente fuera.
+P: ¿Por qué esa diferencia?
+L: Por la resistencia interna del aparato. Un voltímetro debe tener una resistencia interna muy alta, idealmente infinita, para no desviar corriente del circuito. Un amperímetro, al revés, debe tener una resistencia interna muy baja, idealmente cero, para no alterar la corriente. Si conectas un amperímetro en paralelo, estás cortocircuitando el circuito, y puedes quemar el instrumento.
+P: ¿Y qué pasa si el voltímetro tiene una resistencia interna baja?
+L: Que modifica lo que mide, es el efecto de carga. Imagina un divisor de dos resistencias de 100 kΩ con 10 V. En el punto medio hay 5 V. Si lo mides con un voltímetro de 10 MΩ, apenas lo perturbas. Pero con uno de 100 kΩ, estás poniendo una resistencia en paralelo con la inferior, y el punto medio cae a unos 3,3 V. Mediste mal por culpa del aparato.
+L: Y un consejo práctico: empieza siempre por la escala más alta, para no dañar el instrumento. Otra: los polímetros de alterna están calibrados para senoides. Si la señal no es senoidal, medirán mal.
+## Osciladores, frecuencímetros y analizadores
+P: ¿Y el osciloscopio?
+L: Muestra la tensión en función del tiempo. En el eje vertical, voltios, con una sensibilidad en voltios por división. En el eje horizontal, el tiempo, en segundos por división. Con él mides amplitud, periodo y forma de onda. Un ejemplo: la onda completa ocupa 4 divisiones, con una base de tiempos de 5 microsegundos por división. El periodo es 20 µs, y la frecuencia, la inversa, 50 kHz. Y si el pico a pico ocupa 3 divisiones con una sensibilidad de 2 V por división, mide 6 V de pico a pico.
+P: Y hay más aparatos.
+L: Sí. El frecuencímetro cuenta ciclos durante un tiempo fijo, y su precisión depende de su base de tiempos, un oscilador de cristal. El analizador de espectro muestra la amplitud en función de la frecuencia, y es la herramienta para ver armónicos y emisiones espurias de un transmisor. El medidor de ROE y el vatímetro direccional, intercalados entre el transmisor y la línea, miden potencia directa y reflejada. El analizador de antenas mide impedancia y ROE de una antena. Y el ondámetro, o medidor de absorción, y el medidor de resonancia por inmersión permiten encontrar la frecuencia de resonancia de un circuito.
+P: Y la carga artificial.
+L: Es una resistencia de 50 Ω, capaz de disipar la potencia del transmisor, que no radia. Se utiliza para ajustar y probar el equipo sin molestar a nadie. Una buena práctica es no hacer pruebas largas con antena, sino con carga artificial.
+## Interferencias
+L: Pasemos a las interferencias, o compatibilidad electromagnética, la CEM. El principio es que un equipo no debe emitir perturbaciones que molesten a otros, y tampoco debe verse afectado por las de otros, hasta un cierto límite.
+P: Cuando me hablen de interferencias en la tele, ¿cómo distingo el culpable?
+L: Hay dos situaciones y es una pregunta que cae mucho. Primera: la interferencia aparece en un canal concreto de televisión. Es probable que el culpable sea un armónico de tu transmisor que cae justo en ese canal. La solución es un filtro paso bajo a la salida de tu transmisor.
+L: Segunda: la interferencia aparece en todos los canales, o en cualquier dispositivo, cuando transmites en cualquier banda. Entonces, tu señal fundamental es tan fuerte que sobrecarga la entrada del televisor, que no tiene filtros suficientes. La solución es un filtro paso alto en la entrada de la antena del televisor, que deje pasar la televisión y bloquee la HF, y ferritas en los cables.
+P: ¿Y el zumbido en los altavoces, cuando transmito?
+L: Es la rectificación en circuitos de audio. La radiofrecuencia entra por los cables, se detecta en los transistores de entrada y aparece como audio. Se resuelve con condensadores de desacoplo, de unos diez nanofaradios, ferritas en los cables, y blindajes. Y evitar corrientes de modo común en los cables con un buen balun.
+P: Y si el problema va al revés: soy yo quien recibe ruido.
+L: Las fuentes conmutadas baratas, cargadores, luces LED, paneles solares, son de las peores. Se resuelve alejándote, filtrando la alimentación, o conectando todo a tierra.
+P: ¿Cómo sé si soy yo la causa?
+L: Un test sencillo: sustituye la antena por la carga artificial. Si la interferencia sigue, es algo conducido por los cables o por la red eléctrica. Si desaparece, es radiada por la antena. Y mejor sé amable con los vecinos: vale más una conversación, un filtro regalado, que una denuncia.
+L: Y las responsabilidades: tu transmisor debe emitir los armónicos y espurias muy por debajo de la señal principal. Eso se logra con filtros, sin saturar los amplificadores, y sin sobremodular. Una señal limpia es una señal respetuosa.
+## Seguridad eléctrica
+L: Ahora, lo más serio de todo el curso: la seguridad. Empezamos por la eléctrica.
+P: Tengo entendido que no son los voltios, son los amperios.
+L: Efectivamente. Lo que daña el cuerpo es la corriente que lo atraviesa. Con unos 30 mA por el pecho se puede producir una parada respiratoria, y con unos 50 a 100 mA, fibrilación cardíaca, que puede ser mortal. La resistencia de la piel varía mucho: seca, es alta; mojada, baja a unos pocos cientos de ohmios. Con 230 V y la piel mojada, es muy fácil superar los 100 mA.
+L: Por eso el equipo debe tener toma de tierra, que lleva a tierra la carcasa metálica si hay un fallo. El interruptor diferencial, que desconecta cuando detecta una fuga a tierra de unos 30 mA, te salva la vida. Los fusibles y magnetotérmicos se colocan en el conductor de fase, y nunca debes cambiar un fusible por otro de más amperios, ni puentearlo.
+P: Y algún consejo práctico.
+L: Trabaja siempre con el equipo desconectado y el cable fuera del enchufe. Descarga los condensadores grandes. Si tienes que medir con tensión, usa una sola mano, mantén la otra en el bolsillo, para que la corriente no atraviese el pecho. Quítate anillos y relojes. Y atención con los amplificadores de válvulas, que trabajan con miles de voltios continuos, y los condensadores guardan la carga aunque lo desenchufes.
+L: Con baterías, el peligro es el cortocircuito. Una batería de 12 V puede dar cientos de amperios y fundir cables. Pon un fusible cerca del polo positivo. Y una fuente de 13,8 V para un equipo de 100 W necesita cable grueso, capaz de llevar 20 amperios o más.
+## Seguridad con las antenas
+P: Y de las antenas, ¿qué hay que cuidar?
+L: Las antenas exteriores, el rayo y las líneas eléctricas. Nunca instales una antena cerca de líneas eléctricas, y asegúrate de que si se cae el mástil, no alcanza los cables: la distancia mínima es mayor que la altura de la antena más el mástil. Para el rayo: pon un pararrayos, o un descargador en el cable, conecta el mástil a una toma de tierra de baja resistencia, y cuando haya tormenta, desconecta el coaxial del equipo, y déjalo conectado a tierra. Y trabajar en altura, siempre con arnés y acompañado.
+## Exposición a la radiofrecuencia
+L: Y llegamos a la cuestión que más preocupa a la gente: ¿es peligrosa la radiofrecuencia? Las ondas de radio son radiación no ionizante: no dañan el ADN, como los rayos X. Pero con potencia suficiente, calientan los tejidos. Por eso hay límites de exposición, que dependen de la frecuencia. Son más estrictos cerca de las frecuencias de resonancia del cuerpo humano, entre 30 y 300 MHz.
+P: ¿Cómo sé si la exposición es alta?
+L: Hay una fórmula. La densidad de potencia a una distancia `d` de una antena es `S = P · G / (4 π d²)`, en vatios por metro cuadrado, siendo `G` la ganancia como factor, no en dB. Y el campo eléctrico es `E = √(30 · P · G) / d`, en voltios por metro. Por ejemplo, 100 W con una antena de ganancia 1 a 10 metros: raíz de tres mil, 54,8, entre 10, unos 5,5 V/m. Para el público en general, el límite de referencia en esa zona de frecuencias ronda los 28 V/m.
+P: ¿Y qué se hace para reducir la exposición?
+L: Tres cosas. Primero, distancia: si duplicas la distancia, la densidad de potencia se divide entre cuatro. Segundo, altura: antenas altas y lejos de zonas habitadas. Tercero, potencia y tiempo: menos potencia, y menos tiempo transmitiendo. Además, no toques la antena mientras transmites, porque puedes sufrir quemaduras de RF, y en microondas, nunca mires dentro de una guía de ondas o de una bocina de parábola en funcionamiento, porque el ojo es especialmente delicado.
+## Resumen del episodio
+L: Voltímetro en paralelo, alto de resistencia; amperímetro en serie, baja. Interferencia en un canal: filtro paso bajo en el transmisor. En todos los canales: filtro paso alto en la TV. Carga artificial para probar. Seguridad: tierra, diferencial, fusible en fase, descargar condensadores. Rayo: desconectar y a tierra. Exposición: la densidad cae con el cuadrado de la distancia.
+## Preguntas relámpago
+P: Primera. Para medir la tensión en una resistencia, ¿cómo conectas el voltímetro?
+[PAUSA 4]
+L: En paralelo.
+P: Segunda. Si duplicas la distancia a una antena, ¿cómo cambia la densidad de potencia?
+[PAUSA 5]
+L: Se divide entre cuatro.
+P: Tercera. Una interferencia afecta solo a un canal de televisión cuando transmites. ¿Qué filtro colocas, y dónde?
+[PAUSA 6]
+L: Un filtro paso bajo a la salida del transmisor, porque es un armónico.
+P: Y con esto cerramos la parte técnica.
+L: Sí, la parte técnica se acaba aquí. Ahora toca la otra mitad del examen: la normativa. Y ya verás que, con el método adecuado, es la más agradecida.

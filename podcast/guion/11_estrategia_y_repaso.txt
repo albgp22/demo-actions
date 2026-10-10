@@ -1,0 +1,83 @@
+# Episodio 11: Estrategia de estudio y repaso final
+[MORSE CQ]
+## Cómo estudiar de verdad
+L: Episodio once, el último. Ya tienes los contenidos. Ahora hablemos de cómo convertirlos en un aprobado.
+P: Confieso que ahora mismo siento que he oído un millón de datos y no recuerdo ninguno.
+L: Es totalmente normal, y tiene solución. La ciencia del aprendizaje lo tiene claro: escuchar o leer no basta. Lo que fija la información es intentar recordarla, y repasarla justo cuando empiezas a olvidarla.
+P: Traduce eso a un plan.
+L: Primero, dosifica. Treinta o cuarenta minutos al día, durante cuatro a seis semanas, funcionan mucho mejor que una semana de atracón. Segundo, tras cada episodio, resuelve a mano los ejercicios con papel y lápiz, sin mirar. Tercero, repasa al día siguiente, a la semana, y a las tres semanas. Cuarto, haz muchos tests de práctica, los de academias y asociaciones de radioaficionados; verás que las preguntas se repiten con variaciones.
+P: ¿Y cuando me equivoque?
+L: Eso es lo mejor que te puede pasar. Apunta en una libreta el error y la razón. Al final tendrás tu propia lista de trampas personales, y esa libreta vale más que cualquier libro.
+## Tu hoja de fórmulas
+L: Construye tu hoja de fórmulas. Una sola cara. Te dictamos las imprescindibles. Ley de Ohm: `V = I · R`. Potencia: `P = V · I`, `P = I² · R`, `P = V² / R`. Longitud de onda: trescientos entre megahercios. Valor eficaz: pico entre raíz de dos. Decibelios: diez log para potencia, veinte log para tensión. Reactancias: `XL = 2 π f L` y `XC = 1 / (2 π f C)`. Resonancia: `f = 1 / (2 π √(L C))`. Transformador: relación de espiras, y las impedancias, al cuadrado. Dipolo: ciento cuarenta y tres entre megahercios. ROE: `(1 + ρ) / (1 − ρ)`. Y MUF: frecuencia crítica entre coseno.
+P: Con eso me sé media parte técnica.
+L: Y la otra mitad es entender los conceptos: clases de amplificador, tipos de modulación, capas de la ionosfera, filtros.
+## Trampas del examen
+P: Hazme el catálogo de trampas, que ya me estoy poniendo nervioso.
+L: Siete. Una: los prefijos, convierte siempre a la unidad base. Dos: los decibelios, tres es doble de potencia pero no de tensión, y para tensión se usa veinte. Tres: la potencia depende del cuadrado de la tensión o de la corriente. Cuatro: serie y paralelo en condensadores es lo contrario que en resistencias. Cinco: la reactancia de la bobina sube con la frecuencia y la del condensador baja. Seis: dBi no es dBd. Y siete: lee todas las opciones, incluso cuando la primera te parezca correcta.
+P: Y si no sé la respuesta.
+L: Descarta las opciones absurdas. Si una respuesta tiene unidades que no encajan, o un resultado que no es físicamente posible, como una resistencia en paralelo mayor que cualquiera de las dos, fuera. Después, elige entre las que quedan. No dejes preguntas en blanco salvo que la convocatoria diga expresamente que los errores restan, cosa que debes comprobar antes del examen.
+## El día del examen
+L: Algunos consejos para el día. Acude descansado. Tienes unos noventa minutos para sesenta preguntas, así que unos minuto y medio por pregunta. Contesta primero las que sabes, deja las difíciles para el final. Comprueba si puedes llevar calculadora y papel; pregúntalo con antelación, no lo des por hecho. Y recuerda: necesitas quince aciertos de treinta en cada parte. No tienes que ser perfecto. Tienes que ser constante.
+P: Y si suspendo una parte...
+L: Pues vuelves a intentarlo, con tu libreta de errores, que a estas alturas ya será larguísima. Consulta en la convocatoria las condiciones para repetir.
+## Repaso relámpago
+P: Y ahora, el repaso final. Dieciséis preguntas de todo el curso, una detrás de otra. Una pausa corta, y la respuesta. Si necesitas más tiempo, pausa el podcast.
+L: Allá vamos.
+P: Una. Se aplican 24 V a una resistencia de 8 Ω. ¿Qué corriente circula?
+[PAUSA 5]
+L: Veinticuatro entre ocho, 3 A.
+P: Dos. Una corriente de 2 A atraviesa 10 Ω. ¿Qué potencia se disipa?
+[PAUSA 5]
+L: Corriente al cuadrado por resistencia, cuatro por diez, 40 W.
+P: Tres. Tres resistencias de 90 Ω en paralelo.
+[PAUSA 5]
+L: Un tercio de 90, 30 Ω.
+P: Cuatro. ¿Qué longitud de onda corresponde a 28 MHz?
+[PAUSA 5]
+L: Trescientos entre veintiocho, unos 10,7 m.
+P: Cinco. Un cable deja pasar 25 W de 100 W. ¿Cuántos decibelios de pérdida?
+[PAUSA 5]
+L: Un cuarto de potencia: 6 dB.
+P: Seis. Una señal tiene 100 V de pico a pico. ¿Cuál es su tensión eficaz?
+[PAUSA 6]
+L: El pico es 50 V, por cero coma setenta y uno, unos 35,4 V.
+P: Siete. Dos condensadores, de 20 pF y 30 pF, en serie.
+[PAUSA 6]
+L: Producto entre suma, seiscientos entre cincuenta, 12 pF.
+P: Ocho. Si doblas la frecuencia, ¿qué le pasa a la reactancia de una bobina?
+[PAUSA 4]
+L: Se duplica.
+P: Nueve. Un transformador con relación de espiras veinte a uno, alimentado a 230 V. ¿Tensión de salida?
+[PAUSA 6]
+L: Doscientos treinta entre veinte, 11,5 V.
+P: Diez. ¿Qué clase de amplificador es muy eficiente pero no lineal?
+[PAUSA 4]
+L: La clase C.
+P: Once. Una portadora de AM de 50 W, modulada al cien por cien. ¿Potencia total?
+[PAUSA 5]
+L: Uno coma cinco por cincuenta, 75 W.
+P: Doce. Recibes 3,7 MHz con una FI de 455 kHz y el oscilador por encima. ¿Cuál es la frecuencia imagen?
+[PAUSA 7]
+L: La deseada más dos veces la FI: tres coma siete más cero coma noventa y uno, 4,61 MHz.
+P: Trece. ¿Qué impedancia tiene un dipolo de media onda en espacio libre?
+[PAUSA 4]
+L: Unos 73 Ω.
+P: Catorce. ¿Qué capa ionosférica absorbe las bajas frecuencias durante el día?
+[PAUSA 4]
+L: La capa D.
+P: Quince. ¿Cuándo se permite transmitir mensajes de terceros?
+[PAUSA 4]
+L: Solo en emergencias o desastres.
+P: Dieciséis. ¿Qué significa QRP?
+[PAUSA 4]
+L: Disminuir potencia, o trabajar con poca potencia.
+## Despedida
+P: Pues hasta aquí, Lucía. Me voy a hacer mi libreta de errores.
+L: Antes de despedirnos, un último pensamiento. El examen es una puerta, no la meta. Detrás está lo bueno: escuchar los repetidores de tu zona, hacer tu primer contacto, montar una antena con tus manos, entrar en una asociación local, y descubrir que hay gente maravillosa al otro lado del micrófono.
+P: Y que se aprende más en el primer mes en el aire que en tres meses de estudio.
+L: Totalmente. Recuerda lo prometido: las cifras de la normativa, contrástalas con el BOE. Este podcast es una ayuda para estudiar, no la fuente oficial. Y ahora cierra el audio, abre tus apuntes y repasa lo que más te haya costado.
+P: Mucha suerte en el examen. Y esperamos que pronto te oigamos en el aire.
+L: Gracias por escucharnos. Desde CQ Examen, setenta y tres.
+P: Setenta y tres.
+[MORSE 73]

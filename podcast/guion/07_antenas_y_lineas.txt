@@ -1,0 +1,74 @@
+# Episodio 7: Antenas y líneas de transmisión
+[MORSE CQ]
+## La antena, el eslabón decisivo
+L: Episodio siete: antenas y líneas de transmisión. Un dicho de radioaficionados dice que la mejor inversión que puedes hacer en tu estación es una buena antena. Y en el examen, este bloque es de los que más preguntas aporta.
+P: ¿Qué es exactamente una antena?
+L: Es el elemento que convierte la corriente eléctrica de alta frecuencia en una onda electromagnética que se propaga por el espacio, y viceversa. Y fíjate en este detalle: una antena funciona igual para transmitir que para recibir. Se llama reciprocidad. La antena que radia bien, escucha bien.
+P: ¿Y cómo es esa onda?
+L: Una onda electromagnética tiene un campo eléctrico y un campo magnético, perpendiculares entre sí y perpendiculares a la dirección de avance. La polarización de la onda es la dirección de su campo eléctrico. Una antena vertical genera polarización vertical; una antena horizontal, polarización horizontal.
+P: ¿Y eso importa?
+L: Mucho en VHF y UHF. Si transmites en vertical y el otro recibe en horizontal, pierdes mucha señal, del orden de veinte decibelios. Por eso en FM de repetidores se usa vertical, y en SSB y CW de VHF, horizontal. En HF, en cambio, la ionosfera gira la polarización de forma impredecible, y casi no importa. Para satélites se usa polarización circular.
+## El dipolo de media onda
+P: Hablemos de la antena reina: el dipolo.
+L: Un dipolo de media onda son dos tramos de hilo en línea, cada uno de un cuarto de onda, alimentados por el centro. Su longitud total, en metros, la da una fórmula sencilla: `L = 143 / f`, con la frecuencia en megahercios. Es algo menos que media onda real, porque el efecto de los extremos acorta la longitud eléctrica un cinco por ciento aproximadamente.
+P: Vamos con números. Banda de 40 metros, 7,1 MHz.
+L: Ciento cuarenta y tres entre siete coma uno, unos 20,1 m en total. En 10 metros, 28,5 MHz: ciento cuarenta y tres entre veintiocho coma cinco, unos 5 m. Y en 2 metros, a 145 MHz: casi justo un metro, 98,6 cm.
+P: ¿Y por dónde radia el dipolo?
+L: Su diagrama de radiación, en un plano, tiene forma de ocho. Radia al máximo en dirección perpendicular al hilo, y nada en la dirección de los extremos. Su impedancia en el centro es de unos 73 Ω en espacio libre, aunque en la práctica, cerca del suelo, baja. Si lo montas en V invertida, con el centro alto y los extremos hacia abajo, la impedancia baja a unos 50 Ω, que es muy cómodo para el cable coaxial. Y su ganancia es de 2,15 dBi, que es la referencia que veremos dentro de nada.
+P: ¿Y un dipolo plegado?
+L: Tiene un hilo en bucle, y su impedancia es cuatro veces la de un dipolo normal, unos 300 Ω. Es el que se ve en las antenas de televisión.
+## La vertical de cuarto de onda
+L: La otra antena fundamental es la vertical de cuarto de onda, o monopolo. Es medio dipolo, y el suelo hace de espejo para el otro medio. Su longitud es `71,5 / f`: para 145 MHz, unos 49 cm. Necesita un plano de tierra, que son los radiales, unos hilos que salen de la base. Con buena tierra, su impedancia es de unos 36 Ω, la mitad que la del dipolo, y si inclinas los radiales hacia abajo, sube hacia los 50 Ω.
+P: ¿Y qué tiene de bueno?
+L: Es omnidireccional en el plano horizontal, ocupa poco espacio, y suele radiar con ángulo bajo, es decir, cerca del horizonte, lo que es excelente para contactos lejanos en HF.
+## Ganancia y los decibelios en antenas
+P: Y ahora la ganancia. ¿Cómo se consigue ganancia en una antena pasiva?
+L: Ojo, aquí hay un error común. Una antena no crea potencia. Lo que hace es concentrarla en una dirección, igual que el reflector de una linterna concentra la luz en un haz. Lo que ganas en una dirección, lo pierdes en otras.
+L: La ganancia se mide en decibelios respecto a una referencia. Si la referencia es una antena ideal que radia igual en todas las direcciones, la antena isotrópica, hablamos de dBi. Si es un dipolo de media onda, de dBd. Como el dipolo ya tiene 2,15 dBi, `dBi = dBd + 2,15`. Una antena de 6 dBd tiene 8,15 dBi.
+P: ¿Y se mezclan en las preguntas?
+L: Sí, porque la trampa está en el mensaje. Si te dan la ganancia en dBd y piden la potencia isotrópica, sumas 2,15.
+L: Hablemos de potencia radiada. La potencia isotrópica radiada equivalente, la p.i.r.e., o en inglés EIRP, es la potencia que habría que alimentar a una antena isotrópica para obtener la misma señal en la dirección de máxima radiación. Se calcula sumando, en decibelios: potencia del transmisor, menos pérdidas del cable, más ganancia de la antena en dBi. La potencia radiada aparente, la p.r.a., o ERP, es lo mismo pero comparando con un dipolo, así que es 2,15 dB menor.
+P: A ver un ejemplo.
+L: Un transmisor de 10 W, equivalente a 10 dBW. El cable tiene 2 dB de pérdidas, y la antena, 8 dBi. Sumamos: diez, menos dos, más ocho, 16 dBW. Y 16 dBW son unos 40 W de p.i.r.e. La p.r.a. sería 2,15 dB menos, unos 24 W.
+## Antenas direccionales
+P: ¿Y las antenas con ganancia de verdad?
+L: La más famosa es la Yagi. Tiene un elemento excitado, que es un dipolo, conectado al cable. Detrás, un reflector, un poco más largo. Y delante, uno o varios directores, un poco más cortos. Los elementos parásitos no están conectados al cable, pero captan energía y la reirradian con la fase adecuada, de modo que se refuerza hacia delante y se anula hacia atrás.
+P: ¿Qué características tiene?
+L: Cuantos más elementos, más ganancia y un haz más estrecho. Como regla orientativa, cada vez que duplicas el número de elementos ganas unos 3 dB. El ancho del haz se mide entre los puntos donde la potencia cae 3 dB. La relación delante-atrás compara la señal hacia delante con la de atrás. Y el precio: la impedancia del elemento excitado baja, y hace falta adaptarla, y el ancho de banda se estrecha.
+L: Otras antenas que se mencionan: la cúbica o quad, formada por espiras de una longitud de onda; la logoperiódica, de mucho ancho de banda; las helicoidales, para polarización circular; y la parábola, en microondas. En una parábola, la ganancia crece con el diámetro y con la frecuencia. Si duplicas el diámetro, ganas 6 dB, porque el área se multiplica por cuatro.
+## Líneas de transmisión
+P: Pasemos al cable que une el equipo con la antena.
+L: La línea de transmisión lleva la energía de radiofrecuencia. Cada línea tiene una impedancia característica, `Z0`, que depende de su geometría, y no de su longitud. El cable coaxial tiene un conductor central, un aislante, una malla y una cubierta. Los más habituales son de 50 Ω, para radioafición, y de 75 Ω, para televisión. Hay otras líneas simétricas, como la de cinta de 300 Ω o la línea de escalera, de 450 a 600 Ω.
+P: ¿Y las pérdidas?
+L: Aumentan con la frecuencia y disminuyen con el grosor del cable. Se dan en decibelios por cada cien metros. A VHF y UHF, un cable fino puede comerse más de la mitad de la potencia, así que se usan cables gruesos.
+P: ¿Y el factor de velocidad?
+L: Dentro del cable, la onda va más lenta que en el aire. El factor de velocidad es esa proporción: cero coma seis seis en un cable con aislante macizo de polietileno, cero coma ocho o más en cables con aislante espumado. Consecuencia: un trozo de cable de un cuarto de onda es más corto que en el aire. A 145 MHz, un cuarto de onda en el aire son 51,7 cm. En un cable con factor cero coma sesenta y seis, 34 cm.
+## Adaptación y ondas estacionarias
+L: Ahora el tema estrella. Cuando la impedancia de la antena no coincide con la de la línea, parte de la energía rebota y vuelve hacia el transmisor. Es como las olas de un puerto: si el muelle es liso, rebotan. Esa onda reflejada se suma a la directa y crea ondas estacionarias.
+L: Se mide con la relación de onda estacionaria, la ROE, o SWR en inglés. Un valor de uno a uno significa adaptación perfecta. Cuanto mayor, peor. Si la carga es una resistencia pura, la ROE es simplemente la relación entre la carga y la impedancia de la línea, la mayor entre la menor. Una carga de 100 Ω en una línea de 50 Ω da una ROE de 2 a 1.
+P: ¿Y cuánta potencia se refleja?
+L: Se define el coeficiente de reflexión, `ρ`, como `ρ = (ZL − Z0) / (ZL + Z0)`. Con 100 y 50, cincuenta entre ciento cincuenta, un tercio. La ROE es `(1 + ρ) / (1 − ρ)`: uno coma tres tres entre cero coma seis seis, 2. Y la potencia reflejada es `ρ²` por la directa: un tercio al cuadrado, un 11 por ciento.
+P: Dame más valores para memorizar.
+L: ROE 1,5 a 1: el coeficiente es 0,2 y se refleja un 4 por ciento. ROE 2 a 1: 11 por ciento. ROE 3 a 1: el coeficiente es 0,5 y se refleja un 25 por ciento, es decir, de 100 W, 25 W vuelven y 75 W llegan a la carga.
+P: Y si el medidor me da potencias, ¿cómo saco la ROE?
+L: Con la potencia directa y la reflejada. Si la directa es 100 W y la reflejada, 4 W, `ρ` es la raíz de cuatro entre cien, 0,2, y la ROE sale 1,5 a 1.
+L: Y atención a dos falsas creencias. Una: que la potencia reflejada «se quema» en el transmisor. En realidad, la parte reflejada se vuelve a reflejar en el transmisor, o se pierde en el cable, y lo que de verdad sufre es la etapa final. Dos: que el acoplador de antena arregla la ROE. Un acoplador, colocado junto al transmisor, hace que el equipo vea 50 Ω, pero la ROE entre el acoplador y la antena sigue ahí, y con ella las pérdidas en el cable. Para corregirla de verdad, hay que adaptar en la antena.
+## Balun y adaptadores de impedancia
+P: Me falta una palabra que suena en todos los foros: el balun.
+L: Balun viene de balanced-unbalanced: simétrico-asimétrico. El cable coaxial es asimétrico, porque el conductor exterior va a tierra, mientras que un dipolo es simétrico. Si los conectas directamente, parte de la corriente circula por el exterior de la malla, y el cable también radia: deforma el diagrama y provoca interferencias. El balun lo evita. Los hay de uno a uno, y de cuatro a uno, que también transforman la impedancia.
+P: ¿Y qué más se usa para adaptar?
+L: Una línea de un cuarto de onda puede actuar de transformador de impedancia: su impedancia característica debe ser la raíz del producto de las dos impedancias. Para adaptar 50 Ω con 100 Ω, la raíz de 5000, unos 70,7 Ω. También se utilizan las adaptaciones gamma, los stubs, y los acopladores.
+## Resumen del episodio
+L: Dipolo: ciento cuarenta y tres entre la frecuencia, impedancia unos 73 Ω, ganancia 2,15 dBi. Vertical: setenta y uno coma cinco entre la frecuencia, unos 36 Ω. dBi igual a dBd más 2,15. Yagi: más elementos, más ganancia. Coaxial: 50 Ω en radioafición. Factor de velocidad: acorta. ROE: de uno a uno es perfecta; tres a uno refleja un 25 por ciento. El balun, para pasar de simétrico a asimétrico.
+## Preguntas relámpago
+P: Primera. ¿Cuánto mide un dipolo de media onda para 14,2 MHz?
+[PAUSA 7]
+L: Ciento cuarenta y tres entre catorce coma dos, unos 10,1 m.
+P: Segunda. Con 100 W directos y 25 W reflejados, ¿qué ROE hay?
+[PAUSA 8]
+L: `ρ` es la raíz de un cuarto, 0,5. Entonces la ROE es uno coma cinco entre cero coma cinco: 3 a 1.
+P: Tercera. Una antena tiene una ganancia de 6 dBd. ¿Cuánto es en dBi?
+[PAUSA 5]
+L: Seis más dos coma quince, 8,15 dBi.
+P: Pues con esto tenemos la onda saliendo de la antena. Ahora queda el viaje.
+L: En el siguiente: cómo viajan las ondas de radio, y por qué un día hablas con Japón y al siguiente no.

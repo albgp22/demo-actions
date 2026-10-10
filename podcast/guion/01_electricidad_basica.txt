@@ -1,0 +1,87 @@
+# Episodio 1: Electricidad básica, la ley de Ohm
+[MORSE CQ]
+## Tensión, corriente y resistencia
+L: Episodio uno: electricidad básica. Si dominas este episodio, ya tienes la mitad de los cálculos del examen resueltos, porque todo lo demás son variaciones de lo mismo.
+P: Pues empecemos por lo básico. Cuando oigo «tensión, corriente y resistencia» se me mezcla todo en la cabeza. ¿Cómo lo distingo?
+L: Con una tubería de agua. Imagina un depósito elevado conectado a un tubo. La presión del agua es la tensión, que medimos en voltios. El caudal de agua que circula es la corriente, que medimos en amperios. Y lo estrecha que es la tubería, lo que dificulta el paso, es la resistencia, que medimos en ohmios.
+P: O sea, más presión, más caudal. Y más estrechez, menos caudal.
+L: Exactamente. Más tensión, más corriente. Más resistencia, menos corriente. Esa idea tan simple es la ley de Ohm.
+P: ¿Y por qué se llaman voltios, amperios y ohmios? ¿Hay que saberlo?
+L: Son nombres de científicos: Volta, Ampère y Ohm. No cae en examen la historia, pero sí los símbolos. La tensión se representa con la letra `V`, la corriente con la letra `I`, y la resistencia con la letra `R`. Fíjate: la corriente es la `I`, de intensidad.
+P: Vale. Y físicamente, ¿qué es la corriente?
+L: Es un movimiento ordenado de electrones por un conductor. Un amperio equivale a que pase un culombio de carga cada segundo. Por convenio, se dice que la corriente va del polo positivo al negativo, aunque los electrones se muevan al revés. No te líes con eso: en examen, siempre se usa el sentido convencional.
+## Los prefijos, antes de calcular nada
+P: Antes de lanzarnos a calcular, Lucía, yo siempre me atasco con los prefijos: miliamperios, kiloohmios, picofaradios.
+L: Y haces bien en mencionarlo, porque es el error número uno del examen. Cuando una pregunta te da trescientos miliamperios, tienes que convertirlos a amperios antes de hacer nada.
+L: Aprende la escalera. Giga son mil millones. Mega es un millón. Kilo es mil. Luego está la unidad. Y hacia abajo: mili es una milésima, micro una millonésima, nano una milmillonésima y pico una billonésima. De mil en mil.
+P: Dame un ejemplo con números.
+L: Un kiloohmio son mil ohmios. Treinta miliamperios son cero coma cero treinta amperios. Y cuatro mil setecientos picofaradios son cuatro coma siete nanofaradios, o también cero coma cero cero cuatro siete microfaradios.
+P: Mi truco: cada vez que veo una unidad con prefijo, lo primero que hago es escribirla en la unidad base.
+L: Es el mejor consejo del episodio.
+## La ley de Ohm
+L: Ahora sí, la ley de Ohm. Dice que la tensión es igual a la corriente por la resistencia: `V = I · R`. De ahí salen otras dos: la corriente es la tensión dividida entre la resistencia, `I = V / R`, y la resistencia es la tensión dividida entre la corriente, `R = V / I`.
+P: Tres fórmulas que son la misma. ¿Cómo no las confundo?
+L: Con el triángulo mágico. Dibuja un triángulo, pon la `V` arriba, y abajo, a un lado la `I` y al otro la `R`. Tapas con el dedo lo que quieres calcular. Si tapas la `V`, queda `I` por `R`, que se multiplican. Si tapas la `I`, queda `V` encima de `R`, es decir, una división.
+P: Vale, ejemplo.
+L: Primer ejemplo. Aplicamos 12 V a una resistencia de 4 Ω. ¿Qué corriente circula? Es `I = V / R`, doce entre cuatro, tres amperios.
+L: Segundo ejemplo, con cuidado. Un circuito tiene 9 V y circula una corriente de 30 mA. ¿Qué resistencia tiene? Primero, convierto: treinta miliamperios son cero coma cero treinta amperios. Ahora, `R = V / I`, nueve entre cero coma cero treinta. Son 300 Ω.
+P: Y si me olvido de convertir los miliamperios, me sale nueve entre treinta, cero coma tres. Y marcaría una respuesta equivocada.
+L: Y las preguntas de examen suelen tener justo esa respuesta entre las opciones, como trampa. Tercer ejemplo: una corriente de 0,5 A atraviesa una resistencia de 24 Ω. La tensión es cero coma cinco por veinticuatro, doce voltios.
+## Un ejemplo práctico: la resistencia de un LED
+P: Esto lo he visto en proyectos de electrónica. ¿Cómo calculo la resistencia que le pongo a un LED para que no se queme?
+L: Muy buena pregunta, y es un clásico. Tienes una fuente de 12 V y un LED que necesita unos 2 V y 20 mA. El LED se queda con sus dos voltios, así que a la resistencia le sobran diez. Aplicas Ohm: diez voltios entre cero coma cero veinte amperios, quinientos ohmios.
+P: Quinientos ohmios, y el LED vive feliz.
+L: Y ya que estamos, la resistencia disipa diez voltios por veinte miliamperios, que son dos décimas de vatio. Por eso sirve una resistencia común de un cuarto de vatio. Y eso nos lleva a la potencia.
+## La potencia eléctrica
+L: La potencia es la rapidez con la que se consume la energía. Se mide en vatios, y se calcula multiplicando tensión por corriente: `P = V · I`.
+P: Entonces, doce voltios y tres amperios, treinta y seis vatios.
+L: Perfecto. Pero hay dos versiones más, que salen de combinar esta con la ley de Ohm. Si sustituyes la tensión, queda `P = I² · R`: la corriente al cuadrado por la resistencia. Y si sustituyes la corriente, queda `P = V² / R`: la tensión al cuadrado dividida entre la resistencia.
+P: Tres fórmulas de potencia. ¿Cuándo uso cada una?
+L: La que mejor encaje con los datos que te den. Si tienes tensión y corriente, la primera. Si tienes corriente y resistencia, la segunda. Si tienes tensión y resistencia, la tercera.
+P: Ponme un ejemplo de radioaficionado.
+L: Claro. Tienes una carga artificial de 50 Ω y le inyectas 100 W de potencia. ¿Qué tensión hay en sus bornes? De `P = V² / R` despejamos `V = √(P · R)`: raíz de cien por cincuenta, raíz de cinco mil, unos 70,7 V. Y la corriente es la raíz de cien entre cincuenta, raíz de dos, unos 1,41 A.
+P: Y si compruebo con Ohm, uno coma cuarenta y uno por cincuenta, setenta coma siete. Cuadra.
+L: Siempre que puedas, comprueba por otro camino.
+P: Y la bombilla de cien vatios de casa, que a doscientos treinta voltios, ¿cuánta corriente consume?
+L: Cien entre doscientos treinta, unos 0,43 A. Y su resistencia, doscientos treinta al cuadrado entre cien, 529 Ω.
+L: Ahora la trampa de examen número dos. Si duplicas la tensión sobre la misma resistencia, la potencia no se duplica: se multiplica por cuatro, porque la tensión va al cuadrado. Lo mismo ocurre si duplicas la corriente.
+P: Eso suena a pregunta con respuesta tramposa: «la potencia se duplica».
+L: Exacto. Esa es la opción incorrecta que más se elige.
+## Resistencias en serie y en paralelo
+P: ¿Y cuando hay varias resistencias juntas?
+L: Dos formas de conectarlas. En serie, una detrás de otra, por el mismo camino. En paralelo, cada una en su propio camino, todas entre los mismos dos puntos.
+L: En serie, la resistencia total es la suma: `R = R1 + R2 + R3`. Por todas pasa la misma corriente, y las tensiones se suman. Por ejemplo, 100 Ω, 220 Ω y 330 Ω en serie dan 650 Ω.
+P: Fácil. ¿Y en paralelo?
+L: En paralelo, la tensión es la misma en todas, y las corrientes se suman. La resistencia total siempre es menor que la más pequeña. Para dos resistencias, usa producto entre suma: `R = R1 · R2 / (R1 + R2)`. Por ejemplo, 60 Ω y 30 Ω: sesenta por treinta, mil ochocientos, entre noventa, 20 Ω.
+P: ¿Y si son tres o cuatro?
+L: Hay dos atajos. Si son iguales, divides el valor entre cuántas hay. Tres resistencias de 150 Ω en paralelo dan 50 Ω. Dos de 100 Ω dan 50 Ω. Y si son distintas, sumas los inversos: uno entre `R` total es uno entre `R1` más uno entre `R2`, y así.
+P: Mi regla para no equivocarme: en paralelo, el resultado tiene que ser menor que la más pequeña. Si me sale mayor, me he equivocado.
+L: Una comprobación perfecta.
+## El divisor de tensión
+L: Un caso muy usado: dos resistencias en serie que reparten una tensión. Si conectas 12 V a una resistencia de 1 kΩ en serie con otra de 3 kΩ, la resistencia total es 4 kΩ, así que la corriente es doce entre cuatro mil, 3 mA. Entonces, en la de 3 kΩ caen tres miliamperios por tres mil ohmios, 9 V, y en la de 1 kΩ, 3 V.
+P: Y existe una fórmula directa, imagino.
+L: Sí: la tensión de salida es la de entrada multiplicada por la resistencia de abajo, entre la suma de las dos. `Vs = Ve · R2 / (R1 + R2)`. Con los números anteriores, doce por tres entre cuatro, nueve voltios. Sale igual.
+## Las leyes de Kirchhoff
+P: Me suena que también hay unas leyes de Kirchhoff.
+L: Dos, y son sentido común. La primera: en un nudo, la suma de corrientes que entran es igual a la suma de las que salen. Si entran 5 A a un nudo y por una rama salen 2 A, por la otra salen 3 A. La carga no desaparece.
+L: La segunda: si recorres un circuito cerrado, la suma de las tensiones es cero. Dicho de otra forma, la tensión de la fuente se reparte entre todas las caídas. Si tienes una pila de 12 V y dos resistencias que se quedan 3 V y 4 V, la tercera se queda 5 V.
+## Baterías y capacidad
+P: Una última, que seguro que cae: baterías.
+L: Las baterías se conectan igual. En serie, las tensiones se suman: dos baterías de 12 V dan 24 V. En paralelo, la tensión se mantiene, pero la capacidad se suma. La capacidad se mide en amperios hora. Una batería de 12 Ah que alimenta un equipo que consume 3 A, dura unas cuatro horas: doce entre tres.
+P: Y a un equipo de 13,8 V que consume 20 A le hace falta una fuente que dé al menos 20 A.
+L: Y cuidado con los fusibles. Pero eso lo vemos en el episodio de seguridad.
+## Resumen del episodio
+L: Resumen rápido. Uno: la ley de Ohm, `V = I · R`. Dos: la potencia, `P = V · I`, con sus variantes. Tres: serie suma resistencias, paralelo las reduce. Cuatro: convierte siempre los prefijos antes de operar. Y cinco: si duplicas tensión o corriente, la potencia se multiplica por cuatro.
+P: Y ahora, preguntas relámpago, que es lo que hace que lo aprendas de verdad.
+## Preguntas relámpago
+L: Primera. Una resistencia de 100 Ω se conecta a 5 V. ¿Qué corriente circula?
+[PAUSA 7]
+L: Cinco entre cien, cero coma cero cinco amperios, es decir, 50 mA. Si has dicho cinco amperios o quinientos, repasa la ley de Ohm.
+P: Segunda. Un equipo funciona a 12 V y consume 4 A. ¿Qué potencia consume?
+[PAUSA 5]
+L: Doce por cuatro, 48 W.
+P: Tercera. Dos resistencias de 100 Ω en paralelo. ¿Cuál es la resistencia total?
+[PAUSA 5]
+L: La mitad, 50 Ω. Recuerda, siempre menor que la más pequeña.
+P: ¡Tres de tres! Siguiente episodio.
+L: En el siguiente, damos el salto a la corriente alterna, a la frecuencia, a las longitudes de onda, y a los decibelios, que dan mucho miedo, pero ya verás que no es para tanto.

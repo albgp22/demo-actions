@@ -1,0 +1,84 @@
+# Episodio 10: Reglamentación y procedimientos de operación
+[MORSE CQ]
+## La segunda mitad del examen
+L: Episodio diez: reglamentación y procedimientos. Es la segunda parte del examen, treinta preguntas, y necesitas quince aciertos. La buena noticia es que aquí no hay fórmulas. La mala es que hay que memorizar. Así que vamos a ordenar la información para que se quede.
+P: Y una advertencia que nos hemos puesto nosotros: en esta parte, las cifras exactas, como potencias y límites de bandas, tienes que contrastarlas con el texto oficial vigente.
+L: Sí. Te daremos la estructura y los datos que hemos podido contrastar, pero la fuente de verdad es el BOE. Donde haya dudas, te lo diremos.
+## Qué es el servicio de aficionados
+P: Empecemos por el principio. ¿Qué es un radioaficionado, legalmente?
+L: La definición viene del Reglamento de Radiocomunicaciones de la Unión Internacional de Telecomunicaciones. El servicio de aficionados es un servicio de radiocomunicación que tiene por objeto la instrucción individual, la intercomunicación y los estudios técnicos, efectuados por aficionados, es decir, por personas debidamente autorizadas que se interesan en la radioelectricidad con carácter exclusivamente personal y sin fines de lucro.
+P: Muchas palabras. ¿Cuáles son las clave?
+L: Cuatro. Instrucción individual, intercomunicación, estudios técnicos, y sin ánimo de lucro. Todo lo que la normativa permite o prohíbe sale de ahí. Por ejemplo, no puedes usar la radioafición para un negocio, ni para publicidad, ni como una emisora de radiodifusión. Existe también el servicio de aficionados por satélite, que usa estaciones espaciales.
+## Quién manda: UIT, CEPT y España
+L: La normativa tiene tres niveles. El primero, internacional: la UIT. Divide el mundo en tres regiones. España está en la Región 1, que abarca Europa, África, Oriente Medio y el norte de Asia. Su reglamento, en su artículo 25, fija las reglas básicas de nuestro servicio.
+P: ¿Qué dice ese artículo, en esencia?
+L: Que las comunicaciones entre estaciones de aficionados de distintos países están permitidas, salvo que alguna administración se oponga. Que los mensajes deben limitarse a asuntos técnicos y a observaciones de carácter personal. Que no se pueden cifrar los mensajes para ocultar su sentido. Y que las comunicaciones de terceros solo se permiten en emergencias.
+L: El segundo nivel es europeo, la CEPT, la conferencia de administraciones de correos y telecomunicaciones. Tiene dos recomendaciones clave. La T/R 61-02 define el certificado armonizado de radioaficionado, el HAREC. Y la T/R 61-01 establece la licencia CEPT, que permite operar temporalmente en otros países que la han adoptado.
+P: Y el tercero es el español.
+L: En España, el marco es la Ley General de Telecomunicaciones, la ley once de dos mil veintidós, y la Orden IET/1311/2013, que aprueba el reglamento de uso del dominio público radioeléctrico por radioaficionados. Esta orden contiene el programa de materias del examen en su anexo segundo. Y el Cuadro Nacional de Atribución de Frecuencias, el CNAF, dice qué servicios pueden usar cada frecuencia.
+P: Y una cosa que se confunde: la IARU.
+L: La IARU es la Unión Internacional de Radioaficionados. No es una autoridad. Sus planes de banda, que recomiendan qué modo usar en cada tramo, son un acuerdo entre aficionados, no ley. Pero se cumplen, y el examen pregunta por ellos. Nosotros estamos en la IARU Región 1.
+## Servicio primario y secundario
+L: Un concepto que cae casi seguro. En el cuadro de atribución de frecuencias, un servicio puede ser primario o secundario en una banda. Un servicio secundario no debe causar interferencias perjudiciales a los servicios primarios, ni puede reclamar protección contra las interferencias que le causen.
+P: O sea, que el secundario se tiene que apartar.
+L: Exacto. Por el reglamento de la UIT, los radioaficionados tienen atribución primaria en bandas como 40, 20, 17, 15, 12, 10 y 2 metros, y secundaria en otras, como 30 metros, 70 centímetros o 23 centímetros. Pero los detalles del tramo concreto en España, consúltalos en el CNAF vigente.
+## Autorización, certificado e indicativo
+P: Vale, apruebo el examen. ¿Y ahora qué?
+L: Ahora vienen los trámites. Con la aprobación obtienes el certificado HAREC. Con él solicitas la autorización administrativa de radioaficionado. En España hay una sola autorización, con las mismas atribuciones para todos los titulares, y ya no existen las clases antiguas. Es personal e intransferible. Y se te asigna un indicativo, también llamado distintivo de llamada.
+P: ¿Y cuánto dura?
+L: Según las fuentes consultadas, no caduca por el paso del tiempo mientras no haya renuncia o revocación. Las tasas se pagan con el modelo setecientos noventa. Y si eres extranjero residente en España con un HAREC, o con un convenio de reciprocidad, puedes obtener la autorización sin examen.
+## El indicativo
+L: El indicativo tiene tres partes: un prefijo, que son letras, una cifra, y un sufijo, que son letras. Por ejemplo, e, a, cuatro, u, erre, e. El prefijo identifica el país. Los asignados a España por la UIT son las series AM a AO, y EA a EH.
+P: Pero yo veo EA, EB, EC y otros más.
+L: Sí, y aquí hay que prestar atención. EA, EB y EC son los que reciben las estaciones de los radioaficionados. Los demás, ED, EE, EF, EG y EH, se reservan para usos especiales: estaciones desatendidas, como repetidores y balizas, concursos y eventos de distinto alcance. Y las series AM, AN y AO, para eventos de ámbito nacional o internacional. El reparto exacto, aprende el de la Orden.
+P: ¿Y la cifra?
+L: La cifra no identifica el país, sino una zona del territorio español. Hay distritos del uno al nueve. El uno corresponde al noroeste y norte, el dos a Aragón, País Vasco y Navarra, el tres a Cataluña, el cuatro a Madrid, Castilla-La Mancha y Extremadura, el cinco a Valencia y Murcia, el seis a Baleares, el siete a Andalucía, el ocho a Canarias y el nueve a Ceuta y Melilla. Son aproximaciones; no coinciden exactamente con las comunidades autónomas.
+P: ¿Y el sufijo?
+L: La norma actual asigna sufijos de tres letras. Las series antiguas de una y dos letras se siguen usando. Y hay una novedad reciente: en 2026 se ha abierto un procedimiento para solicitar indicativos de una sola letra, pensado para titulares muy veteranos.
+L: En cuanto a su uso: el indicativo se transmite al comienzo y al final de cada comunicación, y se repite periódicamente en las largas. El intervalo exacto, mejor que lo mires en la Orden. Los repetidores y balizas se identifican automáticamente. Si operas desde fuera de tu casa, añades al indicativo la barra y una letra: barra P, portable, o barra M, móvil.
+## Bandas y potencias
+P: Ahora el tema que da más miedo: bandas y potencias.
+L: Vamos con las bandas de HF y las de VHF y UHF, con sus límites aproximados. Ciento sesenta metros: alrededor de 1,8 MHz. Ochenta metros: de 3,5 a 3,8 MHz. Cuarenta metros: de 7 a 7,2. Treinta metros: de 10,1 a 10,15. Veinte metros: de 14 a 14,35. Diecisiete metros: de 18,068 a 18,168. Quince metros: de 21 a 21,45. Doce metros: de 24,89 a 24,99. Y diez metros: de 28 a 29,7 MHz.
+P: Qué lío de números. ¿Un truco?
+L: Fíjate en el patrón. Los nombres son aproximadamente trescientos entre la frecuencia, como vimos. Y los anchos son pequeños en las bandas bajas y grandes en 10 metros. El resto, repite los números en voz alta, que es lo único que funciona. En VHF y UHF: seis metros, de 50 a 52 MHz en España, con condiciones particulares; dos metros, de 144 a 146 MHz; setenta centímetros, de 430 a 440; veintitrés centímetros, de 1240 a 1300 MHz. Y hay más bandas de microondas.
+P: ¿Y las potencias?
+L: Se expresan como potencia de cresta de la envolvente, la p.c.e., que es lo que vimos como PEP, y, en las bandas más altas, como p.i.r.e. Según las fuentes que hemos podido contrastar: 1000 W en las bandas de HF, 600 W en seis y dos metros, 300 W en setenta centímetros, y 1000 W de p.i.r.e. en 23 centímetros y en las bandas de microondas.
+P: Dices «según las fuentes que hemos podido contrastar».
+L: Sí. Y te lo digo con total honestidad: en la banda de 30 metros hay fuentes que dicen 300 W y otras 500 W, y en las bandas de uso secundario hay reducciones de potencia cuyo porcentaje no pudimos confirmar. Por eso, antes del examen, abre el anexo primero de la Orden y apréndete esa tabla tal cual. Es la tabla que va a manejar el examen.
+## Qué se puede y qué no
+L: Reglas de operación, que son las preguntas más típicas. Se puede: comunicar con otras estaciones de aficionados, de España o del extranjero, salvo que alguna administración se oponga. Se puede experimentar, construir equipos, hacer concursos y colaborar en emergencias. No se puede: obtener lucro, emitir mensajes cifrados, salvo las señales de control de un satélite, transmitir mensajes de terceros, salvo en caso de emergencia o desastre, ni interferir a otros servicios.
+P: Hablando de emergencias, ¿qué se espera de un radioaficionado?
+L: Que si la Dirección General de Protección Civil y Emergencias lo solicita en una catástrofe, colabores. Y que, si escuchas una llamada de socorro, des prioridad absoluta a ese tráfico, dejes de transmitir si molestas, y ayudes. Las frecuencias de actividad de emergencia de la IARU Región 1 son 3760 kHz y 7110 kHz.
+P: Y hay algo sobre el secreto de las comunicaciones.
+L: Sí: no puedes divulgar ni utilizar la información que capturas por casualidad de otros servicios, que no va dirigida a ti. Y finalmente, la responsabilidad: tú respondes de lo que emite tu estación. El ministerio puede inspeccionarla, y usar el espectro sin autorización es una infracción grave de la Ley General de Telecomunicaciones.
+## Fonética y código Q
+P: Pasemos a la parte práctica. El alfabeto fonético.
+L: Es el de la aviación civil internacional. Alfa. Bravo. Charlie. Delta. Eco. Foxtrot. Golf. Hotel. India. Juliett. Kilo. Lima. Mike. November. Oscar. Papa. Quebec. Romeo. Sierra. Tango. Uniform. Victor. Whiskey. X-ray. Yankee. Zulu.
+P: Y esas palabras, ¿para qué?
+L: Para deletrear el indicativo sin errores. EA4URE sería: Eco, Alfa, cuatro, Uniform, Romeo, Eco.
+L: Ahora el código Q. Tres letras que empiezan por Q, y que se pueden usar como pregunta, con un interrogante, o como respuesta. Las que más caen. QRA: nombre de la estación. QRG: frecuencia exacta. QRK: inteligibilidad de las señales. QRL: la frecuencia está ocupada. QRM: interferencias de otras estaciones. QRN: ruido atmosférico. QRO: aumentar potencia. QRP: disminuir potencia, o trabajar con poca potencia. QRT: cesar la transmisión. QRV: estoy preparado. QRX: espera, volveré a llamar. QRZ: quién me llama. QSA: intensidad de las señales. QSB: desvanecimiento. QSL: confirmación de recepción. QSO: comunicación entre dos estaciones. QSY: cambiar de frecuencia. QTH: ubicación. QTR: hora exacta.
+P: ¿Cómo no me confundo entre QRM y QRN?
+L: QRM, la M de «man-made», hecha por el hombre, otras estaciones. QRN, la N de «noise», ruido de la naturaleza. Y QRO es la O de «o grande», mucha potencia, mientras QRP es la P de «pequeña».
+## El informe RST y la comunicación
+L: Para dar el informe de recepción se usa el código RST. R es la legibilidad, de uno a cinco. S, la intensidad, de uno a nueve. Y T, el tono, de uno a nueve, solo en telegrafía. Un cincuenta y nueve en fonía significa perfectamente legible y muy fuerte. Un quinientos noventa y nueve en CW, igual, con tono perfecto.
+P: ¿Y cómo hago una llamada general?
+L: Escuchas primero, para asegurarte de que la frecuencia está libre. Luego llamas: «CQ, CQ, CQ, aquí EA4URE, llamando CQ y a la escucha». Respondes con tu indicativo y el del otro, y das el informe. En la despedida, setenta y tres, «73», que significa saludos cordiales. Y nunca se añade una ese al final, porque ya es plural. Y 88 significa cariños, para amigos cercanos.
+L: Dos referencias de frecuencias: la frecuencia de llamada nacional de FM en dos metros es 145,500 MHz, y la de llamada en SSB, 144,300 MHz. Y en cada banda, la telegrafía ocupa la parte baja, y la telefonía la parte alta.
+## Señales de socorro y licencia CEPT
+L: Las señales de socorro. En telefonía, «Mayday», repetida tres veces. En telegrafía, SOS. La de urgencia, «Pan-pan», y la de seguridad, «Sécurité». Y si oyes un Mayday, silencio y escucha.
+P: Y ya la última, la licencia CEPT.
+L: Con tu HAREC, y en los países que han adoptado la recomendación T/R 61-01, puedes operar temporalmente, hasta tres meses, sin trámites adicionales. Debes usar el indicativo del país que visitas, seguido de una barra y el tuyo. Por ejemplo, un francés en España usaría EA barra su indicativo. Y los privilegios son los del país visitado, no los del tuyo.
+## Resumen del episodio
+L: Servicio de aficionados: instrucción, intercomunicación, estudios técnicos, sin lucro. Sin cifrar. Terceros solo en emergencia. Secundario no molesta al primario. Una autorización por persona. EA, EB y EC para estaciones de radioaficionados. Bandas y potencias: apréndete la tabla oficial. Fonética, código Q, RST, 73. Mayday, Pan-pan, Sécurité.
+## Preguntas relámpago
+P: Primera. ¿Cuándo se permite transmitir mensajes de terceros?
+[PAUSA 5]
+L: Solo en caso de emergencia o desastre.
+P: Segunda. ¿Qué significa QRX?
+[PAUSA 5]
+L: Espera, volveré a llamar.
+P: Tercera. ¿Qué significa «73»?
+[PAUSA 4]
+L: Saludos cordiales.
+P: Madre mía, cuánto código.
+L: Y ya solo queda el último episodio: cómo plantear el estudio y el examen.

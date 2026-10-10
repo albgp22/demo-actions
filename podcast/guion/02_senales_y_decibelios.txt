@@ -1,0 +1,79 @@
+# Episodio 2: Señales, frecuencia, longitud de onda y decibelios
+[MORSE CQ]
+## De la corriente continua a la alterna
+L: Episodio dos. En el uno trabajamos con corriente continua, la de las pilas, que siempre empuja en el mismo sentido. Pero la radio vive en la corriente alterna, que cambia de sentido una y otra vez, de forma periódica.
+P: Como el enchufe de casa.
+L: Eso es. La red eléctrica es alterna, con una forma de onda que se llama senoide, o sinusoide. Sube hasta un máximo, baja pasando por cero, llega a un mínimo negativo y vuelve a empezar. Cada repetición completa es un ciclo.
+P: ¿Y qué es la frecuencia, exactamente?
+L: Es el número de ciclos que se completan por segundo. Se mide en hercios. La red europea tiene 50 Hz, es decir, cincuenta ciclos cada segundo. Y el tiempo que dura un ciclo se llama periodo: es la inversa de la frecuencia, `T = 1 / f`.
+P: Entonces, cincuenta hercios, un periodo de un cincuentavo de segundo.
+L: Veinte milisegundos. Y a mil hercios, un periodo de un milisegundo. Cuanto mayor es la frecuencia, más corto el periodo.
+## Valor pico, pico a pico y eficaz
+L: Ahora un clásico del examen: los distintos valores de una señal alterna. Si miras la senoide en un osciloscopio, puedes medir tres cosas. El valor pico, desde el cero hasta el máximo. El valor pico a pico, desde el mínimo negativo hasta el máximo positivo, que es el doble del pico. Y el valor eficaz.
+P: ¿Eficaz? ¿Eficaz para qué?
+L: Eficaz significa equivalente en calor. Es la tensión continua que daría la misma potencia en una resistencia. En inglés se llama RMS. Y para una senoide, el valor eficaz es el valor pico dividido entre raíz de dos: `Vef = Vp / √2`. Es decir, aproximadamente cero coma setenta y uno por el pico. Al revés, el pico es uno coma cuarenta y uno por el eficaz.
+P: ¿Un ejemplo?
+L: El enchufe de casa. Cuando dices que son doscientos treinta voltios, hablas de voltios eficaces. El pico real es doscientos treinta por uno coma cuatro uno cuatro, unos 325 V. Y de pico a pico, el doble, 650 V. Por eso a la red hay que tenerle respeto.
+P: Entonces, si en un osciloscopio veo una señal de 20 V de pico a pico...
+L: Divides entre dos para obtener el pico, 10 V, y multiplicas por cero coma setenta y uno para el eficaz, unos 7,07 V. Y si esa señal alimenta una carga de 50 Ω, la potencia es siete coma cero siete al cuadrado entre cincuenta, exactamente 1 W.
+P: ¿Y para un transmisor de cien vatios?
+L: Con 100 W sobre una carga de 50 Ω, el valor eficaz es setenta coma siete voltios, el pico, 100 V, y el pico a pico, 200 V. Esos números redondos son muy típicos en preguntas de examen.
+L: Un matiz más: en SSB se habla de potencia de cresta, o PEP, que es la potencia que corresponde al pico de la envolvente: `PEP = Vp² / (2 · R)`. Con 100 V de pico y 50 Ω, cien al cuadrado entre cien, 100 W. Lo veremos en transmisores.
+## El espectro de radiofrecuencia
+P: Hablemos de las frecuencias de radio. ¿Hay alguna forma de ordenarlas?
+L: Sí, por décadas. De treinta a trescientos kilohercios, ondas largas o LF. De 300 kHz a 3 MHz, ondas medias o MF. De tres a treinta megahercios, ondas cortas o HF, la alta frecuencia. De 30 a 300 MHz, VHF, muy alta frecuencia. De 300 MHz a 3 GHz, UHF. De tres a treinta gigahercios, SHF. Y de 30 a 300 GHz, EHF.
+P: Es que dicho así, suena a sopa de letras.
+L: Piensa en esto: las bandas empiezan en la «L» de low, baja, y suben. Cada una es diez veces más alta que la anterior. Y recuerda que HF, de 3 a 30 MHz, es el hogar de las comunicaciones de larga distancia, VHF y UHF son para comunicaciones locales, y por encima del gigahercio hablamos de microondas.
+P: ¿Y el sonido? Ahí también hay frecuencias.
+L: Sí, la voz humana ocupa más o menos de 300 a 3000 Hz, que es lo que se transmite en telefonía. El oído humano llega de 20 Hz a 20 kHz. Son frecuencias de audio, o baja frecuencia, que no se propagan por el aire como ondas de radio. Hay que montarlas sobre una portadora de radiofrecuencia. Eso es la modulación, pero eso es otro episodio.
+## Longitud de onda
+L: Ahora, la fórmula más usada de todo el examen. Las ondas de radio viajan a la velocidad de la luz, trescientos mil kilómetros por segundo. La longitud de onda es la distancia que avanza la onda durante un ciclo. Y se calcula así: `λ = c / f`. Para ahorrarte la mala vida, usa el atajo: la longitud de onda en metros es trescientos dividido entre la frecuencia en megahercios.
+P: Trescientos entre la frecuencia en megahercios. A ver si lo clavo. Banda de 2 metros, a unos 145 MHz.
+L: Trescientos entre ciento cuarenta y cinco, unos 2,07 m. Por eso se llama banda de dos metros.
+P: ¿Y la de 40 metros? Está a 7,1 MHz.
+L: Trescientos entre siete coma uno, unos 42,3 m. Ojo: los nombres de las bandas son aproximados. La banda de 40 metros no mide exactamente cuarenta.
+P: ¿Y al revés?, si me dan la longitud de onda.
+L: Se despeja: la frecuencia en megahercios es trescientos entre la longitud de onda en metros. Una longitud de onda de 10 m es una frecuencia de 30 MHz.
+L: La trampa de examen: mezclar unidades. Si te dan la frecuencia en kilohercios, divide entre mil primero, o usa trescientos mil entre los kilohercios. Por ejemplo, 3600 kHz son 3,6 MHz, y trescientos entre tres coma seis son unos 83 m.
+P: Entonces, a mayor frecuencia, menor longitud de onda. Siempre.
+L: Siempre. Son inversamente proporcionales. Y eso es oro puro cuando lleguemos a las antenas, porque su tamaño depende de la longitud de onda.
+## Armónicos y formas de onda
+P: He oído hablar de armónicos. ¿Qué son?
+L: Son múltiplos enteros de una frecuencia, llamada fundamental. El segundo armónico es el doble de la fundamental, el tercero el triple, y así. Si transmites en 7,1 MHz, el segundo armónico cae en 14,2 MHz y el tercero en 21,3 MHz. Es decir, justo en las bandas de 20 y 15 metros.
+P: O sea que un transmisor mal filtrado en 40 metros puede molestar a quien opera en 20.
+L: Justo por eso se instalan filtros paso bajo a la salida del transmisor. Lo veremos en el episodio de interferencias. Otra pregunta clásica: una onda cuadrada contiene la fundamental y todos los armónicos impares: el tercero, el quinto, el séptimo. Una onda en diente de sierra contiene todos, pares e impares. Y la senoide pura no tiene armónicos.
+P: Eso lo puedo recordar: la senoide es la única que no lleva «extras».
+L: Y en el osciloscopio vemos la señal en función del tiempo, y en el analizador de espectro la vemos en función de la frecuencia.
+## Los decibelios
+P: Y ahora, el momento que temo: los decibelios.
+L: No hace falta temerlos. Un decibelio es simplemente una forma de comparar dos potencias usando una escala logarítmica. ¿Por qué? Porque en radio los números son enormes. Una señal puede ser mil millones de veces más débil que la que emites. Con decibelios, esos números se convierten en números pequeños.
+L: La fórmula para potencias es `dB = 10 · log (P2 / P1)`. Para tensiones o corrientes, con la misma resistencia, es `dB = 20 · log (V2 / V1)`.
+P: ¿Y tengo que calcular logaritmos en el examen?
+L: Casi nunca. Basta con memorizar cinco valores. Tres decibelios es el doble de potencia. Seis decibelios es cuatro veces la potencia. Diez decibelios es multiplicar por diez. Veinte decibelios es multiplicar por cien. Y los negativos son lo contrario: menos tres decibelios es la mitad, menos diez es la décima parte.
+P: Y con tensiones, el doble de tensión son 6 dB, ¿no?
+L: Exacto, y esa es la trampa de examen número uno de los decibelios: confundir la regla de potencias con la de tensiones. Seis decibelios es cuatro veces la potencia, pero solo el doble de tensión. Veinte decibelios son cien veces la potencia, y diez veces la tensión.
+P: ¿Y si sale un valor que no está en la lista, por ejemplo 13 dB?
+L: Descompónlo: trece son diez más tres. Diez es por diez; tres es por dos. Multiplicas: por veinte. Un amplificador de 16 dB de ganancia: diez más seis, es decir, por diez y por cuatro, por cuarenta. Si le metes 2,5 W, sacas 100 W.
+P: Y si me dan la pérdida de un cable. Tengo 100 W y salen 25 W.
+L: Un cuarto de potencia son 6 dB de pérdida. Y si el cable tiene 3 dB de pérdida, la mitad: 100 W de entrada, 50 W de salida. Piensa que los decibelios se suman: si tienes un cable de menos 2 dB y una antena de más 8, el balance total es más 6.
+## Decibelios con referencia: dBm, dBW y el S-meter
+L: A veces no se compara con otra señal, sino con una referencia fija. Un dBm es el nivel en decibelios respecto a un milivatio. Cero dBm es 1 mW. Treinta dBm es 1 W. Cincuenta dBm son 100 W. Si es respecto a un vatio, se escribe dBW: veinte dBW son cien vatios.
+P: ¿Y el medidor S de mi receptor?
+L: Cada punto S son seis decibelios, o sea, una tensión doble. Y S9 en HF corresponde a una tensión de unos 50 microvoltios, que es unos menos setenta y tres dBm. Por encima de S9, se mide en decibelios: S9 más 20 dB. Si subes de S5 a S9, ganas cuatro puntos, es decir, 24 dB.
+P: Y de dBi y dBd, ¿qué?
+L: Eso lo dejamos para las antenas. Son decibelios respecto a otra referencia: una antena isotrópica y un dipolo.
+## Resumen del episodio
+L: Lo esencial. Uno: frecuencia es inversa del periodo. Dos: el valor eficaz es el pico entre raíz de dos, y el pico a pico es el doble del pico. Tres: la longitud de onda en metros es trescientos dividido entre la frecuencia en megahercios. Cuatro: tres decibelios, doble; seis, cuádruple; diez, por diez; veinte, por cien. Y cinco: con tensiones, los decibelios se calculan con veinte, no con diez.
+P: Hora de las preguntas relámpago.
+## Preguntas relámpago
+L: Primera. En el osciloscopio, una señal senoidal mide 40 V de pico a pico. ¿Qué tensión eficaz tiene?
+[PAUSA 8]
+L: El pico es la mitad, 20 V, y el eficaz, ese pico por cero coma setenta y uno, unos 14,1 V.
+P: Segunda. Un amplificador convierte 10 W en 40 W. ¿Cuántos decibelios de ganancia tiene?
+[PAUSA 6]
+L: Cuarenta entre diez, cuatro veces. Cuatro veces la potencia son 6 dB.
+P: Tercera. Si transmites en 3,6 MHz, ¿en qué frecuencia cae el segundo armónico?
+[PAUSA 5]
+L: El doble: 7,2 MHz. Y fíjate que cae al borde de la banda de 40 metros.
+P: Pues hasta aquí el episodio dos. Hemos hablado de ondas, frecuencias y decibelios.
+L: En el tres entramos en los componentes: condensadores, bobinas, transformadores y semiconductores. Y descubriremos por qué un circuito puede «sintonizar» una emisora.
