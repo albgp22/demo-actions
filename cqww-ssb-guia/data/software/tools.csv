@@ -1,0 +1,52 @@
+herramienta,uso,plataformas,mac_nativo,version,fecha_version,precio_licencia,url,verificado
+SkookumLogger,Registrador de concursos (CQ WW; DVR de la radio; voz sintética TTS/Personal Voice),macOS 13 Ventura o posterior,si,6.0 (13); beta 6.0 (14),2026-09-05 (beta: notas 2026-10-02),Gratuito,https://k1gq.net/SkookumLogger/,"V2 búsqueda (k1gq.net, 2026-10-20); binario Universal según tercero (V3)"
+N1MM Logger+,Registrador de concursos (DVK con WAV integrado),Windows 10/11,vm,1.0.11466 (actualización); instalador completo 1.0.11364,2026-10-13 (instalador: 2026-07-21),Gratuito,https://n1mmwp.hamdocs.com/,"V2 búsqueda (listado oficial de actualizaciones, 2026-10-20)"
+Not1MM,Registrador de concursos (plugin CQ WW SSB; DVK WAV; Cabrillo con ROOKIE y NON-ASSISTED),"Linux, macOS (Python 3.11+, PyQt6)",si,26.10.18,2026-10-19,GPL-3.0-or-later (gratuito),https://github.com/mbridak/not1mm,V1 (JSON de PyPI y código del paquete 26.10.18)
+QLog,Libro de guardia general con concursos básicos (sin puntuación ni multiplicadores),"Linux, Windows 10/11 64 bits, macOS (DMG de aa5sh)",si,POR VERIFICAR,POR VERIFICAR,"Gratuito, código abierto",https://github.com/foldynl/QLog,V1 README; versión POR VERIFICAR
+RUMlogNG,"Libro de guardia general para macOS (soporte básico IC-7300MK2, LAN y audio)",macOS,si,6.0.2,2026-01-22,POR VERIFICAR,https://machamradio.com/blog/2026/01/22/rumlogng-for-macos-version-6-0-2-released/,V2 búsqueda (MacHamRadio); web oficial POR VERIFICAR
+MacLoggerDX,Libro DX y control de equipo (no es registrador de concursos),macOS,si,6.62,POR VERIFICAR (6.61: entrada del 2026-05-30),De pago (POR VERIFICAR),https://www.dogparksoftware.com/MacLoggerDX.html,V3 cask de Homebrew; 6.61 por V2
+SDR-Control for Icom,Control y panorámico de Icom (soporta IC-7300MK2); no es registrador,macOS 14 o posterior (App Store),si,2.10.3,2026-10-07,De pago (POR VERIFICAR),https://apps.apple.com/app/id1592313285,V2 búsqueda (MacHamRadio); ficha según capítulo de equipo
+TR4W,Registrador de concursos,Windows,vm,POR VERIFICAR (repositorio congelado; migración a Delphi 12),POR VERIFICAR,"Gratuito, código abierto",https://tr4w.net,V1 README de GitHub
+TLF,Registrador de concursos en consola (apto para Raspberry Pi),Linux (macOS POR VERIFICAR),no,POR VERIFICAR,POR VERIFICAR,GPL (POR VERIFICAR),https://github.com/Tlf/tlf,V1 README
+DXLog.net,Registrador de concursos,Windows,vm,POR VERIFICAR,POR VERIFICAR,Gratuito (POR VERIFICAR),https://dxlog.net/,POR VERIFICAR
+Win-Test,Registrador de concursos,Windows,vm,POR VERIFICAR,POR VERIFICAR,De pago (POR VERIFICAR),https://www.win-test.com/,POR VERIFICAR
+Log4OM,Libro de guardia general,Windows,vm,POR VERIFICAR,POR VERIFICAR,Gratuito (POR VERIFICAR),https://www.log4om.com/,POR VERIFICAR
+Hamlib (rigctl/rigctld),"Librería y demonio CAT (IC-7300MK2=3094, IC-705=3085, FT-710=1049); rigctld en el puerto 4532","Linux, macOS, Windows",si,4.7.2,2026-06-21,LGPL,https://hamlib.github.io/,"V1 (NEWS, riglist.h y fórmula de Homebrew)"
+flrig,Control de equipo (CAT) sin Hamlib,"Linux, macOS, Windows",si,2.0.12,POR VERIFICAR,GPL (POR VERIFICAR),https://www.w1hkj.org/,V3 cask de Homebrew
+wfview,Control de Icom/Yaesu/Kenwood; servidor de red; rigctld emulado,"Linux, macOS, Windows",si,2.22 (cadena en master),POR VERIFICAR,GPLv3,https://wfview.org/,V1 código (wfview.pro y rigs/*.rig del espejo de GitHub)
+Icom RS-BA1 Version 2,Control remoto oficial de Icom por LAN,Windows,vm,POR VERIFICAR,POR VERIFICAR,De pago (POR VERIFICAR),,POR VERIFICAR (ver capítulo de equipo)
+Yaesu SCU-LAN10,Unidad de red para operar el FT-710 en remoto (hardware y software Windows),Windows,no,POR VERIFICAR,POR VERIFICAR,De pago (POR VERIFICAR),,Capítulo de equipo (equip-kpo-scu-lan10); macOS POR VERIFICAR
+SDR++,"Receptor SDR (RTL-SDR, rtl_tcp, SDR++ Server; servidor rigctl); modo servidor -s, puerto 5259","Windows, Linux, macOS, BSD",si,1.3.0 (cadena en master),POR VERIFICAR,GPL-3.0 (POR VERIFICAR),https://www.sdrpp.org/,V1 README y código fuente
+OpenWebRX+,Servidor SDR web multiusuario (RTL-SDR V4 en la Pi),"Linux (Debian/Ubuntu, imagen para Raspberry Pi, Docker); cliente en el navegador",no,1.2.127,2026-10-19,AGPL-3.0,https://github.com/luarvique/openwebrx,V1 debian/changelog y README
+rtl-sdr (osmocom),Driver librtlsdr y utilidades (rtl_tcp); soporta RTL-SDR Blog V4 desde la 2.0.0,"Linux, macOS, Windows",si,2.0.3,2026-08-12,GPL-2.0 (POR VERIFICAR),https://osmocom.org/projects/rtl-sdr/wiki,V1 debian/changelog
+rtl-sdr-blog,Driver modificado de RTL-SDR Blog (soporte V4 con R828D),"Linux, Windows",no,POR VERIFICAR,POR VERIFICAR,GPL (POR VERIFICAR),https://github.com/rtlsdrblog/rtl-sdr-blog,V1 README
+gqrx,Receptor SDR alternativo,"macOS, Linux",si,2.17.7,POR VERIFICAR,GPL-3.0 (POR VERIFICAR),https://gqrx.dk/,V3 cask de Homebrew
+KiwiSDR (red pública),Receptores remotos de 10 kHz a 30 MHz (hasta 4 oyentes por receptor),Navegador,si,n/a,n/a,Uso gratuito,http://rx.kiwisdr.com,V1 (enlace del README oficial; página no abierta)
+WebSDR.org,Directorio de servidores WebSDR,Navegador,si,n/a,n/a,Uso gratuito,http://websdr.org/,POR VERIFICAR
+rx.linkfanel.net,Agregador de listas KiwiSDR y WebSDR,Navegador,si,n/a,n/a,Uso gratuito,http://rx.linkfanel.net/,POR VERIFICAR (no resolvía desde el entorno)
+ITURHFProp / P533,Motor de predicción HF según ITU-R P.533-14 (ruido P.372-15),POR VERIFICAR (biblioteca y CLI),no,POR VERIFICAR,POR VERIFICAR,POR VERIFICAR,https://github.com/ITU-R-Study-Group-3/ITU-R-HF,V1 README
+Proppy,Predicción web basada en ITURHFProp,Navegador,si,n/a,n/a,Gratuito (POR VERIFICAR),https://soundbytes.asia/proppy/,POR VERIFICAR
+VOACAP Online,Predicción web basada en VOACAP (OH6BG),Navegador,si,n/a,n/a,Gratuito (POR VERIFICAR),https://www.voacap.com/hf/,POR VERIFICAR
+voacapl,VOACAP portado a Linux (gfortran),Linux,no,POR VERIFICAR,POR VERIFICAR,POR VERIFICAR,https://github.com/jawatson/voacapl,V1 README
+pythonprop (voacapgui),Interfaz GTK3 para VOACAP,Linux,no,POR VERIFICAR,POR VERIFICAR,GPL (POR VERIFICAR),https://github.com/jawatson/pythonprop,V1 README
+HamCAP,Predicción (interfaz para VOACAP),Windows,vm,POR VERIFICAR,POR VERIFICAR,Gratuito (POR VERIFICAR),https://www.dxatlas.com/HamCap/,POR VERIFICAR
+DR2W,Predicción (no identificado en la sesión),POR VERIFICAR,POR VERIFICAR,POR VERIFICAR,POR VERIFICAR,POR VERIFICAR,,POR VERIFICAR (no identificado)
+NOAA SWPC,"Clima espacial en tiempo real (Kp, flujo, avisos)",Navegador,si,n/a,n/a,Gratuito,https://www.swpc.noaa.gov/,POR VERIFICAR
+HamQSL solar (N0NBH),Resumen solar y widget,Navegador,si,n/a,n/a,Gratuito,https://www.hamqsl.com/solar.html,POR VERIFICAR
+PSKReporter,Mapa de recepción de modos digitales (indicador de propagación),Navegador,si,n/a,n/a,Gratuito,https://pskreporter.info/pskmap.html,POR VERIFICAR
+WSPRnet,Red de balizas WSPR (indicador de propagación),Navegador,si,n/a,n/a,Gratuito,https://www.wsprnet.org/,POR VERIFICAR
+Reverse Beacon Network,Skimmers de CW y RTTY (no SSB); indicador de propagación; usarlo en concurso es ASSISTED,Navegador,si,n/a,n/a,Gratuito,https://www.reversebeacon.net/,POR VERIFICAR
+DX Summit,Cluster web (usarlo en concurso es ASSISTED),Navegador,si,n/a,n/a,Gratuito,https://www.dxsummit.fi/,POR VERIFICAR
+DXWatch,Cluster web (usarlo en concurso es ASSISTED),Navegador,si,n/a,n/a,Gratuito,https://dxwatch.com/,POR VERIFICAR
+VE7CC CC Cluster / CC User,Software de nodo y cliente de cluster (usarlo en concurso es ASSISTED),Windows (cliente CC User); nodos por telnet,vm,POR VERIFICAR,POR VERIFICAR,Gratuito (POR VERIFICAR),https://www.ve7cc.net/,POR VERIFICAR
+HamAlert,Alertas de spots en app o correo (usarlo en concurso es ASSISTED),Navegador y app,si,n/a,n/a,Gratuito (POR VERIFICAR),https://hamalert.org/,POR VERIFICAR
+"Country files (CTY, AD1C)","Ficheros de entidades, zonas y excepciones (cty.dat, wl_cty.dat, Big CTY)",Datos,si,CTY-3631,2026-09-15,Gratuito,https://www.country-files.com/,V2 (archivo de la lista CTY-Announce); posterior POR VERIFICAR
+Super Check Partial (MASTER.SCP),Base de indicativos activos en concursos,Datos,si,Release 2026.09.25 (copia incluida en Not1MM 26.10.18),2026-09-25,Gratuito,https://www.supercheckpartial.com/,V1 indirecto (cabecera del fichero incluido en Not1MM)
+CQ WW Cabrillo Log Upload,Subida y comprobación del log Cabrillo (plazo de 48 h),Navegador,si,n/a,n/a,Gratuito,https://cqww.com/logcheck/,Capítulo de bases (rules-cqww-logcheck) y V1 (plugin de Not1MM)
+Parallels Desktop,Máquina virtual Windows 11 para Arm (Apple silicon),"v27: macOS Sonoma o posterior, solo arm64; v20.x también en Intel",vm,27.0.3-58680,POR VERIFICAR,De pago,https://www.parallels.com/products/desktop/,V3 casks de Homebrew; autorización de Microsoft por V2
+VMware Fusion Pro,Máquina virtual (Windows on Arm desde la 13.5),macOS (Intel y Apple silicon),vm,POR VERIFICAR,POR VERIFICAR,Gratuito para uso no comercial,,V2 Macworld (2024); versión POR VERIFICAR
+UTM,Máquina virtual (QEMU),macOS Monterey o posterior,vm,5.0.8,POR VERIFICAR,"Gratuito, código abierto",https://mac.getutm.app/,V3 cask de Homebrew
+VirtualBox,Máquina virtual,macOS Intel y Apple silicon,vm,7.2.22,POR VERIFICAR,GPL (POR VERIFICAR),https://www.virtualbox.org/,V3 cask de Homebrew
+CrossOver Mac,Capa Wine para apps Windows; no es una VM (N1MM figura como Unrated en Mac),macOS,si,26.3.0,POR VERIFICAR,De pago,https://www.codeweavers.com/products/crossover-mac/,V3 cask de Homebrew; valoración de N1MM por V2
+Tailscale,Red privada en malla (WireGuard) para el homelab,"macOS Ventura o posterior, Linux, Windows, iOS, Android",si,1.104.1 (app de macOS),POR VERIFICAR,Plan personal gratuito (POR VERIFICAR),https://tailscale.com/,V1 README; V3 cask de Homebrew
+Proxmox VE,Hipervisor del homelab (VM Windows con N1MM),Servidor x86-64,no,POR VERIFICAR,POR VERIFICAR,AGPL-3.0 (POR VERIFICAR),https://www.proxmox.com/,POR VERIFICAR

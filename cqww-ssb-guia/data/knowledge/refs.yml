@@ -1,0 +1,595 @@
+# Referencias del módulo "knowledge" (formato Hayagriva). Claves con prefijo know-.
+# url.date = fecha de consulta/registro (2026-10-20).
+# Nivel de verificación (ver data/knowledge/facts.md):
+#   V-web  = contenido confirmado mediante búsqueda web en esta sesión (resumen del buscador)
+#   V-pkg  = URL/dato leído en un paquete de software descargado de PyPI (fuente secundaria)
+#   V-local= dato leído en un fichero local del proyecto
+#   MEM    = URL de memoria, NO comprobada en esta sesión -> POR VERIFICAR
+
+# ---------------------------------------------------------------- ciclo solar
+know-nasa-solarmax-2024:
+  type: web
+  title: "NASA, NOAA: Sun Reaches Maximum Phase in 11-Year Solar Cycle"
+  author: NASA Science
+  date: 2024-10-15
+  url:
+    value: https://science.nasa.gov/science-research/heliophysics/nasa-noaa-sun-reaches-maximum-phase-in-11-year-solar-cycle/
+    date: 2026-10-20
+  note: "V-web"
+
+know-swpc-solarmax-2024:
+  type: web
+  title: "Joint Solar Maximum Announcement from NASA and NOAA"
+  author: NOAA Space Weather Prediction Center
+  date: 2024-10
+  url:
+    value: https://www.swpc.noaa.gov/news/joint-solar-maximum-announcement-nasa-and-noaa
+    date: 2026-10-20
+  note: "V-web"
+
+know-stce-sc25-tracking:
+  type: web
+  title: "SC25 Tracking"
+  author: Solar-Terrestrial Centre of Excellence (STCE)
+  url:
+    value: https://www.stce.be/content/sc25-tracking
+    date: 2026-10-20
+  note: "V-web: máximo suavizado 160,9 (oct. 2024); máximo mensual 216,0 (ago. 2024)"
+
+know-sidc-sc25-max:
+  type: web
+  title: "Solar Cycle 25 reached its maximum in October 2024"
+  author: SIDC / STCE, Royal Observatory of Belgium
+  url:
+    value: https://www.sidc.be/article/solar-cycle-25-reached-its-maximum-october-2024
+    date: 2026-10-20
+  note: "V-web: 161 (redondeado) en oct. 2024; sep. 159, nov. 157; confirmado por SILSO en 2025"
+
+know-silso-data:
+  type: web
+  title: "Sunspot Number - data files (WDC-SILSO)"
+  author: WDC-SILSO, Royal Observatory of Belgium
+  url:
+    value: https://www.sidc.be/SILSO/datafiles
+    date: 2026-10-20
+  note: "Fuente primaria para comprobar los valores mensuales; no descargable desde el entorno de trabajo"
+
+know-swpc-predicted:
+  type: web
+  title: "Predicted Sunspot Number And Radio Flux"
+  author: NOAA Space Weather Prediction Center
+  url:
+    value: https://www.swpc.noaa.gov/products/predicted-sunspot-number-and-radio-flux
+    date: 2026-10-20
+  note: "Existencia de la tabla confirmada (V-web); valores 2026-2027 NO obtenidos -> POR VERIFICAR. JSON: https://services.swpc.noaa.gov/json/solar-cycle/predicted-solar-cycle.json"
+
+know-swpc-progression:
+  type: web
+  title: "Solar Cycle Progression"
+  author: NOAA Space Weather Prediction Center
+  url:
+    value: https://www.swpc.noaa.gov/products/solar-cycle-progression
+    date: 2026-10-20
+  note: "V-web (descripción del producto y del panel 2019)"
+
+know-miesch-2025:
+  type: article
+  title: "Solar Cycle Prediction at NOAA's Space Weather Prediction Center"
+  author: Miesch, Mark
+  date: 2025
+  parent:
+    type: periodical
+    title: Space Weather
+  serial-number:
+    doi: 10.1029/2025SW004444
+  url:
+    value: https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2025SW004444
+    date: 2026-10-20
+  note: "V-web (existencia y tema); contenido no revisado"
+
+know-solen-star:
+  type: web
+  title: "Solar Terrestrial Activity Report"
+  author: Alvestad, Jan
+  url:
+    value: https://solen.info/solar/index.html
+    date: 2026-10-20
+  note: "V-web, fuente secundaria (recopila SILSO y flujo de Penticton): tabla mensual 2026"
+
+know-solarham-progression:
+  type: web
+  title: "Solar Cycle 25 Progression"
+  author: SolarHam
+  url:
+    value: https://www.solarham.com/progression.htm
+    date: 2026-10-20
+  note: "V-web, fuente secundaria (actualizada 2026-06-07)"
+
+know-bom-ssn:
+  type: web
+  title: "Monthly Sunspot Numbers (Observed and predicted solar indices)"
+  author: Bureau of Meteorology, Australian Space Weather Forecasting Centre
+  url:
+    value: https://www.sws.bom.gov.au/Solar/1/6
+    date: 2026-10-20
+  note: "V-web parcial: emitido 2026-10-01; tabla ilegible en el resumen -> valores POR VERIFICAR"
+
+know-spaceweather-com:
+  type: web
+  title: "SpaceWeather.com"
+  url:
+    value: https://www.spaceweather.com/
+    date: 2026-10-20
+  note: "V-web, fuente secundaria: F10.7 = 137 sfu el 2026-10-19"
+
+know-earthsky-sun-news:
+  type: web
+  title: "Sun news: M flare erupts as solar wind heads to Earth"
+  author: EarthSky
+  url:
+    value: https://earthsky.org/sun/sun-news-activity-solar-flare-cme-aurora-updates/
+    date: 2026-10-20
+  note: "V-web, fuente secundaria: fulguración M1.7 de AR4551 el 2026-10-19"
+
+know-arxiv-2511-16788:
+  type: article
+  title: "Solar Cycle 25 Dynamics from Observational and Statistical Parameters: Characterization of the Maximum Phase and Rotational Behaviour"
+  date: 2025
+  url:
+    value: https://arxiv.org/pdf/2511.16788
+    date: 2026-10-20
+  note: "V-web (resumen): fase de máxima actividad ago. 2024 - ene. 2025 según F10.7 ajustado"
+
+# ------------------------------------------------------- modelo ionosférico
+know-pyiri-zenodo:
+  type: web
+  title: "PyIRI: Python implementation of the IRI model using spherical harmonics"
+  author: Forsythe, Victoriya
+  date: 2025
+  serial-number:
+    doi: 10.5281/zenodo.8235173
+  url:
+    value: https://doi.org/10.5281/zenodo.8235173
+    date: 2026-10-20
+  note: "V-pkg: cita recomendada en los metadatos de PyIRI 0.1.7 (PyPI)"
+
+know-pyiri-pypi:
+  type: web
+  title: "PyIRI 0.1.7 (Python implementation of International Reference Ionosphere)"
+  url:
+    value: https://pypi.org/project/PyIRI/0.1.7/
+    date: 2026-10-20
+  note: "V-pkg; base del cálculo propio scripts/know_muf.py (Forsythe et al. 2023, Space Weather; Bilitza et al. 2022, Rev. Geophys. 60)"
+
+# ------------------------------------------------------- ficheros y software
+know-cty-ad1c:
+  type: web
+  title: "Amateur Radio Country Files (CTY) - versión VER20260603"
+  author: Reisert, Jim (AD1C)
+  url:
+    value: https://www.country-files.com/
+    date: 2026-10-20
+  note: "V-local: data/cty/cty_not1mm.json (version 20260603, empaquetado por Not1MM). URL del sitio: MEM"
+
+know-not1mm-pypi:
+  type: web
+  title: "not1mm 26.10.18 - contest logger (paquete PyPI)"
+  author: Bridak, Michael (K6GTE)
+  date: 2026-10-19
+  url:
+    value: https://pypi.org/project/not1mm/26.10.18/
+    date: 2026-10-20
+  note: "V-pkg: cabeceras de plugins de concursos (resúmenes de bases y URL), MASTER.SCP, macros SSB y fonética"
+
+# ------------------------------------------------------- bases de concursos (URL leídas en Not1MM)
+know-cqww-rules:
+  type: web
+  title: "CQ World Wide DX Contest - Rules"
+  author: CQ Magazine
+  url:
+    value: https://www.cqww.com/rules.htm
+    date: 2026-10-20
+  note: "V-pkg (URL en plugins CQ WW de Not1MM)"
+
+know-cqww-logcheck:
+  type: web
+  title: "CQ WW - Log upload / log check"
+  author: CQ Magazine
+  url:
+    value: https://www.cqww.com/logcheck/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-cqww-faq:
+  type: web
+  title: "CQ WW - FAQ"
+  author: CQ Magazine
+  url:
+    value: https://www.cqww.com/faq.htm
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR (URL supuesta)"
+
+know-cabrillo:
+  type: web
+  title: "Cabrillo log file format"
+  author: CQ Magazine (cqwpx.com)
+  url:
+    value: https://www.cqwpx.com/cabrillo.htm
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-cqwpx-rules:
+  type: web
+  title: "CQ WPX Contest - Rules"
+  author: CQ Magazine
+  url:
+    value: https://www.cqwpx.com/rules.htm
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-arrl-10m:
+  type: web
+  title: "ARRL 10-Meter Contest"
+  author: ARRL
+  url:
+    value: http://www.arrl.org/10-meter
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-arrl-dx:
+  type: web
+  title: "ARRL International DX Contest"
+  author: ARRL
+  url:
+    value: https://www.arrl.org/arrl-dx
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-arrl-iaru:
+  type: web
+  title: "IARU HF World Championship"
+  author: ARRL / IARU
+  url:
+    value: https://www.arrl.org/iaru-hf-championship
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-ure-concursos:
+  type: web
+  title: "URE - Concursos (portal de concursos de la Unión de Radioaficionados de España)"
+  author: URE
+  url:
+    value: https://concursos.ure.es/
+    date: 2026-10-20
+  note: "V-pkg (Not1MM usa concursos.ure.es/en/... para bases y envío de listas)"
+
+know-ure-rey-ssb:
+  type: web
+  title: "Concurso S.M. El Rey de España SSB - Bases"
+  author: URE
+  url:
+    value: https://concursos.ure.es/en/s-m-el-rey-de-espana-ssb/bases/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-ure-rey-cw:
+  type: web
+  title: "Concurso S.M. El Rey de España CW - Bases"
+  author: URE
+  url:
+    value: https://concursos.ure.es/en/s-m-el-rey-de-espana-cw/bases/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-rdxc:
+  type: web
+  title: "Russian DX Contest - Rules"
+  author: RDXC
+  url:
+    value: https://www.rdxc.org/rules_eng
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-eudxc:
+  type: web
+  title: "EU DX Contest - Rules"
+  url:
+    value: https://www.eudx-contest.com/rules/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-euhfc:
+  type: web
+  title: "European HF Championship"
+  author: S5CC
+  url:
+    value: https://euhf.s5cc.eu/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-hadx:
+  type: web
+  title: "HA DX Contest - Rules"
+  url:
+    value: https://ha-dx.com/en/contest-rules
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-helvetia:
+  type: web
+  title: "USKA Helvetia Contest"
+  author: USKA
+  url:
+    value: https://www.uska.ch/events/uska-helvetia-contest-concours-helvetia-hf/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-lzdx:
+  type: web
+  title: "LZ DX Contest - Rules"
+  author: BFRA
+  url:
+    value: https://lzdx.bfra.bg/rulesen.html
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-ref-dx:
+  type: web
+  title: "Championnat de France / REF DX Contest - Règlement"
+  author: REF
+  url:
+    value: https://concours.r-e-f.org/reglements/actuels/reg_cdfhfdx.pdf
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-ari-dx:
+  type: web
+  title: "ARI International DX Contest"
+  author: ARI
+  url:
+    value: https://www.ari.it/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-aadx:
+  type: web
+  title: "All Asian DX Contest - Rules"
+  author: JARL
+  url:
+    value: https://www.jarl.org/English/4_Library/A-4-3_Contests/aadx_eng.html
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-jidx:
+  type: web
+  title: "JIDX - Rules"
+  url:
+    value: http://www.jidx.org/jidxrule-e.html
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-oceania-dx:
+  type: web
+  title: "Oceania DX Contest"
+  url:
+    value: https://www.oceaniadxcontest.com/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-wag:
+  type: web
+  title: "Worked All Germany Contest - Regeln"
+  author: DARC
+  url:
+    value: https://www.darc.de/der-club/referate/conteste/wag-contest/regeln/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-iaru-r1-fd:
+  type: web
+  title: "IARU Region 1 Fieldday"
+  author: DARC
+  url:
+    value: https://www.darc.de/der-club/referate/conteste/iaru-region-1-fieldday/en/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-rsgb-iota:
+  type: web
+  title: "RSGB IOTA Contest - Rules (2025)"
+  author: RSGB
+  url:
+    value: https://www.rsgbcc.org/hf/rules/2025/riota.shtml
+    date: 2026-10-20
+  note: "V-pkg (bases 2025)"
+
+know-stew-perry:
+  type: web
+  title: "Stew Perry Topband Distance Challenge"
+  url:
+    value: http://www.kkn.net/stew/
+    date: 2026-10-20
+  note: "V-pkg"
+
+know-darc-wae:
+  type: web
+  title: "WAE DX Contest"
+  author: DARC
+  url:
+    value: https://www.darc.de/der-club/referate/conteste/wae-dx-contest/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-cq160:
+  type: web
+  title: "CQ 160-Meter Contest - Rules"
+  author: CQ Magazine
+  url:
+    value: https://www.cq160.com/rules.htm
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR (Not1MM solo usa cw160.com/cabrillo.htm)"
+
+know-uba-dx:
+  type: web
+  title: "UBA DX Contest"
+  author: UBA
+  url:
+    value: https://www.uba.be/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-spdx:
+  type: web
+  title: "SP DX Contest"
+  author: PZK
+  url:
+    value: https://spdxcontest.pzk.org.pl/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-veron-pacc:
+  type: web
+  title: "PACC Contest"
+  author: VERON
+  url:
+    value: https://www.veron.nl/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-3830:
+  type: web
+  title: "3830 Contest Scores"
+  url:
+    value: http://www.3830scores.com
+    date: 2026-10-20
+  note: "V-pkg (URL citada en plugins CWT/CWO/SST de Not1MM)"
+
+know-ncj:
+  type: web
+  title: "National Contest Journal (NCJ)"
+  url:
+    value: https://www.ncjweb.com/
+    date: 2026-10-20
+  note: "V-pkg (dominio ncjweb.com citado para NAQP en Not1MM)"
+
+# ------------------------------------------------------- normas y conocimiento general
+know-itu-rr:
+  type: web
+  title: "Radio Regulations (ITU-R), Appendix 14: Phonetic alphabet and figure code"
+  author: International Telecommunication Union
+  url:
+    value: https://www.itu.int/pub/R-REG-RR
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR (contenido citado de memoria; comprobar edición vigente)"
+
+know-eu-dst:
+  type: web
+  title: "Directive 2000/84/EC on summer-time arrangements"
+  author: European Parliament and Council
+  url:
+    value: https://eur-lex.europa.eu/eli/dir/2000/84/oj
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR (fin del horario de verano: último domingo de octubre a la 01:00 UTC)"
+
+know-arrl-dxcc:
+  type: web
+  title: "ARRL DXCC Program / DXCC List"
+  author: ARRL
+  url:
+    value: https://www.arrl.org/dxcc
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR (recuento oficial vigente)"
+
+know-cq-waz:
+  type: web
+  title: "CQ WAZ Award - zone list / rules"
+  author: CQ Magazine
+  url:
+    value: https://cq-amateur-radio.com/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR (localizar la página exacta de la lista de zonas)"
+
+know-boe-iet1311:
+  type: web
+  title: "Orden IET/1311/2013, de 9 de julio, por la que se aprueba el Reglamento de uso del dominio público radioeléctrico por radioaficionados (BOE-A-2013-7624)"
+  author: Ministerio de Industria, Energía y Turismo
+  date: 2013-07-12
+  url:
+    value: https://www.boe.es/eli/es/o/2013/07/09/iet1311
+    date: 2026-10-20
+  note: "Texto consolidado (última actualización 2015-04-11) leído en la réplica legalize-es del BOE (arts. 18, 27, 29, 30, 31 y anexo I.1). Deroga la Orden ITC/1791/2006. Ver también data/legal/facts.md"
+
+know-ure:
+  type: web
+  title: "URE - Unión de Radioaficionados de España"
+  author: URE
+  url:
+    value: https://www.ure.es/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR (servicios, sede, secciones)"
+
+# ------------------------------------------------------- formación y comunidad (todo MEM)
+know-morserunner:
+  type: web
+  title: "Morse Runner (VE3NEA) - simulador de concursos CW"
+  author: Shovkoplyas, Alex (VE3NEA)
+  url:
+    value: http://www.dxatlas.com/MorseRunner/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-morserunner-ce:
+  type: web
+  title: "Morse Runner Community Edition"
+  url:
+    value: https://github.com/w7sst/MorseRunner
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-ctu:
+  type: web
+  title: "Contest University (CTU)"
+  url:
+    value: https://www.contestuniversity.com/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-wwrof:
+  type: web
+  title: "World Wide Radio Operators Foundation (WWROF)"
+  url:
+    value: https://wwrof.org/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-websdr-twente:
+  type: web
+  title: "WebSDR - University of Twente"
+  url:
+    value: http://websdr.ewi.utwente.nl:8901/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-kiwisdr-list:
+  type: web
+  title: "KiwiSDR public receiver list"
+  url:
+    value: https://rx.kiwisdr.com/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"
+
+know-cq-contest-list:
+  type: web
+  title: "CQ-Contest mailing list (contesting.com)"
+  url:
+    value: https://lists.contesting.com/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR (posible migración de plataforma)"
+
+know-reddit-amateurradio:
+  type: web
+  title: "r/amateurradio"
+  url:
+    value: https://www.reddit.com/r/amateurradio/
+    date: 2026-10-20
+  note: "MEM -> POR VERIFICAR"

@@ -1,0 +1,6 @@
+franja_utc,banda,destino,horas_ventana
+07–10,10 m,Johannesburgo,0.25
+10–13,10 m,Nueva York,0.25
+13–17,10 m,Chicago,0.00
+17–20,10 m,Los Ángeles,0.00
+22–24,20 m,Nueva York,0.50

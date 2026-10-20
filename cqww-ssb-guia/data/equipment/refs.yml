@@ -1,0 +1,524 @@
+# Referencias Hayagriva para el capítulo de equipo (prefijo equip-).
+# url.date = fecha de consulta. Generado por scripts/equip_build.py
+equip-aimasstore-ft710:
+  type: web
+  title: YAESU FT-710 emisora HF (ficha y precio)
+  publisher: Aimasstore
+  url:
+    value: https://aimasstore.com/inicio/151-emisora-hf-ft-710.html
+    date: '2026-10-20'
+equip-astroradio-7300mk2:
+  type: web
+  title: ICOM Transceptor IC-7300 MK2 (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/transceptor-ic-7300-mk2/
+    date: '2026-10-20'
+equip-astroradio-ic705:
+  type: web
+  title: ICOM IC-705 Transceptor SDR portable multibanda (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/ic-705-transceptor-sdr-portable-multibanda/
+    date: '2026-10-20'
+equip-cw599-7300mk2:
+  type: web
+  title: IC-7300MK2 CW Setup & Operating Guide
+  publisher: cw599.com
+  url:
+    value: https://cw599.com/radio-guides/icom-ic-7300mk2/
+    date: '2026-10-20'
+equip-digirig-mac:
+  type: web
+  title: DR-891 w/FT-891 WSJT-X using a Mac M1 w/Sequoia will not work (hilo de foro)
+  publisher: Digirig Forum
+  url:
+    value: https://forum.digirig.net/t/dr-891-w-ft-891-wsjt-x-using-a-mac-m1-w-sequoia-will-not-work/5764
+    date: '2026-10-20'
+equip-hamradiotherapy-7300mk2:
+  type: web
+  title: 'ICOM IC-7300MK2 Review: New Features Revealed'
+  publisher: Ham Radio Therapy
+  date: 2026-04
+  url:
+    value: https://hamradiotherapy.com/hf-radio/icom-7300mk2-review/
+    date: '2026-10-20'
+equip-icomamerica-705:
+  type: web
+  title: IC-705 (página de producto y especificaciones)
+  author: Icom America
+  publisher: Icom America
+  url:
+    value: https://www.icomamerica.com/lineup/products/IC-705/
+    date: '2026-10-20'
+equip-icomamerica-7300mk2:
+  type: web
+  title: IC-7300MK2 (página de producto y especificaciones)
+  author: Icom America
+  publisher: Icom America
+  url:
+    value: https://www.icomamerica.com/lineup/products/IC-7300MK2/
+    date: '2026-10-20'
+equip-icomamerica-7300mk2-launch:
+  type: web
+  title: 'Icom Introduces the IC-7300MK2: A New Generation of RF Direct Sampling Performance'
+  author: Icom America
+  publisher: Icom America
+  date: 2025-12
+  url:
+    value: https://icomamerica.com/media_and_promotions/news/4555/
+    date: '2026-10-20'
+equip-icomamerica-7300mk2-unveil:
+  type: web
+  title: Icom Unveils New IC-7300MK2 HF / 50 / (70) MHz Transceiver
+  author: Icom America
+  publisher: Icom America
+  date: 2025-08
+  url:
+    value: https://www.icomamerica.com/media_and_promotions/icom_unveils_new_IC7300mk2/
+    date: '2026-10-20'
+equip-icomamerica-ah705:
+  type: web
+  title: AH-705 Automatic Antenna Tuner
+  author: Icom America
+  publisher: Icom America
+  url:
+    value: https://icomamerica.com/lineup/options/AH-705
+    date: '2026-10-20'
+equip-icomeurope-705-bro:
+  type: web
+  title: IC-705 brochure (A4, ENG, 2020-07-31)
+  author: Icom Europe
+  publisher: Icom Europe
+  date: '2020-07-31'
+  url:
+    value: https://www.icomeurope.com/wp-content/uploads/2020/08/IC-705_BRO_ENG_A4_20200731.pdf
+    date: '2026-10-20'
+equip-icomjapan-705:
+  type: web
+  title: IC-705 (página de producto)
+  author: Icom Inc.
+  publisher: Icom Inc.
+  url:
+    value: https://www.icomjapan.com/lineup/products/IC-705/
+    date: '2026-10-20'
+equip-icomuk-7300mk2-advanced:
+  type: web
+  title: IC-7300MK2 Advanced Manual
+  author: Icom Inc.
+  publisher: Icom UK
+  url:
+    value: https://icomuk.co.uk/files/icom/PDF/advancedManuals/IC-7300MK2_ENG_Advanced_0.pdf
+    date: '2026-10-20'
+equip-icomuk-7300mk2-basic:
+  type: web
+  title: IC-7300MK2 Basic Manual
+  author: Icom Inc.
+  publisher: Icom UK
+  url:
+    value: https://icomuk.co.uk/files/icom/PDF/productManual/IC-7300MK2_ENG_Basic_0.pdf
+    date: '2026-10-20'
+equip-icomuk-7300mk2-civ:
+  type: web
+  title: IC-7300MK2 CI-V Reference Guide
+  author: Icom Inc.
+  publisher: Icom UK
+  url:
+    value: https://icomuk.co.uk/files/icom/PDF/productAdditionalFile/IC-7300MK2_ENG_CI-V_0.pdf
+    date: '2026-10-20'
+equip-kpo-scu-lan10:
+  type: web
+  title: Yaesu SCU-LAN10 Network Interface
+  publisher: K-PO (distribuidor europeo de Yaesu)
+  url:
+    value: https://k-po.com/product/yaesu-scu-lan10-network-interface
+    date: '2026-10-20'
+equip-m0aws-705:
+  type: web
+  title: Getting FLRig and FLDigi working wirelessly to the IC-705
+  author: M0AWS
+  publisher: m0aws.co.uk
+  url:
+    value: https://m0aws.co.uk/?cat=113
+    date: '2026-10-20'
+equip-machamradio-wfview:
+  type: web
+  title: Introducing wfview, a program developed by amateur radio enthusiasts to control modern Icom ham radios
+  publisher: Mac Ham Radio
+  date: '2021-05-24'
+  url:
+    value: https://machamradio.com/blog/2021/05/24/introducing-wfview-a-program-developed-by-amateur-radio-enthusiasts-to-control-modern-icom-ham-radios/
+    date: '2026-10-20'
+equip-manualslib-ft710:
+  type: web
+  title: Yaesu FT-710 Operation Manual
+  publisher: ManualsLib
+  url:
+    value: https://www.manualslib.com/manual/2841126/Yaesu-Ft-710.html
+    date: '2026-10-20'
+equip-manualslib-ic705-voicetx:
+  type: web
+  title: 'Icom IC-705 Advanced Manual, p. 47: Voice TX memory function'
+  publisher: ManualsLib
+  url:
+    value: https://www.manualslib.com/manual/1896763/Icom-Ic-705.html?page=47
+    date: '2026-10-20'
+equip-manualslib-ic7300-voicetx:
+  type: web
+  title: 'Icom IC-7300 Full Manual, p. 85: Recording a Voice TX memory'
+  publisher: ManualsLib
+  url:
+    value: https://www.manualslib.com/manual/1106166/Icom-Ic-7300.html?page=85
+    date: '2026-10-20'
+equip-micropipes-ftdx3000-mac:
+  type: web
+  title: Setting up a Yaesu FTDX-3000 with FT8 on OS X
+  publisher: micropipes.com
+  date: '2023-07-10'
+  url:
+    value: https://micropipes.com/2023/07/10/setting-up-Yaesu-FTDX-3000-with-FT8-on-OS-X/
+    date: '2026-10-20'
+equip-n9ewo-sherwood:
+  type: web
+  title: Sherwood Engineering receiver test data (índice/archivo)
+  author: N9EWO
+  publisher: qsl.net/n9ewo
+  url:
+    value: https://www.qsl.net/n9ewo/sherwood.html
+    date: '2026-10-20'
+equip-ondamania-7300mk2:
+  type: web
+  title: Transceptor HF 50 y 70 MHz Icom IC-7300MK2 (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/icom_ic7300_mk2/1/icom-ic-7300mk2-transceptor-hf-50-y-70-mhz-con-acoplador-automatico-pantalla-espectro
+    date: '2026-10-20'
+equip-ondamania-ft710aess:
+  type: web
+  title: Yaesu FT-710 AESS emisora de HF y 50 MHz con altavoz SP-40 (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/yaesu_ft710aess/1/yaesu-ft-710-aess-emisora-sdr-de-hf-y-50-mhz-compacta-con-100-w-de-potencia
+    date: '2026-10-20'
+equip-osmocom-changelog:
+  type: web
+  title: 'osmocom rtl-sdr: debian/changelog (2.0.0 añade soporte RTL-SDR Blog V4)'
+  author: Osmocom
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/osmocom/rtl-sdr/master/debian/changelog
+    date: '2026-10-20'
+equip-osmocom-librtlsdr:
+  type: web
+  title: 'osmocom rtl-sdr: src/librtlsdr.c (detección ''RTL-SDR Blog V4 Detected'')'
+  author: Osmocom
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/osmocom/rtl-sdr/master/src/librtlsdr.c
+    date: '2026-10-20'
+equip-osmocom-tuner:
+  type: web
+  title: 'osmocom rtl-sdr: src/tuner_r82xx.c (conversor ascendente 28,8 MHz y conmutación de entradas del V4)'
+  author: Osmocom
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/osmocom/rtl-sdr/master/src/tuner_r82xx.c
+    date: '2026-10-20'
+equip-owrx-changelog:
+  type: web
+  title: 'OpenWebRX+: debian/changelog (versión 1.2.127, 19-10-2026)'
+  author: Marat Fayzullin (luarvique)
+  publisher: GitHub
+  date: '2026-10-19'
+  url:
+    value: https://raw.githubusercontent.com/luarvique/openwebrx/master/debian/changelog
+    date: '2026-10-20'
+equip-owrx-core:
+  type: web
+  title: 'OpenWebRX+: owrx/config/core.py (puerto web 8073)'
+  author: Marat Fayzullin (luarvique)
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/luarvique/openwebrx/master/owrx/config/core.py
+    date: '2026-10-20'
+equip-owrx-defaults:
+  type: web
+  title: 'OpenWebRX+: owrx/config/defaults.py (perfiles RTL-SDR por defecto)'
+  author: Marat Fayzullin (luarvique)
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/luarvique/openwebrx/master/owrx/config/defaults.py
+    date: '2026-10-20'
+equip-owrx-readme:
+  type: web
+  title: 'OpenWebRX+: README'
+  author: Marat Fayzullin (luarvique)
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/luarvique/openwebrx/master/README.md
+    date: '2026-10-20'
+equip-passion-ft710:
+  type: web
+  title: Yaesu FT-710 AESS New HF SDR 100W (ficha y precio)
+  publisher: Passion Radio
+  url:
+    value: https://www.passion-radio.com/hf-transceiver/ft710-1714.html
+    date: '2026-10-20'
+equip-passion-ic705:
+  type: web
+  title: ICOM IC-705 SDR QRP transceiver portable (ficha y precio)
+  publisher: Passion Radio
+  url:
+    value: https://www.passion-radio.com/hf-transceiver/ic705-1109.html
+    date: '2026-10-20'
+equip-pe4bas-n1mm:
+  type: web
+  title: Using IC-7300 voicekeyer in N1MM+
+  author: PE4BAS
+  publisher: PE4BAS Amateur Radio Weblog
+  date: 2019-09
+  url:
+    value: https://pe4bas.blogspot.com/2019/09/using-ic-7300-voicekeyer-in-n1mm.html
+    date: '2026-10-20'
+equip-platformio-silabs-mac:
+  type: web
+  title: Apple Silicon M1 Chip not Connecting (hilo de foro sobre drivers SiLabs en macOS)
+  publisher: PlatformIO Community
+  url:
+    value: https://community.platformio.org/t/apple-silicon-m1-chip-not-connecting/19693
+    date: '2026-10-20'
+equip-proyecto4-7300mk2:
+  type: web
+  title: Emisora transceptor HF Icom IC-7300MK2 (ficha y precio)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/emisoras-hf-y-multibanda/5018-emisora-transceptor-hf-icom-ic-7300mk2.html
+    date: '2026-10-20'
+equip-qrper-7300mk2:
+  type: web
+  title: 'Icom Announces the IC-7300MK2: Improved Performance and Enhanced Connectivity'
+  publisher: QRPer.com
+  date: 2025-08
+  url:
+    value: https://qrper.com/2025/08/icom-announces-the-ic-7300mk2-improved-performance-and-enhanced-connectivity/
+    date: '2026-10-20'
+equip-qst-ft710:
+  type: web
+  title: 'Product Review: Yaesu FT-710 AESS MF/HF and 6-Meter Transceiver (QST, agosto 2023)'
+  author: ARRL
+  publisher: ARRL / Yaesu (copia alojada en yaesu.com)
+  date: 2023-08
+  url:
+    value: https://www.yaesu.com/Files/4CB83B95-1018-01AF-FAD307DB330C321A/QST%20August%202023%20Product%20Review%20Yaesu%20FT-710%20AESS%20MF_HF%20and%206-Meter%20Transceiver.pdf
+    date: '2026-10-20'
+equip-radiomania-7300mk2:
+  type: web
+  title: Icom IC-7300 MK2 (ficha y precio)
+  publisher: Radiomanía (radiomania.net)
+  url:
+    value: https://radiomania.net/epages/a460337c-7435-4ca8-a697-f50605a3ed82.sf/es_ES/?ObjectPath=%2FShops%2Fa460337c-7435-4ca8-a697-f50605a3ed82%2FProducts%2F%22IC-7300+MK2%22
+    date: '2026-10-20'
+equip-rigreference-news:
+  type: web
+  title: News and press releases (aviso de Icom Europe del 19-12-2025 sobre el IC-7300MK2)
+  publisher: RigReference
+  url:
+    value: https://rigreference.com/news
+    date: '2026-10-20'
+equip-rtlsdrblog-librtlsdr:
+  type: web
+  title: 'rtl-sdr-blog: src/librtlsdr.c (muestreo directo automático solo para R820T)'
+  author: RTL-SDR Blog
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/rtlsdrblog/rtl-sdr-blog/master/src/librtlsdr.c
+    date: '2026-10-20'
+equip-rtlsdrblog-readme:
+  type: web
+  title: 'rtl-sdr-blog: README (versión modificada RTL-SDR Blog, soporte V4)'
+  author: RTL-SDR Blog
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/rtlsdrblog/rtl-sdr-blog/master/README
+    date: '2026-10-20'
+equip-sdrcontrol-appstore:
+  type: web
+  title: SDR Control (ficha en la App Store; soporte IC-7300 MK2, Mac con macOS 14 o superior)
+  publisher: Apple App Store
+  url:
+    value: https://apps.apple.com/app/id1592313285
+    date: '2026-10-20'
+equip-sdrpp-args:
+  type: web
+  title: 'SDR++: core/src/command_args.cpp (modo servidor, puerto 5259)'
+  author: Alexandre Rouma
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/core/src/command_args.cpp
+    date: '2026-10-20'
+equip-sdrpp-bundle:
+  type: web
+  title: 'SDR++: macos/bundle_utils.sh (copia de dylibs y firma ad hoc)'
+  author: Alexandre Rouma
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/macos/bundle_utils.sh
+    date: '2026-10-20'
+equip-sdrpp-ci:
+  type: web
+  title: 'SDR++: .github/workflows/build_all.yml (compilaciones nightly macOS Intel/ARM y Debian aarch64)'
+  author: Alexandre Rouma
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/.github/workflows/build_all.yml
+    date: '2026-10-20'
+equip-sdrpp-debbuild:
+  type: web
+  title: 'SDR++: docker_builds/debian_bookworm/do_build.sh (enlaza con librtlsdr-dev de la distribución)'
+  author: Alexandre Rouma
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/docker_builds/debian_bookworm/do_build.sh
+    date: '2026-10-20'
+equip-sdrpp-readme:
+  type: web
+  title: 'SDR++, The bloat-free SDR software: readme'
+  author: Alexandre Rouma
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/readme.md
+    date: '2026-10-20'
+equip-sdrpp-rtlsrc:
+  type: web
+  title: 'SDR++: source_modules/rtl_sdr_source/src/main.cpp (tasas de muestreo, muestreo directo, ganancia)'
+  author: Alexandre Rouma
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/source_modules/rtl_sdr_source/src/main.cpp
+    date: '2026-10-20'
+equip-sdrpp-serversrc:
+  type: web
+  title: 'SDR++: source_modules/sdrpp_server_source/src/main.cpp (cliente del modo servidor)'
+  author: Alexandre Rouma
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/source_modules/sdrpp_server_source/src/main.cpp
+    date: '2026-10-20'
+equip-sdrpp-usbdemod:
+  type: web
+  title: 'SDR++: decoder_modules/radio/src/demodulators/usb.h (ancho por defecto 2800 Hz)'
+  author: Alexandre Rouma
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/decoder_modules/radio/src/demodulators/usb.h
+    date: '2026-10-20'
+equip-silabs-vcp:
+  type: web
+  title: CP210x USB to UART Bridge VCP Drivers
+  author: Silicon Labs
+  publisher: Silicon Labs
+  url:
+    value: https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers
+    date: '2026-10-20'
+equip-tailscale-readme:
+  type: web
+  title: 'Tailscale: README (Private WireGuard networks made easy)'
+  author: Tailscale Inc.
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/tailscale/tailscale/main/README.md
+    date: '2026-10-20'
+equip-treerocket-705mac:
+  type: web
+  title: Icom IC-705 digi mode setup for Linux/Mac
+  publisher: treerockets blog
+  url:
+    value: https://treerocket.bearblog.dev/icom-ic-705-digi-mode-setup-for-linux-mac/
+    date: '2026-10-20'
+equip-tutienda-7300mk2:
+  type: web
+  title: ICOM IC-7300MK2 (ficha y precio)
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/home/5997-icom-ic-7300mk2.html
+    date: '2026-10-20'
+equip-tutienda-ft710field:
+  type: web
+  title: YAESU FT-710 FIELD emisora transceptor HF y 50 MHz (ficha y precio)
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/home/5711-yaesu-ft-710-field-emisora-transceptor-hf-y-50-mhz.html
+    date: '2026-10-20'
+equip-wimo-7300mk2:
+  type: web
+  title: Transceptor HF multimodo Icom IC-7300MK2 (ficha y precio)
+  publisher: WiMo Antennen und Elektronik GmbH
+  url:
+    value: https://www.wimo.com/es/icom-ic-7300mk2-kw-50-70-mhz-transceiver
+    date: '2026-10-20'
+equip-wimo-ah705:
+  type: web
+  title: AH-705 Automatic Tuner for IC-705 (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/ah-705
+    date: '2026-10-20'
+equip-wimo-blog-7300mk2:
+  type: web
+  title: Icom IC-7300MK2 vs IC-7300
+  publisher: WiMo (blog)
+  url:
+    value: https://www.wimo.com/en/blog/post/icom-ic-7300mk2-vs-ic-7300
+    date: '2026-10-20'
+equip-wimo-ic705:
+  type: web
+  title: ICOM IC-705 (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/icom-ic-705
+    date: '2026-10-20'
+equip-wimo-scu-lan10:
+  type: web
+  title: SCU-LAN10 Network Interface
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/scu-lan10
+    date: '2026-10-20'
+equip-worldradioleague-civ:
+  type: web
+  title: How to Enable CAT Control on Icom 7300MK2 (hilo de foro)
+  publisher: World Radio League Community
+  url:
+    value: https://community.worldradioleague.com/t/how-to-enable-cat-control-on-icom-7300mk2/45663
+    date: '2026-10-20'
+equip-yaesu-ft710:
+  type: web
+  title: FT-710 (página de producto y especificaciones)
+  author: Yaesu Musen
+  publisher: Yaesu USA
+  url:
+    value: https://www.yaesu.com/product-detail.aspx?Model=FT-710&CatName=HF+Transceiver+-+Amplifier
+    date: '2026-10-20'
+equip-yaesu-ft710-cat:
+  type: web
+  title: FT-710 CAT Operation Reference Manual
+  author: Yaesu Musen
+  publisher: Yaesu
+  url:
+    value: https://www.yaesu.com/Files/4CB893D7-1018-01AF-FA97E9E9AD48B50C/FT-710_CAT_OM_ENG_2306-C.pdf
+    date: '2026-10-20'
+equip-yaesu-ftdx10-cat:
+  type: web
+  title: FTDX10 CAT Operation Reference Manual (driver de puerto COM virtual)
+  author: Yaesu Musen
+  publisher: RigPix (copia)
+  url:
+    value: https://rigpix.com/yaesu/ftdx10_cat_manual.pdf
+    date: '2026-10-20'
+equip-yaesuuk-ft710:
+  type: web
+  title: FT-710 AESS 100W HF/6M SDR Transceiver
+  publisher: Yaesu UK
+  url:
+    value: https://www.yaesu.co.uk/ft-710/
+    date: '2026-10-20'

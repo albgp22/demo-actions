@@ -1,0 +1,10 @@
+# Entorno de los scripts de la guía (Python 3.13). Instalar con:
+#   uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt
+astral==3.2          # posición del Sol, orto y ocaso
+matplotlib==3.11.2   # figuras
+numpy==2.5.4
+shapely==2.2.0       # simplificación de polígonos del mapa de zonas
+pyyaml==6.0.3        # bibliografía (merge_refs.py)
+pymupdf==2.0         # render de páginas a PNG para revisión
+cabrillo==0.3.0      # validación de la plantilla Cabrillo (rules_cabrillo.py)
+PyIRI==0.1.7         # modelo ionosférico IRI (know_muf.py)

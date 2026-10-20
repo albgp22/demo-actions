@@ -1,0 +1,60 @@
+banda,desde_khz,hasta_khz,uso,fuente
+160 m,1810,1838,CW (no SSB),IARU R1 HF Band Plan – POR VERIFICAR (no consultado en esta sesión; dato de conocimiento previo)
+160 m,1836,1836,centro de actividad QRP (CW),IARU R1 HF Band Plan – POR VERIFICAR
+160 m,1838,1843,modos de banda estrecha y digitales (evitar SSB),IARU R1 HF Band Plan – POR VERIFICAR
+160 m,1843,2000,SSB (todos los modos); en España sólo 1843-1850 kHz con atribución permanente,IARU R1 HF Band Plan – POR VERIFICAR; límite 1850 kHz según bands_power_es.csv
+80 m,3500,3510,CW; prioridad tráfico intercontinental (no SSB),IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3510,3560,CW concursos preferente (no SSB),IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3570,3600,modos de banda estrecha y digitales (evitar SSB),IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3600,3620,todos los modos; digimodos y estaciones automáticas (SSB con precaución),IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3600,3650,SSB concursos preferente,IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3630,3630,centro de actividad voz digital,IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3650,3700,SSB; evitar en concursos (fuera de segmentos preferentes),IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3690,3690,centro de actividad QRP SSB,IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3700,3800,SSB concursos preferente,IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3735,3735,centro de actividad imagen (SSTV),IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3760,3760,centro de actividad emergencias Región 1 (dejar libre),IARU R1 HF Band Plan – POR VERIFICAR
+80 m,3775,3800,SSB concursos preferente; prioridad tráfico intercontinental (DX),IARU R1 HF Band Plan – POR VERIFICAR
+60 m,5351.5,5366.5,evitar en concursos (banda sin concursos),IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7000,7040,CW (no SSB),IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7030,7030,centro de actividad QRP (CW),IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7040,7060,modos de banda estrecha y digitales; estaciones automáticas (evitar SSB),IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7060,7100,SSB concursos preferente,IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7070,7070,centro de actividad voz digital,IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7090,7090,centro de actividad QRP SSB,IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7100,7130,SSB; evitar en concursos (fuera de segmentos preferentes),IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7110,7110,centro de actividad emergencias Región 1 (dejar libre),IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7130,7200,SSB concursos preferente,IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7165,7165,centro de actividad imagen (SSTV),IARU R1 HF Band Plan – POR VERIFICAR
+40 m,7175,7200,SSB concursos preferente; prioridad tráfico intercontinental (DX),IARU R1 HF Band Plan – POR VERIFICAR
+30 m,10100,10150,evitar en concursos (banda sin concursos; sin SSB salvo emergencias),IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14000,14060,CW concursos preferente (no SSB),IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14060,14112,CW y modos estrechos/digitales (evitar SSB),IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14099,14101,balizas IBP (no transmitir),IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14112,14125,SSB (todos los modos); fuera del segmento preferente de concursos,IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14125,14300,SSB concursos preferente,IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14130,14130,centro de actividad voz digital,IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14190,14200,prioridad DXpediciones (14195 ± 5 kHz); evitar en concursos,IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14230,14230,centro de actividad imagen (SSTV),IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14285,14285,centro de actividad QRP SSB,IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14300,14350,SSB; evitar en concursos (fuera del segmento preferente),IARU R1 HF Band Plan – POR VERIFICAR
+20 m,14300,14300,centro de actividad emergencias global (dejar libre),IARU R1 HF Band Plan – POR VERIFICAR
+17 m,18068,18168,evitar en concursos (banda sin concursos),IARU R1 HF Band Plan – POR VERIFICAR
+15 m,21000,21070,CW (no SSB),IARU R1 HF Band Plan – POR VERIFICAR
+15 m,21070,21151,modos estrechos/digitales y balizas IBP 21149-21151 (evitar SSB),IARU R1 HF Band Plan – POR VERIFICAR
+15 m,21151,21450,SSB (todos los modos),IARU R1 HF Band Plan – POR VERIFICAR
+15 m,21180,21180,centro de actividad voz digital,IARU R1 HF Band Plan – POR VERIFICAR
+15 m,21285,21285,centro de actividad QRP SSB,IARU R1 HF Band Plan – POR VERIFICAR
+15 m,21340,21340,centro de actividad imagen (SSTV),IARU R1 HF Band Plan – POR VERIFICAR
+15 m,21360,21360,centro de actividad emergencias global (dejar libre),IARU R1 HF Band Plan – POR VERIFICAR
+12 m,24890,24990,evitar en concursos (banda sin concursos),IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28000,28070,CW (no SSB),IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28070,28190,modos estrechos/digitales (evitar SSB),IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28190,28225,balizas IBP (no transmitir),IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28225,28300,todos los modos; balizas (evitar SSB de concurso),IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28300,28320,digimodos y estaciones automáticas (evitar SSB),IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28320,29000,SSB (todos los modos),IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28330,28330,centro de actividad voz digital,IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28360,28360,centro de actividad QRP SSB,IARU R1 HF Band Plan – POR VERIFICAR
+10 m,28680,28680,centro de actividad imagen (SSTV),IARU R1 HF Band Plan – POR VERIFICAR
+10 m,29000,29700,todos los modos de banda ancha (AM/FM); satélites 29300-29510; repetidores FM (no usar para SSB de concurso),IARU R1 HF Band Plan – POR VERIFICAR

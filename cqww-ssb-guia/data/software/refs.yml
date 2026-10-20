@@ -1,0 +1,674 @@
+# Referencias Hayagriva para el capítulo de software (prefijo soft-).
+# url.date = fecha de consulta (2026-10-20). Nivel de verificación en comentarios:
+#   V1 = leído directamente (raw.githubusercontent.com, PyPI); V2 = resumen/cita de búsqueda web;
+#   V3 = fuente secundaria (Homebrew, rastreadores de terceros).
+# Las entradas SIN url.date no se pudieron abrir en la sesión: POR VERIFICAR antes de citarlas.
+# URL ya presentes en otros capítulos NO se repiten aquí; se citan con su clave
+# (equip-sdrpp-*, equip-owrx-*, equip-osmocom-*, equip-rtlsdrblog-*, equip-tailscale-readme,
+#  equip-sdrcontrol-appstore, equip-silabs-vcp, equip-pe4bas-n1mm, rules-cqww-*, rules-pypi-not1mm,
+#  know-cty-ad1c, know-websdr-twente, know-kiwisdr-list).
+
+# --- macOS -------------------------------------------------------------------
+soft-apple-macos27-compat:  # V2
+  type: web
+  title: macOS 27 Golden Gate is compatible with these computers
+  publisher: Apple Support
+  url:
+    value: https://support.apple.com/en-us/127255
+    date: '2026-10-20'
+soft-apple-macos27-updates:  # V2
+  type: web
+  title: What's new in the updates for macOS 27 Golden Gate
+  publisher: Apple Support
+  url:
+    value: https://support.apple.com/en-us/127257
+    date: '2026-10-20'
+soft-apple-rosetta:  # V2
+  type: web
+  title: Upcoming changes to Rosetta support for Intel-based macOS apps
+  publisher: Apple Developer
+  url:
+    value: https://developer.apple.com/news/?id=w5ngl9k2
+    date: '2026-10-20'
+soft-macrumors-rosetta:  # V2
+  type: web
+  title: macOS 27 Golden Gate Is the Last to Support Intel Apps via Rosetta 2
+  publisher: MacRumors
+  date: '2026-06-10'
+  url:
+    value: https://www.macrumors.com/2026/06/10/macos-golden-gate-last-to-support-intel-apps/
+    date: '2026-10-20'
+soft-macrumors-tahoe264:  # V2
+  type: web
+  title: macOS Tahoe 26.4 Displays Warnings for Apps That Won't Work After Rosetta 2 Support Ends
+  publisher: MacRumors
+  date: '2026-02-16'
+  url:
+    value: https://www.macrumors.com/2026/02/16/macos-tahoe-26-4-rosetta-2-warnings/
+    date: '2026-10-20'
+
+# --- SkookumLogger -------------------------------------------------------------
+soft-skookum-home:  # V2
+  type: web
+  title: SkookumLogger
+  author: Myers, Bill
+  publisher: K1GQ
+  url:
+    value: https://k1gq.net/SkookumLogger/
+    date: '2026-10-20'
+soft-skookum-downloads:  # V2
+  type: web
+  title: SkookumLogger Downloads
+  author: Myers, Bill
+  publisher: K1GQ
+  url:
+    value: https://k1gq.net/SkookumLoggerDownloads/index.html
+    date: '2026-10-20'
+soft-skookum-scp-help:  # V2
+  type: web
+  title: Partial Call Matching (SkookumLogger Help)
+  author: Myers, Bill
+  publisher: K1GQ
+  url:
+    value: https://k1gq.net/SkookumLogger/Resources/SkookumLoggerHelpBook/en.lproj/Page89.html
+    date: '2026-10-20'
+soft-skookum-history13:  # V2
+  type: web
+  title: SkookumLogger version history 1.3
+  author: Myers, Bill
+  publisher: K1GQ
+  url:
+    value: https://k1gq.net/SkookumLogger/history_1_3.html
+    date: '2026-10-20'
+soft-mhr-skookum-55:  # V2
+  type: web
+  title: SkookumLogger v5.5 now available
+  publisher: Mac Ham Radio
+  date: '2026-06-15'
+  url:
+    value: https://machamradio.com/blog/2026/06/15/skookumlogger-v5-5-now-available/
+    date: '2026-10-20'
+soft-mhr-skookum-53:  # V2
+  type: web
+  title: SkookumLogger v5.3 now available
+  publisher: Mac Ham Radio
+  date: '2025-07-19'
+  url:
+    value: https://machamradio.com/blog/2025/07/19/skookumlogger-v5-3-now-available-2/
+    date: '2026-10-20'
+soft-mhr-skookum-51:  # V2
+  type: web
+  title: SkookumLogger v5.1 now available
+  publisher: Mac Ham Radio
+  date: '2025-01-03'
+  url:
+    value: https://machamradio.com/blog/2025/01/03/skookumlogger-v5-1-now-available/
+    date: '2026-10-20'
+soft-mhr-skookum-42:  # V2
+  type: web
+  title: SkookumLogger v4.2 now available
+  publisher: Mac Ham Radio
+  date: '2023-10-03'
+  url:
+    value: https://machamradio.com/blog/2023/10/03/skookumlogger-v4-2-now-available/
+    date: '2026-10-20'
+soft-mhr-skookum-247:  # V2
+  type: web
+  title: SkookumLogger v2.4.7 now available
+  publisher: Mac Ham Radio
+  date: '2019-08-29'
+  url:
+    value: https://machamradio.com/blog/2019/08/29/skookumlogger-v2-4-7-now-available/
+    date: '2026-10-20'
+soft-desktopinsights-skookum:  # V3 (análisis automatizado de terceros)
+  type: web
+  title: SkookumLogger (ficha de arquitectura)
+  publisher: Desktop Insights
+  url:
+    value: https://desktopinsights.com/apps/skookumlogger
+    date: '2026-10-20'
+soft-eham-skookum:  # V2
+  type: web
+  title: 'Reviews For: Skookum Logger for OS X'
+  publisher: eHam.net
+  url:
+    value: https://www.eham.net/reviews/view-product/9600
+    date: '2026-10-20'
+
+# --- CQ WW (uso de programas) ----------------------------------------------
+soft-cqww-blog-2018:  # V2
+  type: web
+  title: Popular Logging Programs for CQ WW SSB 2018
+  publisher: CQ WW DX Contest
+  url:
+    value: https://cqww.com/blog/popular-logging-programs-for-cq-ww-ssb/
+    date: '2026-10-20'
+soft-cqww-blog-2019:  # V2
+  type: web
+  title: Logging Software used in CQ WW SSB 2019
+  publisher: CQ WW DX Contest
+  url:
+    value: https://cqww.com/blog/logging-software-used-in-cq-ww-ssb-2019/
+    date: '2026-10-20'
+
+# --- N1MM Logger+ ----------------------------------------------------------
+soft-n1mm-intro:  # V2
+  type: web
+  title: Introduction (N1MM Logger+ documentation)
+  publisher: N1MM Logger+ Team
+  url:
+    value: https://n1mmwp.hamdocs.com/getting-started/introduction/
+    date: '2026-10-20'
+soft-n1mm-tech:  # V2
+  type: web
+  title: Technical Information (N1MM Logger+ documentation)
+  publisher: N1MM Logger+ Team
+  url:
+    value: https://n1mmwp.hamdocs.com/appendices/technical-information/
+    date: '2026-10-20'
+soft-n1mm-updates:  # V2
+  type: web
+  title: Program Files (N1MM Logger+ latest updates)
+  publisher: N1MM Logger+ Team
+  url:
+    value: https://n1mmwp.hamdocs.com/mmfiles/categories/programlatestupdate/
+    date: '2026-10-20'
+soft-n1mm-install:  # V2
+  type: web
+  title: Installing and Upgrading N1MM Logger+
+  publisher: N1MM Logger+ Team
+  url:
+    value: https://n1mmwp.hamdocs.com/getting-started/installing-and-upgrading-n1mm-logger/
+    date: '2026-10-20'
+soft-n1mm-fkeys:  # V2
+  type: web
+  title: Function Keys, Messages and Macros (N1MM Logger+ documentation)
+  publisher: N1MM Logger+ Team
+  url:
+    value: https://n1mmwp.hamdocs.com/setup/function-keys/
+    date: '2026-10-20'
+soft-n1mm-configurer:  # V2
+  type: web
+  title: The Configurer (N1MM Logger+ documentation)
+  publisher: N1MM Logger+ Team
+  url:
+    value: https://n1mmwp.hamdocs.com/setup/the-configurer/
+    date: '2026-10-20'
+soft-n1mm-interfacing:  # V2
+  type: web
+  title: Interfacing (N1MM Logger+ documentation)
+  publisher: N1MM Logger+ Team
+  url:
+    value: https://n1mmwp.hamdocs.com/setup/interfacing/
+    date: '2026-10-20'
+
+# --- Windows en el Mac -------------------------------------------------------
+soft-ms-win11-mac:  # V2
+  type: web
+  title: Options for using Windows 11 with Mac computers with Apple M1, M2, and M3 chips
+  publisher: Microsoft Support
+  url:
+    value: https://support.microsoft.com/en-us/windows/experience/platform-variants/options-for-using-windows-11-with-mac-computers-with-apple-m1-m2-and-m3-chips
+    date: '2026-10-20'
+soft-macworld-fusion:  # V2
+  type: web
+  title: VMware Fusion review
+  publisher: Macworld
+  url:
+    value: https://www.macworld.com/article/668080/vmware-fusion-review.html
+    date: '2026-10-20'
+soft-codeweavers-n1mm:  # V2
+  type: web
+  title: N1MM Logger+ 1.0.4350 (CrossOver compatibility database)
+  publisher: CodeWeavers
+  url:
+    value: https://www.codeweavers.com/compatibility/crossover/n1mm-logger-plus-104350
+    date: '2026-10-20'
+soft-brew-parallels:  # V3
+  type: web
+  title: 'Homebrew cask: parallels (27.0.3-58680)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/p/parallels.rb
+    date: '2026-10-20'
+soft-brew-parallels20:  # V3
+  type: web
+  title: 'Homebrew cask: parallels@20 (20.4.2-55999)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/p/parallels@20.rb
+    date: '2026-10-20'
+soft-brew-utm:  # V3
+  type: web
+  title: 'Homebrew cask: utm (5.0.8)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/u/utm.rb
+    date: '2026-10-20'
+soft-brew-virtualbox:  # V3
+  type: web
+  title: 'Homebrew cask: virtualbox (7.2.22)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/v/virtualbox.rb
+    date: '2026-10-20'
+soft-brew-crossover:  # V3
+  type: web
+  title: 'Homebrew cask: crossover (26.3.0)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/c/crossover.rb
+    date: '2026-10-20'
+
+# --- Not1MM ------------------------------------------------------------------
+soft-not1mm-readme:  # V1
+  type: web
+  title: 'Not1MM: README'
+  author: Bridak, Michael
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/mbridak/not1mm/master/README.md
+    date: '2026-10-20'
+soft-not1mm-install:  # V1
+  type: web
+  title: 'Not1MM: INSTALL.md'
+  author: Bridak, Michael
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/mbridak/not1mm/master/INSTALL.md
+    date: '2026-10-20'
+soft-not1mm-contests:  # V1
+  type: web
+  title: 'Not1MM: List of Should be Working Contests'
+  author: Bridak, Michael
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/mbridak/not1mm/master/Working_Contests.md
+    date: '2026-10-20'
+soft-not1mm-changelog:  # V1
+  type: web
+  title: 'Not1MM: CHANGELOG.md'
+  author: Bridak, Michael
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/mbridak/not1mm/master/CHANGELOG.md
+    date: '2026-10-20'
+soft-not1mm-wheel:  # V1 (código leído: voice_keying.py, plugins/cq_ww_ssb.py, lib/*)
+  type: web
+  title: not1mm-26.10.18-py3-none-any.whl (paquete publicado en PyPI)
+  author: Bridak, Michael
+  publisher: Python Package Index
+  date: '2026-10-19'
+  url:
+    value: https://files.pythonhosted.org/packages/36/1d/5784fafd66f2cb2ba990ec81117f892645601899aac5046dc612d7b36eca/not1mm-26.10.18-py3-none-any.whl
+    date: '2026-10-20'
+soft-notctyparser-pypi:  # V1
+  type: web
+  title: notctyparser (PyPI)
+  author: Bridak, Michael
+  publisher: Python Package Index
+  url:
+    value: https://pypi.org/project/notctyparser/
+    date: '2026-10-20'
+soft-pypi-pyqt6:  # V1
+  type: web
+  title: PyQt6 (PyPI)
+  publisher: Python Package Index
+  url:
+    value: https://pypi.org/project/PyQt6/
+    date: '2026-10-20'
+
+# --- Otros registradores -------------------------------------------------------
+soft-qlog-readme:  # V1
+  type: web
+  title: 'QLog: README'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/foldynl/QLog/master/README.md
+    date: '2026-10-20'
+soft-tr4w-readme:  # V1
+  type: web
+  title: 'TR4W: README'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/n4af/TR4W/master/README.md
+    date: '2026-10-20'
+soft-tlf-readme:  # V1
+  type: web
+  title: 'TLF: README'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/Tlf/tlf/master/README.md
+    date: '2026-10-20'
+soft-tlf-news:  # V1
+  type: web
+  title: 'TLF: NEWS'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/Tlf/tlf/master/NEWS
+    date: '2026-10-20'
+soft-mhr-rumlog-60:  # V2
+  type: web
+  title: RUMlogNG for macOS version 6.0 released
+  publisher: Mac Ham Radio
+  date: '2026-01-01'
+  url:
+    value: https://machamradio.com/blog/2026/01/01/rumlogng-for-macos-version-6-0-released/
+    date: '2026-10-20'
+soft-mhr-rumlog-602:  # V2
+  type: web
+  title: RUMlogNG for macOS version 6.0.2 released
+  publisher: Mac Ham Radio
+  date: '2026-01-22'
+  url:
+    value: https://machamradio.com/blog/2026/01/22/rumlogng-for-macos-version-6-0-2-released/
+    date: '2026-10-20'
+soft-mhr-mldx-661:  # V2
+  type: web
+  title: MacLoggerDX Version 6.61 released
+  publisher: Mac Ham Radio
+  date: '2026-05-30'
+  url:
+    value: https://machamradio.com/blog/2026/05/30/macloggerdx-version-6-61-released/
+    date: '2026-10-20'
+soft-brew-macloggerdx:  # V3
+  type: web
+  title: 'Homebrew cask: macloggerdx (6.62)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/m/macloggerdx.rb
+    date: '2026-10-20'
+soft-mhr-sdrcontrol-2103:  # V2
+  type: web
+  title: SDR Control for Icom MacOS version 2.10.3 released
+  publisher: Mac Ham Radio
+  date: '2026-10-07'
+  url:
+    value: https://machamradio.com/blog/2026/10/07/sdr-control-for-icom-macos-version-2-10-3-released/
+    date: '2026-10-20'
+
+# --- Ficheros de datos -----------------------------------------------------------
+soft-ctyfiles-format:  # V2
+  type: web
+  title: Contest Country File Format
+  author: Reisert, Jim
+  publisher: country-files.com
+  url:
+    value: https://www.country-files.com/cty/backup/format.htm
+    date: '2026-10-20'
+soft-ctyfiles-bigcty:  # V2
+  type: web
+  title: Big CTY.DAT
+  author: Reisert, Jim
+  publisher: country-files.com
+  url:
+    value: https://www.country-files.com/bigcty/backup/index.htm
+    date: '2026-10-20'
+soft-ctyannounce-archive:  # V2 (índice; lista CTY-3631 del 15-sep-2026)
+  type: web
+  title: announce@country-files.com (archivo de la lista CTY-Announce)
+  publisher: The Mail Archive
+  url:
+    value: https://www.mail-archive.com/announce@country-files.com/
+    date: '2026-10-20'
+soft-cty-3630:  # V2
+  type: web
+  title: '[CTY-Announce] CTY-3630 Country Files - 06 September 2026'
+  author: Reisert, Jim
+  publisher: The Mail Archive
+  date: '2026-09-06'
+  url:
+    value: http://www.mail-archive.com/announce@country-files.com/msg00778.html
+    date: '2026-10-20'
+soft-cty-3629:  # V2
+  type: web
+  title: '[CTY-Announce] CTY-3629 Country Files - 26 August 2026'
+  author: Reisert, Jim
+  publisher: The Mail Archive
+  date: '2026-08-26'
+  url:
+    value: http://www.mail-archive.com/announce@country-files.com/msg00777.html
+    date: '2026-10-20'
+soft-cty-3620:  # V2 (VER20260603 = fichero local data/cty/cty_not1mm.json)
+  type: web
+  title: '[CTY-Announce] CTY-3620 Country Files - 03 June 2026'
+  author: Reisert, Jim
+  publisher: The Mail Archive
+  date: '2026-06-03'
+  url:
+    value: http://www.mail-archive.com/announce@country-files.com/msg00766.html
+    date: '2026-10-20'
+soft-scp-home:  # V1 indirecto (URL de descarga en el código de Not1MM); web no abierta
+  type: web
+  title: Super Check Partial
+  publisher: supercheckpartial.com
+  url:
+    value: https://www.supercheckpartial.com/
+    date: '2026-10-20'
+
+# --- CAT / control -------------------------------------------------------------
+soft-hamlib-news:  # V1
+  type: web
+  title: 'Hamlib: NEWS (history of visible changes)'
+  publisher: The Hamlib Group
+  url:
+    value: https://raw.githubusercontent.com/Hamlib/Hamlib/master/NEWS
+    date: '2026-10-20'
+soft-hamlib-riglist:  # V1
+  type: web
+  title: 'Hamlib: include/hamlib/riglist.h'
+  publisher: The Hamlib Group
+  url:
+    value: https://raw.githubusercontent.com/Hamlib/Hamlib/master/include/hamlib/riglist.h
+    date: '2026-10-20'
+soft-hamlib-ic7300c:  # V1
+  type: web
+  title: 'Hamlib: rigs/icom/ic7300.c (IC-7300, IC-7300MK2, IC-705, IC-9700, IC-905)'
+  publisher: The Hamlib Group
+  url:
+    value: https://raw.githubusercontent.com/Hamlib/Hamlib/master/rigs/icom/ic7300.c
+    date: '2026-10-20'
+soft-hamlib-ft710c:  # V1
+  type: web
+  title: 'Hamlib: rigs/yaesu/ft710.c'
+  publisher: The Hamlib Group
+  url:
+    value: https://raw.githubusercontent.com/Hamlib/Hamlib/master/rigs/yaesu/ft710.c
+    date: '2026-10-20'
+soft-brew-hamlib:  # V1
+  type: web
+  title: 'Homebrew formula: hamlib (4.7.2)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-core/master/Formula/h/hamlib.rb
+    date: '2026-10-20'
+soft-flrig-readme:  # V1 (espejo desactualizado)
+  type: web
+  title: 'flrig: README (espejo de GitHub)'
+  author: Freese, Dave
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/w1hkj/flrig/master/README
+    date: '2026-10-20'
+soft-brew-flrig:  # V3
+  type: web
+  title: 'Homebrew cask: flrig (2.0.12)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/f/flrig.rb
+    date: '2026-10-20'
+soft-wfview-readme:  # V1
+  type: web
+  title: 'wfview: README'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/eliggett/wfview/master/README.md
+    date: '2026-10-20'
+soft-wfview-pro:  # V1
+  type: web
+  title: 'wfview: wfview.pro (WFVIEW_VERSION 2.22 y componentes de servidor)'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/eliggett/wfview/master/wfview.pro
+    date: '2026-10-20'
+soft-wfview-rig-ic7300mk2:  # V1
+  type: web
+  title: 'wfview: rigs/IC-7300MK2.rig'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/eliggett/wfview/master/rigs/IC-7300MK2.rig
+    date: '2026-10-20'
+soft-wfview-rig-ic705:  # V1
+  type: web
+  title: 'wfview: rigs/IC-705.rig'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/eliggett/wfview/master/rigs/IC-705.rig
+    date: '2026-10-20'
+soft-wfview-rig-ft710:  # V1
+  type: web
+  title: 'wfview: rigs/FT-710.rig'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/eliggett/wfview/master/rigs/FT-710.rig
+    date: '2026-10-20'
+soft-wfview-whatsnew:  # V1
+  type: web
+  title: 'wfview: WHATSNEW (2.0)'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/eliggett/wfview/master/WHATSNEW
+    date: '2026-10-20'
+
+# --- SDR y receptores remotos -----------------------------------------------------
+soft-sdrpp-version:  # V1
+  type: web
+  title: 'SDR++: core/src/version.h'
+  author: Rouma, Alexandre
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/AlexandreRouma/SDRPlusPlus/master/core/src/version.h
+    date: '2026-10-20'
+soft-brew-gqrx:  # V3
+  type: web
+  title: 'Homebrew cask: gqrx (2.17.7)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/g/gqrx.rb
+    date: '2026-10-20'
+soft-kiwisdr-readme:  # V1
+  type: web
+  title: 'KiwiSDR (Beagle_SDR_GPS): README'
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/jks-prv/Beagle_SDR_GPS/master/README.md
+    date: '2026-10-20'
+soft-kiwisdr-map:  # enlace tomado del README oficial; página no abierta (host bloqueado)
+  type: web
+  title: KiwiSDR receiver map
+  publisher: KiwiSDR
+  url:
+    value: http://map.kiwisdr.com
+soft-websdr-org:  # POR VERIFICAR (host bloqueado)
+  type: web
+  title: WebSDR.org
+  url:
+    value: http://websdr.org/
+soft-linkfanel:  # POR VERIFICAR (no resolvía desde el entorno)
+  type: web
+  title: rx.linkfanel.net (listas KiwiSDR y WebSDR)
+  url:
+    value: http://rx.linkfanel.net/
+
+# --- Propagación ------------------------------------------------------------------
+soft-iturhf-readme:  # V1
+  type: web
+  title: 'ITURHFProp(), P533(), P372() and ITURNoise(): README'
+  publisher: ITU-R Study Group 3 (Working Party 3L)
+  url:
+    value: https://raw.githubusercontent.com/ITU-R-Study-Group-3/ITU-R-HF/master/README.md
+    date: '2026-10-20'
+soft-voacapl-readme:  # V1
+  type: web
+  title: 'voacapl: A port of VOACAP for Linux (README)'
+  author: Watson, Jim
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/jawatson/voacapl/master/README.md
+    date: '2026-10-20'
+soft-pythonprop-readme:  # V1
+  type: web
+  title: 'PythonProp: README'
+  author: Watson, Jim
+  publisher: GitHub
+  url:
+    value: https://raw.githubusercontent.com/jawatson/pythonprop/master/README.md
+    date: '2026-10-20'
+soft-voacap-online:  # POR VERIFICAR
+  type: web
+  title: VOACAP Online for Ham Radio
+  url:
+    value: https://www.voacap.com/hf/
+soft-proppy:  # POR VERIFICAR
+  type: web
+  title: Proppy (HF propagation predictions)
+  url:
+    value: https://soundbytes.asia/proppy/
+soft-swpc:  # POR VERIFICAR
+  type: web
+  title: NOAA Space Weather Prediction Center
+  publisher: NOAA
+  url:
+    value: https://www.swpc.noaa.gov/
+soft-hamqsl:  # POR VERIFICAR
+  type: web
+  title: HamQSL solar-terrestrial data
+  publisher: N0NBH
+  url:
+    value: https://www.hamqsl.com/solar.html
+soft-pskreporter:  # POR VERIFICAR
+  type: web
+  title: PSK Reporter map
+  url:
+    value: https://pskreporter.info/pskmap.html
+soft-wsprnet:  # POR VERIFICAR
+  type: web
+  title: WSPRnet
+  url:
+    value: https://www.wsprnet.org/
+soft-rbn:  # POR VERIFICAR
+  type: web
+  title: Reverse Beacon Network
+  url:
+    value: https://www.reversebeacon.net/
+
+# --- DX cluster -------------------------------------------------------------------
+soft-dxsummit:  # POR VERIFICAR
+  type: web
+  title: DX Summit
+  url:
+    value: https://www.dxsummit.fi/
+soft-dxwatch:  # POR VERIFICAR
+  type: web
+  title: DXWatch
+  url:
+    value: https://dxwatch.com/
+soft-ve7cc:  # POR VERIFICAR
+  type: web
+  title: VE7CC CC Cluster and CC User
+  url:
+    value: https://www.ve7cc.net/
+soft-hamalert:  # POR VERIFICAR
+  type: web
+  title: HamAlert
+  url:
+    value: https://hamalert.org/
+
+# --- Homelab ---------------------------------------------------------------------
+soft-brew-tailscale:  # V3
+  type: web
+  title: 'Homebrew cask: tailscale-app (1.104.1)'
+  publisher: Homebrew
+  url:
+    value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/t/tailscale-app.rb
+    date: '2026-10-20'

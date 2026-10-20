@@ -1,0 +1,250 @@
+# Referencias del capítulo de historial (resultados EA y propagación) - formato Hayagriva.
+# url.date = fecha de consulta. Muchas páginas solo se vieron a través de resúmenes
+# del buscador (WebSearch); ver data/history/facts.md para el grado de verificación.
+
+hist-cqww-2025-ssb-results:
+  type: web
+  title: Results of the 2025 CQ WW DX SSB Contest
+  author: Dorr, John
+  date: 2026-02
+  url:
+    value: https://cqww.com/results/2025_cq_ww_dx_ssb_results.pdf
+    date: 2026-10-20
+  note: Artículo de resultados finales (K1AR). Consultado vía resúmenes de WebSearch.
+
+hist-cqww-2025-ssb-plaques:
+  type: web
+  title: 2025 CQ WW DX SSB Plaque Winners
+  url:
+    value: https://cqww.com/results/2025_cq_ww_dx_ssb_plaques.pdf
+    date: 2026-10-20
+
+hist-cqww-2024-ssb-results:
+  type: web
+  title: Results of the 2024 CQ WW DX SSB Contest
+  author: Dorr, John
+  date: 2025-02
+  url:
+    value: https://cqww.com/results/2024_cq_ww_dx_ssb_results.pdf
+    date: 2026-10-20
+  note: Artículo de resultados finales (K1AR). Consultado vía resúmenes de WebSearch.
+
+hist-cqww-2024-ssb-plaques:
+  type: web
+  title: 2024 CQ WW DX SSB Plaque Winners
+  url:
+    value: https://cqww.com/results/2024_cq_ww_dx_ssb_plaques.pdf
+    date: 2026-10-20
+
+hist-cqww-2023-ssb-results:
+  type: web
+  title: Results of the 2023 CQ WW DX SSB Contest
+  url:
+    value: https://cqww.com/results/2023_cq_ww_dx_ssb_results.pdf
+    date: 2026-10-20
+
+hist-cqww-2022-ssb-results:
+  type: web
+  title: Results of the 2022 CQWW DX SSB Contest
+  url:
+    value: https://cqww.com/results/2022_cq_ww_dx_ssb_results.pdf
+    date: 2026-10-20
+
+hist-cqcontest-2024-final:
+  type: web
+  title: "[CQ-Contest] Final 2024 CQ WW SSB Results Posted"
+  url:
+    value: http://lists.contesting.com/_cq-contest/2025-02/msg00002.html
+    date: 2026-10-20
+  note: Anuncio en la lista CQ-Contest (febrero de 2025).
+
+hist-cqsk-2025-ssb-prelim:
+  type: web
+  title: Predbežné výsledky CQ World Wide DX Contestu 2025 SSB časť
+  url:
+    value: https://cq.sk/es/predbezne-vysledky-cq-world-wide-dx-contestu-2025-ssb-cast/
+    date: 2026-10-20
+  note: Resultados preliminares (antes de la comprobación de logs) publicados por cq.sk.
+
+hist-cqww-stats:
+  type: web
+  title: CQ WW - Contest Statistics
+  url:
+    value: https://cqww.com/stats.htm
+    date: 2026-10-20
+
+hist-cqww-records:
+  type: web
+  title: CQ WW - Score Records
+  url:
+    value: https://cqww.com/records.htm
+    date: 2026-10-20
+
+hist-cqww-records-overlay:
+  type: web
+  title: CQ WW - Overlay Category Records
+  url:
+    value: https://cqww.com/records_overlay.htm
+    date: 2026-10-20
+
+hist-cqww-score-db:
+  type: web
+  title: CQ WW - Score Database
+  url:
+    value: https://cqww.com/score_db.htm
+    date: 2026-10-20
+
+hist-cqww-scores-2024-p30:
+  type: web
+  title: CQ WW - Scores SSB (2024, puestos 2901-3000)
+  url:
+    value: https://cqww.com/scoresph.htm?page=30&yr=2024&order=score&size=100
+    date: 2026-10-20
+
+hist-cqww-scores-2024:
+  type: web
+  title: CQ WW - Scores SSB (2024)
+  url:
+    value: https://cqww.com/scoresph.htm?yr=2024
+    date: 2026-10-20
+
+hist-cqww-scores-ea-sl-p14:
+  type: web
+  title: CQ WW - Scores SSB (EA, SO LOW ALL, todos los años, página 14)
+  url:
+    value: https://www.cqww.com/scoresph.htm?page=14&yr=ALL&dx=EA&cat=SL+ALL&order=score
+    date: 2026-10-20
+
+hist-cqww-scores-ea-s-p25:
+  type: web
+  title: CQ WW - Scores SSB (EA, monooperador, todos los años, página 25)
+  url:
+    value: https://cqww.com/scoresph.htm?page=25&yr=ALL&dx=EA&cat=S%25&order=score&size=100
+    date: 2026-10-20
+
+hist-cqww-overlay-scores:
+  type: web
+  title: CQ WW - Overlay Category Scores
+  url:
+    value: https://cqww.com/overlayscores.htm
+    date: 2026-10-20
+
+hist-cqww-clubscores:
+  type: web
+  title: CQ WW Club Scores for 2025
+  url:
+    value: https://cqww.com/clubscores.htm
+    date: 2026-10-20
+
+hist-cqww-publiclogs:
+  type: web
+  title: CQ WW - Public Logs
+  url:
+    value: https://cqww.com/publiclogs/
+    date: 2026-10-20
+
+hist-cqww-publiclcr:
+  type: web
+  title: CQ WW - Public Log Checking Reports
+  url:
+    value: https://cqww.com/publiclcr/
+    date: 2026-10-20
+
+hist-cqww-api:
+  type: web
+  title: Score Database REST API Reference
+  url:
+    value: https://cqww.com/api_reference.htm
+    date: 2026-10-20
+
+hist-cqww-api-blog:
+  type: web
+  title: New REST API for CQWW Score Records
+  url:
+    value: https://cqww.com/blog/new-rest-api-for-cqww-score-records/
+    date: 2026-10-20
+
+hist-cqww-rules-2024:
+  type: web
+  title: 2024 CQ WW DX Contest Rules
+  url:
+    value: https://cqww.com/rules/2024_rules_cqww.pdf
+    date: 2026-10-20
+
+hist-cqww-rules-2025:
+  type: web
+  title: 2025 CQ WW DX Contest Rules
+  date: 2025-09-09
+  url:
+    value: https://cqww.com/rules/2025_rules_cqww.pdf
+    date: 2026-10-20
+
+hist-cqww-rules-es-2025:
+  type: web
+  title: Bases del CQ WW DX Contest 2025 (español)
+  url:
+    value: https://cqww.com/rules/rules_es_2025.pdf
+    date: 2026-10-20
+
+hist-cqww-rules-2026:
+  type: web
+  title: 2026 CQ WW DX Contest Rules
+  date: 2026-09-05
+  url:
+    value: https://cqww.com/rules/2026_rules_cqww.pdf
+    date: 2026-10-20
+
+hist-ea5fww-1999:
+  type: web
+  title: EA5FWW - CQ WW DX 1999 (Single Operator Low Power; modo por verificar)
+  url:
+    value: https://www.qsl.net/ea5fww/cqwwdx99.htm
+    date: 2026-10-20
+
+hist-ea5fww-2000:
+  type: web
+  title: EA5FWW - CQ World Wide DX Contest 2000 (SSB, Single Operator Low Power)
+  url:
+    value: https://www.qsl.net/ea5fww/cqww2000.htm
+    date: 2026-10-20
+
+hist-celestrak-sw-5y:
+  type: web
+  title: CelesTrak Space Weather Data, SW-Last5Years.txt (copia en pyspaceweather, UPDATED 2026-07-01)
+  url:
+    value: https://raw.githubusercontent.com/st-bender/pyspaceweather/master/src/spaceweather/data/SW-Last5Years.txt
+    date: 2026-10-20
+  note: Copia del fichero original https://celestrak.org/SpaceData/SW-Last5Years.txt (Kp/Ap de GFZ, ISN de SILSO, F10.7 de Penticton).
+
+hist-celestrak-sw-all:
+  type: web
+  title: CelesTrak Space Weather Data, SW-All.txt (copia en pyspaceweather, UPDATED 2025-07-21)
+  url:
+    value: https://raw.githubusercontent.com/st-bender/pyspaceweather/master/src/spaceweather/data/SW-All.txt
+    date: 2026-10-20
+  note: Copia del fichero original https://celestrak.org/SpaceData/SW-All.txt.
+
+hist-celestrak-format:
+  type: web
+  title: CelesTrak - Space Weather Data Documentation (formato SpaceWx)
+  url:
+    value: https://celestrak.org/SpaceData/SpaceWx-format.php
+    date: 2026-10-20
+  note: No consultada directamente (host no accesible desde el entorno de trabajo).
+
+hist-pyspaceweather:
+  type: web
+  title: spaceweather 0.4.2 - Python interface for space weather indices (PyPI)
+  author: Bender, Stefan
+  date: 2026-07-01
+  url:
+    value: https://pypi.org/project/spaceweather/
+    date: 2026-10-20
+
+hist-noaa-scales:
+  type: web
+  title: NOAA Space Weather Scales
+  url:
+    value: https://www.swpc.noaa.gov/noaa-scales-explanation
+    date: 2026-10-20
+  note: No consultada (host no accesible); se cita por la equivalencia Kp 5 = G1, Kp 6 = G2.

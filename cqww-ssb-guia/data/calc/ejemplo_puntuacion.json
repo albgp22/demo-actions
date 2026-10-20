@@ -1,0 +1,252 @@
+{
+  "cty": "VER20260603",
+  "mini_log": {
+    "qsos_validos": 11,
+    "puntos_qso": 24,
+    "zonas": 10,
+    "paises": 10,
+    "multiplicadores": 20,
+    "total": 480,
+    "filas": [
+      {
+        "banda": 20,
+        "indicativo": "EA7ZZZ",
+        "zona": 14,
+        "entidad": "Spain",
+        "continente": "EU",
+        "puntos": 0,
+        "nuevo": "zona 14, país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "DL1ZZZ",
+        "zona": 14,
+        "entidad": "Fed. Rep. of Germany",
+        "continente": "EU",
+        "puntos": 1,
+        "nuevo": "país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "K1ZZZ",
+        "zona": 5,
+        "entidad": "United States",
+        "continente": "NA",
+        "puntos": 3,
+        "nuevo": "zona 5, país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "W9ZZZ",
+        "zona": 4,
+        "entidad": "United States",
+        "continente": "NA",
+        "puntos": 3,
+        "nuevo": "zona 4"
+      },
+      {
+        "banda": 20,
+        "indicativo": "EA8ZZZ",
+        "zona": 33,
+        "entidad": "Canary Islands",
+        "continente": "AF",
+        "puntos": 3,
+        "nuevo": "zona 33, país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "JA1ZZZ",
+        "zona": 25,
+        "entidad": "Japan",
+        "continente": "AS",
+        "puntos": 3,
+        "nuevo": "zona 25, país"
+      },
+      {
+        "banda": 15,
+        "indicativo": "K1ZZZ",
+        "zona": 5,
+        "entidad": "United States",
+        "continente": "NA",
+        "puntos": 3,
+        "nuevo": "zona 5, país"
+      },
+      {
+        "banda": 15,
+        "indicativo": "PY2ZZZ",
+        "zona": 11,
+        "entidad": "Brazil",
+        "continente": "SA",
+        "puntos": 3,
+        "nuevo": "zona 11, país"
+      },
+      {
+        "banda": 15,
+        "indicativo": "EA6ZZZ",
+        "zona": 14,
+        "entidad": "Balearic Islands",
+        "continente": "EU",
+        "puntos": 1,
+        "nuevo": "zona 14, país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "DL1ZZZ",
+        "zona": 14,
+        "entidad": "Fed. Rep. of Germany",
+        "puntos": 0,
+        "nuevo": "duplicado (no cuenta)"
+      },
+      {
+        "banda": 40,
+        "indicativo": "CT1ZZZ",
+        "zona": 14,
+        "entidad": "Portugal",
+        "continente": "EU",
+        "puntos": 1,
+        "nuevo": "zona 14, país"
+      },
+      {
+        "banda": 40,
+        "indicativo": "CN8ZZZ",
+        "zona": 33,
+        "entidad": "Morocco",
+        "continente": "AF",
+        "puntos": 3,
+        "nuevo": "zona 33, país"
+      }
+    ],
+    "penalizacion_puntos": 0,
+    "total_con_penalizacion": null
+  },
+  "mini_log_con_bust": {
+    "qsos_validos": 10,
+    "puntos_qso": 21,
+    "zonas": 9,
+    "paises": 9,
+    "multiplicadores": 18,
+    "total": 378,
+    "filas": [
+      {
+        "banda": 20,
+        "indicativo": "EA7ZZZ",
+        "zona": 14,
+        "entidad": "Spain",
+        "continente": "EU",
+        "puntos": 0,
+        "nuevo": "zona 14, país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "DL1ZZZ",
+        "zona": 14,
+        "entidad": "Fed. Rep. of Germany",
+        "continente": "EU",
+        "puntos": 1,
+        "nuevo": "país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "K1ZZZ",
+        "zona": 5,
+        "entidad": "United States",
+        "continente": "NA",
+        "puntos": 3,
+        "nuevo": "zona 5, país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "W9ZZZ",
+        "zona": 4,
+        "entidad": "United States",
+        "continente": "NA",
+        "puntos": 3,
+        "nuevo": "zona 4"
+      },
+      {
+        "banda": 20,
+        "indicativo": "EA8ZZZ",
+        "zona": 33,
+        "entidad": "Canary Islands",
+        "continente": "AF",
+        "puntos": 3,
+        "nuevo": "zona 33, país"
+      },
+      {
+        "banda": 15,
+        "indicativo": "K1ZZZ",
+        "zona": 5,
+        "entidad": "United States",
+        "continente": "NA",
+        "puntos": 3,
+        "nuevo": "zona 5, país"
+      },
+      {
+        "banda": 15,
+        "indicativo": "PY2ZZZ",
+        "zona": 11,
+        "entidad": "Brazil",
+        "continente": "SA",
+        "puntos": 3,
+        "nuevo": "zona 11, país"
+      },
+      {
+        "banda": 15,
+        "indicativo": "EA6ZZZ",
+        "zona": 14,
+        "entidad": "Balearic Islands",
+        "continente": "EU",
+        "puntos": 1,
+        "nuevo": "zona 14, país"
+      },
+      {
+        "banda": 20,
+        "indicativo": "DL1ZZZ",
+        "zona": 14,
+        "entidad": "Fed. Rep. of Germany",
+        "puntos": 0,
+        "nuevo": "duplicado (no cuenta)"
+      },
+      {
+        "banda": 40,
+        "indicativo": "CT1ZZZ",
+        "zona": 14,
+        "entidad": "Portugal",
+        "continente": "EU",
+        "puntos": 1,
+        "nuevo": "zona 14, país"
+      },
+      {
+        "banda": 40,
+        "indicativo": "CN8ZZZ",
+        "zona": 33,
+        "entidad": "Morocco",
+        "continente": "AF",
+        "puntos": 3,
+        "nuevo": "zona 33, país"
+      }
+    ],
+    "penalizacion_puntos": 6,
+    "total_con_penalizacion": 270
+  },
+  "hipoteticos": [
+    {
+      "escenario": "prudente (unas 12 h)",
+      "qsos": 300,
+      "puntos_medios": 2.0,
+      "puntos_qso": 600,
+      "zonas": 45,
+      "paises": 100,
+      "total": 87000
+    },
+    {
+      "escenario": "ambicioso (unas 30 h)",
+      "qsos": 700,
+      "puntos_medios": 2.1,
+      "puntos_qso": 1470,
+      "zonas": 70,
+      "paises": 160,
+      "total": 338100
+    }
+  ]
+}

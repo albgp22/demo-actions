@@ -1,0 +1,210 @@
+# Bibliografía (Hayagriva / Typst) del tema «Reglas del CQ WW DX Contest».
+# Todas las URL se consultaron el 2026-10-20. Las de cqww.com y wwrof.org NO
+# eran accesibles directamente desde el entorno; su contenido se verificó a
+# través de resúmenes de WebSearch (ver data/rules/facts.md).
+
+rules-cqww-2026:
+  type: web
+  title: "2026 CQ World-Wide DX Contest Rules"
+  author: CQ Magazine
+  date: 2026-09-05
+  url:
+    value: https://cqww.com/rules/2026_rules_cqww.pdf
+    date: 2026-10-20
+  note: "PDF fechado el 5 de septiembre de 2026"
+
+rules-cqww-rules-page:
+  type: web
+  title: "CQ WW - Rules"
+  author: CQ Magazine
+  date: 2026
+  url:
+    value: https://cqww.com/rules/
+    date: 2026-10-20
+
+rules-cqww-2026-changes:
+  type: web
+  title: "2026 Rule Changes"
+  author: CQ Magazine
+  date: 2026-10-07
+  parent:
+    type: blog
+    title: CQ WW Blog
+  url:
+    value: https://cqww.com/blog/2026-rule-changes/
+    date: 2026-10-20
+
+rules-cqww-2025:
+  type: web
+  title: "2025 CQ World-Wide DX Contest Rules"
+  author: CQ Magazine
+  date: 2025-09-09
+  url:
+    value: https://cqww.com/rules/2025_rules_cqww.pdf
+    date: 2026-10-20
+  note: "Edición anterior, usada solo para comparar cambios"
+
+rules-cqww-2025-changes:
+  type: web
+  title: "Rule changes for 2025"
+  author: CQ Magazine
+  date: 2025
+  parent:
+    type: blog
+    title: CQ WW Blog
+  url:
+    value: https://cqww.com/blog/rule-changes-for-2025/
+    date: 2026-10-20
+
+rules-cqww-home:
+  type: web
+  title: "CQ World Wide DX Contest - Home"
+  author: CQ Magazine
+  date: 2026
+  url:
+    value: https://cqww.com/
+    date: 2026-10-20
+
+rules-cqww-faq:
+  type: web
+  title: "CQ WW - Rules FAQ"
+  author: CQ Magazine
+  url:
+    value: https://cqww.com/rules_faq.htm
+    date: 2026-10-20
+  note: "Página sin fecha; algunas respuestas son anteriores a las reglas 2026"
+
+rules-cqww-logcheck:
+  type: web
+  title: "CQ WW - Cabrillo Log Upload"
+  author: CQ Magazine
+  url:
+    value: https://cqww.com/logcheck/
+    date: 2026-10-20
+
+rules-cqww-logs:
+  type: web
+  title: "CQ WW - Submitting Your Log"
+  author: CQ Magazine
+  url:
+    value: https://cqww.com/logs.htm
+    date: 2026-10-20
+  note: "Página antigua; prevalece el plazo de las reglas 2026"
+
+rules-cqww-cabrillo:
+  type: web
+  title: "Cabrillo Log Format for the CQ WW DX Contest"
+  author: CQ Magazine
+  url:
+    value: https://cqww.com/cabrillo.htm
+    date: 2026-10-20
+
+rules-cqww-plaques:
+  type: web
+  title: "CQ WW - Plaques & Sponsors"
+  author: CQ Magazine
+  url:
+    value: https://cqww.com/plaques/
+    date: 2026-10-20
+
+rules-cqww-recording:
+  type: web
+  title: "New Recording Rule"
+  author: CQ Magazine
+  date: 2015-10
+  parent:
+    type: blog
+    title: CQ WW Blog
+  url:
+    value: https://cqww.com/blog/new-recording-rule/
+    date: 2026-10-20
+  note: "Contexto histórico; la regla vigente es la de 2026"
+
+rules-cqww-2017-announce:
+  type: web
+  title: "2017 CQWW Rules"
+  author: CQ Magazine
+  date: 2017
+  parent:
+    type: blog
+    title: CQ WW Blog
+  url:
+    value: https://cqww.com/blog/2017-cqww-rules-update-announcement/
+    date: 2026-10-20
+
+rules-cqww-self-spotting:
+  type: web
+  title: "Self Spotting"
+  author: CQ Magazine
+  parent:
+    type: blog
+    title: CQ WW Blog
+  url:
+    value: https://cqww.com/blog/self-spotting/
+    date: 2026-10-20
+
+rules-cqww-logging-time:
+  type: web
+  title: "Logging Time and Other Things"
+  author: CQ Magazine
+  parent:
+    type: blog
+    title: CQ WW Blog
+  url:
+    value: https://cqww.com/blog/logging-time-and-other-things/
+    date: 2026-10-20
+
+rules-cqww-explorer:
+  type: web
+  title: "CQ WW - Explorer Rules"
+  author: CQ Magazine
+  date: 2024
+  url:
+    value: https://cqww.com/explorer.htm
+    date: 2026-10-20
+  note: "Histórica: la categoría Explorer se eliminó en 2025"
+
+rules-cqww-results-2025-ssb:
+  type: web
+  title: "Results of the 2025 CQ WW DX SSB Contest"
+  author: CQ Magazine
+  date: 2026-02
+  url:
+    value: https://cqww.com/results/2025_cq_ww_dx_ssb_results.pdf
+    date: 2026-10-20
+
+rules-wwrof-cabrillo:
+  type: web
+  title: "Cabrillo Specification (version 3)"
+  author: World Wide Radio Operators Foundation
+  url:
+    value: https://wwrof.org/cabrillo/
+    date: 2026-10-20
+  note: "No accesible desde el entorno; valores contrastados con el paquete cabrillo 0.3.0"
+
+rules-pypi-cabrillo:
+  type: repository
+  title: "cabrillo: A Python library to parse Cabrillo-format amateur radio contest logs"
+  author: thxo
+  version: "0.3.0"
+  url:
+    value: https://pypi.org/project/cabrillo/
+    date: 2026-10-20
+  note: "data.py: valores CATEGORY-* «Based on the Cabrillo specification available at https://wwrof.org/cabrillo/»"
+
+rules-tlf-cabrillo-fmt:
+  type: repository
+  title: "Tlf: share/cabrillo.fmt (formato [CQWW])"
+  author: The Tlf Project
+  url:
+    value: https://raw.githubusercontent.com/Tlf/tlf/master/share/cabrillo.fmt
+    date: 2026-10-20
+
+rules-pypi-not1mm:
+  type: repository
+  title: "Not1MM Logger: plugins/cq_ww_ssb.py"
+  author: Bridak, Michael
+  version: "26.10.18"
+  url:
+    value: https://pypi.org/project/not1mm/
+    date: 2026-10-20

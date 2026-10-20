@@ -1,0 +1,51 @@
+own-hb9hil-zones:
+  type: repository
+  title: "hamradio-zones-geojson: free GeoJSON data of CQ and ITU zones"
+  author: HB9HIL
+  date: 2024
+  url:
+    value: https://github.com/HB9HIL/hamradio-zones-geojson
+    date: 2026-10-20
+  note: "Licencia MIT. Fichero usado: cqzones.geojson"
+own-natural-earth:
+  type: web
+  title: "Natural Earth: free vector and raster map data (1:110m land)"
+  author: Natural Earth
+  url:
+    value: https://www.naturalearthdata.com/
+    date: 2026-10-20
+  note: "Dominio público. Copia usada: github.com/nvkelso/natural-earth-vector"
+own-cty-not1mm:
+  type: repository
+  title: "Not1MM: cty.json (derivado del cty.dat de country-files.com, versión VER20260603)"
+  author: Michael Bridak (K6GTE)
+  url:
+    value: https://github.com/mbridak/not1mm
+    date: 2026-10-20
+own-astral:
+  type: repository
+  title: "Astral 3.2: cálculos de posición del Sol (algoritmo de la NOAA)"
+  author: Simon Kennedy
+  url:
+    value: https://pypi.org/project/astral/
+    date: 2026-10-20
+own-equal-earth:
+  type: article
+  title: "The Equal Earth map projection"
+  author: ["Šavrič, Bojan", "Patterson, Tom", "Jenny, Bernhard"]
+  date: 2018
+  parent:
+    type: periodical
+    title: International Journal of Geographical Information Science
+    volume: 33
+    issue: 3
+  page-range: 454-465
+  serial-number:
+    doi: 10.1080/13658816.2018.1504949
+own-typst:
+  type: web
+  title: "Typst 0.15.1"
+  author: Typst GmbH
+  url:
+    value: https://typst.app/
+    date: 2026-10-20

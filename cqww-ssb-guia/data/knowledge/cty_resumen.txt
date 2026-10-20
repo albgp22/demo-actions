@@ -1,0 +1,5 @@
+CTY version: 20260603
+Entidades (prefijos primarios) en CTY: 346
+  - DXCC: 340
+  - Solo WAE (no DXCC): 6 -> 4U1V, GM/s, IG9, IT9, JW/b, TA1
+Entidades DXCC por continente (CTY): AF=76, AS=55, EU=68, NA=50, OC=59, SA=32

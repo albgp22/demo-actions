@@ -1,0 +1,41 @@
+zona,nombre_en,nombre_es,n_entidades,entidades_completas,entidades_parciales
+1,Northwestern Zone of North America,Noroeste de Norteamérica,2,KL,VE
+2,Northeastern Zone of North America,Noreste de Norteamérica,1,,VE
+3,Western Zone of North America,Oeste de Norteamérica,2,,K VE
+4,Central Zone of North America,Centro de Norteamérica,2,,K VE
+5,Eastern Zone of North America,Este de Norteamérica,7,4U1U CY0 CY9 FP VP9,K VE
+6,Southern Zone of North America,Sur de Norteamérica,2,XE XF4,
+7,Central American Zone,Centroamérica,10,FO/c HK0/a HP HR TG TI TI9 V3 YN YS,
+8,West Indies Zone,Antillas / Caribe,29,6Y 8P C6 CM FG FJ FM FS HH HI J3 J6 J7 J8 KG4 KP1 KP2 KP4 KP5 PJ5 PJ7 V2 V4 VP2E VP2M VP2V VP5 YV0 ZF,
+9,Northern Zone of South America,Norte de Sudamérica,10,8R 9Y FY HK HK0/m P4 PJ2 PJ4 PZ YV,
+10,Western Zone of South America,Oeste de Sudamérica,4,CP HC HC8 OA,
+11,Central Zone of South America,Centro de Sudamérica,5,PY PY0F PY0S PY0T ZP,
+12,Southwest Zone of South America,Suroeste de Sudamérica,5,3Y/p CE CE0X CE0Y CE0Z,
+13,Southeast Zone of South America,Sureste de Sudamérica,8,CX LU VP8 VP8/g VP8/h VP8/o VP8/s,CE9
+14,Western Zone of Europe,Europa occidental,28,3A 4U1I C3 CT CU DL EA EA6 EI F G GD GI GJ GM GM/s GU GW HB HB0 LA LX ON OY OZ PA SM ZB,
+15,Central European Zone,Europa central,29,1A 4O 4U1V 9A 9H E7 ES HA HV I IS IT9 LY OE OH OH0 OJ0 OK OM S5 SP T7 TK UA2 YL YU Z3 Z6 ZA,
+16,Eastern Zone of Europe,Europa oriental,5,ER EU UR,UA UA9
+17,Western Zone of Siberia,Siberia occidental / Asia central,7,EX EY EZ UK UN,UA UA9
+18,Central Siberian Zone,Siberia central,1,,UA9
+19,Eastern Siberian Zone,Siberia oriental,1,,UA9
+20,Balkan Zone,Balcanes / Mediterráneo oriental,15,4X 5B E4 JY LZ OD SV SV/a SV5 SV9 TA TA1 YK YO ZC4,
+21,Southwestern Zone of Asia,Suroeste de Asia (Oriente Medio),14,4J 4L 7O 9K A4 A6 A7 A9 AP EK EP HZ YA YI,
+22,Southern Zone of Asia,Sur de Asia (subcontinente indio),7,4S 8Q 9N A5 S2 VU VU7,
+23,Central Zone of Asia,"Asia central (Mongolia, oeste de China)",3,JT,BY UA9
+24,Eastern Zone of Asia,Este de Asia (China oriental),5,BV BV9P VR XX9,BY
+25,Japanese Zone,Japón y Corea,3,HL JA P5,
+26,Southeastern Zone of Asia,Sudeste asiático continental,7,1S 3W HS VU4 XU XW XZ,
+27,Philippine Zone,Filipinas y Micronesia occidental,8,BS7 DU JD/m JD/o KH0 KH2 T8 V6,
+28,Indonesian Zone,Indonesia y alrededores,8,4W 9M2 9M6 9V H4 P2 V8 YB,
+29,Western Zone of Australia,Australia occidental,4,VK9C VK9X,CE9 VK
+30,Eastern Zone of Australia,Australia oriental,7,FK/c VK0M VK9L VK9M VK9W,CE9 VK
+31,Central Pacific Zone,Pacífico central,16,C2 FO/m KH1 KH3 KH4 KH5 KH6 KH7K KH9 T2 T30 T31 T32 T33 V7 ZK3,
+32,New Zealand Zone,Nueva Zelanda y Pacífico sur,23,3D2 3D2/c 3D2/r 5W A3 E5/n E5/s E6 FK FO FO/a FW H40 KH8 KH8/s VK9N VP6 VP6/d YJ ZL ZL7 ZL8 ZL9,
+33,Northwestern Zone of Africa,Noroeste de África,8,3V 7X CN CT3 EA8 EA9 IG9 S0,
+34,Northeastern Zone of Africa,Noreste de África,4,5A ST SU Z8,
+35,Central Zone of Africa,África occidental/central,16,3X 5N 5T 5U 5V 6W 9G 9L C5 D4 EL J5 TU TY TZ XT,
+36,Equatorial Zone of Africa,África ecuatorial,15,3C 3C0 9J 9Q 9U 9X D2 S9 TJ TL TN TR TT ZD7 ZD8,
+37,Eastern Zone of Africa,África oriental,9,5H 5X 5Z 7Q C9 E3 ET J2 T5,
+38,South African Zone,África austral,10,3DA 3Y/b 7P A2 V5 Z2 ZD9 ZS ZS8,CE9
+39,Madagascar Zone,Madagascar y océano Índico sur,17,3B6 3B8 3B9 5R D6 FH FR FT/g FT/j FT/t FT/w FT/x FT/z S7 VK0H VQ9,CE9
+40,North Atlantic Zone,Atlántico norte / Ártico,6,JW JW/b JX OX R1FJ TF,

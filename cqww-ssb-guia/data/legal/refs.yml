@@ -1,0 +1,374 @@
+# Referencias del capítulo legal (Hayagriva). Claves con prefijo "legal-".
+# Fecha de consulta común: 2026-10-20. Los textos del BOE se leyeron a través de la réplica
+# legalize-es (derivada del API de legislación consolidada del BOE), porque boe.es no era
+# accesible desde el entorno de trabajo; las URL que figuran son las oficiales del BOE.
+
+# --- Normativa específica de radioaficionados -------------------------------------------
+
+legal-orden-iet-1311-2013:
+  type: legislation
+  title: "Orden IET/1311/2013, de 9 de julio, por la que se aprueba el Reglamento de uso del dominio público radioeléctrico por radioaficionados"
+  publisher: Boletín Oficial del Estado
+  date: 2013-07-12
+  serial-number: BOE-A-2013-7624
+  issue: 166
+  page-range: 51697-51722
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2013-7624
+    date: 2026-10-20
+  note: "Texto consolidado; última modificación: Orden IET/614/2015 (versión de 10-04-2015). ELI: https://www.boe.es/eli/es/o/2013/07/09/iet1311"
+
+legal-orden-iet-614-2015:
+  type: legislation
+  title: "Orden IET/614/2015, de 6 de abril, por la que se modifica la Orden IET/787/2013, de 25 de abril, por la que se aprueba el cuadro nacional de atribución de frecuencias"
+  publisher: Boletín Oficial del Estado
+  date: 2015-04-10
+  serial-number: BOE-A-2015-3864
+  language: es
+  url:
+    value: https://www.boe.es/buscar/doc.php?id=BOE-A-2015-3864
+    date: 2026-10-20
+  note: "Su disposición final primera da nueva redacción a la disposición adicional segunda del Reglamento aprobado por la Orden IET/1311/2013."
+
+legal-orden-itc-1791-2006:
+  type: legislation
+  title: "Orden ITC/1791/2006, de 5 de junio, por la que se aprueba el Reglamento de uso del dominio público radioeléctrico por aficionados"
+  publisher: Boletín Oficial del Estado
+  date: 2006-06-09
+  serial-number: BOE-A-2006-10286
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2006-10286
+    date: 2026-10-20
+  note: "Derogada por la Orden IET/1311/2013 (13-07-2013). Se cita sólo como referencia histórica."
+
+legal-res-2019-07-12-distintivos:
+  type: legislation
+  title: "Resolución de 12 de julio de 2019 por la que se establece el procedimiento para la asignación de distintivos de llamada de radioaficionado (art. 27.3 de la Orden IET/1311/2013)"
+  publisher: Boletín Oficial del Estado
+  date: 2019-07-12
+  serial-number: BOE-A-2019-10543
+  language: es
+  url:
+    value: https://www.boe.es/buscar/doc.php?id=BOE-A-2019-10543
+    date: 2026-10-20
+  note: "Título literal y fecha de publicación POR VERIFICAR; la referencia procede de la ficha consolidada de la Orden IET/1311/2013."
+
+legal-res-2026-07-29-distintivos-una-letra:
+  type: legislation
+  title: "Resolución de 29 de julio de 2026, de la Secretaría de Estado de Telecomunicaciones e Infraestructuras Digitales, sobre el procedimiento de asignación de distintivos de llamada con sufijo de una letra"
+  publisher: Boletín Oficial del Estado
+  date: 2026-08-10
+  serial-number: BOE-A-2026-17504
+  language: es
+  url:
+    value: https://www.boe.es/boe/dias/2026/08/10/pdfs/BOE-A-2026-17504.pdf
+    date: 2026-10-20
+  note: "Título literal POR VERIFICAR (datos tomados de un resumen de búsqueda web)."
+
+legal-mtdfp-consulta-distintivos-2026:
+  type: web
+  title: "Consulta pública previa: proyecto de resolución sobre distintivos de llamada de radioaficionado con sufijo de una letra (11-05-2026)"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  date: 2026-05-11
+  language: es
+  url:
+    value: https://digital.gob.es/ministerio/participacion-proyectos-normativos/consulta-publica-previa/telecomunicaciones-infraestructuras-digitales/2026-05-11
+    date: 2026-10-20
+
+legal-orden-int-1149-2018:
+  type: legislation
+  title: "Orden INT/1149/2018, de 29 de octubre, por la que se regula la organización y el funcionamiento de la Red Nacional de Radio de Emergencia"
+  publisher: Boletín Oficial del Estado
+  date: 2018-10-31
+  serial-number: BOE-A-2018-14902
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2018-14902
+    date: 2026-10-20
+
+# --- Marco general de telecomunicaciones y espectro ----------------------------------
+
+legal-ley-11-2022:
+  type: legislation
+  title: "Ley 11/2022, de 28 de junio, General de Telecomunicaciones"
+  publisher: Boletín Oficial del Estado
+  date: 2022-06-29
+  serial-number: BOE-A-2022-10757
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2022-10757
+    date: 2026-10-20
+  note: "Texto consolidado (última actualización recogida: 28-12-2025)."
+
+legal-rd-123-2017:
+  type: legislation
+  title: "Real Decreto 123/2017, de 24 de febrero, por el que se aprueba el Reglamento sobre el uso del dominio público radioeléctrico"
+  publisher: Boletín Oficial del Estado
+  date: 2017-03-08
+  serial-number: BOE-A-2017-2460
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2017-2460
+    date: 2026-10-20
+
+legal-orden-tdf-732-2026:
+  type: legislation
+  title: "Orden TDF/732/2026, de 10 de julio, por la que se aprueba el Cuadro Nacional de Atribución de Frecuencias"
+  publisher: Boletín Oficial del Estado
+  date: 2026-07-17
+  serial-number: BOE-A-2026-15661
+  issue: 173
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2026-15661
+    date: 2026-10-20
+  note: "CNAF vigente desde el 18-07-2026; deroga la Orden ETD/1449/2021. Las tablas de atribución y las notas UN se publican como imágenes."
+
+legal-orden-etd-1449-2021:
+  type: legislation
+  title: "Orden ETD/1449/2021, de 16 de diciembre, por la que se aprueba el Cuadro Nacional de Atribución de Frecuencias"
+  publisher: Boletín Oficial del Estado
+  date: 2021-12-24
+  serial-number: BOE-A-2021-21346
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2021-21346
+    date: 2026-10-20
+  note: "Derogada por la Orden TDF/732/2026 (18-07-2026); modificada en su día por la Orden ETD/625/2023."
+
+# --- Antenas y propiedad --------------------------------------------------------------
+
+legal-ley-19-1983:
+  type: legislation
+  title: "Ley 19/1983, de 16 de noviembre, sobre regulación del derecho a instalar en el exterior de los inmuebles las antenas de las estaciones radioeléctricas de aficionados"
+  publisher: Boletín Oficial del Estado
+  date: 1983-11-26
+  serial-number: BOE-A-1983-31093
+  issue: 283
+  language: es
+  url:
+    value: https://www.boe.es/eli/es/l/1983/11/16/19/con
+    date: 2026-10-20
+
+legal-rd-2623-1986:
+  type: legislation
+  title: "Real Decreto 2623/1986, de 21 de noviembre, por el que se regulan las instalaciones de antenas de estaciones radioeléctricas de aficionado"
+  publisher: Boletín Oficial del Estado
+  date: 1986-12-30
+  serial-number: BOE-A-1986-33766
+  issue: 312
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-1986-33766
+    date: 2026-10-20
+  note: "Incluye las correcciones de errores y erratas de los BOE núm. 60 y 62 de 1987."
+
+legal-ley-49-1960-lph:
+  type: legislation
+  title: "Ley 49/1960, de 21 de julio, sobre propiedad horizontal"
+  publisher: Boletín Oficial del Estado
+  date: 1960-07-23
+  serial-number: BOE-A-1960-10906
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-1960-10906
+    date: 2026-10-20
+
+legal-codigo-civil:
+  type: legislation
+  title: "Real Decreto de 24 de julio de 1889 por el que se publica el Código Civil"
+  publisher: Boletín Oficial del Estado
+  date: 1889-07-25
+  serial-number: BOE-A-1889-4763
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-1889-4763
+    date: 2026-10-20
+  note: "Se cita el artículo 545 (variación de la servidumbre a costa del predio sirviente)."
+
+# --- Exposición a campos electromagnéticos --------------------------------------------
+
+legal-rd-1066-2001:
+  type: legislation
+  title: "Real Decreto 1066/2001, de 28 de septiembre, por el que se aprueba el Reglamento que establece condiciones de protección del dominio público radioeléctrico, restricciones a las emisiones radioeléctricas y medidas de protección sanitaria frente a emisiones radioeléctricas"
+  publisher: Boletín Oficial del Estado
+  date: 2001-09-29
+  serial-number: BOE-A-2001-18256
+  issue: 234
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2001-18256
+    date: 2026-10-20
+  note: "Vigentes el capítulo I, el capítulo III (arts. 6 y 7) y el anexo II; los capítulos II, IV y V y el anexo I fueron derogados por el Real Decreto 123/2017."
+
+legal-orden-cte-23-2002:
+  type: legislation
+  title: "Orden CTE/23/2002, de 11 de enero, por la que se establecen condiciones para la presentación de determinados estudios y certificaciones por operadores de servicios de radiocomunicaciones"
+  publisher: Boletín Oficial del Estado
+  date: 2002-01-12
+  serial-number: BOE-A-2002-694
+  issue: 11
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2002-694
+    date: 2026-10-20
+
+legal-rec-1999-519-ce:
+  type: legislation
+  title: "Recomendación del Consejo, de 12 de julio de 1999, relativa a la exposición del público en general a campos electromagnéticos (0 Hz a 300 GHz) (1999/519/CE)"
+  publisher: Diario Oficial de las Comunidades Europeas
+  date: 1999-07-30
+  language: es
+  url:
+    value: https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:31999H0519
+  note: "DO L 199 de 30-07-1999 (página POR VERIFICAR). No consultada en esta sesión; citada por el RD 1066/2001."
+
+legal-icnirp-1998:
+  type: article
+  title: "Guidelines for limiting exposure to time-varying electric, magnetic, and electromagnetic fields (up to 300 GHz)"
+  author: International Commission on Non-Ionizing Radiation Protection
+  date: 1998
+  page-range: 494-522
+  language: en
+  parent:
+    type: periodical
+    title: Health Physics
+    volume: 74
+    issue: 4
+  note: "Base de los niveles de referencia de la Recomendación 1999/519/CE y del anexo II del RD 1066/2001. No consultada en esta sesión."
+
+legal-itu-t-k52:
+  type: report
+  title: "Recomendación UIT-T K.52: Orientación sobre el cumplimiento de los límites de exposición de las personas a los campos electromagnéticos"
+  publisher: Unión Internacional de Telecomunicaciones
+  language: es
+  url:
+    value: https://www.itu.int/rec/T-REC-K.52
+  note: "Edición vigente y herramienta de cálculo asociada POR VERIFICAR; no consultada en esta sesión."
+
+legal-fcc-oet65b:
+  type: report
+  title: "OET Bulletin 65, Supplement B (Edition 97-01): Additional Information for Amateur Radio Stations"
+  publisher: Federal Communications Commission, Office of Engineering and Technology
+  date: 1997-11
+  language: en
+  url:
+    value: https://transition.fcc.gov/Bureaus/Engineering_Technology/Documents/bulletins/oet65/oet65b.pdf
+  note: "Referencia técnica estadounidense (no normativa en España) para factores de modo SSB y de reflexión en el suelo. URL y valores POR VERIFICAR."
+
+# --- Licencias CEPT, plan de bandas y fuentes secundarias ------------------------------
+
+legal-cept-tr-61-01:
+  type: report
+  title: "CEPT Recommendation T/R 61-01: CEPT Radio Amateur Licence"
+  publisher: European Conference of Postal and Telecommunications Administrations (CEPT)
+  language: en
+  note: "Citada en los arts. 11-14 de la Orden IET/1311/2013. Versión vigente y lista de países: ECO Documentation Database (docdb.cept.org), POR VERIFICAR."
+
+legal-cept-tr-61-02:
+  type: report
+  title: "CEPT Recommendation T/R 61-02: Harmonised Amateur Radio Examination Certificate (HAREC)"
+  publisher: European Conference of Postal and Telecommunications Administrations (CEPT)
+  language: en
+  note: "Citada en los arts. 5 y 10 de la Orden IET/1311/2013 (programa del examen conforme a su anexo 6). Versión vigente POR VERIFICAR."
+
+legal-iaru-r1-hf-bandplan:
+  type: report
+  title: "IARU Region 1 HF Band Plan"
+  publisher: International Amateur Radio Union Region 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/on-the-air/band-plans/
+  note: "Versión, fecha de entrada en vigor y URL exacta POR VERIFICAR (no se pudo consultar en esta sesión). La Orden IET/1311/2013 (art. 2.2 y anexo I, ap. 3.1) remite a este plan «como norma general»."
+
+legal-ure-bandas-atribuidas:
+  type: web
+  title: "Bandas atribuidas"
+  publisher: Unión de Radioaficionados Españoles
+  language: es
+  url:
+    value: https://www.ure.es/bandas-atribuidas/
+    date: 2026-10-20
+  note: "Fuente secundaria; sólo se conoce por un resumen de búsqueda (160 m: 1810-1830 kHz secundaria, 500 W; 1830-1850 kHz primaria, 1000 W)."
+
+# --- Páginas del Ministerio (procedimientos; datos perecederos) -------------------------
+
+legal-mtdfp-radioaficionados-cb27:
+  type: web
+  title: "Radioaficionados y CB-27"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/telecomunicaciones-infraestructuras-digitales/areas-interes/espectro-radioelectrico/radioaficionados-cb27
+    date: 2026-10-20
+  note: "Existencia constatada en resultados de búsqueda; contenido no leído directamente (POR VERIFICAR)."
+
+legal-mtdfp-legislacion-radioaficionados:
+  type: web
+  title: "Radioaficionados y CB-27: legislación"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/telecomunicaciones-infraestructuras-digitales/areas-interes/espectro-radioelectrico/radioaficionados-cb27/legislacion
+    date: 2026-10-20
+
+legal-mtdfp-examenes:
+  type: web
+  title: "Exámenes de radioaficionado"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/telecomunicaciones-infraestructuras-digitales/areas-interes/espectro-radioelectrico/radioaficionados-cb27/examenes-radioaficionado
+    date: 2026-10-20
+
+legal-mtdfp-procedimientos-radioaficionados:
+  type: web
+  title: "Radioaficionados (SIA: 151740 - 155085 - 991002 - 991004)"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/ministerio/servicios-a-la-ciudadania/procedimientos-y-servicios/telecomunicaciones-e-infraestructuras-digitales/espectro-radioelectrico/Radioaficionados
+    date: 2026-10-20
+  note: "Ficha de procedimientos; enlaces a la sede electrónica (sedediatid.digital.gob.es) POR VERIFICAR."
+
+legal-mtdfp-descarga-autorizacion:
+  type: web
+  title: "Descarga telemática de la autorización de radioaficionados actualizada"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/telecomunicaciones-infraestructuras-digitales/areas-interes/espectro-radioelectrico/radioaficionados-cb27/autorizaciones/solicitud-elematica-autorizacion
+    date: 2026-10-20
+
+legal-mtdfp-res-1850-2000:
+  type: web
+  title: "Resolución de autorización en la banda 1850-2000 kHz (radioaficionados)"
+  publisher: Secretaría de Estado de Telecomunicaciones e Infraestructuras Digitales
+  language: es
+  url:
+    value: https://avance.digital.gob.es/espectro/radioaficionados/autorizaciones/Documents/RESOLUCIoN-AUTORIZACIoN-EN-LA-BANDA-1850-2000-kHz.pdf
+    date: 2026-10-20
+  note: "Sólo se conoce el título por resultados de búsqueda; fecha, plazo y condiciones POR VERIFICAR."
+
+legal-mtdfp-res-5mhz:
+  type: web
+  title: "Resolución por la que se autoriza el uso especial de la banda de 5 MHz por titulares de autorizaciones de radioaficionado"
+  publisher: Secretaría de Estado de Telecomunicaciones e Infraestructuras Digitales
+  language: es
+  url:
+    value: https://avance.digital.gob.es/espectro/radioaficionados/autorizaciones/Documents/Resolucion5MHz.pdf
+    date: 2026-10-20
+  note: "Título descriptivo; fecha y vigencia POR VERIFICAR."
+
+legal-legalize-es:
+  type: web
+  title: "legalize-es: legislación de España en formato Markdown, versionada como repositorio git"
+  publisher: Legalize
+  date: 2026
+  language: es
+  url:
+    value: https://github.com/legalize-dev/legalize-es
+    date: 2026-10-20
+  note: "Réplica derivada del API de legislación consolidada del BOE usada para leer los textos; la fuente citable es siempre el BOE."

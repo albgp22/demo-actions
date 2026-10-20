@@ -1,0 +1,22 @@
+categoria,articulo,opcion,precio_eur,tienda,fecha_precio,fuente_url,verificado,iva_incluido,notas
+Transceptor,"Yaesu FT-710 Field (100 W, ATU interno; sin altavoz SP-40)",minima,1099.00,La Tienda del Radioaficionado,2026-10-20,https://www.tutiendaderadio.com/es/home/5711-yaesu-ft-710-field-emisora-transceptor-hf-y-50-mhz.html,si,si (21 %),Precio visto en resultado de búsqueda; fecha de la ficha desconocida; confirmar stock
+Alimentación,"Fuente 13,8 V CC de al menos 25 A continuos (el equipo pide 21 A en TX)",minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Antena,Media onda alimentada en punta (EFHW) multibanda 80/40-10 m apta para 100 W SSB,minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado); elegir potencia nominal con margen para ciclo de trabajo de concurso
+Cable coaxial,15-20 m de coaxial de 50 ohm tipo RG-213 con conectores PL-259,minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Choke de modo común,Choke de ferrita mezcla 31 en el coaxial (punto de alimentación o entrada al cuarto),minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Memorias de voz,Tarjeta SD para las memorias de voz del equipo,minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Micrófono,Micrófono de mano incluido con el equipo (confirmar qué incluye la versión Field),minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Escucha SDR,RTL-SDR Blog V4 + antena de hilo para recepción,minima,,,,,no,,"POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado); si ya se tiene, coste 0"
+Transceptor,"Icom IC-7300MK2 (100 W, ATU interno, USB-C, LAN, HDMI)",recomendada,1549.00,WiMo,2026-10-20,https://www.wimo.com/es/icom-ic-7300mk2-kw-50-70-mhz-transceiver,si,si (IVA alemán 19 %; envío aparte),"Precio verificado por el usuario el 2026-10-20; si WiMo aplica IVA español (21 %) sería ~1.575 € (POR VERIFICAR). Alternativa: Radiomanía 1.549,90 € con IVA y envío incluidos"
+Alimentación,"Fuente 13,8 V CC de 30 A de bajo ruido de RF",recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Antena,EFHW multibanda para 100 W SSB + opción vertical corta con radiales y acoplador remoto para 160/80 m,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Cable coaxial,15-20 m de coaxial de baja pérdida (tipo Ecoflex 10 o Aircell 7) con conectores,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Choke de modo común,Dos chokes de ferrita mezcla 31 (punto de alimentación y entrada al cuarto),recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Auriculares,Auriculares cerrados con micrófono de pértiga + adaptador al conector de micrófono del equipo,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+PTT,Pedal de PTT,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Medida,Medidor de ROE/vatímetro de paso para HF,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado); los equipos muestran ROE en pantalla (comprobar en manual)
+Medida,Carga ficticia de 50 ohm para 100 W,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Filtrado,Filtro paso bajo HF para 100 W (ayuda frente a interferencias en TV/radio de vecinos),recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Memorias de voz,Tarjeta SD para las memorias de voz del equipo,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
+Escucha SDR,RTL-SDR Blog V4 + antena de hilo para recepción (servidor en la Raspberry Pi 5),recomendada,,,,,no,,"POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado); si ya se tiene, coste 0"
+Control remoto,"Icom RS-BA1 Version 2 (opcional; software de control remoto, plataforma POR VERIFICAR)",recomendada,121.00,tienda española no identificada en el resultado,2026-10-20,,no,si,POR VERIFICAR: el resultado de búsqueda no identifica la tienda; en Mac hay alternativas (SDR Control; wfview POR VERIFICAR)

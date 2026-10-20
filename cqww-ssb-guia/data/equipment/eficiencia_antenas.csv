@@ -1,0 +1,55 @@
+tipo,configuracion,banda,f_mhz,dimension_relativa,r_rad_ohm,r_perdidas_ohm,eficiencia_pct,perdida_db,unidades_s,bw_3db_khz,v_condensador_kv_100w,valido
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=0 mOhm",160m,1.85,0.0155,1.14e-05,0.0129,0.0884,30.5,5.09,2.23,1.89,si
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=0 mOhm",80m,3.7,0.031,1.83e-04,0.0182,0.991,20,3.34,3.18,3.16,si
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=0 mOhm",40m,7.1,0.0595,2.48e-03,0.0253,8.93,10.5,1.75,4.79,4.94,si
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=0 mOhm",20m,14.2,0.119,0.0396,0.0358,52.6,2.79,0.465,13,6,aprox
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=0 mOhm",15m,21.3,0.179,0.201,0.0438,82.1,0.857,0.143,42.1,5,aprox
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=0 mOhm",10m,28.5,0.239,0.643,0.0506,92.7,0.329,0.0549,120,3.97,aprox
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=10 mOhm",160m,1.85,0.0155,1.14e-05,0.0229,0.0498,33,5.5,3.95,1.42,si
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=10 mOhm",80m,3.7,0.031,1.83e-04,0.0282,0.643,21.9,3.65,4.9,2.55,si
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=10 mOhm",40m,7.1,0.0595,2.48e-03,0.0353,6.56,11.8,1.97,6.51,4.24,si
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=10 mOhm",20m,14.2,0.119,0.0396,0.0458,46.4,3.33,0.555,14.7,5.64,aprox
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=10 mOhm",15m,21.3,0.179,0.201,0.0538,78.9,1.03,0.172,43.9,4.9,aprox
+lazo_magnetico,"D=0.8 m, tubo Cu 22 mm, R_extra=10 mOhm",10m,28.5,0.239,0.643,0.0606,91.4,0.391,0.0652,121,3.94,aprox
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=0 mOhm",160m,1.85,0.0194,2.79e-05,0.0161,0.173,27.6,4.61,2.1,2.24,si
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=0 mOhm",80m,3.7,0.0388,4.46e-04,0.0228,1.92,17.2,2.86,3.02,3.73,si
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=0 mOhm",40m,7.1,0.0744,6.05e-03,0.0316,16.1,7.94,1.32,4.9,5.63,si
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=0 mOhm",20m,14.2,0.149,0.0968,0.0447,68.4,1.65,0.275,18.4,5.81,aprox
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=0 mOhm",15m,21.3,0.223,0.49,0.0547,90,0.46,0.0766,70.8,4.44,aprox
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=0 mOhm",10m,28.5,0.299,1.57,0.0633,96.1,0.172,0.0286,212,3.43,no (lazo ya no es pequeno)
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=10 mOhm",160m,1.85,0.0194,2.79e-05,0.0261,0.107,29.7,4.95,3.4,1.76,si
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=10 mOhm",80m,3.7,0.0388,4.46e-04,0.0328,1.34,18.7,3.12,4.32,3.12,si
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=10 mOhm",40m,7.1,0.0744,6.05e-03,0.0416,12.7,8.96,1.49,6.2,5,si
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=10 mOhm",20m,14.2,0.149,0.0968,0.0547,63.9,1.95,0.324,19.7,5.61,aprox
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=10 mOhm",15m,21.3,0.223,0.49,0.0647,88.3,0.539,0.0898,72.1,4.4,aprox
+lazo_magnetico,"D=1 m, tubo Cu 22 mm, R_extra=10 mOhm",10m,28.5,0.299,1.57,0.0733,95.5,0.198,0.033,214,3.42,no (lazo ya no es pequeno)
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=0 mOhm",160m,1.85,0.0291,1.41e-04,0.0242,0.58,22.4,3.73,1.91,3.02,si
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=0 mOhm",80m,3.7,0.0582,2.26e-03,0.0342,6.19,12.1,2.01,2.86,4.94,si
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=0 mOhm",40m,7.1,0.112,0.0306,0.0474,39.2,4.06,0.677,6.13,6.47,aprox
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=0 mOhm",20m,14.2,0.223,0.49,0.067,88,0.557,0.0928,43.7,4.85,aprox
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=0 mOhm",15m,21.3,0.335,2.48,0.0821,96.8,0.141,0.0236,201,3.39,no (lazo ya no es pequeno)
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=0 mOhm",10m,28.5,0.448,7.95,0.095,98.8,0.0516,8.59e-03,632,2.56,no (lazo ya no es pequeno)
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=10 mOhm",160m,1.85,0.0291,1.41e-04,0.0342,0.411,23.9,3.98,2.7,2.54,si
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=10 mOhm",80m,3.7,0.0582,2.26e-03,0.0442,4.86,13.1,2.19,3.65,4.37,si
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=10 mOhm",40m,7.1,0.112,0.0306,0.0574,34.8,4.59,0.764,6.91,6.1,aprox
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=10 mOhm",20m,14.2,0.223,0.49,0.077,86.4,0.634,0.106,44.5,4.8,aprox
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=10 mOhm",15m,21.3,0.335,2.48,0.0921,96.4,0.158,0.0264,202,3.38,no (lazo ya no es pequeno)
+lazo_magnetico,"D=1.5 m, tubo Cu 22 mm, R_extra=10 mOhm",10m,28.5,0.448,7.95,0.105,98.7,0.057,9.49e-03,632,2.56,no (lazo ya no es pequeno)
+vertical_corta,"h=5 m, Q=150, R_tierra=5 ohm",160m,1.85,0.0309,0.376,16.2,2.27,16.4,2.74,,,si
+vertical_corta,"h=5 m, Q=150, R_tierra=5 ohm",80m,3.7,0.0617,1.5,10.4,12.6,8.98,1.5,,,si
+vertical_corta,"h=5 m, Q=150, R_tierra=5 ohm",40m,7.1,0.118,5.54,7.4,42.8,3.69,0.614,,,aprox
+vertical_corta,"h=5 m, Q=150, R_tierra=15 ohm",160m,1.85,0.0309,0.376,26.2,1.41,18.5,3.08,,,si
+vertical_corta,"h=5 m, Q=150, R_tierra=15 ohm",80m,3.7,0.0617,1.5,20.4,6.87,11.6,1.94,,,si
+vertical_corta,"h=5 m, Q=150, R_tierra=15 ohm",40m,7.1,0.118,5.54,17.4,24.1,6.17,1.03,,,aprox
+vertical_corta,"h=5 m, Q=150, R_tierra=30 ohm",160m,1.85,0.0309,0.376,41.2,0.904,20.4,3.41,,,si
+vertical_corta,"h=5 m, Q=150, R_tierra=30 ohm",80m,3.7,0.0617,1.5,35.4,4.08,13.9,2.32,,,si
+vertical_corta,"h=5 m, Q=150, R_tierra=30 ohm",40m,7.1,0.118,5.54,32.4,14.6,8.36,1.39,,,aprox
+vertical_corta,"h=7 m, Q=150, R_tierra=5 ohm",160m,1.85,0.0432,0.737,13.4,5.21,12.8,2.14,,,si
+vertical_corta,"h=7 m, Q=150, R_tierra=5 ohm",80m,3.7,0.0864,2.95,8.88,24.9,6.04,1.01,,,si
+vertical_corta,"h=7 m, Q=150, R_tierra=5 ohm",40m,7.1,0.166,10.9,6.38,63,2.01,0.335,,,aprox
+vertical_corta,"h=7 m, Q=150, R_tierra=15 ohm",160m,1.85,0.0432,0.737,23.4,3.05,15.2,2.53,,,si
+vertical_corta,"h=7 m, Q=150, R_tierra=15 ohm",80m,3.7,0.0864,2.95,18.9,13.5,8.7,1.45,,,si
+vertical_corta,"h=7 m, Q=150, R_tierra=15 ohm",40m,7.1,0.166,10.9,16.4,39.9,4,0.666,,,aprox
+vertical_corta,"h=7 m, Q=150, R_tierra=30 ohm",160m,1.85,0.0432,0.737,38.4,1.88,17.3,2.88,,,si
+vertical_corta,"h=7 m, Q=150, R_tierra=30 ohm",80m,3.7,0.0864,2.95,33.9,8,11,1.83,,,si
+vertical_corta,"h=7 m, Q=150, R_tierra=30 ohm",40m,7.1,0.166,10.9,31.4,25.7,5.9,0.983,,,aprox

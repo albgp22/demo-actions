@@ -1,0 +1,16 @@
+destino,etiqueta,lat,lon,rumbo_sp_grados,distancia_sp_km,rumbo_lp_grados,distancia_lp_km
+Nueva York,W2 / zona 5,40.71,-74.01,295,5768,115,34262
+Chicago,W9 / zona 4,41.88,-87.63,302,6725,122,33306
+Los Ángeles,W6 / zona 3,34.05,-118.24,311,9363,131,30668
+San Juan (Puerto Rico),KP4 / zona 8,18.47,-66.11,267,6374,87,33656
+São Paulo,PY / zona 11,-23.55,-46.63,220,8385,40,31646
+Buenos Aires,LU / zona 13,-34.6,-58.38,222,10045,42,29986
+Dakar,6W / zona 35,14.69,-17.45,209,3156,29,36874
+Nairobi,5Z / zona 37,-1.29,36.82,128,6190,308,33840
+Johannesburgo,ZS / zona 38,-26.2,28.05,150,8102,330,31928
+Nueva Delhi,VU / zona 22,28.61,77.21,72,7274,252,32756
+Novosibirsk,UA9 / zona 18,55.03,82.92,44,6244,224,33786
+Tokio,JA / zona 25,35.68,139.69,29,10763,209,29267
+Yakarta,YB / zona 28,-6.21,106.85,81,12190,261,27840
+Sídney,VK2 / zona 30,-33.87,151.21,80,17685,260,22345
+Honolulu,KH6 / zona 31,21.31,-157.86,334,12648,154,27382

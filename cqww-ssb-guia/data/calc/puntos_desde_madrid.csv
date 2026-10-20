@@ -1,0 +1,37 @@
+prefijo,entidad,entidad_cty,continente,zona_cq_tipica,puntos,nota
+"EA1–EA5, EA7 (y EB…EH)",España peninsular,Spain,EU,14,0,"0 puntos, pero da país y zona 14"
+EA6,Baleares,Balearic Islands,EU,14,1,País distinto de EA
+EA8,Canarias,Canary Islands,AF,33,3,Es África
+EA9,Ceuta y Melilla,Ceuta & Melilla,AF,33,3,Es África
+CT,Portugal,Portugal,EU,14,1,
+CT3,Madeira,Madeira Islands,AF,33,3,Es África
+CU,Azores,Azores,EU,14,1,Es Europa
+F,Francia,France,EU,14,1,
+G,Inglaterra,England,EU,14,1,"GM, GW, GI, GD, GJ y GU son países distintos"
+DL,Alemania,Fed. Rep. of Germany,EU,14,1,
+I,Italia,Italy,EU,15,1,
+IT9,Sicilia,Sicily (not DXCC),EU,15,1,"País WAE, aparte de I"
+"IG9, IH9",África italiana,African Italy (not DXCC),AF,33,3,País aparte; es África
+SP,Polonia,Poland,EU,15,1,
+UA1–UA7,Rusia europea,European Russia,EU,16,1,
+"UA9, UA0",Rusia asiática,Asiatic Russia,AS,17,3,"Es Asia; zonas 17, 18, 19 y 23"
+SV,Grecia,Greece,EU,20,1,
+TA1,Turquía europea,European Turkey (not DXCC),EU,20,1,País WAE; es Europa
+TA2–TA9,Turquía asiática,Asiatic Turkey,AS,20,3,Es Asia
+5B,Chipre,Cyprus,AS,20,3,Es Asia
+"4X, 4Z",Israel,Israel,AS,20,3,Es Asia
+CN,Marruecos,Morocco,AF,33,3,
+ZS,Sudáfrica,South Africa,AF,38,3,
+TF,Islandia,Iceland,EU,40,1,
+OX,Groenlandia,Greenland,NA,40,3,Es Norteamérica
+"K, N, W, AA–AK",EE. UU.,United States,NA,5,3,"Zonas 3, 4 y 5 según el estado"
+"VE, VA…",Canadá,Canada,NA,4,3,Zonas 1 a 5
+KP4,Puerto Rico,Puerto Rico,NA,8,3,
+XE,México,Mexico,NA,6,3,
+PY…,Brasil,Brazil,SA,11,3,
+LU…,Argentina,Argentina,SA,13,3,
+JA…,Japón,Japan,AS,25,3,
+BY…,China,China,AS,24,3,Zonas 23 y 24
+VK,Australia,Australia,OC,30,3,Zonas 29 y 30
+ZL,Nueva Zelanda,New Zealand,OC,32,3,
+KH6,Hawái,Hawaii,OC,31,3,Es Oceanía

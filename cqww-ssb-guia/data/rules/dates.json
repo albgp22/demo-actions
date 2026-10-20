@@ -1,0 +1,236 @@
+{
+  "_descripcion": "Fechas del CQ WW DX Contest calculadas con scripts/rules_fechas.py",
+  "_generado": "2026-10-20",
+  "_regla_fin_de_semana": {
+    "SSB": "SSB is always the last full weekend of October.",
+    "CW": "CW is always the last full weekend of November.",
+    "fuente": "https://cqww.com/ (portada; verificado por WebSearch 2026-10-20)"
+  },
+  "_regla_horario": {
+    "texto": "Starts 00:00:00 UTC Saturday  Ends 23:59:59 UTC Sunday",
+    "fuente": "https://cqww.com/rules/2026_rules_cqww.pdf (5-sep-2026)"
+  },
+  "_regla_plazo_log": {
+    "texto": "All entries must be sent WITHIN 48 HOURS after the end of the contest: no later than 2359 UTC October 27, 2026 for SSB and 2359 UTC December 1, 2026 for CW.",
+    "fuente": "https://cqww.com/rules/2026_rules_cqww.pdf; https://cqww.com/blog/2026-rule-changes/",
+    "nota": "Nuevo en 2026 (antes eran 5 días). Para 2027/2028 es una proyección."
+  },
+  "comprobacion": {
+    "fechas_publicadas_reproducidas": [
+      1999,
+      2019,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026,
+      2027,
+      2028,
+      2029
+    ],
+    "resultado": "OK"
+  },
+  "eventos": {
+    "2026": {
+      "SSB": {
+        "modo": "SSB",
+        "concurso": "CQ-WW-SSB",
+        "fin_de_semana": [
+          "2026-10-24",
+          "2026-10-25"
+        ],
+        "inicio_utc": "2026-10-24T00:00:00Z",
+        "fin_utc": "2026-10-25T23:59:59Z",
+        "duracion_horas": 48.0,
+        "inicio_madrid": {
+          "iso": "2026-10-24T02:00:00+02:00",
+          "tz": "CEST",
+          "dia_semana": "sábado"
+        },
+        "fin_madrid": {
+          "iso": "2026-10-26T00:59:59+01:00",
+          "tz": "CET",
+          "dia_semana": "lunes"
+        },
+        "plazo_log_utc": "2026-10-27T23:59:00Z",
+        "plazo_log_madrid": {
+          "iso": "2026-10-28T00:59:00+01:00",
+          "tz": "CET",
+          "dia_semana": "miércoles"
+        },
+        "plazo_log_estado": "publicado en las reglas 2026",
+        "coincide_con_fecha_publicada": true,
+        "fuente_fecha_publicada": "cqww.com/ y reglas 2026",
+        "cambio_hora_europa": {
+          "instante_utc": "2026-10-25T01:00:00Z",
+          "dentro_del_concurso": true,
+          "nota": "En la España peninsular, a las 03:00 CEST se vuelve a las 02:00 CET (UTC+2 -> UTC+1). El log se lleva siempre en UTC."
+        }
+      },
+      "CW": {
+        "modo": "CW",
+        "concurso": "CQ-WW-CW",
+        "fin_de_semana": [
+          "2026-11-28",
+          "2026-11-29"
+        ],
+        "inicio_utc": "2026-11-28T00:00:00Z",
+        "fin_utc": "2026-11-29T23:59:59Z",
+        "duracion_horas": 48.0,
+        "inicio_madrid": {
+          "iso": "2026-11-28T01:00:00+01:00",
+          "tz": "CET",
+          "dia_semana": "sábado"
+        },
+        "fin_madrid": {
+          "iso": "2026-11-30T00:59:59+01:00",
+          "tz": "CET",
+          "dia_semana": "lunes"
+        },
+        "plazo_log_utc": "2026-12-01T23:59:00Z",
+        "plazo_log_madrid": {
+          "iso": "2026-12-02T00:59:00+01:00",
+          "tz": "CET",
+          "dia_semana": "miércoles"
+        },
+        "plazo_log_estado": "publicado en las reglas 2026",
+        "coincide_con_fecha_publicada": true,
+        "fuente_fecha_publicada": "cqww.com/ y reglas 2026"
+      }
+    },
+    "2027": {
+      "SSB": {
+        "modo": "SSB",
+        "concurso": "CQ-WW-SSB",
+        "fin_de_semana": [
+          "2027-10-30",
+          "2027-10-31"
+        ],
+        "inicio_utc": "2027-10-30T00:00:00Z",
+        "fin_utc": "2027-10-31T23:59:59Z",
+        "duracion_horas": 48.0,
+        "inicio_madrid": {
+          "iso": "2027-10-30T02:00:00+02:00",
+          "tz": "CEST",
+          "dia_semana": "sábado"
+        },
+        "fin_madrid": {
+          "iso": "2027-11-01T00:59:59+01:00",
+          "tz": "CET",
+          "dia_semana": "lunes"
+        },
+        "plazo_log_utc": "2027-11-02T23:59:00Z",
+        "plazo_log_madrid": {
+          "iso": "2027-11-03T00:59:00+01:00",
+          "tz": "CET",
+          "dia_semana": "miércoles"
+        },
+        "plazo_log_estado": "PROYECCIÓN (regla de 48 h de 2026; reglas de ese año aún no publicadas)",
+        "coincide_con_fecha_publicada": true,
+        "fuente_fecha_publicada": "cqww.com/ (fechas futuras)",
+        "cambio_hora_europa": {
+          "instante_utc": "2027-10-31T01:00:00Z",
+          "dentro_del_concurso": true,
+          "nota": "En la España peninsular, a las 03:00 CEST se vuelve a las 02:00 CET (UTC+2 -> UTC+1). El log se lleva siempre en UTC."
+        }
+      },
+      "CW": {
+        "modo": "CW",
+        "concurso": "CQ-WW-CW",
+        "fin_de_semana": [
+          "2027-11-27",
+          "2027-11-28"
+        ],
+        "inicio_utc": "2027-11-27T00:00:00Z",
+        "fin_utc": "2027-11-28T23:59:59Z",
+        "duracion_horas": 48.0,
+        "inicio_madrid": {
+          "iso": "2027-11-27T01:00:00+01:00",
+          "tz": "CET",
+          "dia_semana": "sábado"
+        },
+        "fin_madrid": {
+          "iso": "2027-11-29T00:59:59+01:00",
+          "tz": "CET",
+          "dia_semana": "lunes"
+        },
+        "plazo_log_utc": "2027-11-30T23:59:00Z",
+        "plazo_log_madrid": {
+          "iso": "2027-12-01T00:59:00+01:00",
+          "tz": "CET",
+          "dia_semana": "miércoles"
+        },
+        "plazo_log_estado": "PROYECCIÓN (regla de 48 h de 2026; reglas de ese año aún no publicadas)",
+        "coincide_con_fecha_publicada": true,
+        "fuente_fecha_publicada": "cqww.com/ (fechas futuras)"
+      }
+    },
+    "2028": {
+      "SSB": {
+        "modo": "SSB",
+        "concurso": "CQ-WW-SSB",
+        "fin_de_semana": [
+          "2028-10-28",
+          "2028-10-29"
+        ],
+        "inicio_utc": "2028-10-28T00:00:00Z",
+        "fin_utc": "2028-10-29T23:59:59Z",
+        "duracion_horas": 48.0,
+        "inicio_madrid": {
+          "iso": "2028-10-28T02:00:00+02:00",
+          "tz": "CEST",
+          "dia_semana": "sábado"
+        },
+        "fin_madrid": {
+          "iso": "2028-10-30T00:59:59+01:00",
+          "tz": "CET",
+          "dia_semana": "lunes"
+        },
+        "plazo_log_utc": "2028-10-31T23:59:00Z",
+        "plazo_log_madrid": {
+          "iso": "2028-11-01T00:59:00+01:00",
+          "tz": "CET",
+          "dia_semana": "miércoles"
+        },
+        "plazo_log_estado": "PROYECCIÓN (regla de 48 h de 2026; reglas de ese año aún no publicadas)",
+        "coincide_con_fecha_publicada": true,
+        "fuente_fecha_publicada": "cqww.com/ (fechas futuras)",
+        "cambio_hora_europa": {
+          "instante_utc": "2028-10-29T01:00:00Z",
+          "dentro_del_concurso": true,
+          "nota": "En la España peninsular, a las 03:00 CEST se vuelve a las 02:00 CET (UTC+2 -> UTC+1). El log se lleva siempre en UTC."
+        }
+      },
+      "CW": {
+        "modo": "CW",
+        "concurso": "CQ-WW-CW",
+        "fin_de_semana": [
+          "2028-11-25",
+          "2028-11-26"
+        ],
+        "inicio_utc": "2028-11-25T00:00:00Z",
+        "fin_utc": "2028-11-26T23:59:59Z",
+        "duracion_horas": 48.0,
+        "inicio_madrid": {
+          "iso": "2028-11-25T01:00:00+01:00",
+          "tz": "CET",
+          "dia_semana": "sábado"
+        },
+        "fin_madrid": {
+          "iso": "2028-11-27T00:59:59+01:00",
+          "tz": "CET",
+          "dia_semana": "lunes"
+        },
+        "plazo_log_utc": "2028-11-28T23:59:00Z",
+        "plazo_log_madrid": {
+          "iso": "2028-11-29T00:59:00+01:00",
+          "tz": "CET",
+          "dia_semana": "miércoles"
+        },
+        "plazo_log_estado": "PROYECCIÓN (regla de 48 h de 2026; reglas de ese año aún no publicadas)",
+        "coincide_con_fecha_publicada": true,
+        "fuente_fecha_publicada": "cqww.com/ (fechas futuras)"
+      }
+    }
+  }
+}

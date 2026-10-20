@@ -1,0 +1,65 @@
+{
+  "2026-SSB": {
+    "modo": "SSB",
+    "sabado": "2026-10-24",
+    "inicio_utc": "2026-10-24 00:00:00 UTC",
+    "fin_utc": "2026-10-25 23:59:59 UTC",
+    "inicio_madrid": "sábado 2026-10-24 02:00:00 CEST",
+    "fin_madrid": "lunes 2026-10-26 00:59:59 CET",
+    "duracion_h": 48.0,
+    "cambio_hora_utc": "2026-10-25 01:00:00 UTC",
+    "cambio_hora_madrid": "2026-10-25 02:59:59 CEST → 2026-10-25 02:00:00 CET",
+    "cambio_dentro_del_concurso": true
+  },
+  "2026-CW": {
+    "modo": "CW",
+    "sabado": "2026-11-28",
+    "inicio_utc": "2026-11-28 00:00:00 UTC",
+    "fin_utc": "2026-11-29 23:59:59 UTC",
+    "inicio_madrid": "sábado 2026-11-28 01:00:00 CET",
+    "fin_madrid": "lunes 2026-11-30 00:59:59 CET",
+    "duracion_h": 48.0
+  },
+  "2027-SSB": {
+    "modo": "SSB",
+    "sabado": "2027-10-30",
+    "inicio_utc": "2027-10-30 00:00:00 UTC",
+    "fin_utc": "2027-10-31 23:59:59 UTC",
+    "inicio_madrid": "sábado 2027-10-30 02:00:00 CEST",
+    "fin_madrid": "lunes 2027-11-01 00:59:59 CET",
+    "duracion_h": 48.0,
+    "cambio_hora_utc": "2027-10-31 01:00:00 UTC",
+    "cambio_hora_madrid": "2027-10-31 02:59:59 CEST → 2027-10-31 02:00:00 CET",
+    "cambio_dentro_del_concurso": true
+  },
+  "2027-CW": {
+    "modo": "CW",
+    "sabado": "2027-11-27",
+    "inicio_utc": "2027-11-27 00:00:00 UTC",
+    "fin_utc": "2027-11-28 23:59:59 UTC",
+    "inicio_madrid": "sábado 2027-11-27 01:00:00 CET",
+    "fin_madrid": "lunes 2027-11-29 00:59:59 CET",
+    "duracion_h": 48.0
+  },
+  "2028-SSB": {
+    "modo": "SSB",
+    "sabado": "2028-10-28",
+    "inicio_utc": "2028-10-28 00:00:00 UTC",
+    "fin_utc": "2028-10-29 23:59:59 UTC",
+    "inicio_madrid": "sábado 2028-10-28 02:00:00 CEST",
+    "fin_madrid": "lunes 2028-10-30 00:59:59 CET",
+    "duracion_h": 48.0,
+    "cambio_hora_utc": "2028-10-29 01:00:00 UTC",
+    "cambio_hora_madrid": "2028-10-29 02:59:59 CEST → 2028-10-29 02:00:00 CET",
+    "cambio_dentro_del_concurso": true
+  },
+  "2028-CW": {
+    "modo": "CW",
+    "sabado": "2028-11-25",
+    "inicio_utc": "2028-11-25 00:00:00 UTC",
+    "fin_utc": "2028-11-26 23:59:59 UTC",
+    "inicio_madrid": "sábado 2028-11-25 01:00:00 CET",
+    "fin_madrid": "lunes 2028-11-27 00:59:59 CET",
+    "duracion_h": 48.0
+  }
+}
