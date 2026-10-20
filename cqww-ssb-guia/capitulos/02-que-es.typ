@@ -23,6 +23,11 @@ Para ti, el CQ WW SSB es la mejor escuela posible: durante 48 horas las bandas d
 
 La regla es fija: el CQ WW SSB es siempre el *último fin de semana completo de octubre* (y el de CW, el último fin de semana completo de noviembre), de las 00:00:00 UTC del sábado a las 23:59:59 UTC del domingo @rules-cqww-home @rules-cqww-2026. Como el cambio de hora europeo es el último domingo de octubre, *el CQ WW SSB siempre incluye el paso de CEST a CET*. En la radio y en el log no cambia nada (todo va en UTC), pero los horarios locales de la tabla de bandas (capítulo @cap-donde) cambian una hora a mitad del concurso.
 
+#figure(
+  image("../assets/fin_de_semana_2026.pdf", width: 100%),
+  caption: [Las 48 horas del CQ WW SSB 2026 en UTC y en hora de Madrid. Arriba, día, noche y línea gris en Madrid. Las barras marcan cuándo el modelo da cada banda abierta y hacia dónde: en 10, 15 y 20 m, MUF del trayecto corto (modelo IRI vía PyIRI, F10.7 = 120); en 40, 80 y 160 m, noche en todo el trayecto; en 40 m, de día, Europa. Cálculo propio (`scripts/fig_fin_de_semana.py`).],
+) <fig-fin-de-semana>
+
 == Próximas ediciones
 
 #tabla(

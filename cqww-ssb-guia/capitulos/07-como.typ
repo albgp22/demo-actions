@@ -1,5 +1,6 @@
 #import "../plantilla.typ": *
 #import "fonetica.typ": deletrear
+#import "diagramas.typ": diagrama-qso
 
 #let capitulo(cfg) = [
 = Cómo hacer contactos <cap-como>
@@ -48,34 +49,23 @@ La @fig-flujo-qso resume la secuencia. Detalles que marcan la diferencia:
 
 == Guiones de QSO en inglés
 
-#block(breakable: false, grid(
-  columns: (1fr, 1fr),
-  column-gutter: 10pt,
-  [
-    === S&P normal
-    #tabla(
-      columns: (auto, 1fr),
-      table.header([Quién], [Qué se dice]),
-      [Él], dice("CQ contest, Kilo One Alfa Bravo Charlie, contest"),
-      [Tú], dice(deletrear(cfg.indicativo)),
-      [Él], dice(deletrear(cfg.indicativo) + ", five nine zero five"),
-      [Tú], dice("Thank you, five nine one four"),
-      [Él], dice("Thank you, Kilo One Alfa Bravo Charlie, QRZ"),
-    )
-  ],
-  [
-    === Run (llamas tú)
-    #tabla(
-      columns: (auto, 1fr),
-      table.header([Quién], [Qué se dice]),
-      [Tú], dice("CQ contest, " + deletrear(cfg.indicativo) + ", contest"),
-      [Él], dice("Delta Lima One Alfa Bravo Charlie"),
-      [Tú], dice("Delta Lima One Alfa Bravo Charlie, five nine one four"),
-      [Él], dice("Thank you, five nine one four"),
-      [Tú], dice("Thank you, " + deletrear(cfg.indicativo)),
-    )
-  ],
-))
+#figure(
+  diagrama-qso(cfg),
+  kind: image,
+  caption: [Un QSO de S&P completo, con tiempos orientativos: unos 12 segundos desde que termina su CQ hasta su #dice("QRZ").],
+) <fig-secuencia-qso>
+
+=== Run (llamas tú)
+
+#tabla(
+  columns: (auto, 1fr),
+  table.header([Quién], [Qué se dice]),
+  [Tú], dice("CQ contest, " + deletrear(cfg.indicativo) + ", contest"),
+  [Él], dice("Delta Lima One Alfa Bravo Charlie"),
+  [Tú], dice("Delta Lima One Alfa Bravo Charlie, five nine one four"),
+  [Él], dice("Thank you, five nine one four"),
+  [Tú], dice("Thank you, " + deletrear(cfg.indicativo)),
+)
 
 El último mensaje del run (#dice("thank you") + tu indicativo) hace de #dice("QRZ"): da las gracias, cierra el QSO y anuncia quién eres a quien acabe de llegar. Di tu indicativo en cada QSO, o al menos cada dos.
 

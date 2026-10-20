@@ -14,7 +14,7 @@
 
 Marca cada casilla. Están pensadas para el CQ WW SSB 2027, pero sirven para cualquier concurso de fonía.
 
-#set list(marker: [☐])
+#set list(marker: casilla)
 #grid(
   columns: (1fr, 1fr),
   column-gutter: 10pt,
@@ -59,7 +59,7 @@ Marca cada casilla. Están pensadas para el CQ WW SSB 2027, pero sirven para cua
   ],
 )
 
-#set list(marker: [•])
+#set list(marker: marcadores)
 == Solución de problemas típicos
 
 #tabla(

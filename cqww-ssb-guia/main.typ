@@ -33,59 +33,82 @@
 #show: documento.with(cfg)
 
 // ---------------------------------------------------------------- portada
-#page(margin: (x: 2.2cm, top: 2.6cm, bottom: 2cm), header: none, footer: none)[
+#let pastilla(t) = box(
+  inset: (x: 7pt, y: 3.6pt),
+  radius: 8pt,
+  stroke: 0.6pt + rgb("#6da7ec"),
+  text(size: 8pt, weight: "semibold", fill: white, t),
+)
+#let tarjeta(titulo, filas) = block(width: 100%, inset: (x: 11pt, top: 10pt, bottom: 11pt), radius: 5pt, stroke: 0.6pt + c.linea)[
+  #text(size: 7pt, weight: "bold", fill: c.azul-osc, tracking: 0.12em)[#upper(titulo)]
+  #v(0.15em)
+  #set text(size: 8.6pt)
+  #set par(leading: 0.48em)
+  #grid(
+    columns: (auto, 1fr),
+    column-gutter: 10pt,
+    row-gutter: 7.5pt,
+    ..filas.map(((k, v)) => (text(size: 7.6pt, fill: c.tenue, weight: "semibold")[#k], v)).flatten(),
+  )
+]
+
+#page(margin: 0pt, header: none, footer: none, background: none)[
   #set par(justify: false)
   #set text(hyphenate: false)
-  #text(size: 10pt, fill: c.azul, weight: "semibold", tracking: 0.08em)[CQ WORLD WIDE DX CONTEST · SSB]
-  #v(0.6em)
-  #text(size: 27pt, weight: "bold", fill: c.azul-osc)[Guía práctica para escucharlo, prepararlo y participar]
-  #v(0.4em)
-  #text(size: 12pt, fill: c.tinta2)[Manual de referencia para una estación novel en #cfg.qth: reglas, marco legal, propagación, equipo, software, técnica operativa y listas de comprobación.]
-  #v(1.6em)
-  #block(width: 100%, fill: c.cab, inset: 12pt, radius: 4pt)[
-    #set text(size: 9.5pt)
-    #grid(
-      columns: (auto, 1fr),
-      column-gutter: 14pt,
-      row-gutter: 7pt,
-      text(fill: c.tinta2)[Indicativo], [*#cfg.indicativo* (marcador) · #deletrear(cfg.indicativo)],
-      text(fill: c.tinta2)[Locator], [#cfg.locator · zona CQ *#cfg.zona-cq* · zona ITU #cfg.zona-itu · #cfg.continente],
-      text(fill: c.tinta2)[Categoría prevista], [#cfg.categoria, overlay *#cfg.overlay*],
-      text(fill: c.tinta2)[2026], [24–25 oct: *solo escucha* (receptores web y RTL-SDR)],
-      text(fill: c.tinta2)[Antes], [ARRL 10 m (12–13 dic 2026) y otros concursos pequeños],
-      text(fill: c.tinta2)[2027], [30–31 oct: *primera participación* en el CQ WW SSB],
-    )
-  ]
-  #v(1.2em)
-  #block(width: 100%, stroke: 0.6pt + c.linea, inset: 12pt, radius: 4pt)[
-    #set text(size: 9.5pt)
-    #text(weight: "bold", fill: c.azul-osc)[Cómo usar esta guía]
-    #v(0.2em)
-    #grid(
-      columns: (auto, 1fr),
-      column-gutter: 14pt,
-      row-gutter: 7pt,
-      text(fill: c.tinta2)[Si tienes 5 minutos], [Resumen (cap. 1) y la chuleta del anexo.],
-      text(fill: c.tinta2)[Este fin de semana], [Dónde y cuándo buscar (cap. 5) y el plan de escucha (cap. 6).],
-      text(fill: c.tinta2)[Para preparar 2027], [Marco legal, equipo y herramientas (caps. 8–10), entrenamiento (cap. 12).],
-      text(fill: c.tinta2)[Durante el concurso], [Chuleta, plan de bandas (cap. 5), técnica (cap. 7) y checklists (cap. 14).],
-      text(fill: c.tinta2)[Datos sin confirmar], [Marcados como #pv\; lista en el capítulo 17.],
-    )
-  ]
-  #v(1fr)
-  #set text(size: 8pt, fill: c.tinta2)
-  Versión del #cfg.version. Los datos que caducan (precios, versiones de software, ciclo solar) llevan su fecha; lo que no se pudo confirmar en una fuente primaria está marcado como #pv. Las cifras de horarios, puntos y orto/ocaso se han calculado con los scripts de `scripts/`. Compilado con Typst 0.15.1 sin paquetes externos.
+  // Banda superior con el mapa acimutal centrado en Madrid
+  #place(top + left, rect(width: 100%, height: 17.4cm, fill: c.azul-noche))
+  #place(top + left, dx: 6.6cm, dy: -1.9cm, image("assets/portada_azimutal.pdf", width: 19.6cm))
+  #place(top + left, dx: 16.4cm + 7pt, dy: 7.9cm - 5pt, text(size: 7.4pt, weight: "semibold", fill: rgb("#f2a65a"))[Madrid])
+  #place(top + left, dx: 2cm, dy: 2.3cm, block(width: 12.4cm)[
+    #text(size: 8.6pt, weight: "bold", fill: rgb("#9ec5f4"), tracking: 0.18em)[CQ WORLD WIDE DX CONTEST · SSB]
+    #v(1.1em)
+    #text(font: "Inter Display", size: 34pt, weight: "bold", fill: white)[Guía práctica para escucharlo, prepararlo y participar]
+    #v(1em)
+    #block(width: 10.2cm, text(size: 11pt, fill: c.azul-hielo)[Manual de referencia para una estación novel en #cfg.qth: reglas, marco legal, propagación, equipo, software, técnica operativa y listas de comprobación.])
+  ])
+  #place(top + left, dx: 2cm, dy: 15.2cm, stack(
+    dir: ltr,
+    spacing: 6pt,
+    pastilla[#cfg.indicativo · #cfg.locator · zona CQ #cfg.zona-cq],
+    pastilla[24–25 oct 2026 · escucha],
+    pastilla[30–31 oct 2027 · participa],
+  ))
+  // Parte inferior: tu estación y cómo usar la guía
+  #place(top + left, dx: 2cm, dy: 18.6cm, block(width: 17cm, grid(
+    columns: (1fr, 1fr),
+    column-gutter: 12pt,
+    tarjeta("Tu estación y tu plan", (
+      ([Indicativo], [*#cfg.indicativo* (marcador) \ #text(size: 7.8pt, fill: c.tinta2)[#deletrear(cfg.indicativo)]]),
+      ([Locator], [#cfg.locator · zona CQ *#cfg.zona-cq* · zona ITU #cfg.zona-itu · #cfg.continente]),
+      ([Categoría], [#cfg.categoria, overlay *#cfg.overlay*]),
+      ([2026], [24–25 oct: *solo escucha* (receptores web y RTL-SDR)]),
+      ([Antes], [ARRL 10 m (12–13 dic 2026) y otros concursos pequeños]),
+      ([2027], [30–31 oct: *primera participación*]),
+    )),
+    tarjeta("Cómo usar esta guía", (
+      ([5 minutos], [Resumen (cap. 1) y la chuleta del anexo.]),
+      ([Este finde], [Dónde y cuándo buscar (cap. 5) y el plan de escucha (cap. 6).]),
+      ([Para 2027], [Marco legal, equipo y herramientas (caps. 8–10) y entrenamiento (cap. 12).]),
+      ([En el concurso], [Chuleta, plan de bandas (cap. 5), técnica (cap. 7) y listas (cap. 14).]),
+      ([Pendiente], [Lo no confirmado va marcado #pv\; lista en el cap. 17.]),
+      ([Pestañas], [El número del borde derecho es el capítulo; el color, la parte.]),
+    )),
+  )))
+  #place(bottom + left, dx: 2cm, dy: -1.5cm, block(width: 17cm)[
+    #set text(size: 7.4pt, fill: c.tinta2)
+    Versión del #cfg.version. Los datos que caducan (precios, versiones de software, ciclo solar) llevan su fecha; lo que no se pudo confirmar en una fuente primaria está marcado como #pv. Horarios, puntos, orto y ocaso y ventanas de propagación están calculados con los scripts de `scripts/`. Compilado con Typst 0.15.1 sin paquetes externos.
+  ])
 ]
 
 // ---------------------------------------------------------------- índice
 #page(header: none)[
   #set par(justify: false)
-  #text(size: 17pt, weight: "bold", fill: c.azul-osc)[Índice]
-  #v(0.4em)
-  #show outline.entry.where(level: 1): set block(above: 0.75em)
-  #show outline.entry.where(level: 1): set text(weight: "semibold")
-  #set text(size: 8.6pt, hyphenate: false)
-  #columns(2, gutter: 16pt, outline(title: none, depth: 2, indent: 1.1em))
+  #text(font: "Inter Display", size: 22pt, weight: "bold")[Índice]
+  #v(-0.6em)
+  #line(length: 100%, stroke: 0.9pt + c.azul-noche)
+  #v(0.5em)
+  #set text(size: 8.3pt, hyphenate: false)
+  #columns(2, gutter: 18pt, indice())
 ]
 
 #import "capitulos/01-resumen.typ" as cap01
@@ -129,7 +152,7 @@
 // ---------------------------------------------------------------- anexo
 #counter(heading).update(0)
 #set heading(numbering: "A.1")
-#page(margin: (x: 1.0cm, y: 0.9cm), header: none, footer: none)[
+#page(margin: (x: 1.0cm, y: 0.9cm), header: none, footer: none, background: none)[
   // título del anexo para el índice, sin ocupar sitio en la página
   #place(hide[= Chuleta de una página (también en `chuleta.pdf`) <anexo-chuleta>])
   #set text(size: 7.2pt)
@@ -138,5 +161,6 @@
 
 #set heading(numbering: none)
 = Bibliografía
-#set text(size: 8pt)
+#set text(size: 7.6pt)
+#set par(leading: 0.5em)
 #bibliography("bib/referencias.yml", title: none, style: "ieee", full: false)

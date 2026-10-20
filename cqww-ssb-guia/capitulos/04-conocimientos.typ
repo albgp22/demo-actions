@@ -2,6 +2,9 @@
 #import "fonetica.typ": deletrear, letras, cifras
 
 #let orto = csv("../data/calc/orto_ocaso.csv", row-type: dictionary)
+#let rumbos = csv("../data/knowledge/muf_rumbos.csv", row-type: dictionary)
+#let rb(d) = rumbos.find(r => r.destino == d)
+#let sp(d) = [#rb(d).rumbo_sp_grados° y #miles(rb(d).distancia_sp_km) km]
 
 #let capitulo(cfg) = [
 = Conocimientos básicos <cap-conocimientos>
@@ -58,6 +61,20 @@ Los puntos de cada QSO dependen del continente (apartado @sec-puntos). El contin
 - *80 y 160 m* son bandas de *noche*: el trayecto tiene que estar a oscuras. Con una antena de terraza son las más difíciles; cada QSO lejano en ellas es un premio.
 
 La *MUF* (frecuencia máxima utilizable) sube con el Sol: por la mañana suben las bandas altas, a mediodía están en su mejor momento hacia el sur, y al anochecer «bajan» hacia 40 y 80 m.
+
+=== Rumbos y distancias desde Madrid
+
+En un mapa acimutal centrado en Madrid (@fig-azimutal), cada recta que sale del centro es el *camino corto* (el arco de círculo máximo): su ángulo es el rumbo al que apuntaría una antena directiva y su longitud, la distancia real. Con una vertical o una EFHW no orientas nada, pero el mapa explica el concurso:
+
+- *Europa está cerca*: casi toda a menos de 3.000 km, el alcance típico de 40 m de día. Dakar (6W) está a #miles(rb("Dakar").distancia_sp_km) km.
+- *Cada apertura tiene su rumbo*: Nueva York a #sp("Nueva York"), Los Ángeles a #sp("Los Ángeles"), São Paulo a #sp("São Paulo"), Johannesburgo a #sp("Johannesburgo") y Tokio a #sp("Tokio"), por encima de Siberia.
+- *El camino largo* sale en el rumbo opuesto. Hacia Sídney, el corto es de #sp("Sídney"); el largo, de #miles(rb("Sídney").distancia_lp_km) km a #rb("Sídney").rumbo_lp_grados°.
+
+#figure(
+  placement: auto,
+  image("../assets/mapa_azimutal.pdf", width: 86%),
+  caption: [Mapa acimutal equidistante centrado en Madrid: cada recta desde el centro es el camino corto; su ángulo es el rumbo y su longitud, la distancia. El borde del disco es la antípoda (Nueva Zelanda), por eso allí la tierra se estira. Costas: Natural Earth, dominio público @own-natural-earth; destinos de `data/knowledge/muf_rumbos.csv`. Elaboración propia (`scripts/fig_azimutal.py`).],
+) <fig-azimutal>
 
 === Luz y oscuridad durante el concurso
 

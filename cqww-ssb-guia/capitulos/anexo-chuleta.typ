@@ -11,7 +11,7 @@
   above: 0pt,
   below: 0pt,
 )[
-  #text(weight: "bold", fill: c.azul-osc, size: 8.2pt)[#upper(titulo)]
+  #text(weight: "bold", fill: c.azul-osc, size: 8pt, tracking: 0.04em)[#upper(titulo)]
   #v(-0.3em)
   #cuerpo
 ]
@@ -29,7 +29,7 @@
 }
 
 #let chuleta(cfg) = {
-  set text(size: 7.8pt)
+  set text(size: 8pt)
   set par(justify: false, leading: 0.46em, spacing: 0.55em)
   set list(indent: 0.2em, body-indent: 0.35em, spacing: 0.32em)
   block(width: 100%, fill: c.azul-osc, inset: (x: 7pt, y: 5pt), radius: 2.5pt)[
@@ -68,12 +68,12 @@
       #mini(
         columns: (auto, auto, 1fr),
         table.header([Banda], [Dónde llamar/buscar], [Ojo]),
-        [160 m · LSB], [1843–1850 kHz], [1850–2000 solo con resolución temporal #text(fill: c.ambar)[(por verificar)]; nunca < 1810],
-        [80 m · LSB], [3600–3650, 3700–3800], [deja libre 3760; Norteamérica transmite > 3800 (escucha en split)],
-        [40 m · LSB], [7060–7100, 7130–7200], [*nunca > 7200*; deja libre 7110],
-        [20 m · USB], [14125–14300], [evita 14190–14200 (DXpediciones) y 14300],
-        [15 m · USB], [21151–21450], [deja libre 21360],
-        [10 m · USB], [28320–29000], [la actividad se concentra en la parte baja],
+        [#banda("160") LSB], [1843–1850 kHz], [1850–2000 solo con resolución temporal #text(fill: c.ambar)[(por verificar)]; nunca < 1810],
+        [#banda("80") LSB], [3600–3650, 3700–3800], [deja libre 3760; Norteamérica transmite > 3800 (escucha en split)],
+        [#banda("40") LSB], [7060–7100, 7130–7200], [*nunca > 7200*; deja libre 7110],
+        [#banda("20") USB], [14125–14300], [evita 14190–14200 (DXpediciones) y 14300],
+        [#banda("15") USB], [21151–21450], [deja libre 21360],
+        [#banda("10") USB], [28320–29000], [la actividad se concentra en la parte baja],
       )
       Segmentos «preferentes para concursos» del plan IARU R1 #text(fill: c.ambar)[(por verificar)] dentro de las atribuciones españolas.
     ],

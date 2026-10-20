@@ -1,5 +1,6 @@
 #import "../plantilla.typ": *
 #import "fonetica.typ": deletrear
+#import "diagramas.typ": diagrama-estacion
 
 #let budget = csv("../data/equipment/budget.csv", row-type: dictionary)
 #let ef = csv("../data/equipment/eficiencia_antenas.csv", row-type: dictionary)
@@ -16,6 +17,12 @@
 = Equipo <cap-equipo>
 
 == La estación mínima viable desde un piso
+
+#figure(
+  diagrama-estacion(),
+  kind: image,
+  caption: [Esquema de la estación: la RF va por el coaxial (con un choke en cada extremo) y todo lo demás llega al transceptor por cables cortos.],
+) <fig-estacion>
 
 #tabla(
   columns: (auto, 1fr),
@@ -58,7 +65,12 @@
 
 == La antena de la terraza <sec-antena>
 
-Los acopladores internos solo corrigen hasta ROE 3:1: la antena tiene que estar *ya cerca de 50 Ω* en cada banda. Tres opciones habituales:
+Los acopladores internos solo corrigen hasta ROE 3:1: la antena tiene que estar *ya cerca de 50 Ω* en cada banda. Tres opciones habituales (@fig-antenas):
+
+#figure(
+  image("../assets/antenas_terraza.pdf", width: 100%),
+  caption: [Tres antenas para una terraza, a escala aproximada (el hilo de la EFHW está cortado porque no cabe): EFHW con transformador 49:1, vertical corta de ≈ 7 m con acoplador remoto y radiales, y lazo magnético de 1–1,5 m. Ilustración propia (`scripts/fig_antenas.py`).],
+) <fig-antenas>
 
 / EFHW multibanda: un hilo de media onda alimentado en un extremo con un transformador (típicamente 49:1). Un hilo de unos 20 m resuena en 40 m y en sus armónicos (20, 15 y 10 m); uno de unos 40 m añade 80 m. Es la que más rinde por euro si la terraza permite tender el hilo inclinado hacia un punto alto. Inconveniente: la malla del coaxial forma parte del sistema y es fácil tener *RF en el cuarto*; hace falta un choke de modo común (y a menudo un contrapeso corto, según el fabricante).
 / Vertical corta: un radiador de unos 7 m con acoplador remoto en la base y radiales elevados. Ocupa poco suelo, pero sin buenos radiales pierde mucho en las bandas bajas.

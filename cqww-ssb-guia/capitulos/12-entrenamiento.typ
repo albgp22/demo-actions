@@ -1,5 +1,6 @@
 #import "../plantilla.typ": *
 #import "fonetica.typ": deletrear
+#import "diagramas.typ": hoja-de-ruta
 
 #let cal = csv("../data/knowledge/contests_calendar.csv", row-type: dictionary)
 #let meses = ("ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic")
@@ -49,19 +50,21 @@ Los simuladores de concurso más conocidos son de *CW*: Morse Runner (VE3NEA) y 
 
 == Preparación mes a mes
 
-#tabla(
-  columns: (auto, auto, 1fr),
-  table.header([Cuándo], [Objetivo], [Qué hacer]),
-  [24–25 oct 2026], [Escuchar], [Plan del capítulo @cap-escucha-2026: grabar, anotar aperturas, medir el ruido de la terraza.],
-  [Nov 2026], [Licencia y software], [Examen y autorización (capítulo @cap-legal); instalar y configurar el logger y el voice keyer; escuchar el CQ WW CW (28–29 nov).],
-  [12–13 dic 2026], [Primer concurso], [ARRL 10 m, si ya tienes indicativo y estación (aunque sea portátil): pocas horas, solo S&P.],
-  [Ene–feb 2027], [Ritmo de S&P], [Concursos europeos de fin de semana (HA DX, UBA, EUDXC, PACC, REF): S&P y tablas de multiplicadores.],
-  [Mar 2027], [Pileups y primeros CQ], [ARRL DX SSB, RDXC y CQ WPX SSB: prueba a llamar CQ cuando una banda abra.],
-  [Abr–jun 2027], [Consolidar la estación], [Mejorar antena y chokes, pruebas con vecinos; S.M. El Rey de España SSB.],
-  [Jul 2027], [Resistencia], [IARU HF: 12–24 horas con descansos programados.],
-  [Ago–sep 2027], [Ensayo general], [WAE SSB y All Asian: misma estación, mismo logger y mismos mensajes que en el CQ WW.],
-  [Oct 2027], [Puesta a punto], [Bases 2027, CTY y SCP, checklists del capítulo @cap-checklists y *CQ WW SSB 30–31 oct*.],
-)
+#figure(
+  hoja-de-ruta((
+    ([24–25 oct 2026], [Escuchar], [Plan del capítulo @cap-escucha-2026: grabar, anotar aperturas, medir el ruido de la terraza.], true),
+    ([Nov 2026], [Licencia y software], [Examen y autorización (capítulo @cap-legal); instalar y configurar el logger y el voice keyer; escuchar el CQ WW CW (28–29 nov).], false),
+    ([12–13 dic 2026], [Primer concurso], [ARRL 10 m, si ya tienes indicativo y estación (aunque sea portátil): pocas horas, solo S&P.], true),
+    ([Ene–feb 2027], [Ritmo de S&P], [Concursos europeos de fin de semana (HA DX, UBA, EUDXC, PACC, REF): S&P y tablas de multiplicadores.], false),
+    ([Mar 2027], [Pileups y primeros CQ], [ARRL DX SSB, RDXC y CQ WPX SSB: prueba a llamar CQ cuando una banda abra.], false),
+    ([Abr–jun 2027], [Consolidar la estación], [Mejorar antena y chokes, pruebas con vecinos; S.M. El Rey de España SSB.], false),
+    ([Jul 2027], [Resistencia], [IARU HF: 12–24 horas con descansos programados.], false),
+    ([Ago–sep 2027], [Ensayo general], [WAE SSB y All Asian: misma estación, mismo logger y mismos mensajes que en el CQ WW.], false),
+    ([30–31 oct 2027], [CQ WW SSB], [Antes: bases de 2027, CTY y SCP actualizados y las listas del capítulo @cap-checklists.], true),
+  )),
+  kind: image,
+  caption: [Hoja de ruta hasta el CQ WW SSB 2027. Los hitos rellenos son los fines de semana clave.],
+) <fig-hoja-ruta>
 
 == Para aprender más
 

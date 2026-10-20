@@ -1,5 +1,6 @@
 #import "../plantilla.typ": *
 #import "fonetica.typ": deletrear
+#import "diagramas.typ": formula-puntuacion
 
 #let puntos = csv("../data/calc/puntos_desde_madrid.csv", row-type: dictionary)
 #let ej = json("../data/calc/ejemplo_puntuacion.json")
@@ -58,7 +59,7 @@ Cada estación se puede trabajar una vez en cada banda. Vista desde #cfg.qth (Eu
 - *Países*: cada entidad distinta de la lista DXCC + lista WAE + IG9/IH9 en cada banda es un multiplicador (apartado @sec-paises). Tu propio país también cuenta.
 - Las estaciones marítimo-móviles (/MM) solo cuentan como zona.
 
-#align(center)[#block(fill: c.cab, inset: 8pt, radius: 3pt)[*Puntuación = (suma de puntos por QSO) × (zonas + países)*, sumando zonas y países de las seis bandas.]]
+#block(above: 1em, below: 1em, breakable: false, formula-puntuacion(ej))
 
 Como zonas y países se cuentan *por banda*, el mismo K1 que te da zona 5 y EE. UU. en 20 m te los vuelve a dar en 15 m. Por eso cambiar de banda para buscar multiplicadores suele rendir más que repetir QSO en la misma (capítulo @cap-donde).
 

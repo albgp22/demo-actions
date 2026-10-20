@@ -31,7 +31,18 @@ Dentro de lo que permite la licencia española (capítulo @cap-legal), el plan d
   ),
 ) <tab-segmentos>
 
-#importante[Por debajo de 10 MHz se usa *LSB* y por encima *USB*. Si oyes «patos», cambia de banda lateral. En LSB tu señal ocupa los 3 kHz *por debajo* de la frecuencia del dial: no te acerques a los bordes.]
+#figure(
+  placement: auto,
+  image("../assets/segmentos_bandas.pdf", width: 100%),
+  caption: [Las seis bandas del CQ WW, cada una a su escala: usos del plan IARU Región 1, segmentos preferentes de concursos, centros de actividad que hay que dejar libres y la fonía que puedes usar desde España. Atribución: Orden IET/1311/2013, anexo I. Usos: plan de bandas HF de la IARU R1 #pv. Elaboración propia (`scripts/fig_segmentos.py`).],
+) <fig-segmentos>
+
+#importante[Por debajo de 10 MHz se usa *LSB* y por encima *USB*. Si oyes «patos», cambia de banda lateral. En LSB tu señal ocupa los 3 kHz *por debajo* de la frecuencia del dial: no te acerques a los bordes (@fig-banda-lateral).]
+
+#figure(
+  image("../assets/banda_lateral.pdf", width: 100%),
+  caption: [El dial marca la portadora suprimida y la voz ocupa de 0,3 a 2,7 kHz por debajo (LSB) o por encima (USB). Junto a un borde, toda la señal tiene que quedar dentro: en 40 m, dial hasta 7200,0 kHz; en la fonía de 160 m en España, entre ≈ 1846 y 1850,0; en 20 m, hasta ≈ 14 347. Elaboración propia (`scripts/fig_banda_lateral.py`).],
+) <fig-banda-lateral>
 
 == Plan horario: qué banda y hacia dónde
 
@@ -54,17 +65,10 @@ El modelo no incluye la absorción, la esporádica E ni la variabilidad de cada 
 === Ventanas calculadas por destino
 
 #figure(
-  caption: [Ventanas (UTC) por destino. En 10/15/20 m, MUF básica por encima de la banda (F10.7 = 120, 25 oct 2026, trayecto corto). En 40/80/160 m, todo el trayecto de noche (24 oct 2026).],
-  tabla(
-    columns: (auto, auto, auto, auto, auto),
-    table.header([Destino], [10 m], [15 m], [20 m], [40/80/160 m]),
-    ..noche.map(r => (
-      [#r.destino #text(fill: c.tinta2, size: 0.9em)[(#r.etiqueta)]],
-      ventana(r.destino, "10 m"), ventana(r.destino, "15 m"), ventana(r.destino, "20 m"),
-      r.noche_en_todo_el_trayecto_utc.replace("-", "–"),
-    )).flatten(),
-  ),
-) <tab-ventanas>
+  placement: auto,
+  image("../assets/ventanas_bandas.pdf", width: 100%),
+  caption: [Horas UTC de apertura desde Madrid hacia cada destino el 25 de octubre de 2026: en 10, 15 y 20 m, cuando la MUF del trayecto corto supera la banda (modelo IRI vía PyIRI, F10.7 = 120); en 40, 80 y 160 m, cuando es de noche en todo el trayecto (24 de octubre). La barra oscura fina muestra 10 y 15 m con F10.7 = 100, la previsión para 2027. La fila de Madrid está en CEST (sábado); el domingo, réstale una hora. Cálculo propio (`scripts/fig_ventanas_bandas.py`).],
+) <fig-ventanas>
 
 El flujo solar cambia mucho las bandas altas. Con F10.7 = 100, la ventana de 10 m hacia Nueva York se acorta a #ventana("Nueva York", "10 m", f107: "100", texto: true) y hacia Chicago #ventana("Chicago", "10 m", f107: "100", texto: true); con F10.7 = 140, 10 m hacia Chicago abre de #ventana("Chicago", "10 m", f107: "140", texto: true). Consulta el flujo del día (capítulo @cap-herramientas) y ajusta. Para 2027 (previsión F10.7 ≈ 98), el apartado «Qué cambia en 2027» del capítulo @cap-supuestos lista las recomendaciones que el modelo deja sin respaldo: sobre todo, 10 m hacia Norteamérica.
 

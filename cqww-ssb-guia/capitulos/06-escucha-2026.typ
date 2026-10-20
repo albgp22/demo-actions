@@ -1,5 +1,6 @@
 #import "../plantilla.typ": *
 #import "fonetica.typ": deletrear
+#import "diagramas.typ": diagrama-escucha
 
 #let capitulo(cfg) = [
 = Plan de escucha para este fin de semana <cap-escucha-2026>
@@ -37,6 +38,12 @@ Del sábado 24 a las 02:00 (hora de Madrid) al lunes 26 a las 00:59, las bandas 
 ) <tab-sdrpp>
 
 *Desde la Raspberry Pi 5*: si la Pi está cerca de la antena, conecta allí el V4 y escucha desde el Mac por Tailscale con *OpenWebRX+* (navegador, puerto 8073; en sus perfiles de HF pon `direct_sampling=0` para el V4) o con *SDR++ en modo servidor* (`sdrpp --server`, puerto 5259) @equip-owrx-defaults @equip-sdrpp-args. OpenWebRX+ envía audio comprimido y es el más ligero por la red. En la Pi, comprueba que la versión de librtlsdr reconoce el V4 (`rtl_test` debe decir `RTL-SDR Blog V4 Detected`).
+
+#figure(
+  diagrama-escucha(),
+  kind: image,
+  caption: [Escucha remota con tu homelab: el RTL-SDR junto a la antena, en la Pi, y el Mac en cualquier habitación.],
+) <fig-escucha>
 
 == Horario de escucha propuesto
 

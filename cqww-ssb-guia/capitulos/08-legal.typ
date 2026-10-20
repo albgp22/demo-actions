@@ -1,5 +1,6 @@
 #import "../plantilla.typ": *
 #import "fonetica.typ": deletrear
+#import "diagramas.typ": diagrama-licencia
 
 #let bandas = csv("../data/legal/bands_power_es.csv", row-type: dictionary)
 #let rf = csv("../data/legal/rf_exposure_distances.csv", row-type: dictionary)
@@ -10,6 +11,12 @@
 Este capítulo resume la normativa vigente a 20 de octubre de 2026, leída en los textos consolidados del BOE. No es asesoramiento jurídico: ante cualquier duda, manda el BOE y lo que te diga la Jefatura Provincial de Inspección de Telecomunicaciones. Las funciones que las normas atribuyen a la antigua SETSI las ejerce hoy la *Secretaría de Estado de Telecomunicaciones e Infraestructuras Digitales* (SETID), del Ministerio para la Transformación Digital y de la Función Pública.
 
 #importante[Para transmitir en el CQ WW 2027 desde tu piso necesitas *dos* cosas: la *autorización de radioaficionado* (con su indicativo) y la *licencia de estación fija* para la instalación de casa. Sin la segunda, la autorización solo te ampara con estaciones *móviles o portátiles*. La licencia de estación tiene un trámite con la comunidad de propietarios de al menos dos meses: empieza con tiempo.]
+
+#figure(
+  diagrama-licencia(),
+  kind: image,
+  caption: [Del examen a transmitir desde casa (Orden IET/1311/2013, RD 2623/1986 y Ley 11/2022; tasas a 20 de octubre de 2026).],
+) <fig-licencia>
 
 == Normas que te afectan
 
