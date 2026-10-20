@@ -3,6 +3,15 @@
 #import "diagramas.typ": hoja-de-ruta
 
 #let cal = csv("../data/knowledge/contests_calendar.csv", row-type: dictionary)
+#let calv = csv("../data/verif_historia/calendario.csv", row-type: dictionary)
+#let tipo-fecha(nombre) = {
+  let v = calv.filter(r => r.concurso == nombre)
+  if nombre.starts-with("CQ WW DX Contest") { "publicada" } else if v.len() == 0 { "calculada" } else { v.first().tipo }
+}
+#let marca-fecha(nombre) = {
+  let t = tipo-fecha(nombre)
+  text(size: 0.85em, fill: if t == "calculada" { c.ambar } else { c.tenue })[ · #if t == "publicada" [publicada] else if t == "regla" [por sus bases] else [calculada]]
+}
 #let meses = ("ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic")
 #let fechas(s) = {
   let m = s.match(regex("(\d{4})-(\d{2})-(\d{2}) (\d{2})(\d{2})Z - (\d{4})-(\d{2})-(\d{2}) (\d{2})(\d{2})Z"))
@@ -17,7 +26,7 @@
 
 == Simuladores: lo que hay (y lo que no)
 
-Los simuladores de concurso más conocidos son de *CW*: Morse Runner (VE3NEA) y su edición comunitaria, y RufzXP para copiar indicativos #pv. *No se ha podido verificar ningún simulador de pileups de SSB de uso extendido*, ni un modo simulador en los loggers. La alternativa que sí funciona, y que es gratuita, es entrenar con audio real:
+Los simuladores de concurso más conocidos son de *CW*: Morse Runner (VE3NEA) y su edición comunitaria, Morse Runner CE (activa: versión 1.86 del 25 de septiembre de 2026, con CQ WW, WPX, ARRL DX e IARU HF, solo en CW) @verh-mrce-github, y RufzXP para copiar indicativos #pv. *No se ha podido verificar ningún simulador de pileups de SSB de uso extendido*, ni un modo simulador en los loggers. La alternativa que sí funciona, y que es gratuita, es entrenar con audio real:
 
 + *Graba el CQ WW SSB 2026* (capítulo @cap-escucha-2026) y reprodúcelo anotando «a la sombra» en el logger, en una base de datos de prueba. Puedes repetir el mismo fragmento hasta copiarlo entero.
 + *Practica el voice keyer*: graba tus mensajes (apartado @sec-cabrillo y @tab-dvk) y ensaya la secuencia de teclas de S&P y de run hasta que salga sin pensar.
@@ -27,13 +36,13 @@ Los simuladores de concurso más conocidos son de *CW*: Morse Runner (VE3NEA) y 
 == Concursos para foguearte antes de 2027
 
 #larga[#figure(
-  caption: [Calendario orientativo nov 2026 – oct 2027 con contenido de SSB. Las fechas están *calculadas* con la regla habitual de cada concurso y deben confirmarse en sus bases #pv (salvo CQ WW y ARRL 10 m, coherentes con las fechas publicadas). Las URL de bases proceden del paquete Not1MM o son de memoria.],
+  caption: [Calendario nov 2026 – oct 2027 con contenido de SSB. «Publicada»: fecha anunciada por el organizador; «por sus bases»: calculada con la regla de sus bases vigentes; «calculada»: regla habitual no comprobada en sus bases #pv. Verificación del 20 de octubre de 2026 (`data/verif_historia/calendario.csv`).],
   tabla(
     columns: (1.55fr, 1.3fr, auto, 1fr),
     table.header([Concurso], [Fechas (UTC)], [Modo], [Por qué]),
     ..cal.filter(r => r.modo.contains("SSB")).map(r => (
       r.concurso.replace(" (OBJETIVO)", "").replace(" (escucha)", ""),
-      fechas(r.fechas_utc),
+      [#fechas(r.fechas_utc)#marca-fecha(r.concurso)],
       r.modo,
       if r.concurso.starts-with("ARRL 10") [*Tu primer concurso*: solo 10 m, horas a elegir.]
       else if r.concurso.starts-with("ARRL International DX Contest SSB") [Solo trabajas W/VE: pileups transatlánticos.]
@@ -69,9 +78,9 @@ Los simuladores de concurso más conocidos son de *CW*: Morse Runner (VE3NEA) y 
 == Para aprender más
 
 - *3830scores.com*: puntuaciones declaradas y crónicas (soapbox) de cada concurso; busca estaciones EA de tu categoría.
-- *Contest University* y los seminarios de la *WWROF*: presentaciones y vídeos sobre técnica de concurso #pv.
+- *Contest University* (#url("https://www.contestuniversity.com/")): jornada anual (la de 2026, el 14 de mayo en Ohio) con vídeos y transparencias en su web @verh-ctu-videos; y los *seminarios web de la WWROF* (#url("https://wwrof.org/")) @verh-wwrof-blog.
 - *NCJ (National Contest Journal)*: revista de concursos (ncjweb.com).
 - Las bases y la FAQ del CQ WW (capítulo @cap-reglas): léelas enteras una vez al año.
 
-#fuentes("know-not1mm-pypi", "know-morserunner", "know-ctu", "know-wwrof", "know-3830", "know-ncj", "know-arrl-10m", "know-arrl-dx", "know-cqwpx-rules", "know-arrl-iaru", "know-darc-wae", "know-ure-rey-ssb")
+#fuentes("verh-mrce-github", "verh-arrl-contest-calendar", "verh-ure-rey-ssb-bases", "know-not1mm-pypi", "know-morserunner", "know-ctu", "know-wwrof", "know-3830", "know-ncj", "know-arrl-10m", "know-arrl-dx", "know-cqwpx-rules", "know-arrl-iaru", "know-darc-wae", "know-ure-rey-ssb")
 ]

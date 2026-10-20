@@ -1,0 +1,436 @@
+# Referencias de la verificación de datos «POR VERIFICAR» (capítulos 11, 12 y 15).
+# Formato Hayagriva, prefijo «verh-». url.date = fecha de consulta (20-oct-2026).
+# Todas se consultaron a través de resúmenes de WebSearch, salvo verh-mrce-github,
+# leído directamente del repositorio git. Detalle en facts.md y verificacion.csv.
+
+# --- CQ WW (CQ Magazine) -------------------------------------------------------
+
+verh-cqww-2025-ssb-results:
+  type: web
+  title: "Results of the 2025 CQ WW DX SSB Contest"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/results/2025_cq_ww_dx_ssb_results.pdf
+    date: '2026-10-20'
+
+verh-cqww-2024-ssb-results:
+  type: web
+  title: "Results of the 2024 CQ WW DX SSB Contest"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/results/2024_cq_ww_dx_ssb_results.pdf
+    date: '2026-10-20'
+
+verh-cqww-2024-ssb-plaques:
+  type: web
+  title: "2024 CQ WW DX SSB Plaque Winners"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/results/2024_cq_ww_dx_ssb_plaques.pdf
+    date: '2026-10-20'
+  note: "El asterisco junto a un ganador significa «Awarded to second place finisher»."
+
+verh-cqww-2023-ssb-results:
+  type: web
+  title: "Results of the 2023 CQ WW DX SSB Contest"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/results/2023_cq_ww_dx_ssb_results.pdf
+    date: '2026-10-20'
+
+verh-cqww-2023-ssb-plaques:
+  type: web
+  title: "2023 CQ WW DX SSB Plaque Winners and Donors"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/results/2023_cq_ww_dx_ssb_plaques.pdf
+    date: '2026-10-20'
+
+verh-cqww-2022-ssb-results:
+  type: web
+  title: "Results of the 2022 CQWW DX SSB Contest"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/results/2022_cq_ww_dx_ssb_results.pdf
+    date: '2026-10-20'
+
+verh-cqww-2022-ssb-line-scores:
+  type: web
+  title: "2022 CQ WW DX SSB: line scores"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/results/2022_cq_ww_dx_ssb_line_scores.pdf
+    date: '2026-10-20'
+
+verh-cqww-raw-ssb:
+  type: web
+  title: "CQ WW - Raw Scores Before Checking"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/raw.htm?amp=&mode=ph&reg=OM
+    date: '2026-10-20'
+  note: "Puntuaciones declaradas, antes de la comprobación. Copia indexada por el buscador; el año no consta en el resumen."
+
+verh-cqww-records-zone:
+  type: web
+  title: "CQ WW - Score Records by CQ Zone"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/recordsbyzone.htm
+    date: '2026-10-20'
+
+verh-cqww-clubscores-2025:
+  type: web
+  title: "CQ WW Club Scores for 2025"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/clubscores.htm
+    date: '2026-10-20'
+
+verh-cqww-plaques:
+  type: web
+  title: "CQ WW - Plaques & Sponsors"
+  publisher: CQ Magazine
+  url:
+    value: https://cqww.com/plaques/
+    date: '2026-10-20'
+
+verh-cqww-scores-ea-s-p25:
+  type: web
+  title: "CQ WW - Scores SSB (EA, monooperador, todos los años, página 25)"
+  publisher: CQ Magazine
+  url:
+    value: "https://cqww.com/scoresph.htm?page=25&yr=ALL&dx=EA&cat=S%25&order=score&size=100"
+    date: '2026-10-20'
+
+verh-cq160-clubscores-2025:
+  type: web
+  title: "CQ 160 Club Scores for 2025"
+  publisher: CQ Magazine
+  url:
+    value: https://bitbucket.cqww.com/clubscores.htm
+    date: '2026-10-20'
+
+verh-cqwpx-home:
+  type: web
+  title: "CQ WPX - Home"
+  publisher: CQ Magazine
+  url:
+    value: https://cqwpx.com/
+    date: '2026-10-20'
+  note: "Fechas futuras del concurso (SSB 2027: 27-28 de marzo)."
+
+verh-cq160-home:
+  type: web
+  title: "CQ 160 - Home"
+  publisher: CQ Magazine
+  url:
+    value: https://cq160.com/
+    date: '2026-10-20'
+
+# --- ARRL ---------------------------------------------------------------------
+
+verh-arrl-contest-calendar:
+  type: web
+  title: "ARRL Contest Calendar"
+  publisher: ARRL
+  url:
+    value: https://contests.arrl.org/calendar.php
+    date: '2026-10-20'
+
+verh-arrl-10m:
+  type: web
+  title: "ARRL 10-Meter Contest"
+  publisher: ARRL
+  url:
+    value: https://contests.arrl.org/10m/
+    date: '2026-10-20'
+
+verh-arrl-dxph:
+  type: web
+  title: "ARRL International DX Phone Contest"
+  publisher: ARRL
+  url:
+    value: https://contests.arrl.org/dxph/
+    date: '2026-10-20'
+
+verh-arrl-iaru:
+  type: web
+  title: "IARU HF World Championship"
+  publisher: ARRL
+  url:
+    value: https://www.arrl.org/iaru-hf-world-championship
+    date: '2026-10-20'
+
+# --- Otros organizadores --------------------------------------------------------
+
+verh-darc-wae-rules:
+  type: web
+  title: "WAE DX Contest - Rules"
+  publisher: DARC
+  url:
+    value: https://www.darc.de/der-club/referate/conteste/wae-dx-contest/en/wae-rules/
+    date: '2026-10-20'
+
+verh-darc-wae-ssb-2026:
+  type: web
+  title: "Einladung zum WAE-DX-Contest SSB"
+  publisher: DARC
+  url:
+    value: https://www.darc.de/der-club/referate/conteste/artikelstorage/detailansicht/news/einladung-zum-wae-dx-contest-ssb
+    date: '2026-10-20'
+  note: "Invitación del DARC; el resumen no precisa si la de 2026 es esta u otra noticia parecida (…/news/einladung-wae-dx-contest-ssb)."
+
+verh-ure-rey-ssb-bases:
+  type: web
+  title: "Bases Concurso S.M. El Rey de España SSB"
+  publisher: URE
+  url:
+    value: https://concursos.ure.es/en/s-m-el-rey-de-espana-ssb/bases/
+    date: '2026-10-20'
+
+verh-rdxc-rules:
+  type: web
+  title: "Russian DX Contest - Rules (English)"
+  publisher: Russian DX Contest
+  url:
+    value: https://www.rdxc.org/rules_eng
+    date: '2026-10-20'
+
+verh-uba-calendar:
+  type: web
+  title: "UBA - HF Contest Calendar"
+  publisher: UBA
+  url:
+    value: https://www.uba.be/en/hf/contest-calendar
+    date: '2026-10-20'
+
+verh-uba-dx-rules:
+  type: web
+  title: "UBA DX Contest"
+  publisher: UBA
+  url:
+    value: https://www.uba.be/en/hf/contest-rules/uba-dx-contest
+    date: '2026-10-20'
+
+verh-hadx-rules:
+  type: web
+  title: "HA-DX Contest rules"
+  publisher: HA-DX Contest
+  url:
+    value: https://ha-dx.com/en/contest-rules
+    date: '2026-10-20'
+
+verh-eudx-rules:
+  type: web
+  title: "RULES - EUDX-Contest"
+  publisher: EUDX-Contest
+  url:
+    value: https://www.eudx-contest.com/rules/
+    date: '2026-10-20'
+
+verh-veron-pacc:
+  type: web
+  title: "PACC contest van de VERON in het 2e weekend februari"
+  publisher: VERON
+  url:
+    value: https://veron.nl/pacc/
+    date: '2026-10-20'
+
+verh-veron-pacc-2026-rules:
+  type: web
+  title: "71e PACC 2026: rules"
+  publisher: VERON
+  url:
+    value: https://veron.nl/wp-content/uploads/2025/12/PACC_2026_rules_eng.pdf
+    date: '2026-10-20'
+
+verh-ref-rules:
+  type: web
+  title: "REF Contest - Rules"
+  publisher: REF
+  url:
+    value: https://concours.r-e-f.org/contest/a-propos/
+    date: '2026-10-20'
+
+verh-jarl-aa-rules:
+  type: web
+  title: "The 67th ALL ASIAN DX CONTEST Rule"
+  publisher: JARL
+  url:
+    value: https://www.jarl.org/English/4_Library/A-4-3_Contests/aadx_eng.html
+    date: '2026-10-20'
+
+# --- Listas y foros -------------------------------------------------------------
+
+verh-cq-contest-listinfo:
+  type: web
+  title: "CQ-Contest Info Page"
+  publisher: contesting.com
+  url:
+    value: https://lists.contesting.com/mailman/listinfo/cq-contest
+    date: '2026-10-20'
+
+verh-cq-contest-archive-2026-03:
+  type: web
+  title: "[CQ-Contest] Announcing the 2026 CQ World Wide WPX SSB and CW Contests"
+  publisher: contesting.com
+  url:
+    value: https://lists.contesting.com/_cq-contest/2026-03/msg00006.html
+    date: '2026-10-20'
+  note: "Muestra que el reflector seguía activo en marzo de 2026."
+
+verh-contesting-lists:
+  type: web
+  title: "Contesting.com Ham Radio Mailing Lists"
+  publisher: contesting.com
+  url:
+    value: https://lists.contesting.com/
+    date: '2026-10-20'
+
+# --- Entrenamiento --------------------------------------------------------------
+
+verh-mrce-github:
+  type: web
+  title: "Morse Runner Community Edition (repositorio w7sst/MorseRunner)"
+  publisher: GitHub
+  url:
+    value: https://github.com/w7sst/MorseRunner
+    date: '2026-10-20'
+  note: "Leído con git: última etiqueta v1.86, commit del 25-sep-2026 «Roll version number for final 1.86 build»."
+
+verh-ctu-videos:
+  type: web
+  title: "Contest University Videos - Dayton Ohio"
+  publisher: Contest University
+  url:
+    value: https://www.contestuniversity.com/videos/
+    date: '2026-10-20'
+
+verh-ctu-files:
+  type: web
+  title: "Contest University - Files"
+  publisher: Contest University
+  url:
+    value: https://www.contestuniversity.com/files/
+    date: '2026-10-20'
+
+verh-wwrof-blog:
+  type: web
+  title: "WWROF Blog"
+  publisher: WWROF
+  url:
+    value: https://wwrof.org/wwrof-blog/
+    date: '2026-10-20'
+
+verh-wwrof-webinar-k9la:
+  type: web
+  title: "Solar Topics by Carl Luetzelschwab K9LA"
+  publisher: WWROF
+  url:
+    value: https://wwrof.org/webinar-archive/solar-topics-by-carl-luetzelschwab-k9la/
+    date: '2026-10-20'
+  note: "Ejemplo del archivo de webinarios de la WWROF."
+
+verh-rufzxp-k0pir:
+  type: web
+  title: "Two Excellent CW Training Tools - Memory Training"
+  publisher: K0PIR
+  url:
+    value: https://k0pir.us/two-excellent-cw-training-tools-memory-training/
+    date: '2026-10-20'
+  note: "Blog: fuente secundaria sobre RufzXP."
+
+verh-rufzxp-crossover:
+  type: web
+  title: "RufzXP version 1.1.2 - CrossOver compatibility"
+  publisher: CodeWeavers
+  url:
+    value: https://codeweavers.com/compatibility/crossover/rufzxp-version-112
+    date: '2026-10-20'
+  note: "Fuente secundaria."
+
+# --- URE, clubes y grupos de concurso --------------------------------------------
+
+verh-ure-que-es:
+  type: web
+  title: "¿Qué es la URE? - Unión de Radioaficionados Españoles"
+  publisher: URE
+  url:
+    value: https://www.ure.es/que-es-la-ure/
+    date: '2026-10-20'
+
+verh-ure-seccion-madrid:
+  type: web
+  title: "Sección Local Madrid"
+  publisher: URE
+  url:
+    value: https://www.ure.es/foros/secciones-ure/seccion-local-madrid/
+    date: '2026-10-20'
+  note: "Página del foro de URE; los datos del local tienen unos siete años."
+
+verh-ure-mercadillo-madrid:
+  type: web
+  title: "Mercadillo Sección URE Madrid"
+  publisher: URE
+  url:
+    value: https://www.ure.es/mercadillo-seccion-ure-madrid/
+    date: '2026-10-20'
+
+verh-ure-repetidores:
+  type: web
+  title: "Repetidores y balizas - Unión de Radioaficionados Españoles"
+  publisher: URE
+  url:
+    value: https://www.ure.es/repetidores/
+    date: '2026-10-20'
+
+verh-ure-revista-2026-06:
+  type: web
+  title: "Revista junio 2026 en PDF"
+  publisher: URE
+  url:
+    value: https://www.ure.es/revista-junio-2026-en-pdf/
+    date: '2026-10-20'
+
+verh-fediea-asociaciones:
+  type: web
+  title: "Federación Digital EA: asociaciones"
+  publisher: FEDI-EA
+  url:
+    value: https://www.fediea.org/hamradio/inspain/?lang=el
+    date: '2026-10-20'
+
+verh-radioclubhenares:
+  type: web
+  title: "Actividades RCH 2016"
+  publisher: Radio Club Henares
+  url:
+    value: https://www.radioclubhenares.org/downloads/ACTIVIDADES-RCH-2016.pdf
+    date: '2026-10-20'
+  note: "Web del club: https://www.radioclubhenares.org/"
+
+verh-ea4azj:
+  type: web
+  title: "EA4AZJ: página personal"
+  publisher: qsl.net
+  url:
+    value: https://www.qsl.net/ea4azj/personal.html
+    date: '2026-10-20'
+  note: "Fuente secundaria: única mención de ARAC (Alcobendas)."
+
+verh-ceuta-contest-club:
+  type: web
+  title: "Página WEB de Ceuta Contest Club"
+  publisher: Ceuta Contest Club
+  url:
+    value: https://www.qsl.net/ea9ea/indice.htm
+    date: '2026-10-20'
+
+verh-ea2ck-team:
+  type: web
+  title: "EA2CK / ED2JJ: miembros"
+  publisher: qsl.net
+  url:
+    value: https://www.qsl.net/ea2ck/miembros.htm
+    date: '2026-10-20'
