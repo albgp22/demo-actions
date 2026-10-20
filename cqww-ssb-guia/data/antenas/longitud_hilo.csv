@@ -1,0 +1,37 @@
+hilo_m,banda,tierra_ohm,longitud_lambda,eficiencia_pct,perdida_db,directividad_10deg_dbi,lobulo_deg,nota
+7,160 m,5,0.043,4.1,13.9,,,
+7,160 m,15,0.043,2.6,15.8,,,
+7,80 m,5,0.086,21.4,6.7,,,
+7,80 m,15,0.086,12.4,9.1,,,
+7,40 m,5,0.166,59.9,2.2,,,
+7,40 m,15,0.166,38.6,4.1,,,
+7,20 m,,0.33,,,5.3,0,monopolo ideal sobre tierra perfecta
+7,15 m,,0.5,,,6.3,0,monopolo ideal sobre tierra perfecta
+7,10 m,,0.67,,,6.5,0,monopolo ideal sobre tierra perfecta
+8,160 m,5,0.049,5.7,12.5,,,
+8,160 m,15,0.049,3.6,14.5,,,
+8,80 m,5,0.099,27.7,5.6,,,
+8,80 m,15,0.099,16.1,7.9,,,
+8,40 m,5,0.189,68.0,1.7,,,
+8,40 m,15,0.189,45.9,3.4,,,
+8,20 m,,0.38,,,5.5,0,monopolo ideal sobre tierra perfecta
+8,15 m,,0.57,,,6.9,0,monopolo ideal sobre tierra perfecta
+8,10 m,,0.76,,,-0.9,47,monopolo ideal sobre tierra perfecta
+10,160 m,5,0.062,9.8,10.1,,,
+10,160 m,15,0.062,5.9,12.3,,,
+10,80 m,5,0.123,40.3,3.9,,,
+10,80 m,15,0.123,24.1,6.2,,,
+10,40 m,5,0.237,79.6,1.0,,,
+10,40 m,15,0.237,58.6,2.3,,,
+10,20 m,,0.47,,,6.1,0,monopolo ideal sobre tierra perfecta
+10,15 m,,0.71,,,4.2,0,monopolo ideal sobre tierra perfecta
+10,10 m,,0.95,,,-7.5,35,monopolo ideal sobre tierra perfecta
+12,160 m,5,0.074,14.8,8.3,,,
+12,160 m,15,0.074,8.8,10.6,,,
+12,80 m,5,0.148,51.9,2.8,,,
+12,80 m,15,0.148,32.5,4.9,,,
+12,40 m,5,0.284,,,,,≥ λ/4: el modelo de vertical corta no aplica
+12,40 m,15,0.284,,,,,≥ λ/4: el modelo de vertical corta no aplica
+12,20 m,,0.57,,,6.9,0,monopolo ideal sobre tierra perfecta
+12,15 m,,0.85,,,-49.1,40,monopolo ideal sobre tierra perfecta
+12,10 m,,1.14,,,-7.3,27,monopolo ideal sobre tierra perfecta

@@ -125,19 +125,21 @@ def main() -> None:
                 arrowprops=dict(arrowstyle="-|>", color=INK2, lw=0.6, mutation_scale=6,
                                 connectionstyle="arc3,rad=-0.25", shrinkA=1, shrinkB=1))
 
-    # 2) 160 m, LSB, ventana permanente en España
+    # 2) 160 m, LSB, fonía permanente en España. El plan IARU R1 fija el dial LSB mínimo
+    #    («Lowest dial setting for LSB Voice mode: 1843 kHz»): la voz cae en 1840–1843 (todos los modos)
+    #    y no debe entrar en el tramo de banda estrecha, por debajo de 1840 kHz.
     ax = axs[1]
-    d_min = ssb160 + A1
-    ejes(ax, ssb160 - 4.0, sup160 + 2.5, 2, "160 m · LSB · fonía en España",
-         f"Regla: dial entre ≈ {khz(math.ceil(d_min * 2) / 2)} y {khz(sup160, 1)} kHz",
-         clave=(ssb160, math.ceil(d_min * 2) / 2, sup160))
-    fuera(ax, ssb160 - 4.0, ssb160, "digitales\n(IARU)", 2.35)
+    estrecha = max(float(r["hasta_khz"]) for r in iaru if r["banda"] == "160 m" and "banda estrecha" in r["uso"].lower())
+    d_min = ssb160
+    ejes(ax, estrecha - 2.5, sup160 + 2.5, 2, "160 m · LSB · fonía en España",
+         f"Regla: dial entre {khz(d_min, 1)} y {khz(sup160, 1)} kHz", clave=(estrecha, d_min, sup160))
+    fuera(ax, estrecha - 2.5, estrecha, "banda\nestrecha", 2.35)
     fuera(ax, sup160, sup160 + 2.5, "sin\natribución", 2.35)
-    d_ok, d_ko = math.ceil(d_min * 2) / 2, ssb160 + 1.0
+    d_ok, d_ko = d_min, d_min - 1.5
     voz(ax, d_ok, "LSB", Y_OK, BIEN)
-    voz(ax, d_ko, "LSB", Y_KO, MAL, borde=ssb160, fuera_lado="abajo")
+    voz(ax, d_ko, "LSB", Y_KO, MAL, borde=estrecha, fuera_lado="abajo")
     rotulo(ax, d_ok, "LSB", Y_OK, f"dial {khz(d_ok, 1)}", "✓ dentro")
-    rotulo(ax, d_ko, "LSB", Y_KO, f"dial {khz(d_ko, 1)}", f"✗ {khz(ssb160 - (d_ko - A1), 1)} kHz fuera")
+    rotulo(ax, d_ko, "LSB", Y_KO, f"dial {khz(d_ko, 1)}", f"✗ {khz(estrecha - (d_ko - A1), 1)} kHz fuera")
 
     # 3) 20 m, USB, borde superior
     ax = axs[2]

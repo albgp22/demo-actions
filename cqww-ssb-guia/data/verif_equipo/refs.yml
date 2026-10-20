@@ -1,0 +1,719 @@
+# Referencias de la verificación de datos «POR VERIFICAR» de equipo, software y receptores
+# (capítulos 06, 09 y 10). Formato Hayagriva, prefijo «vere-». url.date = fecha de consulta.
+# Todas salen de resúmenes de WebSearch del 20-oct-2026: ninguna página se pudo abrir
+# (WebFetch y curl daban ENOTFOUND). Nivel en el comentario de cada entrada:
+#   P = fuente primaria (fabricante, desarrollador, sitio oficial o tienda con precio a la vista);
+#   T = tercero (foro, blog, directorio no oficial).
+# La entrada sin url.date (vere-ctyfiles-feed) solo aparece citada dentro de un resumen.
+# Detalle en verificacion.csv, precios.csv, receptores.csv y facts.md.
+
+# --- Icom: IC-7300MK2 y RS-BA1 ----------------------------------------------------
+
+vere-icom-usbdriver:  # P
+  type: web
+  title: 'USB Driver Download (Icom USB Driver; incluye el IC-7300MK2)'
+  publisher: Icom America
+  url:
+    value: https://icomamerica.com/support/firmware_driver/4520/
+    date: '2026-10-20'
+vere-icom-7300mk2-basic:  # P
+  type: web
+  title: 'IC-7300MK2 Basic Manual'
+  publisher: Icom (Icom UK)
+  url:
+    value: https://icomuk.co.uk/files/icom/PDF/productManual/IC-7300MK2_ENG_Basic_0.pdf
+    date: '2026-10-20'
+vere-icom-7300mk2-advanced:  # P
+  type: web
+  title: 'IC-7300MK2 Advanced Manual'
+  publisher: Icom Europe
+  url:
+    value: https://www.icomeurope.com/wp-content/uploads/2026/02/IC-7300MK2_ENG_Advanced_0.pdf
+    date: '2026-10-20'
+vere-icom-7300mk2-civ:  # P
+  type: web
+  title: 'IC-7300MK2 CI-V Reference Guide'
+  publisher: Icom (Icom UK)
+  url:
+    value: https://icomuk.co.uk/files/icom/PDF/productAdditionalFile/IC-7300MK2_ENG_CI-V_0.pdf
+    date: '2026-10-20'
+vere-icom-7300mk2-jp:  # P
+  type: web
+  title: 'IC-7300MK2 (página de producto en japonés)'
+  publisher: Icom Inc.
+  url:
+    value: https://www.icom.co.jp/lineup/products/IC-7300MK2/
+    date: '2026-10-20'
+vere-icom-rsba1v2:  # P
+  type: web
+  title: 'RS-BA1 Version 2 – IP Remote Control Software'
+  publisher: Icom America
+  url:
+    value: https://www.icomamerica.com/lineup/products/RS-BA1_v2/
+    date: '2026-10-20'
+vere-icom-rsba1v2-download:  # P
+  type: web
+  title: 'RS-BA1 Version 2 – Control software Download'
+  publisher: Icom America
+  url:
+    value: https://icomamerica.com/support/firmware_driver/3945
+    date: '2026-10-20'
+vere-wimo-rsba1v2:  # P (tienda)
+  type: web
+  title: 'Remote Control Software Icom RS-BA1V2'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/rs-ba1v2
+    date: '2026-10-20'
+vere-sdrcontrol-appstore:  # P (ficha del desarrollador en el App Store)
+  type: web
+  title: 'Supporting the Icom IC-705, IC-7610, IC-9700, IC-R8600, IC-7300, IC-7760 and finally the 7300 MK2 (SDR-Control)'
+  publisher: Apple App Store
+  url:
+    value: https://apps.apple.com/app/id1592313285
+    date: '2026-10-20'
+
+# --- Yaesu FT-710 y USB en macOS ---------------------------------------------------
+
+vere-yaesu-vcp-manual:  # P
+  type: web
+  title: 'Virtual COM Port Driver Installation Manual (rev. 2202-D)'
+  publisher: Yaesu Musen
+  url:
+    value: https://www.yaesu.com/Files/BB2B47AE-1018-01AF-FAE48FDCB1919193/USB_Driver_Installation_Manual_ENG_2202-D.pdf
+    date: '2026-10-20'
+vere-yaesu-ft710:  # P
+  type: web
+  title: 'FT-710 (página de producto)'
+  publisher: Yaesu
+  url:
+    value: https://yaesu.com/product-detail.aspx?Model=FT-710&CatName=HF+Transceivers%2FAmplifiers
+    date: '2026-10-20'
+vere-silabs-vcp:  # P
+  type: web
+  title: 'CP210x USB to UART Bridge VCP Drivers'
+  publisher: Silicon Labs
+  url:
+    value: https://silabs.com/developers/usb-to-uart-bridge-vcp-drivers
+    date: '2026-10-20'
+vere-micropipes-ftdx3000:  # T
+  type: web
+  title: 'Setting up a Yaesu FTDX-3000 with FT8 on OS X'
+  publisher: micropipes.com
+  date: '2023-07-10'
+  url:
+    value: https://micropipes.com/2023/07/10/setting-up-Yaesu-FTDX-3000-with-FT8-on-OS-X/
+    date: '2026-10-20'
+vere-digirig-ft891-mac:  # T
+  type: web
+  title: 'DR-891 w/FT-891 WSJT-X using a Mac M1 w/Sequoia will not work'
+  publisher: Digirig forum
+  url:
+    value: https://forum.digirig.net/t/dr-891-w-ft-891-wsjt-x-using-a-mac-m1-w-sequoia-will-not-work/5764
+    date: '2026-10-20'
+vere-chirp-mac-yaesu:  # T
+  type: web
+  title: '[chirp_users] Mac to Vaesu communication problem'
+  publisher: CHIRP users mailing list
+  url:
+    value: https://lists.chirpmyradio.com/hyperkitty/list/users@lists.chirpmyradio.com/thread/Y2U2HD5DGLN3DZH275J763KYMLW6USQV
+    date: '2026-10-20'
+vere-reddit-wsjtx:  # T
+  type: web
+  title: 'r/WSJTX (espejo Redlib)'
+  publisher: Reddit
+  url:
+    value: https://redlib.hackliberty.org/r/WSJTX
+    date: '2026-10-20'
+vere-reddit-wsjtx-2:  # T
+  type: web
+  title: 'r/WSJTX (otro espejo Redlib)'
+  publisher: Reddit
+  url:
+    value: https://lr.us.psf.lt/r/WSJTX
+    date: '2026-10-20'
+
+# --- Loggers -------------------------------------------------------------------------
+
+vere-k1gq-skookum:  # P
+  type: web
+  title: 'SkookumLogger (página del programa)'
+  author: Myers, Bill
+  publisher: K1GQ
+  url:
+    value: https://k1gq.net/SkookumLogger/
+    date: '2026-10-20'
+vere-mhr-skookum-55:  # T (anuncio de versión)
+  type: web
+  title: 'SkookumLogger v5.5 now available'
+  publisher: MacHamRadio
+  date: '2026-06-15'
+  url:
+    value: https://machamradio.com/blog/2026/06/15/skookumlogger-v5-5-now-available/
+    date: '2026-10-20'
+vere-mhr-skookum-53:  # T (anuncio de versión)
+  type: web
+  title: 'SkookumLogger v5.3 now available'
+  publisher: MacHamRadio
+  date: '2025-07-19'
+  url:
+    value: https://machamradio.com/blog/2025/07/19/skookumlogger-v5-3-now-available-2/
+    date: '2026-10-20'
+vere-mhr-skookum-51:  # T (anuncio de versión)
+  type: web
+  title: 'SkookumLogger v5.1 now available'
+  publisher: MacHamRadio
+  date: '2025-01-03'
+  url:
+    value: https://machamradio.com/blog/2025/01/03/skookumlogger-v5-1-now-available/
+    date: '2026-10-20'
+vere-n1mm-parallels:  # T (grupo oficial de soporte; mensajes de usuarios)
+  type: web
+  title: 'N1MM Logger under Parallels (hilo)'
+  publisher: N1MMLoggerPlus@groups.io
+  url:
+    value: https://groups.io/g/N1MMLoggerPlus/topic/n1mm_logger_under_parallels/95175083
+    date: '2026-10-20'
+vere-n1mm-arm64:  # T
+  type: web
+  title: 'New Windows 11 install ARM64 (hilo)'
+  publisher: N1MMLoggerPlus@groups.io
+  url:
+    value: https://groups.io/g/N1MMLoggerPlus/topic/new_windows_11_install_arm64/102402541
+    date: '2026-10-20'
+vere-n1mm-apple:  # T
+  type: web
+  title: 'N1MM on a Mac with Apple silicon (hilo)'
+  publisher: N1MMLoggerPlus@groups.io
+  url:
+    value: https://groups.io/g/N1MMLoggerPlus/topic/n1mm_on_a_mac_with_apple/109933754
+    date: '2026-10-20'
+vere-n1mm-install:  # P (sin declaración sobre Windows on ARM en el resumen)
+  type: web
+  title: 'Installing and Upgrading N1MM Logger+'
+  publisher: N1MM Logger+ Documentation
+  url:
+    value: https://n1mmwp.hamdocs.com/getting-started/installing-and-upgrading-n1mm-logger/
+    date: '2026-10-20'
+
+# --- Ficheros CTY ----------------------------------------------------------------------
+
+vere-cty-3630-announce:  # P (anuncio de AD1C, archivado)
+  type: web
+  title: '[CTY-Announce] CTY-3630 Country Files - 06 September 2026'
+  author: Reisert, Jim
+  publisher: The Mail Archive (announce@country-files.com)
+  date: '2026-09-06'
+  url:
+    value: http://www.mail-archive.com/announce@country-files.com/msg00778.html
+    date: '2026-10-20'
+vere-cty-3630-tlf:  # P (mismo anuncio en tlf-devel)
+  type: web
+  title: 'CTY-3630 Country Files - 06 September 2026'
+  publisher: The Mail Archive (tlf-devel@nongnu.org)
+  date: '2026-09-06'
+  url:
+    value: http://www.mail-archive.com/tlf-devel@nongnu.org/msg03313.html
+    date: '2026-10-20'
+vere-ctyfiles-feed:  # citado en un resumen; no apareció como resultado
+  type: web
+  title: 'Country Files – feed RSS de anuncios'
+  publisher: AD1C (country-files.com)
+  url:
+    value: https://www.country-files.com/feed/
+
+# --- WebSDR ----------------------------------------------------------------------------
+
+vere-twente-websdr:  # P
+  type: web
+  title: 'Wide-band WebSDR in JO32KF - Universiteit Twente'
+  publisher: Universiteit Twente (radioclub ETGD)
+  url:
+    value: http://websdr.ewi.utwente.nl:8901/websdr.html
+    date: '2026-10-20'
+vere-twente-websdr-tune:  # P (enlace directo a una frecuencia con ?tune=)
+  type: web
+  title: 'Wide-band WebSDR in Enschede, the Netherlands (enlace ?tune=6070am)'
+  publisher: Universiteit Twente (radioclub ETGD)
+  url:
+    value: http://websdr.ewi.utwente.nl:8901/?tune=6070am
+    date: '2026-10-20'
+vere-twente-websdr-mobile:  # P
+  type: web
+  title: 'Wide-band WebSDR in JO32KF - Mobile version'
+  publisher: Universiteit Twente (radioclub ETGD)
+  url:
+    value: http://etgd-websdr.ewi.utwente.nl:8901/m.html
+    date: '2026-10-20'
+vere-etgd-websdr:  # P
+  type: web
+  title: 'WebSDR (proyecto del radioclub ETGD)'
+  publisher: ETGD, Universiteit Twente
+  url:
+    value: https://etgd.utwente.nl/projecten/websdr/
+    date: '2026-10-20'
+vere-websdr-org-background:  # P
+  type: web
+  title: 'WebSDR.org - background information'
+  publisher: WebSDR.org
+  url:
+    value: https://websdr.org/background.html
+    date: '2026-10-20'
+vere-websdr-org-faq:  # P
+  type: web
+  title: 'WebSDR.org - Frequently Asked Questions'
+  publisher: WebSDR.org
+  url:
+    value: https://www.websdr.org/faq.html
+    date: '2026-10-20'
+vere-essexham-websdr:  # T
+  type: web
+  title: 'Web SDR mobile app (foro)'
+  publisher: Essex Ham
+  url:
+    value: https://essexham.co.uk/help-advice/web-sdr-mobile-app
+    date: '2026-10-20'
+vere-swling-twente-mobile:  # T
+  type: web
+  title: 'U Twente WebSDR: new tablet/phone interface option'
+  publisher: The SWLing Post
+  date: '2024-08'
+  url:
+    value: https://swling.com/blog/2024/08/u-twente-websdr-new-tablet-phone-interface-option
+    date: '2026-10-20'
+
+# --- Predicción de propagación ---------------------------------------------------------
+
+vere-voacap-manual:  # P
+  type: web
+  title: 'VOACAP Online User’s Manual'
+  author: Perkiömäki, Jari
+  publisher: VOACAP.com (OH6BG)
+  url:
+    value: https://www.voacap.com/2023/documents/VOACAP_Manual.pdf
+    date: '2026-10-20'
+vere-voacap-hamcap:  # P
+  type: web
+  title: 'HamCAP User''s Guide'
+  publisher: VOACAP.com (OH6BG)
+  url:
+    value: https://www.voacap.com/hamcap-guide.html
+    date: '2026-10-20'
+vere-arrl-voacap:  # T
+  type: web
+  title: 'Surfin: online HF propagation application'
+  publisher: ARRL
+  url:
+    value: https://www.arrl.org/news/surfin-online-hf-propagation-application
+    date: '2026-10-20'
+vere-rsgb-radcom-voacap:  # P (herramienta RadCom de la RSGB en voacap.com)
+  type: web
+  title: 'RadCom online Propagation Prediction Tools'
+  publisher: RSGB
+  url:
+    value: https://rsgb.org/main/technical/propagation/on-line-propagation-tools/radcom-online-propagation-prediction-tools/
+    date: '2026-10-20'
+vere-rsgb-proppy:  # P (fecha de la noticia no visible)
+  type: web
+  title: 'New propagation prediction tool released (Proppy)'
+  publisher: RSGB
+  url:
+    value: https://rsgb.org/main/?p=22381
+    date: '2026-10-20'
+vere-itu-iturhfprop:  # P
+  type: web
+  title: 'ITURHFProp: software de la Recomendación UIT-R P.533'
+  publisher: UIT (ITU-R)
+  url:
+    value: https://www.itu.int/oth/R0A0400006F
+    date: '2026-10-20'
+vere-itu-p533:  # P
+  type: web
+  title: 'Recommendation ITU-R P.533: Method for the prediction of the performance of HF circuits'
+  publisher: UIT (ITU-R)
+  url:
+    value: https://www.itu.int/rec/R-REC-P.533/en
+    date: '2026-10-20'
+
+# --- KiwiSDR y directorios -------------------------------------------------------------
+
+vere-kiwisdr-home:  # P
+  type: web
+  title: 'KiwiSDR: The world''s easiest to set up and use Software Defined Radio'
+  publisher: KiwiSDR
+  url:
+    value: http://kiwisdr.com/
+    date: '2026-10-20'
+vere-kiwisdr-info:  # P
+  type: web
+  title: 'KiwiSDR Operating Information'
+  publisher: KiwiSDR
+  url:
+    value: http://kiwisdr.com/info/
+    date: '2026-10-20'
+vere-kiwisdr-update:  # P (página de estado de los receptores registrados)
+  type: web
+  title: 'Kiwisdr (estado de los receptores públicos)'
+  publisher: KiwiSDR
+  url:
+    value: http://kiwisdr.com/php/update.php
+    date: '2026-10-20'
+vere-kiwisdr-public:  # P (vista filtrada de la lista pública)
+  type: web
+  title: 'Kiwisdr (lista pública de receptores)'
+  publisher: KiwiSDR
+  url:
+    value: http://kiwisdr.com/.public/?s=zl&n=30&u=f%3D10Mamnz10
+    date: '2026-10-20'
+vere-kiwi-cx8bit:  # P (página del propio receptor)
+  type: web
+  title: '0-32 MHz SDR, Montevideo, Uruguay - KiwiSDR'
+  publisher: CX8BIT
+  url:
+    value: http://cx8bit.proxy.kiwisdr.com:8073/
+    date: '2026-10-20'
+vere-rxtx-map:  # T
+  type: web
+  title: 'Map of SDR Receivers'
+  publisher: rx-tx.info
+  url:
+    value: https://rx-tx.info/map-sdr-points
+    date: '2026-10-20'
+vere-rxtx-map-kiwi:  # T
+  type: web
+  title: 'Map of SDR Receivers (filtro KiwiSDR)'
+  publisher: rx-tx.info
+  url:
+    value: https://rx-tx.info/map-sdr-points?type%5B2%5D=2
+    date: '2026-10-20'
+vere-rxtx-map-es:  # T
+  type: web
+  title: 'Map of SDR Receivers (filtro España)'
+  publisher: rx-tx.info
+  url:
+    value: https://rx-tx.info/map-sdr-points?freq_of=&freq_to=&bands=All&country=38&title=&qth=&url=
+    date: '2026-10-20'
+vere-rxtx-list:  # T
+  type: web
+  title: 'Preview of SDR Receivers (lista, filtro KiwiSDR)'
+  publisher: rx-tx.info
+  url:
+    value: https://rx-tx.info/list-sdr-points?freq_of=&freq_to=&bands=All&country=All&title=&url=&qth=&type=2&sort_by=title&sort_order=ASC&items_per_page=50&offset=0&page=16
+    date: '2026-10-20'
+vere-receiverbook-kiwi:  # T
+  type: web
+  title: 'Receiverbook – KiwiSDR'
+  publisher: receiverbook.de
+  url:
+    value: https://www.receiverbook.de/?type=kiwisdr
+    date: '2026-10-20'
+vere-receiverbook-kiwi-p1:  # T
+  type: web
+  title: 'Receiver list (KiwiSDR, página 1)'
+  publisher: receiverbook.de
+  url:
+    value: https://www.receiverbook.de/?type=kiwisdr&page=1
+    date: '2026-10-20'
+vere-receiverbook-kiwi-p2:  # T
+  type: web
+  title: 'Receiverbook (KiwiSDR, página 2)'
+  publisher: receiverbook.de
+  url:
+    value: https://www.receiverbook.de/?type=kiwisdr&page=2
+    date: '2026-10-20'
+vere-receiverbook-p1:  # T
+  type: web
+  title: 'Receiverbook (todos los tipos, página 1)'
+  publisher: receiverbook.de
+  url:
+    value: https://www.receiverbook.de/?page=1
+    date: '2026-10-20'
+
+# --- Tiendas: fuentes de alimentación ----------------------------------------------------
+
+vere-ondamania-fuentes:  # P (tienda)
+  type: web
+  title: 'Fuentes de alimentación estabilizadas y filtradas, con y sin instrumentos, fijas y regulables'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/productos/1/1/fuentes_de_alimentacion/fuentes-de-alimentacion
+    date: '2026-10-20'
+vere-ondamania-rps1230swm:  # P (tienda)
+  type: web
+  title: 'Telecom RPS-1230-SWM fuente de alimentación conmutada con 13,8 V 30 A máx.'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02flrps1230swm/1/telecom-rps-1230-swm-fuente-de-alimentacion-conmutada-con-13-8-v-y-30-amp-max-
+    date: '2026-10-20'
+vere-tutienda-rps1230swm:  # P (tienda)
+  type: web
+  title: 'RPS-1230-SWM - Fuente de alimentación conmutada 30 A, 13.8 V'
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/home/4373-rps-1230-swm-fuente-de-alimentacion-conmutada-30-a-138-v.html
+    date: '2026-10-20'
+vere-ondamania-sps3036d:  # P (tienda)
+  type: web
+  title: 'Fuente de alimentación conmutada y digital Sadelta SPS-3036D'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02ldsps3036d/1/fuente-de-alimentacion-digital-conmutada-sadelta-sps-3036d-con-13-8v-y-30-amp-
+    date: '2026-10-20'
+vere-ondamania-pc1335:  # P (tienda)
+  type: web
+  title: 'Fuente de alimentación conmutada con toma de carga de batería Jetfon PC-1335'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02phpc1335/1/fuente-de-alimentacion-jetfon-pc-1335-con-30-amp-maximo-y-funcion-de-carga-de-bateria
+    date: '2026-10-20'
+vere-radiomania-ss330w:  # P (tienda)
+  type: web
+  title: 'Daiwa SS-330-W'
+  publisher: Radiomanía
+  url:
+    value: https://radiomania.net/SS330W
+    date: '2026-10-20'
+
+# --- Tiendas: cascos, adaptadores y pedal ------------------------------------------------
+
+vere-astro-pro7:  # P (tienda)
+  type: web
+  title: 'Heil sound PRO-7'
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/pro7/
+    date: '2026-10-20'
+vere-astro-pro7ic:  # P (tienda)
+  type: web
+  title: 'Heil sound PRO-7-IC'
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/pro7ic/
+    date: '2026-10-20'
+vere-radiomania-pro7:  # P (tienda)
+  type: web
+  title: 'Micro Auricular Heil Pro-7 Negro'
+  publisher: Radiomanía
+  url:
+    value: https://radiomania.net/epages/a460337c-7435-4ca8-a697-f50605a3ed82.mobile/es_ES/?ObjectPath=%2FShops%2Fa460337c-7435-4ca8-a697-f50605a3ed82%2FProducts%2F%22Heil+Pro-7%22
+    date: '2026-10-20'
+vere-wimo-pro7:  # P (tienda)
+  type: web
+  title: 'Heil Sound Pro7'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/pro7
+    date: '2026-10-20'
+vere-proyecto4-pro7:  # P (tienda)
+  type: web
+  title: 'Auriculares Heil PRO7'
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/microfonos-altavoces-y-auriculares/3496-auriculares-heil-pro7.html
+    date: '2026-10-20'
+vere-astro-proset-elite:  # P (tienda)
+  type: web
+  title: 'Heil sound PRO-SET ELITE'
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/proset_elite/
+    date: '2026-10-20'
+vere-astro-proset-elite-ic:  # P (tienda)
+  type: web
+  title: 'Heil sound PRO-SET ELITE IC'
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/en/p/proset_elite_ic/
+    date: '2026-10-20'
+vere-wimo-heil-headsets:  # P (tienda)
+  type: web
+  title: 'Auriculares Heil Sound'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/accessories/radio-accessories/audio-accessory/headsets-heil-sound
+    date: '2026-10-20'
+vere-amazon-cm500:  # P (tienda; ficha contradictoria)
+  type: web
+  title: 'Yamaha CM500 Headphones with Built in Microphone'
+  publisher: Amazon.es
+  url:
+    value: https://www.amazon.es/Yamaha-CM500-auriculares-Built-en-micr%C3%B3fono/dp/B000BZ6ZX0
+    date: '2026-10-20'
+vere-proyecto4-heil:  # P (tienda)
+  type: web
+  title: 'Accesorios HEIL SOUND'
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/accesorios-c-113/marca-heil_sound
+    date: '2026-10-20'
+vere-astro-ad1:  # P (tienda)
+  type: web
+  title: 'Heil sound Adaptador HEIL AD1'
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/adaptador_heil_ad1/
+    date: '2026-10-20'
+vere-wimo-heil-adapter:  # P (tienda)
+  type: web
+  title: 'Heil Adaptor Cable'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/heil-sound-adapterkabel
+    date: '2026-10-20'
+vere-wimo-cc1i:  # P (tienda)
+  type: web
+  title: 'Heil Sound Mic Cables (CC-1-I)'
+  publisher: WiMo
+  url:
+    value: https://wimo.com/en/cc-1-i-8
+    date: '2026-10-20'
+vere-astro-fs3:  # P (tienda)
+  type: web
+  title: 'Heil sound FS-3 Pedal PTT Heil'
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/en/p/fs3_pedal_ptt_heil/
+    date: '2026-10-20'
+vere-wimo-fs3:  # P (tienda)
+  type: web
+  title: 'PTT foot switch FS-3'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/fs-3
+    date: '2026-10-20'
+vere-proyecto4-fs3:  # P (tienda)
+  type: web
+  title: 'Pedal PTT Heil Sound FS-3'
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/microfonosauric-altav-/3003-pedal-ptt-fs-3.html
+    date: '2026-10-20'
+vere-wimo-fs2:  # P (tienda)
+  type: web
+  title: 'PTT foot switch FS-2, 2 switches'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/fs-2
+    date: '2026-10-20'
+
+# --- Tiendas: medidores, cargas, filtros y tarjetas ----------------------------------------
+
+vere-ondamania-cn901hp:  # P (tienda)
+  type: web
+  title: 'Medidor de estacionarias ROE y potencia Daiwa CN-901-HP'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02flcn901hp/1/medidor-de-estacionarias-roe-y-potencia-daiwa-cn-901-hp
+    date: '2026-10-20'
+vere-proyecto4-cn901hp:  # P (tienda)
+  type: web
+  title: 'Medidor de estacionarias ROE Daiwa CN-901 HP'
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/medidores-de-estacionarias-roe/508-medidor-de-estacionarias-roe-daiwa-cn-801-hp.html
+    date: '2026-10-20'
+vere-radiomania-roe:  # P (tienda)
+  type: web
+  title: 'Medidores ROE'
+  publisher: Radiomanía
+  url:
+    value: https://radiomania.net/8/MedidoresROE
+    date: '2026-10-20'
+vere-wimo-cn901hp:  # P (tienda)
+  type: web
+  title: 'CN-901HP Medidor SWR'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/cn-901hp-swr-meter-daiwa
+    date: '2026-10-20'
+vere-passion-swr:  # P (tienda)
+  type: web
+  title: 'Best ROSmeter & WATTmeter'
+  publisher: Passion Radio
+  url:
+    value: https://www.passion-radio.com/swr-power-meter/53
+    date: '2026-10-20'
+vere-ondamania-sx200:  # P (tienda)
+  type: web
+  title: 'Diamond SX-200 original Japón, medidor de ROE y watímetro'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/diamondsx-200/1/diamond-sx-200-medidor-de-roe-y-potencia-original-japon
+    date: '2026-10-20'
+vere-ondamania-roe-cat:  # P (tienda)
+  type: web
+  title: 'Medidores de estacionarias ROE y watímetros'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/productos/1/1/roeywatt/medidores-y-watimetros/4/1/32
+    date: '2026-10-20'
+vere-ondamania-sw102:  # P (tienda)
+  type: web
+  title: 'Surecom SW-102 medidor digital de ROE, potencia y frecuencímetro de 125 a 525 MHz (VHF y UHF)'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02phs102/1/surecom-sw-102-medidor-digital-de-estacionarias-y-potencia-para-vhf-y-uhf-desde-125-a-525-mhz
+    date: '2026-10-20'
+vere-passion-dummy100:  # P (tienda)
+  type: web
+  title: 'DC dummy load at 1GHz 100W Max. 50 Ohms UHF male connector PL-259'
+  publisher: Passion Radio
+  url:
+    value: https://www.passion-radio.com/dummy-load/81t411-2200.html
+    date: '2026-10-20'
+vere-ondamania-avdl200m:  # P (tienda)
+  type: web
+  title: 'Carga ficticia D-Original AV-DL-200M con conector tipo PL UHF'
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02flavdl200m/1/d-original-av-dl-200-m-carga-ficticia-o-artificial-con-conector-pl-hasta-1-ghz
+    date: '2026-10-20'
+vere-tutienda-accesorios:  # P (tienda; categoría)
+  type: web
+  title: 'Accesorios - La Tienda del Radioaficionado'
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/17-accesorios
+    date: '2026-10-20'
+vere-wimo-lpf30-2000:  # P (tienda)
+  type: web
+  title: 'Low Pass Filter 30 MHz 2000W'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/lpf30-2000
+    date: '2026-10-20'
+vere-wimo-mfj704:  # P (tienda)
+  type: web
+  title: 'MFJ-704 Low Pass Filter 1.8-30 MHz, 1500W PEP'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/mfj-704
+    date: '2026-10-20'
+vere-wimo-lpf1:  # P (tienda)
+  type: web
+  title: 'LPF-1 Low Pass Filter 1,8-30 MHz, 1500W'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/lpf-1
+    date: '2026-10-20'
+vere-fnac-sdhc32:  # P (tienda)
+  type: web
+  title: 'Tarjeta SDHC SanDisk Ultra 32 GB'
+  publisher: Fnac España
+  url:
+    value: https://www.fnac.es/Tarjeta-SDHC-SanDisk-Ultra-32-GB-Tarjeta-de-memoria-Tarjeta-SD/a1170703
+    date: '2026-10-20'
+vere-pccomp-sdhc32:  # P (tienda)
+  type: web
+  title: 'Sandisk Ultra Tarjeta SDHC 32Gb UHS-1 Clase 10'
+  publisher: PcComponentes
+  url:
+    value: https://www.pccomponentes.com/sandisk-ultra-tarjeta-sdhc-32gb-uhs-1-clase-10
+    date: '2026-10-20'
+vere-pccomp-microsdhc32:  # P (tienda)
+  type: web
+  title: 'Sandisk Ultra MicroSDHC 32GB UHS-I Clase 10 + Adaptador SD'
+  publisher: PcComponentes
+  url:
+    value: https://www.pccomponentes.com/sandisk-ultra-microsdhc-32gb-uhs-i-clase-10-plus-adaptador-sd
+    date: '2026-10-20'

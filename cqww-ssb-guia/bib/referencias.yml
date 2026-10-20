@@ -52,6 +52,867 @@ own-typst:
   url:
     value: https://typst.app/
     date: 2026-10-20
+ant-myantennas-efhw8010:
+  type: web
+  title: EFHW-8010 (ficha y precio)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/efhw-8010/
+    date: '2026-10-20'
+ant-myantennas-efhw8010lp:
+  type: web
+  title: EFHW-8010-LP (ficha y precio)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/efhw-8010-lp/
+    date: '2026-10-20'
+ant-myantennas-efhw4010:
+  type: web
+  title: EFHW-4010 (ficha y precio)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/efhw-4010/
+    date: '2026-10-20'
+ant-myantennas-efhw4010lp:
+  type: web
+  title: EFHW-4010-LP (ficha y precio)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/efhw-4010-lp/
+    date: '2026-10-20'
+ant-myantennas-efhw4010p:
+  type: web
+  title: EFHW-4010-P (ficha y precio)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/efhw-4010p/
+    date: '2026-10-20'
+ant-myantennas-efhw4010-1k:
+  type: web
+  title: EFHW-4010-1K-ICAS (ficha y precio)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/efhw-4010-1k-icas/
+    date: '2026-10-20'
+ant-myantennas-efhw7510-2k:
+  type: web
+  title: EFHW-7510-2K-Plus (ficha)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/efhw-7510-2k-plus/
+    date: '2026-10-20'
+ant-myantennas-categoria:
+  type: web
+  title: EFHW Antennas (categoría de antenas EFHW multibanda)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product-category/antennas/efhw-multi-band/
+    date: '2026-10-20'
+ant-myantennas-manual:
+  type: web
+  title: EFHW antennas Instruction Manual
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/wp-content/uploads/2021/08/Installation-Manual-EFHW-antennas.pdf
+    date: '2026-10-20'
+ant-myantennas-manual-8010-1k:
+  type: web
+  title: Manual EFHW-8010-1K
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/wp-content/uploads/2015/11/Manual-EFHW-8010-1K.pdf
+    date: '2026-10-20'
+ant-myantennas-eflw3k:
+  type: web
+  title: EFLW-3K (ficha)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/eflw-3k/
+    date: '2026-10-20'
+ant-myantennas-mef130:
+  type: web
+  title: MEF-130-2K-Plus (ficha)
+  publisher: MyAntennas
+  url:
+    value: https://myantennas.com/wp/product/mef-130-2k-plus/
+    date: '2026-10-20'
+ant-astroradio-dxpatrol-endfeed:
+  type: web
+  title: Dxpatrol Antena END-FEED 10 m a 80 m (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/antena-end-feed-10m-a-80m/
+    date: '2026-10-20'
+ant-astroradio-ef1080:
+  type: web
+  title: Momobeam Antena Endfeed EF1080 10-15-20-40-80 300 W (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/antena-endfeed-ef1080-10-15-20-40-80-300w/
+    date: '2026-10-20'
+ant-astroradio-ef1080c:
+  type: web
+  title: Momobeam Antena EndFeed EF1080C 10-15-20-40-80 1 kW (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/antena-endfeed-ef1080c-10-15-20-40-80-1kw/
+    date: '2026-10-20'
+ant-astroradio-ezwire:
+  type: web
+  title: Dxpatrol Antena EZWIRE (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/antena-ezwire/
+    date: '2026-10-20'
+ant-wimo-efhw:
+  type: web
+  title: WiMo EFHW Antennas for 80/40/20/15/10m (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/wimo-end-fed-wire-antenna
+    date: '2026-10-20'
+ant-wimo-lefs8010:
+  type: web
+  title: Chameleon LEFS 8010 EFHW portable antenna 80-10m (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/chameleon-lefs-8010
+    date: '2026-10-20'
+ant-wimo-hyendfed-8band:
+  type: web
+  title: HyEndFed 8-Band 80-10m (ficha)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/11345-8al
+    date: '2026-10-20'
+ant-wimo-hyendfed-5band:
+  type: web
+  title: HyEndFed 5-Band 80-10m (ficha)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/11345-84251
+    date: '2026-10-20'
+ant-wimo-hyendfed-marca:
+  type: web
+  title: HyEndFed (productos de la marca)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/brand/hyendfed
+    date: '2026-10-20'
+ant-hyendfed-web:
+  type: web
+  title: Hyendfed antenna (página de producto)
+  publisher: HyEndFed
+  url:
+    value: https://hyendfed.com/antenna/multiband_100_watt/product/detail/119/www.hyendfed.com
+    date: '2026-10-20'
+ant-wimo-bl49:
+  type: web
+  title: Balun (UnUn) 1:49 - 1000 Watt (CG-Antenna BL-49)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/bl-49
+    date: '2026-10-20'
+ant-ondamania-dxw8010:
+  type: web
+  title: Antena dipolo multibanda D-Original DX-W-8010 de 10 a 80 metros (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/d_original_dx_w_1080/1/dipolo-de-hf-de-10-a-80-metros-d-original-dx-w-8010
+    date: '2026-10-20'
+ant-passionradio-w8010:
+  type: web
+  title: DIAMOND W8010 multiband 80-10m 5 bands (ficha y precio)
+  publisher: Passion Radio
+  url:
+    value: https://www.passion-radio.com/long-wire/w8010-113.html
+    date: '2026-10-20'
+ant-wimo-ah730:
+  type: web
+  title: Icom AH-730 antenna tuner 1.8-54 MHz (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/icom-ah-730-automatic-tuner-waterproof-outdoor
+    date: '2026-10-20'
+ant-ltdr-ah730:
+  type: web
+  title: AH-730 Acoplador de antena Icom (ficha y precio)
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/home/3893-ah-4-acoplador-de-antena-icom.html
+    date: '2026-10-20'
+ant-icomfrance-ah730-doc:
+  type: web
+  title: AH-730 High Speed Tuning, IPX4 (folleto técnico)
+  publisher: Icom France
+  url:
+    value: https://www.icomfrance.com/uploads/files/produit/doc-AH-730-en.pdf
+    date: '2026-10-20'
+ant-icomjapan-ah730:
+  type: web
+  title: 'AH-730 (accesorio: especificaciones y equipos compatibles)'
+  publisher: Icom Inc.
+  url:
+    value: https://www.icomjapan.com/lineup/options/AH-730/
+    date: '2026-10-20'
+ant-icom-ah730-manual-copia:
+  type: web
+  title: AH-730 Instruction Manual (copia del manual de Icom)
+  publisher: Outback Marine (distribuidor; copia del manual de Icom)
+  url:
+    value: https://www.outbackmarine.com.au/assets/files/Manufacturers/ICOM/ico_AH730_Manual.pdf
+    date: '2026-10-20'
+ant-icomjapan-ah730-manual:
+  type: web
+  title: AH-730 (descarga del manual de instrucciones)
+  publisher: Icom Inc.
+  url:
+    value: https://www.icomjapan.com/support/manual/3577/
+    date: '2026-10-20'
+ant-icomuk-ah730:
+  type: web
+  title: AH-730 Automatic Antenna Tuner
+  publisher: Icom UK
+  url:
+    value: https://icomuk.co.uk/AH-730-Automatic-Antenna-Tuner/4051/1480/41/
+    date: '2026-10-20'
+ant-icomuk-ah705-manual:
+  type: web
+  title: AH-705 Automatic Antenna Tuner, Instructions
+  publisher: Icom UK
+  url:
+    value: https://icomuk.co.uk/files/icom/PDF/productManual/AH-705_ENG_IM_0.pdf
+    date: '2026-10-20'
+ant-icomuk-ah4:
+  type: web
+  title: AH-4 Automatic Antenna Tuner (producto no disponible)
+  publisher: Icom UK
+  url:
+    value: https://icomuk.co.uk/AH-4-automatic-antenna-tuner/4051/981/41/
+    date: '2026-10-20'
+ant-icomfrance-7300mk2:
+  type: web
+  title: Fixed stations IC-7300MK2 (accesorios)
+  publisher: Icom France
+  url:
+    value: https://www.icomfrance.com/en/produit/IC-7300MK2.php
+    date: '2026-10-20'
+ant-fbnews-ah730:
+  type: web
+  title: Technical Segment (FB News, mayo de 2022)
+  publisher: Icom FB News
+  url:
+    value: https://fbnews.jp/202205/w_technicalsegment/
+    date: '2026-10-20'
+ant-proyecto4-ah4:
+  type: web
+  title: Acoplador de antena Icom AH-4 (ficha)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/acopladores-de-antena/3685-acoplador-de-antena-icom-ah-4.html
+    date: '2026-10-20'
+ant-astroradio-ah705:
+  type: web
+  title: ICOM AH-705 (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/ah-705/
+    date: '2026-10-20'
+ant-yaesu-ft710:
+  type: web
+  title: FT-710 AESS (página de producto)
+  publisher: Yaesu
+  url:
+    value: https://www.yaesu.com/indexVS.cfm?cmd=DisplayProducts&ProdCatID=102&encProdID=615ADFEAB5EDBC65EBE1D64835F209DB&DivisionID=65&isArchived=0
+    date: '2026-10-20'
+ant-yaesu-fc40-manual:
+  type: web
+  title: Automatic-Matching 200-Memory Antenna Tuner FC-40 Installation Instructions
+  publisher: Yaesu
+  url:
+    value: https://www.yaesu.com/Files/4CB893D7-1018-01AF-FA97E9E9AD48B50C/FC-40_OM_ENG_EAD77X101.pdf
+    date: '2026-10-20'
+ant-yaesuuk-fc40:
+  type: web
+  title: FC-40 (página de producto)
+  publisher: Yaesu UK
+  url:
+    value: https://www.yaesu.co.uk/fc-40/
+    date: '2026-10-20'
+ant-ondamania-fc40:
+  type: web
+  title: Acoplador automático de antena Yaesu FC-40 (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/yaesufc-40/1/acoplador-automatico-de-antena-yaesu-fc-40-compatible-con-ft-857-ft-897-
+    date: '2026-10-20'
+ant-ltdr-fc40:
+  type: web
+  title: Acoplador de antena Yaesu FC-40 (ficha y precio)
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/home/3947-acoplador-de-antena-yaesu-fc-40.html
+    date: '2026-10-20'
+ant-proyecto4-fc40:
+  type: web
+  title: Acoplador de antena Yaesu FC-40 (ficha y precio)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/acopladores-de-antena/640-yaesu-fc-40.html
+    date: '2026-10-20'
+ant-wimo-fc40:
+  type: web
+  title: Yaesu FC-40 antenna tuner, weatherproof (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/fc-40
+    date: '2026-10-20'
+ant-ldg-rt100:
+  type: web
+  title: RT/RC-100 (ficha, especificaciones y precio)
+  publisher: LDG Electronics
+  url:
+    value: https://www.ldgelectronics.com/rt/rc-100
+    date: '2026-10-20'
+ant-ldg-support:
+  type: web
+  title: Amateur Radio Product Support (preguntas frecuentes)
+  publisher: LDG Electronics
+  url:
+    value: https://www.ldgelectronics.com/support
+    date: '2026-10-20'
+ant-wimo-rt100:
+  type: web
+  title: RT-100 outdoor antenna tuner, with RC-100 - LDG (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/rt-100
+    date: '2026-10-20'
+ant-mat-mat40:
+  type: web
+  title: mAT-40 Automatic Antenna Tuner
+  publisher: mAT-TUNER
+  url:
+    value: http://www.mat-tuner.com/mAT-40.php
+    date: '2026-10-20'
+ant-mat-mat40-manual:
+  type: web
+  title: mAT-40 HF-SSB Automatic Antenna Tuner, Operation manual v1 (29-08-2025)
+  publisher: mAT-TUNER
+  url:
+    value: http://www.mat-tuner.com/down/mAT-40_Operation_manual_v1_en.pdf
+    date: '2026-10-20'
+ant-wimo-mat40:
+  type: web
+  title: mAT-40 universal outdoor tuner 120W PEP (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/mat-40
+    date: '2026-10-20'
+ant-hruk-mat40:
+  type: web
+  title: mAT-40 Automatic Antenna Tuner (ficha y precio)
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/mat40
+    date: '2026-10-20'
+ant-ondamania-mat40:
+  type: web
+  title: Acoplador automático de antena mAT-40 de 1,6-54 MHz, 120 W (ficha)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/hr_mat_40/1/acoplador-automatico-de-antena-mat-40-de-1-6-54-mhz-120-w-compatible-kenwood-yaesu-e-icom
+    date: '2026-10-20'
+ant-spiderbeam-12hd:
+  type: web
+  title: 12m HD Fiberglass pole standard (ficha y precio)
+  publisher: Spiderbeam
+  url:
+    value: https://shop.spiderbeam.com/en/shop/spiderbeam-12m-fiberglass-pole-hd-1764
+    date: '2026-10-20'
+ant-spiderbeam-12hd-info:
+  type: web
+  title: Spiderbeam HD 12m fiberglass pole (especificaciones)
+  publisher: Spiderbeam
+  url:
+    value: https://www.spiderbeam.com/product_info.php?info=p3_Spiderbeam+HD+12m+fiberglass+pole.html
+    date: '2026-10-20'
+ant-spiderbeam-12hd-set1:
+  type: web
+  title: 12m HD Fiberglass pole with clamp set (ficha y precio)
+  publisher: Spiderbeam
+  url:
+    value: https://shop.spiderbeam.com/en/shop/package-1-spiderbeam-12m-fiberglass-pole-hd-clamps-kit-1766?category=101
+    date: '2026-10-20'
+ant-spiderbeam-12hd-set2:
+  type: web
+  title: 12m HD Fiberglass pole with clamp set and guy belt (ficha y precio)
+  publisher: Spiderbeam
+  url:
+    value: https://shop.spiderbeam.com/en/shop/package-2-spiderbeam-12m-fiberglass-pole-hd-clamps-guy-belt-1767
+    date: '2026-10-20'
+ant-spiderbeam-12hd-eyelet:
+  type: web
+  title: 12m HD Fiberglass pole (eyelet version) (ficha y precio)
+  publisher: Spiderbeam
+  url:
+    value: https://shop.spiderbeam.com/en/shop/spiderbeam-hd-e-12m-fiberglass-pole-eyelet-version-1765
+    date: '2026-10-20'
+ant-spiderbeam-10mini:
+  type: web
+  title: 10m Mini fiberglass pole (ficha y precio)
+  publisher: Spiderbeam
+  url:
+    value: https://shop.spiderbeam.com/en/shop/spiderbeam-10m-mini-fiberglass-pole-1744
+    date: '2026-10-20'
+ant-spiderbeam-12xhd:
+  type: web
+  title: Spiderbeam 12m XHD pole (ficha)
+  publisher: Spiderbeam
+  url:
+    value: https://shop.spiderbeam.com/en/shop/spiderbeam-12m-xhd-pole-2393?page=3&search=12m
+    date: '2026-10-20'
+ant-spiderbeam-categoria:
+  type: web
+  title: Fiberglass Poles (categoría de la tienda)
+  publisher: Spiderbeam
+  url:
+    value: https://shop.spiderbeam.com/en/shop/category/fiberglass-poles-73
+    date: '2026-10-20'
+ant-astroradio-cg10:
+  type: web
+  title: Cgantenna Mástil telescópico de fibra de vidrio 10M reforzado (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/mstil_telescpico_de_fibra_de_vidrio_10m/
+    date: '2026-10-20'
+ant-astroradio-cg12:
+  type: web
+  title: Cgantenna Mástil telescópico de fibra de vidrio 12M (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/mstil_telescpico_de_fibra_de_vidrio_12m/
+    date: '2026-10-20'
+ant-proyecto4-dxwire:
+  type: web
+  title: Mástiles telescópicos DX-WIRE (listado y precios)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/mastiles-telescopicos-c-230/marca-dx_wire
+    date: '2026-10-20'
+ant-proyecto4-gfk10m:
+  type: web
+  title: Mástil telescópico DX-Wire GFK-10M (ficha)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/mastiles-telescopicos/1180-mastil-telescopico-dx-wire-fibra-de-vidrio-gfk-10m.html
+    date: '2026-10-20'
+ant-ltdr-hardfiber10:
+  type: web
+  title: HARDFIBER10 Mástil telescópico 10 metros en fibra de vidrio (ficha y precio)
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/home/4569-hardfiber10-mastil-telecopico-10-metros-en-fibra-de-vidrio.html
+    date: '2026-10-20'
+ant-astroradio-mfj1906h:
+  type: web
+  title: MFJ-1906H Mástil telescópico de fibra de vidrio (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/en/p/mfj_1906h_mstil_telescpico_de_fibra_de_vidrio_de_10_mts/
+    date: '2026-10-20'
+ant-hygain-av640:
+  type: web
+  title: AV-640 (ficha y precio)
+  publisher: Hy-Gain
+  url:
+    value: http://www.hy-gain.com/Product.php?productid=av-640
+    date: '2026-10-20'
+ant-wimo-av640-manual:
+  type: web
+  title: AV-640 8 Band Vertical Antenna Instruction & Assembly Manual
+  publisher: Hy-Gain (copia en WiMo)
+  url:
+    value: https://www.wimo.com/media/manuals/MFJ/11284_AV-640_Vertikalantenne_Vertical-antenna.pdf
+    date: '2026-10-20'
+ant-radioworld-av640:
+  type: web
+  title: Hy-Gain Patriot Vertical HF Antenna AV-640 (ficha y precio)
+  publisher: Radioworld UK
+  url:
+    value: https://www.radioworld.co.uk/amateur_radio_antenna/hf_base/hf-vertical-antenna/hy-gain-patriot-vertical-hf-antenna--av-640
+    date: '2026-10-20'
+ant-wimo-av640:
+  type: web
+  title: Hy-Gain AV-640 8 Band Vertical (ficha)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/av-640
+    date: '2026-10-20'
+ant-dxe-5btv:
+  type: web
+  title: Hustler 5BTV 5-Band HF Vertical Antenna (ficha y precio)
+  publisher: DX Engineering
+  url:
+    value: https://www.dxengineering.com/parts/hsr-5btv
+    date: '2026-10-20'
+ant-dxe-6btv:
+  type: web
+  title: Hustler 6BTV 6-Band HF Vertical Antenna (ficha y precio)
+  publisher: DX Engineering
+  url:
+    value: https://www.dxengineering.com/parts/hsr-6btv
+    date: '2026-10-20'
+ant-dxe-btv-manual:
+  type: web
+  title: 4-BTV, 5-BTV, 6-BTV Multiband HF Vertical Antennas, Assembly and Installation
+  publisher: Hustler / DX Engineering
+  url:
+    value: https://static.dxengineering.com/global/images/instructions/dxe-btv-inst-ins_oh.pdf
+    date: '2026-10-20'
+ant-hruk-5btv:
+  type: web
+  title: Hustler 5-BTV (ficha y precio)
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/hustler-5-btv-pd-2795
+    date: '2026-10-20'
+ant-hruk-6btv:
+  type: web
+  title: Hustler 6-BTV 80-10m 1kW HF Vertical Antenna (ficha y precio)
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/6-btv
+    date: '2026-10-20'
+ant-wimo-btv:
+  type: web
+  title: Hustler BTV 4/5/6-Band Vertical Antennas, 80-10m (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/hustler-btv-vertical-multiband-antennas
+    date: '2026-10-20'
+ant-dxc-classic:
+  type: web
+  title: CLASSIC Multi-Band Antenna (40m - 2m) HF Kit (ficha y precio)
+  publisher: DX Commander
+  url:
+    value: https://dxcommander.com/product/dx-commander-classic-multi-band-antenna/
+    date: '2026-10-20'
+ant-dxc-classic80:
+  type: web
+  title: CLASSIC (plus 80m) HF Multi-band vertical kit (ficha y precio)
+  publisher: DX Commander
+  url:
+    value: https://dxcommander.com/product/classic-80m-kit/
+    date: '2026-10-20'
+ant-dxc-expedition:
+  type: web
+  title: Expedition Portable Ham Radio Antenna 40m-6m Kit (ficha y precio)
+  publisher: DX Commander
+  url:
+    value: https://dxcommander.com/product/dx-commander-expedition-kit/
+    date: '2026-10-20'
+ant-ondamania-out250b:
+  type: web
+  title: Antena D-Original OUT-250B vertical de HF 10-80 m y 6 m (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/d.originalout-250b/1/antena-d-original-out-250b-antena-vertical-de-hf-10-80-m-6-m
+    date: '2026-10-20'
+ant-ltdr-out250b:
+  type: web
+  title: D-Original OUT-250-B antena vertical en aluminio de 3,5-57 MHz, altura 7,13 m (ficha)
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/home/4294-doriginal-out-250-b-antena-vertical-en-aluminio-de-35-57-mhz-altura-713-m.html
+    date: '2026-10-20'
+ant-ondamania-out250f:
+  type: web
+  title: D-Original OUT-250F antena vertical de fibra de vidrio de 3,5 a 57 MHz (ficha)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/out-250-f/1/d-original-out-250f-antena-vertical-de-fibra-de-vidrio-fiberglass-de-3-5-a-57-mhz-con-7-16-mts
+    date: '2026-10-20'
+ant-hruk-cha250bxii:
+  type: web
+  title: Comet CHA-250BXII HF multiband vertical antenna (ficha y precio)
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/comet-cha-250bxii-hf-multiband-vertical-antenna-pd-14136
+    date: '2026-10-20'
+ant-comet-cha250hd:
+  type: web
+  title: Comet CHA-250HD (ficha y precio recomendado)
+  publisher: Comet (NCG Company)
+  url:
+    value: https://www.cometantenna.com/product/comet_cha_250hd/
+    date: '2026-10-20'
+ant-radioworld-cha250b:
+  type: web
+  title: Comet CHA-250B wide band HF antenna (ficha)
+  publisher: Radioworld UK
+  url:
+    value: https://www.radioworld.co.uk/comet_cha250b
+    date: '2026-10-20'
+ant-hruk-cha250b-review:
+  type: web
+  title: 'New Product Review: Comet CHA250B HF/VHF Vertical Antenna (reseña sin fecha)'
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/userfiles/file/Comet-CHA250B-Review.pdf
+    date: '2026-10-20'
+ant-wimo-bb7v:
+  type: web
+  title: Diamond BB-7V Wide band Vertical (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/bb-7v
+    date: '2026-10-20'
+ant-hruk-bb7v:
+  type: web
+  title: Diamond BB7V (ficha y precio)
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/diamond-bb7v-pd-2520
+    date: '2026-10-20'
+ant-radioworld-bb7v:
+  type: web
+  title: Diamond BB7V HF Vertical Antenna 2-30MHz No Radials (ficha y precio)
+  publisher: Radioworld UK
+  url:
+    value: https://www.radioworld.co.uk/diamond-bb7v-hf-wideband-ground-plane-antenna-2---30mhz
+    date: '2026-10-20'
+ant-diamond-bb7v:
+  type: web
+  title: 'OTHERS (antenas de base: BB7V)'
+  publisher: Diamond Antenna Corporation
+  url:
+    value: https://www.diamond-ant.co.jp/english/amateur/antenna/ante_2base/ante_base8.html
+    date: '2026-10-20'
+ant-ondamania-gpa80:
+  type: web
+  title: Moonraker GPA-80 antena de HF vertical 80-6 m (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/moonraker_gpa80/1/antena-vertical-de-hf-moonraker-gpa-80
+    date: '2026-10-20'
+ant-wimo-ciromazzoni:
+  type: web
+  title: Ciro Mazzoni (productos y precios)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/brand/ciro-mazzoni
+    date: '2026-10-20'
+ant-hruk-babyloop:
+  type: web
+  title: Ciro Mazzoni Baby Loop - Latest version (ficha y precio)
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/ciro-mazzoni-baby-loop-latest-version-pd-5797
+    date: '2026-10-20'
+ant-hruk-midiloop:
+  type: web
+  title: Ciro Mazzoni MIDI Loop - new version (ficha y precio)
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/ciro-mazzoni-midi-loop-new-version-pd-5798
+    date: '2026-10-20'
+ant-hruk-stealthloop:
+  type: web
+  title: Ciro Stealth Magnetic Loop (ficha y precio)
+  publisher: Ham Radio UK
+  url:
+    value: https://www.hamradio.co.uk/stealth-loop
+    date: '2026-10-20'
+ant-chameleon-floop3:
+  type: web
+  title: CHA F-LOOP 3.0 Portable Magnetic Loop (ficha y precio)
+  publisher: Chameleon Antenna
+  url:
+    value: https://chameleonantenna.com/products/cha-f-loop-3-0
+    date: '2026-10-20'
+ant-chameleon-loops-kb:
+  type: web
+  title: Small Transmitting Loops (página de soporte)
+  publisher: Chameleon Antenna
+  url:
+    value: https://chameleonantenna.com/pages/ckb-portable-magnetic-loop-systems
+    date: '2026-10-20'
+ant-wimo-floop:
+  type: web
+  title: Chameleon F-Loop Total V3.0, portable, 10-80m, 25W (ficha)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/f-loop
+    date: '2026-10-20'
+ant-arrl-mfj:
+  type: web
+  title: MFJ Ceasing On-Site Production
+  publisher: ARRL
+  url:
+    value: https://arrl.org/news/mfj-ceasing-on-site-production
+    date: '2026-10-20'
+ant-wimo-mfj:
+  type: web
+  title: 'News: MFJ stops production (blog)'
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/blog/post/news-mfj-stops-production
+    date: '2026-10-20'
+ant-wikipedia-mfj:
+  type: web
+  title: MFJ Enterprises
+  publisher: Wikipedia
+  url:
+    value: https://en.wikipedia.org/wiki/MFJ_Enterprises
+    date: '2026-10-20'
+ant-astroradio-ft240-31:
+  type: web
+  title: Toroide de ferrita FT-240-31 (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/toroide-de-ferrita-ft-240-31/
+    date: '2026-10-20'
+ant-balundesigns-1115:
+  type: web
+  title: Model 1115 - 1:1 Current Balun, 1-31 MHz, 3kW (ficha y precio)
+  publisher: Balun Designs
+  url:
+    value: https://www.balundesigns.com/model-1115-1-1-balun-1-5-31-mhz-3kw/
+    date: '2026-10-20'
+ant-balundesigns-1116di:
+  type: web
+  title: Model 1116di - 1:1 Balun, Low Band Optimized, 1-31 MHz, 5kW (ficha y precio)
+  publisher: Balun Designs
+  url:
+    value: https://www.balundesigns.com/model-1116di-1-1-balun-low-band-optimized-1-31-mhz-5kw/
+    date: '2026-10-20'
+ant-wimo-choke11:
+  type: web
+  title: 1:1 Current Balun 3-50 MHz, 1-4 kW PEP (ficha y precio)
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/wimo-1-1-rf-choke
+    date: '2026-10-20'
+ant-proyecto4-as111500:
+  type: web
+  title: Balun ASP 1:1 AS-111500 (ficha y precio)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/balun/3999-balun-asp-11-as-111500.html
+    date: '2026-10-20'
+ant-proyecto4-as113000:
+  type: web
+  title: Balun ASP 1:1 AS-113000 (ficha y precio)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/balun/4603-balun-asp-11-as-113000.html
+    date: '2026-10-20'
+ant-ondamania-ja400:
+  type: web
+  title: Tagra JA-400 balun 1:1 de 1,8 a 30 MHz, 1000 W (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02egja400/1/balun-1-1-tagra-ja-400-de-1-8-a-30-mhz
+    date: '2026-10-20'
+ant-ondamania-bl1011:
+  type: web
+  title: D-Original BL-1011 balun 1:1, 1 kW, 1 a 50 MHz (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/03flbl1011/1/d-original-bl-1011-balun-1-1-1-kw-1-50-mhz
+    date: '2026-10-20'
+ant-proyecto4-ch1:
+  type: web
+  title: Choque RF CH-1 (ficha)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/cables-coaxiales/1040-ch-1.html
+    date: '2026-10-20'
+ant-k9yc-cookbook:
+  type: web
+  title: 'Measured Data For Chokes Wound on New Big #31 Toroid (2018 Cookbook)'
+  publisher: Jim Brown, K9YC
+  url:
+    value: http://k9yc.com/2018Cookbook.pdf
+    date: '2026-10-20'
+ant-k9yc-rfi-ham:
+  type: web
+  title: A Ham's Guide to RFI, Ferrites, Baluns, and Audio Interfacing
+  publisher: Jim Brown, K9YC
+  url:
+    value: http://www.audiosystemsgroup.com/RFI-Ham.pdf
+    date: '2026-10-20'
+ant-proyecto4-rg213:
+  type: web
+  title: Cable coaxial RG-213 (ficha y precio)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/cables-coaxiales/404-rg-213.html
+    date: '2026-10-20'
+ant-ondamania-rg213:
+  type: web
+  title: RG-213 cable coaxial de baja pérdida 50 ohm (ficha y precio)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/rg-213u/1/cable-coaxial-rg-213
+    date: '2026-10-20'
+ant-ltdr-masvendidos:
+  type: web
+  title: Los más vendidos (listado con precios de coaxiales)
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/mas-vendidos
+    date: '2026-10-20'
+ant-astroradio-rg213-100m:
+  type: web
+  title: Messi & Paoloni Cable RG213/U plus 100 m (ficha y precio)
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/cable_rg213u_plus_100m/
+    date: '2026-10-20'
+ant-proyecto4-aircell7:
+  type: web
+  title: Cable coaxial AIRCELL-7 (ficha y precio)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/cables-coaxiales/779-aircell-7.html
+    date: '2026-10-20'
+ant-proyecto4-ecoflex10:
+  type: web
+  title: Cable coaxial ECOFLEX-10 (ficha y precio)
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/cables-coaxiales/781-ecoflex-10.html
+    date: '2026-10-20'
+ant-ssb-ecoflex10-ds:
+  type: web
+  title: 'Ecoflex 10: extremely flexible and low-loss (hoja de datos)'
+  publisher: SSB-Electronic
+  url:
+    value: https://www.ssb.de/shop/download/Kabel/ENG/6080%20ENG.pdf
+    date: '2026-10-20'
+ant-ssb-aircell7-ds:
+  type: web
+  title: 'Aircell 7: highly flexible, low-loss, and stray radiation resistant (hoja de datos)'
+  publisher: SSB-Electronic
+  url:
+    value: https://www.ssb.de/media/6070_eng.pdf
+    date: '2026-10-20'
+ant-bce-cambio:
+  type: web
+  title: Euro foreign exchange reference rates
+  publisher: Banco Central Europeo
+  url:
+    value: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
+    date: '2026-10-20'
+ant-bce-eurofxref-pdf:
+  type: web
+  title: Euro Foreign Exchange Reference Rates (PDF diario, 13-10-2026)
+  publisher: Banco Central Europeo
+  url:
+    value: https://www.ecb.europa.eu/stats/shared/pdf/eurofxref.pdf
+    date: '2026-10-20'
 equip-aimasstore-ft710:
   type: web
   title: YAESU FT-710 emisora HF (ficha y precio)
@@ -2454,6 +3315,687 @@ soft-brew-tailscale:
   url:
     value: https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/Casks/t/tailscale-app.rb
     date: '2026-10-20'
+vere-icom-usbdriver:
+  type: web
+  title: USB Driver Download (Icom USB Driver; incluye el IC-7300MK2)
+  publisher: Icom America
+  url:
+    value: https://icomamerica.com/support/firmware_driver/4520/
+    date: '2026-10-20'
+vere-icom-7300mk2-basic:
+  type: web
+  title: IC-7300MK2 Basic Manual
+  publisher: Icom (Icom UK)
+  url:
+    value: https://icomuk.co.uk/files/icom/PDF/productManual/IC-7300MK2_ENG_Basic_0.pdf
+    date: '2026-10-20'
+vere-icom-7300mk2-advanced:
+  type: web
+  title: IC-7300MK2 Advanced Manual
+  publisher: Icom Europe
+  url:
+    value: https://www.icomeurope.com/wp-content/uploads/2026/02/IC-7300MK2_ENG_Advanced_0.pdf
+    date: '2026-10-20'
+vere-icom-7300mk2-civ:
+  type: web
+  title: IC-7300MK2 CI-V Reference Guide
+  publisher: Icom (Icom UK)
+  url:
+    value: https://icomuk.co.uk/files/icom/PDF/productAdditionalFile/IC-7300MK2_ENG_CI-V_0.pdf
+    date: '2026-10-20'
+vere-icom-7300mk2-jp:
+  type: web
+  title: IC-7300MK2 (página de producto en japonés)
+  publisher: Icom Inc.
+  url:
+    value: https://www.icom.co.jp/lineup/products/IC-7300MK2/
+    date: '2026-10-20'
+vere-icom-rsba1v2:
+  type: web
+  title: RS-BA1 Version 2 – IP Remote Control Software
+  publisher: Icom America
+  url:
+    value: https://www.icomamerica.com/lineup/products/RS-BA1_v2/
+    date: '2026-10-20'
+vere-icom-rsba1v2-download:
+  type: web
+  title: RS-BA1 Version 2 – Control software Download
+  publisher: Icom America
+  url:
+    value: https://icomamerica.com/support/firmware_driver/3945
+    date: '2026-10-20'
+vere-wimo-rsba1v2:
+  type: web
+  title: Remote Control Software Icom RS-BA1V2
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/rs-ba1v2
+    date: '2026-10-20'
+vere-sdrcontrol-appstore:
+  type: web
+  title: Supporting the Icom IC-705, IC-7610, IC-9700, IC-R8600, IC-7300, IC-7760 and finally the 7300 MK2 (SDR-Control)
+  publisher: Apple App Store
+  url:
+    value: https://apps.apple.com/app/id1592313285
+    date: '2026-10-20'
+vere-yaesu-vcp-manual:
+  type: web
+  title: Virtual COM Port Driver Installation Manual (rev. 2202-D)
+  publisher: Yaesu Musen
+  url:
+    value: https://www.yaesu.com/Files/BB2B47AE-1018-01AF-FAE48FDCB1919193/USB_Driver_Installation_Manual_ENG_2202-D.pdf
+    date: '2026-10-20'
+vere-yaesu-ft710:
+  type: web
+  title: FT-710 (página de producto)
+  publisher: Yaesu
+  url:
+    value: https://yaesu.com/product-detail.aspx?Model=FT-710&CatName=HF+Transceivers%2FAmplifiers
+    date: '2026-10-20'
+vere-silabs-vcp:
+  type: web
+  title: CP210x USB to UART Bridge VCP Drivers
+  publisher: Silicon Labs
+  url:
+    value: https://silabs.com/developers/usb-to-uart-bridge-vcp-drivers
+    date: '2026-10-20'
+vere-micropipes-ftdx3000:
+  type: web
+  title: Setting up a Yaesu FTDX-3000 with FT8 on OS X
+  publisher: micropipes.com
+  date: '2023-07-10'
+  url:
+    value: https://micropipes.com/2023/07/10/setting-up-Yaesu-FTDX-3000-with-FT8-on-OS-X/
+    date: '2026-10-20'
+vere-digirig-ft891-mac:
+  type: web
+  title: DR-891 w/FT-891 WSJT-X using a Mac M1 w/Sequoia will not work
+  publisher: Digirig forum
+  url:
+    value: https://forum.digirig.net/t/dr-891-w-ft-891-wsjt-x-using-a-mac-m1-w-sequoia-will-not-work/5764
+    date: '2026-10-20'
+vere-chirp-mac-yaesu:
+  type: web
+  title: '[chirp_users] Mac to Vaesu communication problem'
+  publisher: CHIRP users mailing list
+  url:
+    value: https://lists.chirpmyradio.com/hyperkitty/list/users@lists.chirpmyradio.com/thread/Y2U2HD5DGLN3DZH275J763KYMLW6USQV
+    date: '2026-10-20'
+vere-reddit-wsjtx:
+  type: web
+  title: r/WSJTX (espejo Redlib)
+  publisher: Reddit
+  url:
+    value: https://redlib.hackliberty.org/r/WSJTX
+    date: '2026-10-20'
+vere-reddit-wsjtx-2:
+  type: web
+  title: r/WSJTX (otro espejo Redlib)
+  publisher: Reddit
+  url:
+    value: https://lr.us.psf.lt/r/WSJTX
+    date: '2026-10-20'
+vere-k1gq-skookum:
+  type: web
+  title: SkookumLogger (página del programa)
+  author: Myers, Bill
+  publisher: K1GQ
+  url:
+    value: https://k1gq.net/SkookumLogger/
+    date: '2026-10-20'
+vere-mhr-skookum-55:
+  type: web
+  title: SkookumLogger v5.5 now available
+  publisher: MacHamRadio
+  date: '2026-06-15'
+  url:
+    value: https://machamradio.com/blog/2026/06/15/skookumlogger-v5-5-now-available/
+    date: '2026-10-20'
+vere-mhr-skookum-53:
+  type: web
+  title: SkookumLogger v5.3 now available
+  publisher: MacHamRadio
+  date: '2025-07-19'
+  url:
+    value: https://machamradio.com/blog/2025/07/19/skookumlogger-v5-3-now-available-2/
+    date: '2026-10-20'
+vere-mhr-skookum-51:
+  type: web
+  title: SkookumLogger v5.1 now available
+  publisher: MacHamRadio
+  date: '2025-01-03'
+  url:
+    value: https://machamradio.com/blog/2025/01/03/skookumlogger-v5-1-now-available/
+    date: '2026-10-20'
+vere-n1mm-parallels:
+  type: web
+  title: N1MM Logger under Parallels (hilo)
+  publisher: N1MMLoggerPlus@groups.io
+  url:
+    value: https://groups.io/g/N1MMLoggerPlus/topic/n1mm_logger_under_parallels/95175083
+    date: '2026-10-20'
+vere-n1mm-arm64:
+  type: web
+  title: New Windows 11 install ARM64 (hilo)
+  publisher: N1MMLoggerPlus@groups.io
+  url:
+    value: https://groups.io/g/N1MMLoggerPlus/topic/new_windows_11_install_arm64/102402541
+    date: '2026-10-20'
+vere-n1mm-apple:
+  type: web
+  title: N1MM on a Mac with Apple silicon (hilo)
+  publisher: N1MMLoggerPlus@groups.io
+  url:
+    value: https://groups.io/g/N1MMLoggerPlus/topic/n1mm_on_a_mac_with_apple/109933754
+    date: '2026-10-20'
+vere-n1mm-install:
+  type: web
+  title: Installing and Upgrading N1MM Logger+
+  publisher: N1MM Logger+ Documentation
+  url:
+    value: https://n1mmwp.hamdocs.com/getting-started/installing-and-upgrading-n1mm-logger/
+    date: '2026-10-20'
+vere-cty-3630-announce:
+  type: web
+  title: '[CTY-Announce] CTY-3630 Country Files - 06 September 2026'
+  author: Reisert, Jim
+  publisher: The Mail Archive (announce@country-files.com)
+  date: '2026-09-06'
+  url:
+    value: http://www.mail-archive.com/announce@country-files.com/msg00778.html
+    date: '2026-10-20'
+vere-cty-3630-tlf:
+  type: web
+  title: CTY-3630 Country Files - 06 September 2026
+  publisher: The Mail Archive (tlf-devel@nongnu.org)
+  date: '2026-09-06'
+  url:
+    value: http://www.mail-archive.com/tlf-devel@nongnu.org/msg03313.html
+    date: '2026-10-20'
+vere-ctyfiles-feed:
+  type: web
+  title: Country Files – feed RSS de anuncios
+  publisher: AD1C (country-files.com)
+  url:
+    value: https://www.country-files.com/feed/
+vere-twente-websdr:
+  type: web
+  title: Wide-band WebSDR in JO32KF - Universiteit Twente
+  publisher: Universiteit Twente (radioclub ETGD)
+  url:
+    value: http://websdr.ewi.utwente.nl:8901/websdr.html
+    date: '2026-10-20'
+vere-twente-websdr-tune:
+  type: web
+  title: Wide-band WebSDR in Enschede, the Netherlands (enlace ?tune=6070am)
+  publisher: Universiteit Twente (radioclub ETGD)
+  url:
+    value: http://websdr.ewi.utwente.nl:8901/?tune=6070am
+    date: '2026-10-20'
+vere-twente-websdr-mobile:
+  type: web
+  title: Wide-band WebSDR in JO32KF - Mobile version
+  publisher: Universiteit Twente (radioclub ETGD)
+  url:
+    value: http://etgd-websdr.ewi.utwente.nl:8901/m.html
+    date: '2026-10-20'
+vere-etgd-websdr:
+  type: web
+  title: WebSDR (proyecto del radioclub ETGD)
+  publisher: ETGD, Universiteit Twente
+  url:
+    value: https://etgd.utwente.nl/projecten/websdr/
+    date: '2026-10-20'
+vere-websdr-org-background:
+  type: web
+  title: WebSDR.org - background information
+  publisher: WebSDR.org
+  url:
+    value: https://websdr.org/background.html
+    date: '2026-10-20'
+vere-websdr-org-faq:
+  type: web
+  title: WebSDR.org - Frequently Asked Questions
+  publisher: WebSDR.org
+  url:
+    value: https://www.websdr.org/faq.html
+    date: '2026-10-20'
+vere-essexham-websdr:
+  type: web
+  title: Web SDR mobile app (foro)
+  publisher: Essex Ham
+  url:
+    value: https://essexham.co.uk/help-advice/web-sdr-mobile-app
+    date: '2026-10-20'
+vere-swling-twente-mobile:
+  type: web
+  title: 'U Twente WebSDR: new tablet/phone interface option'
+  publisher: The SWLing Post
+  date: 2024-08
+  url:
+    value: https://swling.com/blog/2024/08/u-twente-websdr-new-tablet-phone-interface-option
+    date: '2026-10-20'
+vere-voacap-manual:
+  type: web
+  title: VOACAP Online User’s Manual
+  author: Perkiömäki, Jari
+  publisher: VOACAP.com (OH6BG)
+  url:
+    value: https://www.voacap.com/2023/documents/VOACAP_Manual.pdf
+    date: '2026-10-20'
+vere-voacap-hamcap:
+  type: web
+  title: HamCAP User's Guide
+  publisher: VOACAP.com (OH6BG)
+  url:
+    value: https://www.voacap.com/hamcap-guide.html
+    date: '2026-10-20'
+vere-arrl-voacap:
+  type: web
+  title: 'Surfin: online HF propagation application'
+  publisher: ARRL
+  url:
+    value: https://www.arrl.org/news/surfin-online-hf-propagation-application
+    date: '2026-10-20'
+vere-rsgb-radcom-voacap:
+  type: web
+  title: RadCom online Propagation Prediction Tools
+  publisher: RSGB
+  url:
+    value: https://rsgb.org/main/technical/propagation/on-line-propagation-tools/radcom-online-propagation-prediction-tools/
+    date: '2026-10-20'
+vere-rsgb-proppy:
+  type: web
+  title: New propagation prediction tool released (Proppy)
+  publisher: RSGB
+  url:
+    value: https://rsgb.org/main/?p=22381
+    date: '2026-10-20'
+vere-itu-iturhfprop:
+  type: web
+  title: 'ITURHFProp: software de la Recomendación UIT-R P.533'
+  publisher: UIT (ITU-R)
+  url:
+    value: https://www.itu.int/oth/R0A0400006F
+    date: '2026-10-20'
+vere-itu-p533:
+  type: web
+  title: 'Recommendation ITU-R P.533: Method for the prediction of the performance of HF circuits'
+  publisher: UIT (ITU-R)
+  url:
+    value: https://www.itu.int/rec/R-REC-P.533/en
+    date: '2026-10-20'
+vere-kiwisdr-home:
+  type: web
+  title: 'KiwiSDR: The world''s easiest to set up and use Software Defined Radio'
+  publisher: KiwiSDR
+  url:
+    value: http://kiwisdr.com/
+    date: '2026-10-20'
+vere-kiwisdr-info:
+  type: web
+  title: KiwiSDR Operating Information
+  publisher: KiwiSDR
+  url:
+    value: http://kiwisdr.com/info/
+    date: '2026-10-20'
+vere-kiwisdr-update:
+  type: web
+  title: Kiwisdr (estado de los receptores públicos)
+  publisher: KiwiSDR
+  url:
+    value: http://kiwisdr.com/php/update.php
+    date: '2026-10-20'
+vere-kiwisdr-public:
+  type: web
+  title: Kiwisdr (lista pública de receptores)
+  publisher: KiwiSDR
+  url:
+    value: http://kiwisdr.com/.public/?s=zl&n=30&u=f%3D10Mamnz10
+    date: '2026-10-20'
+vere-kiwi-cx8bit:
+  type: web
+  title: 0-32 MHz SDR, Montevideo, Uruguay - KiwiSDR
+  publisher: CX8BIT
+  url:
+    value: http://cx8bit.proxy.kiwisdr.com:8073/
+    date: '2026-10-20'
+vere-rxtx-map:
+  type: web
+  title: Map of SDR Receivers
+  publisher: rx-tx.info
+  url:
+    value: https://rx-tx.info/map-sdr-points
+    date: '2026-10-20'
+vere-rxtx-map-kiwi:
+  type: web
+  title: Map of SDR Receivers (filtro KiwiSDR)
+  publisher: rx-tx.info
+  url:
+    value: https://rx-tx.info/map-sdr-points?type%5B2%5D=2
+    date: '2026-10-20'
+vere-rxtx-map-es:
+  type: web
+  title: Map of SDR Receivers (filtro España)
+  publisher: rx-tx.info
+  url:
+    value: https://rx-tx.info/map-sdr-points?freq_of=&freq_to=&bands=All&country=38&title=&qth=&url=
+    date: '2026-10-20'
+vere-rxtx-list:
+  type: web
+  title: Preview of SDR Receivers (lista, filtro KiwiSDR)
+  publisher: rx-tx.info
+  url:
+    value: https://rx-tx.info/list-sdr-points?freq_of=&freq_to=&bands=All&country=All&title=&url=&qth=&type=2&sort_by=title&sort_order=ASC&items_per_page=50&offset=0&page=16
+    date: '2026-10-20'
+vere-receiverbook-kiwi:
+  type: web
+  title: Receiverbook – KiwiSDR
+  publisher: receiverbook.de
+  url:
+    value: https://www.receiverbook.de/?type=kiwisdr
+    date: '2026-10-20'
+vere-receiverbook-kiwi-p1:
+  type: web
+  title: Receiver list (KiwiSDR, página 1)
+  publisher: receiverbook.de
+  url:
+    value: https://www.receiverbook.de/?type=kiwisdr&page=1
+    date: '2026-10-20'
+vere-receiverbook-kiwi-p2:
+  type: web
+  title: Receiverbook (KiwiSDR, página 2)
+  publisher: receiverbook.de
+  url:
+    value: https://www.receiverbook.de/?type=kiwisdr&page=2
+    date: '2026-10-20'
+vere-receiverbook-p1:
+  type: web
+  title: Receiverbook (todos los tipos, página 1)
+  publisher: receiverbook.de
+  url:
+    value: https://www.receiverbook.de/?page=1
+    date: '2026-10-20'
+vere-ondamania-fuentes:
+  type: web
+  title: Fuentes de alimentación estabilizadas y filtradas, con y sin instrumentos, fijas y regulables
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/productos/1/1/fuentes_de_alimentacion/fuentes-de-alimentacion
+    date: '2026-10-20'
+vere-ondamania-rps1230swm:
+  type: web
+  title: Telecom RPS-1230-SWM fuente de alimentación conmutada con 13,8 V 30 A máx.
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02flrps1230swm/1/telecom-rps-1230-swm-fuente-de-alimentacion-conmutada-con-13-8-v-y-30-amp-max-
+    date: '2026-10-20'
+vere-tutienda-rps1230swm:
+  type: web
+  title: RPS-1230-SWM - Fuente de alimentación conmutada 30 A, 13.8 V
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/home/4373-rps-1230-swm-fuente-de-alimentacion-conmutada-30-a-138-v.html
+    date: '2026-10-20'
+vere-ondamania-sps3036d:
+  type: web
+  title: Fuente de alimentación conmutada y digital Sadelta SPS-3036D
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02ldsps3036d/1/fuente-de-alimentacion-digital-conmutada-sadelta-sps-3036d-con-13-8v-y-30-amp-
+    date: '2026-10-20'
+vere-ondamania-pc1335:
+  type: web
+  title: Fuente de alimentación conmutada con toma de carga de batería Jetfon PC-1335
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02phpc1335/1/fuente-de-alimentacion-jetfon-pc-1335-con-30-amp-maximo-y-funcion-de-carga-de-bateria
+    date: '2026-10-20'
+vere-radiomania-ss330w:
+  type: web
+  title: Daiwa SS-330-W
+  publisher: Radiomanía
+  url:
+    value: https://radiomania.net/SS330W
+    date: '2026-10-20'
+vere-astro-pro7:
+  type: web
+  title: Heil sound PRO-7
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/pro7/
+    date: '2026-10-20'
+vere-astro-pro7ic:
+  type: web
+  title: Heil sound PRO-7-IC
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/pro7ic/
+    date: '2026-10-20'
+vere-radiomania-pro7:
+  type: web
+  title: Micro Auricular Heil Pro-7 Negro
+  publisher: Radiomanía
+  url:
+    value: https://radiomania.net/epages/a460337c-7435-4ca8-a697-f50605a3ed82.mobile/es_ES/?ObjectPath=%2FShops%2Fa460337c-7435-4ca8-a697-f50605a3ed82%2FProducts%2F%22Heil+Pro-7%22
+    date: '2026-10-20'
+vere-wimo-pro7:
+  type: web
+  title: Heil Sound Pro7
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/pro7
+    date: '2026-10-20'
+vere-proyecto4-pro7:
+  type: web
+  title: Auriculares Heil PRO7
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/microfonos-altavoces-y-auriculares/3496-auriculares-heil-pro7.html
+    date: '2026-10-20'
+vere-astro-proset-elite:
+  type: web
+  title: Heil sound PRO-SET ELITE
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/proset_elite/
+    date: '2026-10-20'
+vere-astro-proset-elite-ic:
+  type: web
+  title: Heil sound PRO-SET ELITE IC
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/en/p/proset_elite_ic/
+    date: '2026-10-20'
+vere-wimo-heil-headsets:
+  type: web
+  title: Auriculares Heil Sound
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/accessories/radio-accessories/audio-accessory/headsets-heil-sound
+    date: '2026-10-20'
+vere-amazon-cm500:
+  type: web
+  title: Yamaha CM500 Headphones with Built in Microphone
+  publisher: Amazon.es
+  url:
+    value: https://www.amazon.es/Yamaha-CM500-auriculares-Built-en-micr%C3%B3fono/dp/B000BZ6ZX0
+    date: '2026-10-20'
+vere-proyecto4-heil:
+  type: web
+  title: Accesorios HEIL SOUND
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/accesorios-c-113/marca-heil_sound
+    date: '2026-10-20'
+vere-astro-ad1:
+  type: web
+  title: Heil sound Adaptador HEIL AD1
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/p/adaptador_heil_ad1/
+    date: '2026-10-20'
+vere-wimo-heil-adapter:
+  type: web
+  title: Heil Adaptor Cable
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/heil-sound-adapterkabel
+    date: '2026-10-20'
+vere-wimo-cc1i:
+  type: web
+  title: Heil Sound Mic Cables (CC-1-I)
+  publisher: WiMo
+  url:
+    value: https://wimo.com/en/cc-1-i-8
+    date: '2026-10-20'
+vere-astro-fs3:
+  type: web
+  title: Heil sound FS-3 Pedal PTT Heil
+  publisher: Astro Radio
+  url:
+    value: https://www.astroradio.com/en/p/fs3_pedal_ptt_heil/
+    date: '2026-10-20'
+vere-wimo-fs3:
+  type: web
+  title: PTT foot switch FS-3
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/fs-3
+    date: '2026-10-20'
+vere-proyecto4-fs3:
+  type: web
+  title: Pedal PTT Heil Sound FS-3
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/microfonosauric-altav-/3003-pedal-ptt-fs-3.html
+    date: '2026-10-20'
+vere-wimo-fs2:
+  type: web
+  title: PTT foot switch FS-2, 2 switches
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/fs-2
+    date: '2026-10-20'
+vere-ondamania-cn901hp:
+  type: web
+  title: Medidor de estacionarias ROE y potencia Daiwa CN-901-HP
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02flcn901hp/1/medidor-de-estacionarias-roe-y-potencia-daiwa-cn-901-hp
+    date: '2026-10-20'
+vere-proyecto4-cn901hp:
+  type: web
+  title: Medidor de estacionarias ROE Daiwa CN-901 HP
+  publisher: Proyecto 4
+  url:
+    value: https://www.proyecto4.com/medidores-de-estacionarias-roe/508-medidor-de-estacionarias-roe-daiwa-cn-801-hp.html
+    date: '2026-10-20'
+vere-radiomania-roe:
+  type: web
+  title: Medidores ROE
+  publisher: Radiomanía
+  url:
+    value: https://radiomania.net/8/MedidoresROE
+    date: '2026-10-20'
+vere-wimo-cn901hp:
+  type: web
+  title: CN-901HP Medidor SWR
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/cn-901hp-swr-meter-daiwa
+    date: '2026-10-20'
+vere-passion-swr:
+  type: web
+  title: Best ROSmeter & WATTmeter
+  publisher: Passion Radio
+  url:
+    value: https://www.passion-radio.com/swr-power-meter/53
+    date: '2026-10-20'
+vere-ondamania-sx200:
+  type: web
+  title: Diamond SX-200 original Japón, medidor de ROE y watímetro
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/diamondsx-200/1/diamond-sx-200-medidor-de-roe-y-potencia-original-japon
+    date: '2026-10-20'
+vere-ondamania-roe-cat:
+  type: web
+  title: Medidores de estacionarias ROE y watímetros
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/productos/1/1/roeywatt/medidores-y-watimetros/4/1/32
+    date: '2026-10-20'
+vere-ondamania-sw102:
+  type: web
+  title: Surecom SW-102 medidor digital de ROE, potencia y frecuencímetro de 125 a 525 MHz (VHF y UHF)
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02phs102/1/surecom-sw-102-medidor-digital-de-estacionarias-y-potencia-para-vhf-y-uhf-desde-125-a-525-mhz
+    date: '2026-10-20'
+vere-passion-dummy100:
+  type: web
+  title: DC dummy load at 1GHz 100W Max. 50 Ohms UHF male connector PL-259
+  publisher: Passion Radio
+  url:
+    value: https://www.passion-radio.com/dummy-load/81t411-2200.html
+    date: '2026-10-20'
+vere-ondamania-avdl200m:
+  type: web
+  title: Carga ficticia D-Original AV-DL-200M con conector tipo PL UHF
+  publisher: Ondamania
+  url:
+    value: https://www.ondamania.com/b2c/producto/02flavdl200m/1/d-original-av-dl-200-m-carga-ficticia-o-artificial-con-conector-pl-hasta-1-ghz
+    date: '2026-10-20'
+vere-tutienda-accesorios:
+  type: web
+  title: Accesorios - La Tienda del Radioaficionado
+  publisher: La Tienda del Radioaficionado
+  url:
+    value: https://www.tutiendaderadio.com/es/17-accesorios
+    date: '2026-10-20'
+vere-wimo-lpf30-2000:
+  type: web
+  title: Low Pass Filter 30 MHz 2000W
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/lpf30-2000
+    date: '2026-10-20'
+vere-wimo-mfj704:
+  type: web
+  title: MFJ-704 Low Pass Filter 1.8-30 MHz, 1500W PEP
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/mfj-704
+    date: '2026-10-20'
+vere-wimo-lpf1:
+  type: web
+  title: LPF-1 Low Pass Filter 1,8-30 MHz, 1500W
+  publisher: WiMo
+  url:
+    value: https://www.wimo.com/en/lpf-1
+    date: '2026-10-20'
+vere-fnac-sdhc32:
+  type: web
+  title: Tarjeta SDHC SanDisk Ultra 32 GB
+  publisher: Fnac España
+  url:
+    value: https://www.fnac.es/Tarjeta-SDHC-SanDisk-Ultra-32-GB-Tarjeta-de-memoria-Tarjeta-SD/a1170703
+    date: '2026-10-20'
+vere-pccomp-sdhc32:
+  type: web
+  title: Sandisk Ultra Tarjeta SDHC 32Gb UHS-1 Clase 10
+  publisher: PcComponentes
+  url:
+    value: https://www.pccomponentes.com/sandisk-ultra-tarjeta-sdhc-32gb-uhs-1-clase-10
+    date: '2026-10-20'
+vere-pccomp-microsdhc32:
+  type: web
+  title: Sandisk Ultra MicroSDHC 32GB UHS-I Clase 10 + Adaptador SD
+  publisher: PcComponentes
+  url:
+    value: https://www.pccomponentes.com/sandisk-ultra-microsdhc-32gb-uhs-i-clase-10-plus-adaptador-sd
+    date: '2026-10-20'
 verh-cqww-2025-ssb-results:
   type: web
   title: Results of the 2025 CQ WW DX SSB Contest
@@ -2823,3 +4365,276 @@ verh-ea2ck-team:
   url:
     value: https://www.qsl.net/ea2ck/miembros.htm
     date: '2026-10-20'
+verl-iaru-r1-hf-bandplan:
+  type: web
+  title: IARU Region 1 HF Band Plan (versión de 16 de octubre de 2020, revisada en 2021)
+  publisher: IARU Región 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2021/06/hf_r1_bandplan.pdf
+    date: '2026-10-20'
+  note: Versión vigente localizada. Aprobada por la Conferencia General Virtual «Novi Sad» 2020, en vigor el 16-10-2020 y revisada en 2021. Su tabla no fue legible en los resúmenes de búsqueda; los segmentos se contrastaron con la edición de 2016 (verl-iaru-r1-hf-managers-handbook-v9).
+verl-iaru-r1-hf-bandplan-revised:
+  type: web
+  title: HF Band Plan revised
+  publisher: IARU Región 1
+  date: 2021
+  language: en
+  url:
+    value: https://www.iaru-r1.org/2021/hf-band-plan-revised/
+    date: '2026-10-20'
+  note: Aviso de revisión del plan en su versión de 16-10-2020 (incluido el anexo) y enlace al PDF de junio de 2021.
+verl-iaru-r1-band-plans:
+  type: web
+  title: Band Plans
+  publisher: IARU Región 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/on-the-air/band-plans/
+    date: '2026-10-20'
+  note: Página de descarga de los planes de banda de la Región 1.
+verl-iaru-r1-hf-managers-handbook-v9:
+  type: report
+  title: HF Manager's Handbook, version 9 (June 2018)
+  publisher: IARU Región 1
+  date: 2018-06
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2019/08/hf_managers_handbook_v9.pdf
+    date: '2026-10-20'
+  note: Reproduce el plan HF en vigor desde el 1-6-2016 (ratificado en Landshut 2017). Fuente de la mayoría de los segmentos confirmados y de la regla de concursos sólo en 160, 80, 40, 20, 15 y 10 m.
+verl-iaru-r1-hf-bandplan-2019:
+  type: web
+  title: IARU Region 1 HF band plan (PDF publicado en 2019, edición anterior a la de 2020)
+  publisher: IARU Región 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2019/08/hf_r1_bandplan.pdf
+    date: '2026-10-20'
+  note: 'Incluye el historial de cambios (p. ej., supresión del segmento CW preferente de concursos 7000-7025 kHz) y la nota «Lowest dial setting for LSB Voice mode: 1843, 3603 and 7053 kHz».'
+verl-iaru-r1-hf-bandplan-why:
+  type: web
+  title: IARU Region 1 HF bandplan (anexo explicativo)
+  publisher: IARU Región 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2019/08/hf_bandplan_why.pdf
+    date: '2026-10-20'
+  note: Bandas laterales (LSB por debajo de 10 MHz, USB por encima; USB en 5 MHz), dial 3 kHz por debajo del borde superior en 20 m y superiores, uso de 7050-7060 kHz para SSB si no hay actividad digital.
+verl-iaru-r1-vie19-harmonisation:
+  type: report
+  title: 'VIE19-C4-015: HF Bandplan Harmonisation (RSGB)'
+  publisher: IARU Región 1, reunión intermedia de Viena 2019
+  date: 2019
+  language: en
+  url:
+    value: https://vienna.iaru-r1.org/wp-content/uploads/2019/01/VIE19-C4-015-RSGB-HF-Bandplan-Harmonisation.pdf
+    date: '2026-10-20'
+  note: Tabla comparativa de las tres regiones; usada para 14125-14300 kHz y para las balizas de 10 m (28190-28225 kHz).
+verl-iaru-r1-dv05-plenary:
+  type: report
+  title: 'IARU Region 1 General Conference Davos 2005: Final Plenary'
+  publisher: IARU Región 1
+  date: 2005
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2019/10/DV05_Final-Plenary.pdf
+    date: '2026-10-20'
+  note: Documento antiguo; sólo se usó para 7030 kHz (QRP CW) y 21070-21110 kHz.
+verl-mtdfp-autorizacion-uso-temporal:
+  type: web
+  title: Autorización de uso temporal y experimental (radioaficionados)
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/en/telecomunicaciones-infraestructuras-digitales/areas-interes/espectro-radioelectrico/radioaficionados-cb27/autorizaciones/autorizacion-uso-temporal
+    date: '2026-10-20'
+  note: 'Recoge la resolución de uso temporal y experimental de la banda de 1800 kHz y su prórroga (fechas no visibles en los resúmenes) y la de 5 MHz (hasta el 31-12-2017). Página antigua equivalente: https://avancedigital.mineco.gob.es/espectro/radioaficionados/autorizaciones/Paginas/autorizacion-uso-temporal.aspx'
+verl-ure-1850-2000-2026:
+  type: web
+  title: Autorizado el uso experimental de la banda 1850–2000 kHz para radioaficionados durante 2026
+  publisher: Unión de Radioaficionados Españoles
+  date: 2025-12-29
+  language: es
+  url:
+    value: https://www.ure.es/autorizado-de-la-banda-1850-2000-khz/
+    date: '2026-10-20'
+  note: Fuente secundaria. Concursos entre el 1-1-2026 y el 31-12-2026; características técnicas del Reglamento para 1,8 MHz; sin protección y con suspensión inmediata si hay interferencias.
+verl-ure-1850-2000-2025:
+  type: web
+  title: Autorización de 1.850-2.000 kHz para concursos 2025
+  publisher: Unión de Radioaficionados Españoles
+  language: es
+  url:
+    value: https://www.ure.es/autorizacion-de-1-850-2-000-khz-para-concursos-2025/
+    date: '2026-10-20'
+  note: Fuente secundaria; serie anual (también 2021, 2022, 2023 y 2024).
+verl-boe-cnaf-2026:
+  type: legislation
+  title: Orden TDF/732/2026, de 10 de julio, por la que se aprueba el Cuadro Nacional de Atribución de Frecuencias
+  publisher: Boletín Oficial del Estado
+  date: 2026-07-17
+  serial-number: BOE-A-2026-15661
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2026-15661
+    date: '2026-10-20'
+  note: 'Leída en la réplica legalize-es: cuadros nacionales y notas UN sólo como imágenes de boe.es; las notas del RR (5.92, 5.96, 5.98, 5.100, 5.142) sí son texto.'
+verl-boe-cnaf-2021:
+  type: legislation
+  title: Orden ETD/1449/2021, de 16 de diciembre, por la que se aprueba el Cuadro Nacional de Atribución de Frecuencias
+  publisher: Boletín Oficial del Estado
+  date: 2021-12-24
+  serial-number: BOE-A-2021-21346
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2021-21346
+    date: '2026-10-20'
+  note: 'Derogada por la Orden TDF/732/2026. Sus notas UN son texto: las de aficionados son UN-100, UN-108 y UN-132; ninguna en HF.'
+verl-ure-cnaf-2026:
+  type: web
+  title: El CNAF 2026 no modifica las condiciones de uso de las bandas de radioaficionado
+  publisher: Unión de Radioaficionados Españoles
+  date: 2026
+  language: es
+  url:
+    value: https://www.ure.es/el-cnaf-2026-no-modifica-las-condiciones-de-uso-de-las-bandas-de-radioaficionado/
+    date: '2026-10-20'
+  note: Fuente secundaria (análisis de URE con su gabinete jurídico).
+verl-ure-bandas-atribuidas:
+  type: web
+  title: Bandas atribuidas
+  publisher: Unión de Radioaficionados Españoles
+  language: es
+  url:
+    value: https://www.ure.es/bandas-atribuidas/
+    date: '2026-10-20'
+  note: Fuente secundaria; página de hacia 2024 (CNAF 2021). Estatus primario/secundario y potencia por banda.
+verl-sede-radioaficionados-147:
+  type: web
+  title: 'Detalle de procedimientos electrónicos: radioaficionados (IdProcedimiento=147)'
+  publisher: Sede electrónica del Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://sedediatid.digital.gob.es/es-es/procedimientoselectronicos/Paginas/detalle-procedimientos.aspx?IdProcedimiento=147
+    date: '2026-10-20'
+  note: Autorización (alta, modificación, cancelación), distintivo temporal, licencia de instalación de estación fija y su modificación o cancelación, autorizaciones especiales y exámenes. SIA 151740, 155085, 991002 y 991004.
+verl-sede-puesta-servicio-34:
+  type: web
+  title: 'Detalle de procedimientos electrónicos: puesta en servicio de estaciones de radioaficionados y licencia de estaciones fijas (IdProcedimiento=34)'
+  publisher: Sede electrónica del Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://sedediatid.digital.gob.es/es-es/procedimientoselectronicos/Paginas/detalle-procedimientos.aspx?IdProcedimiento=34
+    date: '2026-10-20'
+  note: 'Adjuntos: solicitud de puesta en servicio; declaración responsable de la instalación si la hizo el propio radioaficionado; boletín de instalación. «Modelo 790 (No aplica a radioafición)».'
+verl-mtdfp-ficha-radioaficionados:
+  type: web
+  title: 'Radioaficionados (SIA: 151740 - 155085 - 991002 - 991004)'
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/en/ministerio/servicios-a-la-ciudadania/procedimientos-y-servicios/telecomunicaciones-e-infraestructuras-digitales/espectro-radioelectrico/Radioaficionados
+    date: '2026-10-20'
+verl-mtdfp-autorizaciones-estaciones:
+  type: web
+  title: Autorizaciones de estaciones radioeléctricas (Inspección de Telecomunicaciones)
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/en/telecomunicaciones-infraestructuras-digitales/areas-interes/inspeccion-telecomunicaciones/autorizaciones-estaciones-radioelectricas
+    date: '2026-10-20'
+  note: Página general donde aparece el proyecto técnico firmado por técnico competente; no consta que se aplique a estaciones de aficionado.
+verl-boe-ley-11-2022:
+  type: legislation
+  title: Ley 11/2022, de 28 de junio, General de Telecomunicaciones
+  publisher: Boletín Oficial del Estado
+  date: 2022-06-29
+  serial-number: BOE-A-2022-10757
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2022-10757
+    date: '2026-10-20'
+  note: 'Texto consolidado de 28-12-2025 (leído en la réplica legalize-es): art. 49.9 y disposición adicional decimonovena.'
+verl-boe-rd-2623-1986:
+  type: legislation
+  title: Real Decreto 2623/1986, de 21 de noviembre, por el que se regulan las instalaciones de antenas de estaciones radioeléctricas de aficionado
+  publisher: Boletín Oficial del Estado
+  date: 1986-12-30
+  serial-number: BOE-A-1986-33766
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-1986-33766
+    date: '2026-10-20'
+  note: 'Art. 2: memoria descriptiva, plano y cálculos; sin exigencia de firma de técnico competente (comprobado por ausencia en el texto).'
+verl-madrid-oldruam:
+  type: legislation
+  title: Ordenanza 6/2022, de 26 de abril, de Licencias y Declaraciones Responsables Urbanísticas del Ayuntamiento de Madrid
+  publisher: Boletín Oficial de la Comunidad de Madrid
+  date: 2022-05-17
+  language: es
+  url:
+    value: https://www.bocm.es/boletin/CM_Orden_BOCM/2022/05/17/BOCM-20220517-58.PDF
+    date: '2026-10-20'
+  note: En vigor desde el 17-06-2022. No se pudo leer si menciona las antenas de radioaficionado.
+verl-madrid-declaracion-responsable:
+  type: web
+  title: Declaración responsable urbanística
+  publisher: Ayuntamiento de Madrid, sede electrónica
+  language: es
+  url:
+    value: https://sede.madrid.es/portal/site/tramites/menuitem.62876cb64654a55e2dbd7003a8a409a0/?vgnextoid=0e615339c8bf8310VgnVCM2000000c205a0aRCRD&vgnextchannel=37f637c190180210VgnVCM100000c90da8c0RCRD&vgnextfmt=default
+    date: '2026-10-20'
+verl-madrid-protocolo-telecom-2011:
+  type: web
+  title: Decreto de 3 de enero de 2011 del Presidente del Consejo Rector de la Agencia de Gestión de Licencias de Actividades, por el que se aprueba el Protocolo de instalación de equipos y sistemas de telecomunicaciones
+  publisher: Ayuntamiento de Madrid, sede electrónica
+  date: 2011-01-03
+  language: es
+  url:
+    value: https://sede.madrid.es/portal/site/tramites/menuitem.5dd4485239c96e10f7a72106a8a409a0/?vgnextoid=f3f2c6f5728bd210VgnVCM1000000b205a0aRCRD&vgnextchannel=69cca38813180210VgnVCM100000c90da8c0RCRD&vgnextfmt=pda
+    date: '2026-10-20'
+  note: Anterior a la Ley 11/2022 y a la OLDRUAM; probablemente superado.
+verl-cqww-rules-2026:
+  type: web
+  title: 2026 CQ WW DX Contest Rules (September 5, 2026)
+  publisher: CQ World-Wide DX Contest Committee
+  date: 2026-09-05
+  language: en
+  url:
+    value: https://cqww.com/rules/2026_rules_cqww.pdf
+    date: '2026-10-20'
+verl-cqww-rules-faq:
+  type: web
+  title: CQ WW – Rules FAQ
+  publisher: CQ World-Wide DX Contest Committee
+  language: en
+  url:
+    value: https://cqww.com/rules_faq.htm
+    date: '2026-10-20'
+  note: Sin fecha; algunas respuestas son anteriores a 2026.
+verl-cqww-publiclcr:
+  type: web
+  title: CQ WW – Public Log Checking Reports
+  publisher: CQ World-Wide DX Contest Committee
+  language: en
+  url:
+    value: https://cqww.com/publiclcr/
+    date: '2026-10-20'
+verl-cqww-blog-log-checking:
+  type: web
+  title: CQ WW Blog – Log checking
+  publisher: CQ World-Wide DX Contest Committee
+  language: en
+  url:
+    value: https://cqww.com/blog/category/log-checking/
+    date: '2026-10-20'
+verl-cqww-blog-lcr-cw-2013:
+  type: web
+  title: CQ WW CW 2013 Log Checking Reports
+  publisher: CQ World-Wide DX Contest Committee
+  language: en
+  url:
+    value: https://cqww.com/blog/cq-ww-cw-2013-log-checking-reports/
+    date: '2026-10-20'
+  note: 'Entrada antigua: estadística de únicos («probably bad calls more than 90% of the time»).'

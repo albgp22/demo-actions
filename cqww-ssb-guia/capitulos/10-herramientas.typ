@@ -43,7 +43,7 @@ Desde aquí no se ha podido ver tu Mac. Compruébalo en Terminal: `sw_vers` (ver
   table.header([Opción], [A favor], [En contra]),
   [*A. SkookumLogger* (K1GQ), nativo], [Gratuito, Universal según terceros, CQ WW, memorias de voz de la radio por CAT (DVR del IC-705 e IC-7300), voz sintética (incluso tu Personal Voice), modo práctica. Versión *6.0 (13)* del 5-sep-2026 (beta 6.0 (14), 2-oct-2026); pide *macOS 13* o posterior @soft-skookum-home @soft-skookum-downloads.], [Pocos usuarios (unos 15 logs al año en el CQ WW SSB 2018–2019). #pv que el selector muestre «CQ WW SSB» en la 6.0, el soporte del IC-7300MK2 y que reproduzca WAV grabados por ti.],
   [*B. Not1MM* (K6GTE), multiplataforma], [Gratuito (GPL), plugin «CQ WW SSB» con `NON-ASSISTED` y `ROOKIE` en el Cabrillo, voice keyer con *WAV de tu voz*, SCP y CTY desde el menú, CAT por Hamlib (rigctld) o flrig. Corre en el Mac y en la Pi. Versión *26.10.18* (19-oct-2026) @rules-pypi-not1mm @soft-not1mm-readme.], [Software joven con versiones casi semanales: *fija la versión* antes del concurso (`uvx not1mm==26.10.18`). Se instala por terminal. Guía paso a paso para macOS #pv.],
-  [C. N1MM Logger+ en una VM Windows], [El estándar de facto, enorme comunidad y documentación; DVK con WAV integrado. Versión 1.0.11466 (13-oct-2026) @soft-n1mm-updates.], [Solo Windows. En Apple silicon exige Windows 11 para Arm (Parallels, VMware Fusion o UTM) con N1MM emulado (x86): #pv que funcione con los drivers USB de las radios. Hay que pasar a la VM el CAT y el audio USB.],
+  [C. N1MM Logger+ en una VM Windows], [El estándar de facto, enorme comunidad y documentación; DVK con WAV integrado. Versión 1.0.11466 (13-oct-2026) @soft-n1mm-updates.], [Solo Windows. En Apple silicon exige Windows 11 para Arm (Parallels, VMware Fusion o UTM) con N1MM emulado (x86): en los foros funciona, pero sin soporte oficial #pv, y el driver USB de Icom excluye expresamente Windows en Arm @vere-icom-usbdriver. Hay que pasar a la VM el CAT y el audio USB.],
   [D. N1MM en una VM de Proxmox por RDP], [El Mac solo es el terminal.], [El audio de SSB por RDP añade latencia y la redirección del micro no es fiable: *no recomendable* para un novel.],
   [E. Not1MM en la Raspberry Pi 5 junto a la radio], [Base para una estación remota.], [El mismo problema de audio remoto; las ruedas de PyQt6 para la Pi piden glibc 2.39 o más (o Flatpak).],
 )
@@ -76,7 +76,7 @@ En Not1MM: elige el concurso *CQ WW SSB*, pon tu indicativo, zona #cfg.zona-cq, 
   [IC-705], [3085 (estable)], [0xA4], [8], [Wi-Fi],
   [FT-710], [1049 (estable)], [— (CAT Yaesu ASCII)], [5], [Sin LAN (SCU-LAN10 aparte)],
 )
-Datos leídos en el código de Hamlib y wfview @soft-hamlib-riglist @soft-wfview-rig-ic7300mk2. *wfview* (GPLv3, para macOS, Linux y Windows) controla las tres y puede hacer de servidor de red y de emulador de rigctld para el logger @soft-wfview-readme. *flrig* es la alternativa sin Hamlib. En macOS, los chips USB-serie habituales funcionan con el driver de Apple (el puerto aparece como `/dev/cu.usbserial-…`); el chip exacto del IC-7300MK2 y del FT-710 está #pv.
+Datos leídos en el código de Hamlib y wfview @soft-hamlib-riglist @soft-wfview-rig-ic7300mk2. *wfview* (GPLv3, para macOS, Linux y Windows) controla las tres y puede hacer de servidor de red y de emulador de rigctld para el logger @soft-wfview-readme. *flrig* es la alternativa sin Hamlib. En macOS, los chips USB-serie habituales funcionan con el driver de Apple (el puerto aparece como `/dev/cu.usbserial-…`). El FT-710 usa un Silicon Labs CP210x con dos puertos COM, Enhanced (CAT) y Standard @vere-yaesu-vcp-manual; Icom solo publica driver USB para Windows 10/11, sin Arm ni macOS @vere-icom-usbdriver, y el chip del IC-7300MK2 no se ha confirmado. Que los dos funcionen en el Mac sin driver propio está #pv: si el MK2 no aparece por USB, wfview puede usar su LAN.
 
 == Voice keyer: tu voz, grabada
 
@@ -106,17 +106,17 @@ El *DX cluster* es una red de nodos (telnet o web) donde se publican *spots*: in
 
 == Predicción y estado de la propagación
 
-- *Predicción*: VOACAP Online (OH6BG) y Proppy en el navegador; ITURHFProp (motor de la Recomendación UIT-R P.533) en línea de órdenes @soft-iturhf-readme. HamCAP es para Windows. (URL web #pv.)
+- *Predicción*: VOACAP Online (OH6BG, #url("https://www.voacap.com/"), que también ofrece ITURHFProp) y Proppy de la RSGB (#url("https://rsgb.org/proppy")) en el navegador @vere-voacap-manual @vere-rsgb-proppy; ITURHFProp (motor de la Recomendación UIT-R P.533) en línea de órdenes @soft-iturhf-readme. HamCAP es solo para Windows.
 - *Tiempo real*: NOAA SWPC (índices Kp y A, flujo solar, avisos), HamQSL (resumen solar), y PSKReporter, WSPRnet y RBN como indicadores indirectos de qué rutas están abiertas. Úsalos *antes* del concurso; durante, mirar la propagación general sin buscar estaciones concretas no debería considerarse asistencia, pero las bases no lo aclaran #pv.
 - El plan del capítulo @cap-donde ya incorpora un modelo de MUF calculado para estas fechas.
 
 == Receptores web y SDR
 
-Los receptores KiwiSDR (10 kHz–30 MHz, hasta cuatro oyentes por receptor) se eligen en la lista pública #url("http://rx.kiwisdr.com") o en el mapa #url("http://map.kiwisdr.com") @soft-kiwisdr-readme; el directorio de WebSDR está en websdr.org #pv. Durante tu participación no puedes usar receptores fuera de tu estación (bases); antes y como escucha, sí. Detalles prácticos en el capítulo @cap-escucha-2026.
+Los receptores KiwiSDR (10 kHz–30 MHz, normalmente cuatro oyentes por receptor) se eligen en la lista pública #url("http://rx.kiwisdr.com") o en el mapa #url("http://map.kiwisdr.com") @soft-kiwisdr-readme; el directorio de WebSDR está en #url("http://websdr.org/") @vere-websdr-org-background. Durante tu participación no puedes usar receptores fuera de tu estación (bases); antes y como escucha, sí. Detalles prácticos en el capítulo @cap-escucha-2026.
 
 == El comprobador de logs de cqww.com
 
-La página de subida #url("https://cqww.com/logcheck/") comprueba el Cabrillo *antes* de enviarlo y te avisa de errores de cabecera o de formato; el log queda aceptado cuando recibes el correo con el número de seguimiento @rules-cqww-logcheck @rules-cqww-logs. No se ha encontrado un validador aparte ni la publicación de informes UBN (únicos, busts, NIL) #pv. Sí se publican los informes de comprobación (LCR) de las estaciones con más puntos @hist-cqww-publiclcr.
+La página de subida #url("https://cqww.com/logcheck/") comprueba el Cabrillo *antes* de enviarlo y te avisa de errores de cabecera o de formato; el log queda aceptado cuando recibes el correo con el número de seguimiento @rules-cqww-logcheck @rules-cqww-logs. Tras los resultados, cada participante recibe por correo el enlace a su *informe de comprobación* (LCR: resumen por bandas, NIL, busts, únicos y quién copió mal tu indicativo), y se publican los de las estaciones con más puntos @hist-cqww-publiclcr @hist-cqww-publiclcr.
 
 == Plantilla Cabrillo para tu categoría <sec-cabrillo>
 

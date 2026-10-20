@@ -48,11 +48,11 @@ Ninguna de las cuatro ediciones tuvo tormenta geomagnética (el Kp no llegó a 5
   columns: (auto, auto, auto, 1fr),
   table.header([Edición], [Categoría], [Estación], [Puntuación final (aprox.)]),
   [2025], [SOAB LP, 1.º mundial], [N1UR (EE. UU.)], [4.985.102 (5.199.480 declarados antes de la comprobación) @verh-cqww-records-zone @verh-cqww-raw-ssb],
-  [2025], [SOAB LP, 2.º mundial], [PC0A (Países Bajos)], [2.834.758 @verh-cqww-2025-ssb-results],
+  [2025], [SOAB LP, 2.º mundial], [PC0A (Países Bajos)], [2.834.758 @hist-cqww-2025-ssb-results],
   [2024], [SOAB LP, 1.º mundial], [P40W (Aruba, op. W2GD)], [≈ 7,8 M con ≈ 5.000 QSO y 100 W @hist-cqww-2024-ssb-results],
-  [2024], [SOAB LP, 1.º de Europa], [UW5Y (Ucrania, op. US2YW)], [3.894.098 y placa @verh-cqww-2024-ssb-results @verh-cqww-2024-ssb-plaques],
+  [2024], [SOAB LP, 1.º de Europa], [UW5Y (Ucrania, op. US2YW)], [3.894.098 y placa @hist-cqww-2024-ssb-results @verh-cqww-2024-ssb-plaques],
   [2023], [SOAB LP, 1.º de Europa], [LY4L (Lituania)], [2.685.798 y placa @verh-cqww-2023-ssb-plaques],
-  [2022], [SOAB LP, 1.º mundial], [WP3C (Puerto Rico)], [≈ 4,5 M @verh-cqww-2022-ssb-results],
+  [2022], [SOAB LP, 1.º mundial], [WP3C (Puerto Rico)], [≈ 4,5 M @hist-cqww-2022-ssb-results],
   [2002], [Récord SOAB LP SSB], [D44TD (Cabo Verde)], [11.199.793 @hist-cqww-records],
   [2025], [Récord ROOKIE LP SSB], [9K2ES (Kuwait)], [3.550.008 @hist-cqww-records-overlay],
 )
@@ -70,8 +70,8 @@ Estas cifras salen de estaciones en África o el Caribe (3 puntos casi por cada 
     [2023], [EA5JAX], [SO LOW ALL], [21.945], [135], [27 / 78], [22,8 h; esfuerzo modesto @hist-cqww-scores-ea-sl-p14.],
     [2023], [EA1FRY], [SO LOW ALL], [48.918], [—], [—], [Otra referencia de 2023 @verh-cqww-scores-ea-s-p25.],
     [2022], [EA4Z], [monooperador], [47.100], [224], [41 / 116], [Categoría exacta #pv @verh-cqww-2022-ssb-line-scores.],
-    [2022], [CR2B (op. EA1BP)], [SO LOW ALL], [2.178.800], [2.636], [95 / 324], [Operador español desde Azores: *1.º de Europa* en baja potencia (placa) @verh-cqww-2022-ssb-results.],
-    [2023], [CR2B (op. EA1BP)], [SO LOW ALL], [2.572.485], [—], [—], [2.º de Europa, tras LY4L @verh-cqww-2023-ssb-results.],
+    [2022], [CR2B (op. EA1BP)], [SO LOW ALL], [2.178.800], [2.636], [95 / 324], [Operador español desde Azores: *1.º de Europa* en baja potencia (placa) @hist-cqww-2022-ssb-results.],
+    [2023], [CR2B (op. EA1BP)], [SO LOW ALL], [2.572.485], [—], [—], [2.º de Europa, tras LY4L @hist-cqww-2023-ssb-results.],
     [2024], [ED5D (op. UT5UDX)], [SO asistido ALL], [11.435.580], [—], [—], [*1.º mundial asistido* (placa); para escala @verh-cqww-2024-ssb-plaques.],
     [2024], [EA2W], [SO asistido ALL], [11.059.711], [—], [—], [Placa de Europa asistido (ED5D se lleva la mundial) @verh-cqww-2024-ssb-plaques.],
   ),
@@ -102,5 +102,5 @@ El script `scripts/hist_analyze_logs.py` está listo para hacerlo en tu Mac (con
 
 #truco[Mira el reparto por horas de una estación EA de baja potencia parecida a la tuya: verás cuándo hizo los QSO (normalmente, de día en 15/20 m) y qué bandas le dieron más multiplicadores. Es la mejor forma de ajustar el plan del capítulo @cap-donde a la realidad.]
 
-#fuentes("verh-cqww-2025-ssb-results", "verh-cqww-2024-ssb-plaques", "verh-cqww-2022-ssb-line-scores", "hist-cqww-2025-ssb-results", "hist-cqww-2024-ssb-results", "hist-cqww-2023-ssb-results", "hist-cqww-2022-ssb-results", "hist-cqww-records", "hist-cqww-records-overlay", "hist-cqww-scores-2024-p30", "hist-cqww-scores-ea-sl-p14", "hist-celestrak-sw-5y", "hist-pyspaceweather", "hist-cqww-publiclogs", "hist-cqww-api")
+#fuentes("hist-cqww-2025-ssb-results", "verh-cqww-2024-ssb-plaques", "verh-cqww-2022-ssb-line-scores", "hist-cqww-2025-ssb-results", "hist-cqww-2024-ssb-results", "hist-cqww-2023-ssb-results", "hist-cqww-2022-ssb-results", "hist-cqww-records", "hist-cqww-records-overlay", "hist-cqww-scores-2024-p30", "hist-cqww-scores-ea-sl-p14", "hist-celestrak-sw-5y", "hist-pyspaceweather", "hist-cqww-publiclogs", "hist-cqww-api")
 ]

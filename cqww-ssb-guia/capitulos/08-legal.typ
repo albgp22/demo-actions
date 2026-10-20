@@ -25,7 +25,7 @@ Este capítulo resume la normativa vigente a 20 de octubre de 2026, leída en lo
   table.header([Norma], [Qué regula]),
   [Orden IET/1311/2013 (BOE-A-2013-7624)], [Reglamento de radioaficionados: autorización, examen, indicativos, estaciones, potencias (anexo I). Su texto solo se ha modificado una vez: la Orden IET/614/2015 cambió la disposición adicional segunda (bandas de microondas con autorización especial).],
   [Ley 11/2022, General de Telecomunicaciones], [Marco general, tasas (disposición transitoria 7.ª), infracciones y sanciones; prohíbe exigir licencia municipal a las antenas de aficionado salvo excepciones.],
-  [Orden TDF/732/2026 (CNAF)], [Nuevo Cuadro Nacional de Atribución de Frecuencias, en vigor desde el 18 de julio de 2026 (deroga el de 2021). Sus tablas nacionales se publicaron como imágenes: el estatus de cada banda está #pv en el PDF del BOE.],
+  [Orden TDF/732/2026 (CNAF)], [Nuevo Cuadro Nacional de Atribución de Frecuencias, en vigor desde el 18 de julio de 2026 (deroga el de 2021). Sus tablas y notas nacionales se publicaron como imágenes, así que el estatus de cada banda no se ha podido leer en el BOE #pv; según URE, no cambia nada para los aficionados respecto al de 2021 @verl-ure-cnaf-2026.],
   [Ley 19/1983 y RD 2623/1986], [Derecho a instalar antenas en el exterior del edificio, seguro, requisitos técnicos y de seguridad.],
   [RD 1066/2001], [Límites de exposición del público a campos electromagnéticos.],
 )
@@ -40,7 +40,7 @@ Este capítulo resume la normativa vigente a 20 de octubre de 2026, leída en lo
 
 *En el aire*: identifícate al principio y al final de cada emisión y, en las largas, al menos cada 10 minutos (en un concurso lo haces en cada QSO). *No hay obligación legal de llevar libro de guardia*: el log lo exigen las bases del concurso. La autorización española vale como licencia CEPT (T/R 61-01): en Francia operarías como F/#cfg.indicativo.
 
-#nota[Las páginas del Ministerio sobre exámenes y autorizaciones existen, pero los formularios y enlaces concretos de la sede en 2026 están #pv. Las convocatorias de examen las fija la SETID por resolución.]
+#nota[Todo se tramita en la sede electrónica de la SETID, con certificado digital o Cl\@ve: el *procedimiento 147* (autorización, distintivos temporales, licencia de estación fija e inscripción en exámenes) @verl-sede-radioaficionados-147 y el *procedimiento 34* (puesta en servicio de la estación) @verl-sede-puesta-servicio-34. Las convocatorias de examen las fija la SETID por resolución.]
 
 == Licencia de estación fija: lo que necesita tu piso <sec-licencia-estacion>
 
@@ -52,7 +52,7 @@ La Orden exige *licencia para instalar y hacer funcionar cualquier estación fij
 + *Seguro de responsabilidad civil* antes de la licencia, con copia para la comunidad. La ley no fija un importe mínimo: debe cubrir «en la cuantía suficiente» los daños posibles.
 + *Comunicación de fin de montaje* en seis semanas; la Jefatura tiene 30 días para verificar y *expedir la licencia*, que es la que te habilita a emitir desde casa.
 
-Si el seguro caduca, la licencia se cancela. Cambiar la antena de sitio exige repetir el trámite. Las estaciones *móviles y portátiles* no necesitan licencia de estación (art. 5.3 de la Orden y art. 26 del RD 123/2017). #pv cómo se tramita hoy la licencia en la sede (formularios, si piden proyecto firmado).
+Si el seguro caduca, la licencia se cancela. Cambiar la antena de sitio exige repetir el trámite. Las estaciones *móviles y portátiles* no necesitan licencia de estación (art. 5.3 de la Orden y art. 26 del RD 123/2017). La Orden y el RD piden una *memoria descriptiva*, no un proyecto firmado por un técnico. En la sede (procedimiento 34) se adjunta la solicitud de puesta en servicio y, según quién monte la instalación, una declaración responsable (si la haces tú) o el boletín del instalador; el modelo 790 de tasa figura como «no aplica a radioafición» @verl-sede-puesta-servicio-34. Si además piden planos o el permiso del propietario #pv.
 
 == Bandas y potencias en HF <sec-bandas-es>
 
@@ -65,7 +65,7 @@ La potencia máxima es de *1000 W PEP* en todas las bandas de HF atribuidas, y l
     table.header([Banda], [kHz], [Potencia máx.], [Observaciones]),
     [160 m], [1810–1830], [500 W PEP], [Atribución secundaria en España; al norte de 40° N (Madrid está a 40,4° N) el Reglamento de Radiocomunicaciones pide consulta previa entre administraciones.],
     [160 m], [1830–1850], [1000 W PEP], [Atribución primaria.],
-    [160 m], [1850–2000], [—], [*Sin atribución permanente*: solo con una resolución temporal de la SETID. Existe una «Resolución autorización en la banda 1850-2000 kHz» en la web del Ministerio, pero sus fechas y si cubre el CQ WW SSB están #pv.],
+    [160 m], [1850–2000], [—], [*Sin atribución permanente*: solo con una resolución temporal de la SETID. Según URE, la de 2026 (diciembre de 2025) la permite en los concursos del 1 de enero al 31 de diciembre, sin protección y con cese inmediato si hay interferencias: cubre el CQ WW SSB 2026, no el de 2027 @verl-ure-1850-2000-2026. En la web del Ministerio figura sin fechas #pv.],
     [80 m], [3500–3800], [1000 W PEP], [Compartida con los servicios fijo y móvil.],
     [40 m], [7000–7200], [1000 W PEP], [Nada por encima de 7200 kHz.],
     [20 m], [14000–14350], [1000 W PEP], [],
@@ -74,7 +74,7 @@ La potencia máxima es de *1000 W PEP* en todas las bandas de HF atribuidas, y l
   ),
 ) <tab-bandas-es>
 
-#error-tipico[Llamar en 160 m en SSB por encima de 1850 kHz porque «allí está todo el mundo». Sin una resolución temporal que lo cubra, en España no puedes transmitir entre 1850 y 2000 kHz. Las estaciones de otros países sí pueden: escúchalas allí y llámalas desde tu segmento (*split*).]
+#error-tipico[Llamar en 160 m en SSB por encima de 1850 kHz porque «allí está todo el mundo». Sin una resolución temporal que lo cubra, en España no puedes transmitir entre 1850 y 2000 kHz: para 2027 tendrás que comprobar que la SETID haya dictado la de ese año. Las estaciones de otros países sí pueden: escúchalas allí y llámalas desde tu segmento (*split*).]
 
 == Antenas y comunidad de propietarios
 
@@ -83,7 +83,7 @@ La potencia máxima es de *1000 W PEP* en todas las bandas de HF atribuidas, y l
 - La comunidad *no puede impedir la antena*, pero sí, por *mayoría simple*, trasladarla a otro sitio igual de útil *a su costa* (art. 545 del Código Civil).
 - Si hay obras en el edificio, te pueden obligar a desmontarla temporalmente sin indemnización, con un mes de preaviso (salvo urgencia).
 - El *RD 2623/1986* fija requisitos de seguridad: sin peligro ni molestias, anclajes y riostras señalizados en azoteas transitables, *3 m libres sobre el plano de paso*, distancias a líneas eléctricas, buena construcción y mantenimiento.
-- *No te pueden exigir licencia municipal* de obras o de actividad (Ley 11/2022, DA 19.ª y art. 49.9), salvo en edificios BIC, instalaciones de más de 300 m² o espacios naturales protegidos. #pv si el Ayuntamiento de Madrid puede pedir una declaración responsable.
+- *No te pueden exigir licencia municipal* de obras o de actividad (Ley 11/2022, DA 19.ª y art. 49.9), salvo en edificios BIC, instalaciones de más de 300 m² o espacios naturales protegidos. Si el Ayuntamiento de Madrid puede pedir una declaración responsable no está claro: la DA 19.ª solo remite al primer párrafo del art. 49.9, y la sustitución por declaraciones responsables está en otro párrafo @legal-ley-11-2022. Pregunta en Urbanismo o en URE #pv.
 - La Ley de Propiedad Horizontal no dice nada de antenas de aficionado: rigen la Ley 19/1983 y el RD 2623/1986.
 
 #truco[Antes de pedir la licencia, habla con el presidente de la comunidad y explícale qué vas a poner (una EFHW de hilo, una vertical pequeña o un lazo apenas se ven), el seguro y el compromiso de resolver cualquier interferencia. Una comunidad informada no suele alegar.]
@@ -113,5 +113,5 @@ En la práctica: elementos radiantes fuera del alcance de las personas (y no men
 
 Si la Inspección comprueba que tu estación interfiere a otro servicio o a la recepción de radio o televisión, *debes dejar de emitir* y adoptar a tu costa medidas técnicas razonables; si persiste, te pueden limitar bandas, potencia u horario (art. 32 de la Orden). La responsabilidad es del titular de la autorización. Producir interferencias es infracción grave, y no atender un requerimiento de cese, muy grave. Las medidas técnicas para evitarlas están en el capítulo @cap-equipo.
 
-#fuentes("legal-orden-iet-1311-2013", "legal-orden-iet-614-2015", "legal-ley-11-2022", "legal-rd-123-2017", "legal-orden-tdf-732-2026", "legal-ley-19-1983", "legal-rd-2623-1986", "legal-codigo-civil", "legal-ley-49-1960-lph", "legal-rd-1066-2001", "legal-orden-cte-23-2002", "legal-cept-tr-61-01", "legal-cept-tr-61-02", "legal-mtdfp-examenes", "legal-mtdfp-res-1850-2000", "legal-fcc-oet65b", "legal-itu-t-k52")
+#fuentes("legal-orden-iet-1311-2013", "legal-orden-iet-614-2015", "legal-ley-11-2022", "legal-rd-123-2017", "legal-orden-tdf-732-2026", "legal-ley-19-1983", "legal-rd-2623-1986", "legal-codigo-civil", "legal-ley-49-1960-lph", "legal-rd-1066-2001", "legal-orden-cte-23-2002", "legal-cept-tr-61-01", "legal-cept-tr-61-02", "legal-mtdfp-examenes", "legal-mtdfp-res-1850-2000", "verl-ure-1850-2000-2026", "verl-sede-radioaficionados-147", "verl-sede-puesta-servicio-34", "verl-ure-cnaf-2026", "legal-fcc-oet65b", "legal-itu-t-k52")
 ]

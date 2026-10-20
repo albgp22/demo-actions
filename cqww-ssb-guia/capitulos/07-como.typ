@@ -13,7 +13,7 @@ En los ejemplos, los indicativos de las otras estaciones son ficticios. Tu inter
 
 #figure(
   kind: image,
-  placement: auto,
+  placement: bottom,
   caption: [Flujo de un QSO en S&P. En amarillo, los puntos donde decides.],
   block(width: 100%)[
     #set text(size: 8pt)

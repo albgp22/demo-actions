@@ -69,7 +69,7 @@
   [Resultados], [#enlace("hist-cqww-score-db", "Base de datos de puntuaciones") · #enlace("hist-cqww-publiclogs", "Logs públicos") · #enlace("hist-cqww-records", "Récords")],
   [Normativa], [#enlace("legal-orden-iet-1311-2013", "Orden IET/1311/2013") · #enlace("legal-ley-11-2022", "Ley 11/2022") · #enlace("legal-orden-tdf-732-2026", "CNAF 2026") · #enlace("legal-ley-19-1983", "Ley 19/1983") · #enlace("legal-rd-2623-1986", "RD 2623/1986") · #enlace("legal-rd-1066-2001", "RD 1066/2001")],
   [Trámites], [#enlace("legal-mtdfp-radioaficionados-cb27", "Radioaficionados (Ministerio)") · #enlace("legal-mtdfp-examenes", "Exámenes")],
-  [Plan de bandas], [#enlace("legal-iaru-r1-hf-bandplan", "Plan de bandas HF de la IARU Región 1") #pv],
+  [Plan de bandas], [#enlace("verl-iaru-r1-hf-bandplan", "Plan de bandas HF de la IARU Región 1 (2020, rev. 2021)")],
   [IC-7300MK2], [#enlace("equip-icomuk-7300mk2-basic", "Manual básico") · #enlace("equip-icomuk-7300mk2-advanced", "Manual avanzado") · #enlace("equip-icomuk-7300mk2-civ", "Guía CI-V")],
   [FT-710], [#enlace("equip-yaesu-ft710", "Página del producto") · #enlace("equip-manualslib-ft710", "Manual") · #enlace("equip-yaesu-ft710-cat", "Manual CAT")],
   [IC-705], [#enlace("equip-icomeurope-705-bro", "Folleto") · #enlace("equip-manualslib-ic705-voicetx", "Manual (memorias de voz)")],

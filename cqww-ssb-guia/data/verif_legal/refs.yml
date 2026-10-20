@@ -1,0 +1,319 @@
+# Referencias de la verificación legal y de reglas (Hayagriva). Prefijo "verl-".
+# Consulta común: 2026-10-20, a través de resúmenes de WebSearch (las webs no eran accesibles
+# directamente) y de la réplica legalize-es del API del BOE en raw.githubusercontent.com.
+# Las fuentes marcadas como "secundaria" en `note` no bastan por sí solas para dar un dato por
+# confirmado (ver data/verif_legal/facts.md).
+
+# --- Plan de bandas IARU Región 1 ---------------------------------------------------------
+
+verl-iaru-r1-hf-bandplan:
+  type: web
+  title: "IARU Region 1 HF Band Plan (versión de 16 de octubre de 2020, revisada en 2021)"
+  publisher: IARU Región 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2021/06/hf_r1_bandplan.pdf
+    date: '2026-10-20'
+  note: "Versión vigente localizada. Aprobada por la Conferencia General Virtual «Novi Sad» 2020, en vigor el 16-10-2020 y revisada en 2021. Su tabla no fue legible en los resúmenes de búsqueda; los segmentos se contrastaron con la edición de 2016 (verl-iaru-r1-hf-managers-handbook-v9)."
+
+verl-iaru-r1-hf-bandplan-revised:
+  type: web
+  title: "HF Band Plan revised"
+  publisher: IARU Región 1
+  date: 2021
+  language: en
+  url:
+    value: https://www.iaru-r1.org/2021/hf-band-plan-revised/
+    date: '2026-10-20'
+  note: "Aviso de revisión del plan en su versión de 16-10-2020 (incluido el anexo) y enlace al PDF de junio de 2021."
+
+verl-iaru-r1-band-plans:
+  type: web
+  title: "Band Plans"
+  publisher: IARU Región 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/on-the-air/band-plans/
+    date: '2026-10-20'
+  note: "Página de descarga de los planes de banda de la Región 1."
+
+verl-iaru-r1-hf-managers-handbook-v9:
+  type: report
+  title: "HF Manager's Handbook, version 9 (June 2018)"
+  publisher: IARU Región 1
+  date: 2018-06
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2019/08/hf_managers_handbook_v9.pdf
+    date: '2026-10-20'
+  note: "Reproduce el plan HF en vigor desde el 1-6-2016 (ratificado en Landshut 2017). Fuente de la mayoría de los segmentos confirmados y de la regla de concursos sólo en 160, 80, 40, 20, 15 y 10 m."
+
+verl-iaru-r1-hf-bandplan-2019:
+  type: web
+  title: "IARU Region 1 HF band plan (PDF publicado en 2019, edición anterior a la de 2020)"
+  publisher: IARU Región 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2019/08/hf_r1_bandplan.pdf
+    date: '2026-10-20'
+  note: "Incluye el historial de cambios (p. ej., supresión del segmento CW preferente de concursos 7000-7025 kHz) y la nota «Lowest dial setting for LSB Voice mode: 1843, 3603 and 7053 kHz»."
+
+verl-iaru-r1-hf-bandplan-why:
+  type: web
+  title: "IARU Region 1 HF bandplan (anexo explicativo)"
+  publisher: IARU Región 1
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2019/08/hf_bandplan_why.pdf
+    date: '2026-10-20'
+  note: "Bandas laterales (LSB por debajo de 10 MHz, USB por encima; USB en 5 MHz), dial 3 kHz por debajo del borde superior en 20 m y superiores, uso de 7050-7060 kHz para SSB si no hay actividad digital."
+
+verl-iaru-r1-vie19-harmonisation:
+  type: report
+  title: "VIE19-C4-015: HF Bandplan Harmonisation (RSGB)"
+  publisher: IARU Región 1, reunión intermedia de Viena 2019
+  date: 2019
+  language: en
+  url:
+    value: https://vienna.iaru-r1.org/wp-content/uploads/2019/01/VIE19-C4-015-RSGB-HF-Bandplan-Harmonisation.pdf
+    date: '2026-10-20'
+  note: "Tabla comparativa de las tres regiones; usada para 14125-14300 kHz y para las balizas de 10 m (28190-28225 kHz)."
+
+verl-iaru-r1-dv05-plenary:
+  type: report
+  title: "IARU Region 1 General Conference Davos 2005: Final Plenary"
+  publisher: IARU Región 1
+  date: 2005
+  language: en
+  url:
+    value: https://www.iaru-r1.org/wp-content/uploads/2019/10/DV05_Final-Plenary.pdf
+    date: '2026-10-20'
+  note: "Documento antiguo; sólo se usó para 7030 kHz (QRP CW) y 21070-21110 kHz."
+
+# --- 160 m en España (1850-2000 kHz) ------------------------------------------------------
+
+verl-mtdfp-autorizacion-uso-temporal:
+  type: web
+  title: "Autorización de uso temporal y experimental (radioaficionados)"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/en/telecomunicaciones-infraestructuras-digitales/areas-interes/espectro-radioelectrico/radioaficionados-cb27/autorizaciones/autorizacion-uso-temporal
+    date: '2026-10-20'
+  note: "Recoge la resolución de uso temporal y experimental de la banda de 1800 kHz y su prórroga (fechas no visibles en los resúmenes) y la de 5 MHz (hasta el 31-12-2017). Página antigua equivalente: https://avancedigital.mineco.gob.es/espectro/radioaficionados/autorizaciones/Paginas/autorizacion-uso-temporal.aspx"
+
+verl-ure-1850-2000-2026:
+  type: web
+  title: "Autorizado el uso experimental de la banda 1850–2000 kHz para radioaficionados durante 2026"
+  publisher: Unión de Radioaficionados Españoles
+  date: 2025-12-29
+  language: es
+  url:
+    value: https://www.ure.es/autorizado-de-la-banda-1850-2000-khz/
+    date: '2026-10-20'
+  note: "Fuente secundaria. Concursos entre el 1-1-2026 y el 31-12-2026; características técnicas del Reglamento para 1,8 MHz; sin protección y con suspensión inmediata si hay interferencias."
+
+verl-ure-1850-2000-2025:
+  type: web
+  title: "Autorización de 1.850-2.000 kHz para concursos 2025"
+  publisher: Unión de Radioaficionados Españoles
+  language: es
+  url:
+    value: https://www.ure.es/autorizacion-de-1-850-2-000-khz-para-concursos-2025/
+    date: '2026-10-20'
+  note: "Fuente secundaria; serie anual (también 2021, 2022, 2023 y 2024)."
+
+# --- CNAF 2026 ----------------------------------------------------------------------------
+
+verl-boe-cnaf-2026:
+  type: legislation
+  title: "Orden TDF/732/2026, de 10 de julio, por la que se aprueba el Cuadro Nacional de Atribución de Frecuencias"
+  publisher: Boletín Oficial del Estado
+  date: 2026-07-17
+  serial-number: BOE-A-2026-15661
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2026-15661
+    date: '2026-10-20'
+  note: "Leída en la réplica legalize-es: cuadros nacionales y notas UN sólo como imágenes de boe.es; las notas del RR (5.92, 5.96, 5.98, 5.100, 5.142) sí son texto."
+
+verl-boe-cnaf-2021:
+  type: legislation
+  title: "Orden ETD/1449/2021, de 16 de diciembre, por la que se aprueba el Cuadro Nacional de Atribución de Frecuencias"
+  publisher: Boletín Oficial del Estado
+  date: 2021-12-24
+  serial-number: BOE-A-2021-21346
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2021-21346
+    date: '2026-10-20'
+  note: "Derogada por la Orden TDF/732/2026. Sus notas UN son texto: las de aficionados son UN-100, UN-108 y UN-132; ninguna en HF."
+
+verl-ure-cnaf-2026:
+  type: web
+  title: "El CNAF 2026 no modifica las condiciones de uso de las bandas de radioaficionado"
+  publisher: Unión de Radioaficionados Españoles
+  date: 2026
+  language: es
+  url:
+    value: https://www.ure.es/el-cnaf-2026-no-modifica-las-condiciones-de-uso-de-las-bandas-de-radioaficionado/
+    date: '2026-10-20'
+  note: "Fuente secundaria (análisis de URE con su gabinete jurídico)."
+
+verl-ure-bandas-atribuidas:
+  type: web
+  title: "Bandas atribuidas"
+  publisher: Unión de Radioaficionados Españoles
+  language: es
+  url:
+    value: https://www.ure.es/bandas-atribuidas/
+    date: '2026-10-20'
+  note: "Fuente secundaria; página de hacia 2024 (CNAF 2021). Estatus primario/secundario y potencia por banda."
+
+# --- Sede electrónica del Ministerio ------------------------------------------------------
+
+verl-sede-radioaficionados-147:
+  type: web
+  title: "Detalle de procedimientos electrónicos: radioaficionados (IdProcedimiento=147)"
+  publisher: Sede electrónica del Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://sedediatid.digital.gob.es/es-es/procedimientoselectronicos/Paginas/detalle-procedimientos.aspx?IdProcedimiento=147
+    date: '2026-10-20'
+  note: "Autorización (alta, modificación, cancelación), distintivo temporal, licencia de instalación de estación fija y su modificación o cancelación, autorizaciones especiales y exámenes. SIA 151740, 155085, 991002 y 991004."
+
+verl-sede-puesta-servicio-34:
+  type: web
+  title: "Detalle de procedimientos electrónicos: puesta en servicio de estaciones de radioaficionados y licencia de estaciones fijas (IdProcedimiento=34)"
+  publisher: Sede electrónica del Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://sedediatid.digital.gob.es/es-es/procedimientoselectronicos/Paginas/detalle-procedimientos.aspx?IdProcedimiento=34
+    date: '2026-10-20'
+  note: "Adjuntos: solicitud de puesta en servicio; declaración responsable de la instalación si la hizo el propio radioaficionado; boletín de instalación. «Modelo 790 (No aplica a radioafición)»."
+
+verl-mtdfp-ficha-radioaficionados:
+  type: web
+  title: "Radioaficionados (SIA: 151740 - 155085 - 991002 - 991004)"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/en/ministerio/servicios-a-la-ciudadania/procedimientos-y-servicios/telecomunicaciones-e-infraestructuras-digitales/espectro-radioelectrico/Radioaficionados
+    date: '2026-10-20'
+
+verl-mtdfp-autorizaciones-estaciones:
+  type: web
+  title: "Autorizaciones de estaciones radioeléctricas (Inspección de Telecomunicaciones)"
+  publisher: Ministerio para la Transformación Digital y de la Función Pública
+  language: es
+  url:
+    value: https://digital.gob.es/en/telecomunicaciones-infraestructuras-digitales/areas-interes/inspeccion-telecomunicaciones/autorizaciones-estaciones-radioelectricas
+    date: '2026-10-20'
+  note: "Página general donde aparece el proyecto técnico firmado por técnico competente; no consta que se aplique a estaciones de aficionado."
+
+# --- Normativa estatal y del Ayuntamiento de Madrid ---------------------------------------
+
+verl-boe-ley-11-2022:
+  type: legislation
+  title: "Ley 11/2022, de 28 de junio, General de Telecomunicaciones"
+  publisher: Boletín Oficial del Estado
+  date: 2022-06-29
+  serial-number: BOE-A-2022-10757
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-2022-10757
+    date: '2026-10-20'
+  note: "Texto consolidado de 28-12-2025 (leído en la réplica legalize-es): art. 49.9 y disposición adicional decimonovena."
+
+verl-boe-rd-2623-1986:
+  type: legislation
+  title: "Real Decreto 2623/1986, de 21 de noviembre, por el que se regulan las instalaciones de antenas de estaciones radioeléctricas de aficionado"
+  publisher: Boletín Oficial del Estado
+  date: 1986-12-30
+  serial-number: BOE-A-1986-33766
+  language: es
+  url:
+    value: https://www.boe.es/buscar/act.php?id=BOE-A-1986-33766
+    date: '2026-10-20'
+  note: "Art. 2: memoria descriptiva, plano y cálculos; sin exigencia de firma de técnico competente (comprobado por ausencia en el texto)."
+
+verl-madrid-oldruam:
+  type: legislation
+  title: "Ordenanza 6/2022, de 26 de abril, de Licencias y Declaraciones Responsables Urbanísticas del Ayuntamiento de Madrid"
+  publisher: Boletín Oficial de la Comunidad de Madrid
+  date: 2022-05-17
+  language: es
+  url:
+    value: https://www.bocm.es/boletin/CM_Orden_BOCM/2022/05/17/BOCM-20220517-58.PDF
+    date: '2026-10-20'
+  note: "En vigor desde el 17-06-2022. No se pudo leer si menciona las antenas de radioaficionado."
+
+verl-madrid-declaracion-responsable:
+  type: web
+  title: "Declaración responsable urbanística"
+  publisher: Ayuntamiento de Madrid, sede electrónica
+  language: es
+  url:
+    value: https://sede.madrid.es/portal/site/tramites/menuitem.62876cb64654a55e2dbd7003a8a409a0/?vgnextoid=0e615339c8bf8310VgnVCM2000000c205a0aRCRD&vgnextchannel=37f637c190180210VgnVCM100000c90da8c0RCRD&vgnextfmt=default
+    date: '2026-10-20'
+
+verl-madrid-protocolo-telecom-2011:
+  type: web
+  title: "Decreto de 3 de enero de 2011 del Presidente del Consejo Rector de la Agencia de Gestión de Licencias de Actividades, por el que se aprueba el Protocolo de instalación de equipos y sistemas de telecomunicaciones"
+  publisher: Ayuntamiento de Madrid, sede electrónica
+  date: 2011-01-03
+  language: es
+  url:
+    value: https://sede.madrid.es/portal/site/tramites/menuitem.5dd4485239c96e10f7a72106a8a409a0/?vgnextoid=f3f2c6f5728bd210VgnVCM1000000b205a0aRCRD&vgnextchannel=69cca38813180210VgnVCM100000c90da8c0RCRD&vgnextfmt=pda
+    date: '2026-10-20'
+  note: "Anterior a la Ley 11/2022 y a la OLDRUAM; probablemente superado."
+
+# --- CQ WW ---------------------------------------------------------------------------------
+
+verl-cqww-rules-2026:
+  type: web
+  title: "2026 CQ WW DX Contest Rules (September 5, 2026)"
+  publisher: CQ World-Wide DX Contest Committee
+  date: 2026-09-05
+  language: en
+  url:
+    value: https://cqww.com/rules/2026_rules_cqww.pdf
+    date: '2026-10-20'
+
+verl-cqww-rules-faq:
+  type: web
+  title: "CQ WW – Rules FAQ"
+  publisher: CQ World-Wide DX Contest Committee
+  language: en
+  url:
+    value: https://cqww.com/rules_faq.htm
+    date: '2026-10-20'
+  note: "Sin fecha; algunas respuestas son anteriores a 2026."
+
+verl-cqww-publiclcr:
+  type: web
+  title: "CQ WW – Public Log Checking Reports"
+  publisher: CQ World-Wide DX Contest Committee
+  language: en
+  url:
+    value: https://cqww.com/publiclcr/
+    date: '2026-10-20'
+
+verl-cqww-blog-log-checking:
+  type: web
+  title: "CQ WW Blog – Log checking"
+  publisher: CQ World-Wide DX Contest Committee
+  language: en
+  url:
+    value: https://cqww.com/blog/category/log-checking/
+    date: '2026-10-20'
+
+verl-cqww-blog-lcr-cw-2013:
+  type: web
+  title: "CQ WW CW 2013 Log Checking Reports"
+  publisher: CQ World-Wide DX Contest Committee
+  language: en
+  url:
+    value: https://cqww.com/blog/cq-ww-cw-2013-log-checking-reports/
+    date: '2026-10-20'
+  note: "Entrada antigua: estadística de únicos («probably bad calls more than 90% of the time»)."

@@ -161,6 +161,6 @@
 
 #set heading(numbering: none)
 = Bibliografía
-#set text(size: 7.6pt)
-#set par(leading: 0.5em)
-#bibliography("bib/referencias.yml", title: none, style: "ieee", full: false)
+#set text(size: 7.1pt, hyphenate: true)
+#set par(leading: 0.45em, justify: false)
+#columns(2, gutter: 14pt)[#bibliography("bib/referencias.yml", title: none, style: "ieee", full: false)]

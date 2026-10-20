@@ -2,6 +2,8 @@
 #import "fonetica.typ": deletrear
 
 #let fallos27 = csv("../data/calc/plan_bandas_2027_fallos.csv", row-type: dictionary)
+#let verif = ("legal", "equipo", "historia").map(d => csv("../data/verif_" + d + "/verificacion.csv", row-type: dictionary)).flatten()
+#let cuenta(e) = verif.filter(r => r.estado == e).len()
 
 #let capitulo(cfg) = [
 = Supuestos y datos pendientes <cap-supuestos>
@@ -16,7 +18,9 @@ La guía se preparó el 20 de octubre de 2026 en un entorno con la red restringi
 - Los *datos solares* se leyeron del fichero de CelesTrak que distribuye el paquete `spaceweather` de PyPI.
 - *Horarios, orto y ocaso, puntos, puntuaciones, ventanas de propagación, eficiencias de antena y distancias de exposición* se calcularon con los scripts de `scripts/` (Python en `.venv`).
 
-Todo lo que no se pudo confirmar en una fuente primaria está marcado como #pv en el texto.
+El mismo día, con el cupo de búsquedas renovado, cinco agentes repasaron todo lo pendiente (marco legal y plan de bandas, equipo y software, historia y comunidad, y antenas con precio). De #verif.len() afirmaciones revisadas, *#cuenta("confirmado") se confirmaron*, *#cuenta("corregido") se corrigieron* y #cuenta("sin_confirmar") siguen sin confirmar; además se documentaron 84 antenas y accesorios con su precio y su tienda. El detalle está en `data/verif_*/verificacion.csv` y en `data/antenas/`.
+
+Todo lo que sigue sin confirmar en una fuente primaria está marcado como #pv en el texto. Para comprobarlo en el original hay dos caminos: abrir desde tu Mac los enlaces de la bibliografía, o permitir esos dominios (cqww.com, boe.es, iaru-r1.org, ure.es, digital.gob.es…) en la red del entorno donde se generó la guía y repetir la verificación con los scripts de `scripts/`.
 
 == Supuestos
 
@@ -28,7 +32,7 @@ Todo lo que no se pudo confirmar en una fuente primaria está marcado como #pv e
 + *Bases de 2027*: se supone que serán como las de 2026 (incluido el plazo de 48 horas). Revísalas en septiembre de 2027.
 + *Cambio de hora*: se supone que la UE mantiene el régimen actual (último domingo de octubre a las 01:00 UTC).
 + *Puntos medios por QSO* (objetivos hipotéticos del capítulo @cap-historico): 2,0–2,1 desde Madrid.
-+ *Precios*: los de los transceptores son los que verificaste tú o los vistos en buscador el 20 de octubre de 2026; en Passion Radio no está claro si incluyen IVA y WiMo aplica el IVA alemán.
++ *Precios*: los vistos el 20 de octubre de 2026 en las fichas de las tiendas, con IVA. WiMo y Spiderbeam muestran el IVA alemán (19 %) y no está claro si a un cliente en España le aplican el español; en Passion Radio no siempre consta si incluyen IVA. Las conversiones de dólares usan el cambio del BCE del 19 de octubre de 2026, sin envío ni impuestos de importación.
 + *Exposición a RF*: factores de modo SSB (0,2–0,4) y de reflexión del suelo de la práctica técnica (FCC OET-65, UIT-T K.52), no de la norma española.
 
 == Qué cambia en 2027 según el modelo
@@ -48,15 +52,15 @@ En resumen: en 2027, *10 m hacia Norteamérica quedará reducido a unas horas a 
 #tabla(
   columns: (auto, 1fr),
   table.header([Tema], [Pendiente]),
-  [Bandas], [Plan de bandas IARU R1 vigente (todos los segmentos de SSB); resolución temporal 1850–2000 kHz y si cubre el CQ WW; estatus de cada banda en las tablas (imagen) del CNAF 2026.],
-  [Trámites], [Formularios actuales de la autorización y de la licencia de estación fija en la sede electrónica; posibles cambios en las tasas.],
-  [Bases], [Redacción literal del objetivo y del cómputo del overlay CLASSIC; tratamiento de los QSO únicos y existencia de informes UBN; si el SCP cuenta como asistencia (se usa habitualmente en no asistido).],
-  [Equipo], [Duración de las memorias de voz y chip USB del IC-7300MK2; drivers del FT-710 en macOS; IVA de los precios de Passion Radio; modelos y precios de antenas, coaxial, cascos, pedal, fuente y medidores.],
-  [Software], [Que SkookumLogger 6.0 tenga «CQ WW SSB» y soporte el IC-7300MK2; N1MM en Windows 11 para Arm; CTY posterior a CTY-3631 (mira el 23 de octubre).],
-  [Escucha], [Receptores KiwiSDR concretos cerca de Madrid y lejos; URL del WebSDR de Twente.],
-  [Historia], [Mejores EA, EA6, EA8, EA9 y rookies de cada año; crónicas de propagación de cada edición.],
-  [Comunidad], [Radioclubes de la Comunidad de Madrid, secciones de URE, grupos de concurso españoles.],
-  [Calendario], [Fechas de 2026–2027 de los concursos menores (calculadas con su regla habitual).],
+  [Bandas], [Nueve tramos menores del plan IARU R1, fuera de la fonía que recomienda la guía; la resolución de 1850–2000 kHz en fuente oficial y la de 2027; el estatus de cada banda en las tablas (imagen) del CNAF 2026.],
+  [Trámites], [Si la sede pide planos o el permiso del propietario para la licencia de estación; si el Ayuntamiento de Madrid puede pedir una declaración responsable.],
+  [Bases], [Si el Super Check Partial cuenta como asistencia: ni las bases ni la FAQ lo mencionan.],
+  [Equipo], [Duración de las memorias de voz del IC-7300MK2; USB del MK2 y del FT-710 en macOS sin driver propio; radiales del AH-730 en una terraza y longitud mínima de hilo del LDG RT-100; impedancia de los chokes comerciales; IVA de WiMo para España.],
+  [Software], [SkookumLogger con el CQ WW SSB y el IC-7300MK2; N1MM en Windows 11 para Arm (solo hay foros); un CTY posterior al CTY-3631.],
+  [Escucha], [KiwiSDR en Japón y Sudáfrica con dirección; la disponibilidad diaria de los de la tabla.],
+  [Historia], [Mejores EA, EA6, EA8 y EA9 en baja potencia y rookies EA de cada año; categoría de EA4Z en 2022.],
+  [Comunidad], [Localidad de Radio Club Henares, web del EA Contest Club y dirección de r/amateurradio.],
+  [Calendario], [Fechas de los concursos sin fecha publicada ni regla en sus bases (JIDX, LZ DX, SP DX, Helvetia, ARI, IOTA, EUHFC, Field Day R1, Oceania y WAG).],
 )
 
 == Créditos y licencias
@@ -68,10 +72,5 @@ En resumen: en 2027, *10 m hacia Norteamérica quedará reducido a unas horas a 
 
 == Cómo regenerar todo
 
-Los pasos completos están en `README.md`. En resumen: crea el entorno (`uv venv .venv` e instala `requirements.txt`), ejecuta los scripts `calc_*` y `fig_*` y `merge_refs.py`, y compila:
-
-```
-typst compile --font-path fonts main.typ cqww-ssb-guia.pdf
-typst compile --font-path fonts chuleta.typ chuleta.pdf
-```
+Los pasos están en `README.md`: crea el entorno de Python (`uv venv .venv` e instala `requirements.txt`), ejecuta los scripts `calc_*`, `fig_*` y `merge_refs.py`, y compila `main.typ` y `chuleta.typ` con `typst compile --font-path fonts`.
 ]

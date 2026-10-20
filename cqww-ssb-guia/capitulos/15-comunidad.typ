@@ -19,7 +19,7 @@ Algunos clubes y grupos con actividad comprobada (verificación del 20 de octubr
   [Radio Club EIT, EA4RCT], [ETSIT-UPM, Madrid], [Radio club de la ETSIT (Universidad Politécnica de Madrid); colabora con la Sección de Madrid en el repetidor ED4YAC (145,650 MHz) @verh-ure-repetidores.],
   [Grupo Canal 21 Sierra de Madrid, EA4RKR], [Las Rozas], [Asociación de FEDI-EA desde 1989 @verh-fediea-asociaciones.],
   [Radio Club Henares, EA4RCH], [localidad #pv], [Web activa: #url("https://www.radioclubhenares.org/") @verh-radioclubhenares.],
-  [EA Contest Club], [España], [Grupo de concurso: 3.º club DX del CQ WW 2025 y patrocinador de la placa europea Rookie SSB @verh-cqww-clubscores-2025 @verh-cqww-plaques.],
+  [EA Contest Club], [España], [Grupo de concurso: 3.º club DX del CQ WW 2025 y patrocinador de la placa europea Rookie SSB @hist-cqww-clubscores @verh-cqww-plaques.],
   [Ceuta Contest Club, EA9EA], [Ceuta], [Grupo de concurso centrado en el CQ WW SSB y CW @verh-ceuta-contest-club.],
 )
 
@@ -29,7 +29,7 @@ Para encontrar más:
 - Busca indicativos de radioclub: los sufijos que empiezan por *RC* o *RK* están reservados a estaciones de radioclub, y los que empiezan por *UR*, a asociaciones (Orden IET/1311/2013, art. 27). En el distrito 4, del tipo EA4RC… o EA4RK….
 - Escucha este fin de semana: muchas estaciones multioperador EA de concurso dan su web o su club en el soapbox de 3830.
 
-En la competición de clubes del CQ WW de 2025, el *EA Contest Club* fue *3.º entre los clubes DX*, con 162 logs y 242.380.834 puntos @verh-cqww-clubscores-2025. Las bases solo admiten en un club DX a socios que vivan en la misma entidad DXCC que el club o dentro de un radio de 400 km, y las asociaciones nacionales no pueden competir como club.
+En la competición de clubes del CQ WW de 2025, el *EA Contest Club* fue *3.º entre los clubes DX*, con 162 logs y 242.380.834 puntos @hist-cqww-clubscores. Las bases solo admiten en un club DX a socios que vivan en la misma entidad DXCC que el club o dentro de un radio de 400 km, y las asociaciones nacionales no pueden competir como club.
 
 == Foros, listas y webs
 
@@ -41,5 +41,5 @@ En la competición de clubes del CQ WW de 2025, el *EA Contest Club* fue *3.º e
 
 #truco[Publica tu primera puntuación en 3830 con un soapbox sincero («primer CQ WW, 100 W, hilo en una terraza de Madrid»). Es la manera más rápida de que otros EA te escriban, te inviten a un multioperador o te aconsejen sobre la antena.]
 
-#fuentes("verh-ure-que-es", "verh-ure-seccion-madrid", "verh-cqww-clubscores-2025", "verh-cq-contest-listinfo", "know-ure", "know-ure-concursos", "rules-cqww-faq", "know-3830", "know-cq-contest-list", "hist-cqww-clubscores", "rules-cqww-2026-changes")
+#fuentes("verh-ure-que-es", "verh-ure-seccion-madrid", "hist-cqww-clubscores", "verh-cq-contest-listinfo", "know-ure", "know-ure-concursos", "rules-cqww-faq", "know-3830", "know-cq-contest-list", "hist-cqww-clubscores", "rules-cqww-2026-changes")
 ]

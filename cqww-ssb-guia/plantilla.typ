@@ -126,7 +126,7 @@
 #let fuentes(..claves) = block(above: 0.9em, below: 0.6em)[
   #set text(size: 7.6pt, fill: c.tinta2)
   #set par(justify: false)
-  #text(weight: "semibold", fill: c.tenue, tracking: 0.04em)[#upper[Fuentes]]#h(0.4em)#claves.pos().map(k => cite(label(k))).join(", ")
+  #text(weight: "semibold", fill: c.tenue, tracking: 0.04em)[#upper[Fuentes]]#h(0.4em)#claves.pos().dedup().map(k => cite(label(k))).join(", ")
 ]
 
 // Enlace con la URL visible y abreviada
@@ -150,6 +150,13 @@
   if neg { "−" + out } else { out }
 }
 #let redondea(x, n) = coma(str(calc.round(float(x), digits: n)))
+// Importe en euros a la española: 1426.85 → «1.426,85»
+#let euros(x) = {
+  let cent = int(calc.round(float(x) * 100))
+  let e = calc.quo(cent, 100)
+  let c = calc.rem(cent, 100)
+  miles(e) + "," + (if c < 10 { "0" } else { "" }) + str(c)
+}
 // Kp en notación de tercios: 4,67 → «5−», 4,33 → «4+», 4,00 → «4o»
 #let kp(v) = {
   let k = float(v)
@@ -208,18 +215,23 @@
   set text(size: 8.2pt)
   set par(justify: false, leading: 0.5em)
   show table.cell.where(y: 0): set text(weight: "semibold", fill: c.azul-noche)
-  table(
+  let opciones = (
     stroke: (x, y) => (
       top: if y == 0 { 0.8pt + c.tinta2 } else if y == 1 { 0.5pt + c.tinta2 } else { none },
     ),
     fill: (x, y) => if y == 0 { c.cab } else if calc.even(y) { c.cebra },
     inset: (x: 4.5pt, y: 3.4pt),
     align: left + horizon,
-    ..args.named(),
-    ..args.pos(),
-    table.hline(stroke: 0.8pt + c.tinta2),
-  )
+  ) + args.named()
+  table(..opciones, ..args.pos(), table.hline(stroke: 0.8pt + c.tinta2))
 }
+
+// Tabla para rellenar a mano: filas altas con líneas, sin cebra
+#let rellenar(..args) = tabla(
+  stroke: (x, y) => (top: if y == 0 { 0.8pt + c.tinta2 } else if y == 1 { 0.5pt + c.tinta2 } else { 0.4pt + c.linea }),
+  fill: (x, y) => if y == 0 { c.cab },
+  ..args,
+)
 
 // ---------------------------------------------------------------- diagramas
 #let paso(cuerpo, color: c.azul-osc, fondo: c.azul-claro) = rect(

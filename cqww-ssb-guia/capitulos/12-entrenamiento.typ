@@ -82,5 +82,5 @@ Los simuladores de concurso más conocidos son de *CW*: Morse Runner (VE3NEA) y 
 - *NCJ (National Contest Journal)*: revista de concursos (ncjweb.com).
 - Las bases y la FAQ del CQ WW (capítulo @cap-reglas): léelas enteras una vez al año.
 
-#fuentes("verh-mrce-github", "verh-arrl-contest-calendar", "verh-ure-rey-ssb-bases", "know-not1mm-pypi", "know-morserunner", "know-ctu", "know-wwrof", "know-3830", "know-ncj", "know-arrl-10m", "know-arrl-dx", "know-cqwpx-rules", "know-arrl-iaru", "know-darc-wae", "know-ure-rey-ssb")
+#fuentes("verh-mrce-github", "verh-arrl-contest-calendar", "know-ure-rey-ssb", "know-not1mm-pypi", "know-morserunner", "know-ctu", "know-wwrof", "know-3830", "know-ncj", "know-arrl-10m", "know-arrl-dx", "know-cqwpx-rules", "know-arrl-iaru", "know-darc-wae", "know-ure-rey-ssb")
 ]

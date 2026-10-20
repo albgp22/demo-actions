@@ -98,13 +98,13 @@ Los *overlays* son una clasificación adicional para un Single Operator. Solo se
 
 - *ROOKIE*: operador con la *primera licencia obtenida hace menos de 3 años* antes de la fecha del concurso. Hay que indicar la *fecha de la primera licencia en el SOAPBOX* del log. Para el CQ WW SSB 2027 (30 de octubre de 2027) tu primera licencia tiene que ser posterior al 30 de octubre de 2024: si la obtienes en 2026, cumples en 2027 y en 2028. Cuenta la primera licencia (si tuviste una que caducó, ya no eres rookie). Los ganadores anteriores de rookie no optan a placa.
 - *YOUTH*: 25 años o menos; año de nacimiento en el SOAPBOX.
-- *CLASSIC*: una sola radio, sin asistencia, máximo 24 de las 48 horas, con descansos de 60 minutos o más. #pv cómo se computan exactamente las 24 horas.
+- *CLASSIC*: una sola radio, sin asistencia y «up to 24 of the 48 hours»: si operas más, solo cuentan las 24 primeras desde tu primer QSO. Un descanso son 60 minutos de reloj seguidos sin ningún QSO (uno a las 13:59 y el siguiente a las 14:59 no valen: son 59) @rules-cqww-2026 @rules-cqww-faq.
 
 == Qué cuenta como asistencia
 
 Las bases de 2026 hablan de *QSO finding assistance*: cualquier tecnología o fuente que te dé el indicativo o te identifique un multiplicador. Ejemplos de las bases: el DX cluster y las webs de *spots*, los decodificadores (de CW y cualquier otro que muestre indicativos), CW Skimmer y la Reverse Beacon Network, y los acuerdos con otras personas para que te avisen. Según la FAQ, en monooperador *tú y solo tú* localizas (sintonizas) e identificas (copias) cada indicativo del log.
 
-Sí puedes usar, sin dejar de ser no asistido, el *panorámico o la cascada* de la radio o del SDR, siempre que no muestre indicativos (lo dice la FAQ). El *Super Check Partial* del logger (capítulo @cap-herramientas) se usa habitualmente en no asistido porque no te dice quién está en el aire, solo qué indicativos existen; las bases no lo mencionan expresamente #pv.
+Sí puedes usar, sin dejar de ser no asistido, el *panorámico o la cascada* de la radio o del SDR, siempre que no muestre indicativos (lo dice la FAQ). El *Super Check Partial* del logger (capítulo @cap-herramientas) no lo mencionan ni las bases ni la FAQ. Desde 2015 cuenta como asistencia la tecnología que te da el indicativo o el multiplicador *de una señal* @rules-cqww-faq; el SCP no escucha la radio, solo completa lo que tecleas con una lista de indicativos activos, y se usa de forma habitual en no asistido. Si quieres certeza, pregunta al comité #pv.
 
 #error-tipico[Dejar abierta en el Mac una ventana de cluster o de una web de spots «solo para mirar». Si la usas para encontrar estaciones, eres asistido. Si quieres competir como no asistido, ciérrala.]
 
@@ -141,7 +141,7 @@ Sí puedes usar, sin dejar de ser no asistido, el *panorámico o la cascada* de 
   [Conducta antideportiva (apartado anterior)], [Reclasificación o descalificación; 5 días para recurrir.],
 )
 
-Las bases 2026 no mencionan una penalización específica por los QSO «únicos» (indicativos que no aparecen en ningún otro log), pero acumular QSO o multiplicadores no verificables es conducta antideportiva. #pv cómo trata el comité los únicos y si publica informes UBN.
+Los QSO «únicos» (indicativos que no aparecen en ningún otro log) no se eliminan por serlo, pero acumular QSO o multiplicadores no verificables es conducta antideportiva. Tras los resultados, cada participante recibe por correo su *informe de comprobación* (LCR) con sus NIL, busts y únicos, y se publican los de las estaciones con más puntos @hist-cqww-publiclcr.
 
-#fuentes("rules-cqww-2026", "rules-cqww-2026-changes", "rules-cqww-faq", "rules-cqww-logcheck", "rules-cqww-cabrillo", "rules-cqww-logging-time", "rules-cqww-results-2025-ssb", "rules-cqww-2025-changes", "own-cty-not1mm")
+#fuentes("rules-cqww-2026", "rules-cqww-2026-changes", "rules-cqww-faq", "rules-cqww-logcheck", "rules-cqww-cabrillo", "rules-cqww-logging-time", "hist-cqww-2025-ssb-results", "rules-cqww-2025-changes", "own-cty-not1mm")
 ]

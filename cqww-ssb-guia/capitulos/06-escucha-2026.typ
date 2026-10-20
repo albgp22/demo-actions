@@ -9,11 +9,25 @@ Del sábado 24 a las 02:00 (hora de Madrid) al lunes 26 a las 00:59, las bandas 
 
 == Qué receptores usar
 
-/ Receptores web cercanos (España, Portugal): te dan una idea de *lo que oirías desde casa* con una buena antena. Elige un KiwiSDR en la lista pública (#url("http://rx.kiwisdr.com")) o en el mapa (#url("http://map.kiwisdr.com")): ordena por SNR, prefiere los que describen antena exterior y comprueba que haya plaza libre (máximo 4 oyentes por receptor).
-/ Receptores lejanos: un KiwiSDR en la costa este de EE. UU., en el Caribe o Sudamérica, en Japón y en Sudáfrica o Australia. Sirven para *oír cómo llega Europa* a esos sitios y cuándo se abre cada trayecto. El WebSDR de la Universidad de Twente (Países Bajos, #url("http://websdr.ewi.utwente.nl:8901/") #pv) admite muchos oyentes a la vez y cubre toda la HF.
+/ Receptores web cercanos (España, Portugal): te dan una idea de *lo que oirías desde casa* con una buena antena. Elige un KiwiSDR en la lista pública (#url("http://rx.kiwisdr.com")) o en el mapa (#url("http://map.kiwisdr.com")): ordena por SNR, prefiere los que describen antena exterior y comprueba que haya plaza libre (normalmente 4 oyentes por receptor).
+/ Receptores lejanos: un KiwiSDR en la costa este de EE. UU., en el Caribe o Sudamérica, en Japón y en Sudáfrica o Australia. Sirven para *oír cómo llega Europa* a esos sitios y cuándo se abre cada trayecto. El WebSDR de la Universidad de Twente (Países Bajos, #url("http://websdr.ewi.utwente.nl:8901/"), también con versión para el móvil) admite muchos oyentes a la vez y cubre toda la HF @vere-twente-websdr.
 / Tu RTL-SDR V4: lo que *de verdad* se oye desde tu terraza, con tu ruido local. Es la referencia más útil para elegir la antena (apartado siguiente).
 
-#nota[No se ha podido verificar en esta guía ningún KiwiSDR concreto cerca de Madrid ni en las regiones lejanas (los directorios no eran accesibles). Elígelos tú en el mapa el viernes y apúntalos en la hoja del final del capítulo.]
+#figure(
+  caption: [Receptores vistos en los listados públicos el 20 de octubre de 2026 (`data/verif_equipo/receptores.csv`). Se encienden y apagan a diario: compruébalos el viernes y busca alternativas en el mapa. No apareció ninguno en Madrid ni en el Caribe; para Japón y Sudáfrica, búscalos en la lista.],
+  tabla(
+    columns: (auto, 1.25fr, auto, 1.6fr),
+    table.header([Receptor], [Dónde], [Para qué], [Dirección]),
+    [EA5RQ], [Llíria (Valencia), ≈ 278 km], [cerca], url("http://ea5rq.ddns.net:8075/"),
+    [EA5JGN], [Hondón de los Frailes (Alicante), ≈ 336 km], [cerca], url("http://ei2hh.proxy.kiwisdr.com:8073/"),
+    [EC2AQW], [Arano (Navarra), ≈ 344 km], [cerca], url("http://21959.proxy.kiwisdr.com:8073/"),
+    [AG1LE], [Lexington (Massachusetts, EE. UU.)], [W1, zona 5], url("http://22729.proxy.kiwisdr.com"),
+    [NJ2US], [Cape May (Nueva Jersey, EE. UU.)], [W2, zona 5], url("http://21610.proxy.kiwisdr.com:8073/"),
+    [LU4AA], [Radio Club Argentino (Buenos Aires)], [LU, zona 13], url("http://lu4aa.proxy.kiwisdr.com:8073/"),
+    [CX8BIT], [Montevideo (Uruguay)], [CX, zona 13], url("http://cx8bit.proxy.kiwisdr.com:8073/"),
+    [AREG], [Kapunda (Australia Meridional)], [VK, zona 30], url("http://kiwisdr.areg.org.au:8073/"),
+  ),
+) <tab-receptores>
 
 == Recibir HF con tu RTL-SDR Blog V4
 
@@ -73,10 +87,10 @@ Basado en el plan de bandas del capítulo @cap-donde. Recuerda que el domingo a 
 
 == Qué observar y qué anotar para 2027
 
-#tabla(
+#rellenar(
   columns: (auto, auto, 1fr, 1fr, 1fr),
   table.header([UTC], [Banda], [Qué oigo (continentes, zonas)], [Señal/ruido en mi terraza], [Notas]),
-  ..range(0, 10).map(_ => ([~], [], [], [], [])).flatten(),
+  ..range(0, 10).map(_ => ([#v(0.9em)], [#h(2.2em)], [], [], [])).flatten(),
 )
 
 Al final del fin de semana, responde en una hoja:
@@ -88,5 +102,5 @@ Al final del fin de semana, responde en una hoja:
 
 #truco[Cuando cqww.com publique los logs de 2026, descarga los de las estaciones EA de baja potencia y analízalos con `scripts/hist_analyze_logs.py` (capítulo @cap-historico): verás su ritmo hora a hora frente a lo que tú oíste.]
 
-#fuentes("equip-osmocom-tuner", "equip-rtlsdrblog-readme", "equip-sdrpp-ci", "equip-sdrpp-rtlsrc", "equip-owrx-defaults", "equip-sdrpp-args", "soft-kiwisdr-readme", "rules-cqww-2026")
+#fuentes("vere-kiwisdr-public", "vere-rxtx-map-kiwi", "vere-receiverbook-kiwi", "vere-twente-websdr", "equip-osmocom-tuner", "equip-rtlsdrblog-readme", "equip-sdrpp-ci", "equip-sdrpp-rtlsrc", "equip-owrx-defaults", "equip-sdrpp-args", "soft-kiwisdr-readme", "rules-cqww-2026")
 ]

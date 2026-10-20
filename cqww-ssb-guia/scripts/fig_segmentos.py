@@ -71,7 +71,8 @@ def uso_concurso(uso: str, principal: str | None) -> str | None:
     u = uso.lower()
     if "concursos preferente" in u and "ssb" in u and principal == "ssb":
         return "pref"
-    if any(k in u for k in ("dxpedicion", "evitar en concursos", "fuera del segmento preferente",
+    # (14190–14200 es «prioridad DXpediciones»: el plan no lo excluye de los concursos; solo se rotula)
+    if any(k in u for k in ("evitar en concursos", "fuera del segmento preferente",
                             "fuera de segmentos preferentes", "evitar ssb de concurso")):
         return "evitar"
     return None
@@ -386,9 +387,10 @@ def main() -> None:
 
     pendiente = [r for r in iaru if r["banda"] in BANDAS and (
         "POR VERIFICAR" in r.get("fuente", "")
-        or (r.get("estado") or "confirmado").strip().lower() not in ("confirmado", "verificado", "si", "sí"))]
+        or (r.get("estado") or "confirmado").strip().lower() not in ("confirmado", "corregido", "verificado", "si", "sí"))]
     if pendiente:
-        fig.text(0.0, 0.004, "Segmentos IARU R1 pendientes de verificar (data/legal/iaru_r1_ssb.csv).",
+        # «corregido» = valor ya tomado del plan; solo quedan pendientes tramos fuera de los segmentos de fonía de la guía
+        fig.text(0.0, 0.004, f"Plan IARU R1 (16-10-2020, rev. 2021); {len(pendiente)} tramos menores sin confirmar.",
                  fontsize=6.3, color=MUTED, ha="left", va="bottom")
     fig.text(1 - RIGHT / W, 0.004, "Frecuencias en kHz; cada banda con su propia escala.", fontsize=6.3, color=MUTED,
              ha="right", va="bottom")

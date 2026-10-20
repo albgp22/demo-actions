@@ -15,17 +15,17 @@
 
 == Segmentos de SSB por banda <sec-segmentos>
 
-Dentro de lo que permite la licencia española (capítulo @cap-legal), el plan de bandas de la IARU Región 1, de uso obligado «como norma general», reserva estos tramos a la fonía. Los valores del plan IARU están #pv en el documento vigente de la IARU R1; los límites españoles sí están verificados en el BOE.
+Dentro de lo que permite la licencia española (capítulo @cap-legal), el plan de bandas de la IARU Región 1, de uso obligado «como norma general», reserva estos tramos a la fonía. Es el plan vigente, del 16 de octubre de 2020 y revisado en 2021 @verl-iaru-r1-hf-bandplan; como su tabla no se pudo leer, los segmentos se contrastaron con su texto de 2016 y con el historial de cambios, que no toca la fonía @verl-iaru-r1-hf-managers-handbook-v9. Los límites españoles están verificados en el BOE.
 
 #figure(
   caption: [Dónde operar SSB en el CQ WW desde España. Columna IARU R1: segmentos «preferentes para concursos» en 80, 40 y 20 m; en 160, 15 y 10 m, el tramo de fonía.],
   tabla(
     columns: (auto, 1.25fr, 1fr, 2.3fr),
-    table.header([Banda], [Límites en España (kHz)], [SSB según IARU R1 (kHz) #pv], [Ojo]),
-    [160 m (LSB)], [1810–1850 (1850–2000 solo con resolución temporal #pv)], [1843–2000], [En España la fonía permanente se reduce a 1843–1850 kHz. Nunca por debajo de 1810 (bases).],
-    [80 m (LSB)], [3500–3800], [3600–3650 y 3700–3800], [Deja libre 3760 (emergencias en R1). Evita 3650–3700. Norteamérica transmite también por encima de 3800: escúchalos ahí y llámalos desde tu segmento.],
+    table.header([Banda], [Límites en España (kHz)], [SSB según IARU R1 (kHz)], [Ojo]),
+    [160 m (LSB)], [1810–1850 (1850–2000 solo con resolución temporal)], [1843–2000], [Fonía permanente en España: dial de 1843 (el mínimo del plan para LSB) a 1850 kHz. Nunca por debajo de 1810 (bases).],
+    [80 m (LSB)], [3500–3800], [3600–3650 y 3700–3800], [Deja libre 3760 (emergencias en R1). Evita 3650–3700. 3775–3800 tiene prioridad para el DX intercontinental: para Europa, mejor 3700–3775. Norteamérica transmite también por encima de 3800: escúchalos ahí y llámalos desde tu segmento.],
     [40 m (LSB)], [7000–7200], [7060–7100 y 7130–7200], [*Nunca por encima de 7200* (bases y licencia). Deja libre 7110 (emergencias). Es habitual que los norteamericanos transmitan en 7200–7300 y escuchen por debajo de 7200.],
-    [20 m (USB)], [14000–14350], [14125–14300], [Evita 14190–14200 (prioridad DXpediciones) y 14300–14350 (14300: emergencias).],
+    [20 m (USB)], [14000–14350], [14125–14300], [14190–14200 tiene prioridad para DXpediciones (dejarlo libre es cortesía). 14300–14350 queda fuera del segmento preferente (14300: emergencias). El dial, como mucho, en 14347.],
     [15 m (USB)], [21000–21450], [21151–21450], [Deja libre 21360 (emergencias).],
     [10 m (USB)], [28000–29700], [28320–29000], [No uses la zona de balizas (28190–28225) ni la de FM y satélites (> 29000).],
   ),
@@ -34,14 +34,14 @@ Dentro de lo que permite la licencia española (capítulo @cap-legal), el plan d
 #figure(
   placement: auto,
   image("../assets/segmentos_bandas.pdf", width: 100%),
-  caption: [Las seis bandas del CQ WW, cada una a su escala: usos del plan IARU Región 1, segmentos preferentes de concursos, centros de actividad que hay que dejar libres y la fonía que puedes usar desde España. Atribución: Orden IET/1311/2013, anexo I. Usos: plan de bandas HF de la IARU R1 #pv. Elaboración propia (`scripts/fig_segmentos.py`).],
+  caption: [Las seis bandas del CQ WW, cada una a su escala: usos del plan IARU Región 1, segmentos preferentes de concursos, centros de actividad que hay que dejar libres y la fonía que puedes usar desde España. Atribución: Orden IET/1311/2013, anexo I. Usos: plan de bandas HF de la IARU R1 de 2020, revisado en 2021 @verl-iaru-r1-hf-bandplan. Elaboración propia (`scripts/fig_segmentos.py`).],
 ) <fig-segmentos>
 
 #importante[Por debajo de 10 MHz se usa *LSB* y por encima *USB*. Si oyes «patos», cambia de banda lateral. En LSB tu señal ocupa los 3 kHz *por debajo* de la frecuencia del dial: no te acerques a los bordes (@fig-banda-lateral).]
 
 #figure(
   image("../assets/banda_lateral.pdf", width: 100%),
-  caption: [El dial marca la portadora suprimida y la voz ocupa de 0,3 a 2,7 kHz por debajo (LSB) o por encima (USB). Junto a un borde, toda la señal tiene que quedar dentro: en 40 m, dial hasta 7200,0 kHz; en la fonía de 160 m en España, entre ≈ 1846 y 1850,0; en 20 m, hasta ≈ 14 347. Elaboración propia (`scripts/fig_banda_lateral.py`).],
+  caption: [El dial marca la portadora suprimida y la voz ocupa de 0,3 a 2,7 kHz por debajo (LSB) o por encima (USB). Junto a un borde, toda la señal tiene que quedar dentro: en 40 m, dial hasta 7200,0 kHz; en la fonía de 160 m en España, entre 1843,0 (el dial LSB mínimo del plan IARU) y 1850,0; en 20 m, hasta ≈ 14 347 (el plan pide quedarse 3 kHz por debajo del borde). Elaboración propia (`scripts/fig_banda_lateral.py`).],
 ) <fig-banda-lateral>
 
 == Plan horario: qué banda y hacia dónde
@@ -87,5 +87,5 @@ El flujo solar cambia mucho las bandas altas. Con F10.7 = 100, la ventana de 10 
 + *En las horas de la línea gris* (orto y ocaso en Madrid), pasa por 40 y 80 m aunque te vaya bien arriba.
 + *De noche*, 40 m es la banda de los multiplicadores; asómate a 80 y 160 m cada hora.
 
-#fuentes("legal-orden-iet-1311-2013", "legal-iaru-r1-hf-bandplan", "rules-cqww-2026", "own-astral")
+#fuentes("legal-orden-iet-1311-2013", "verl-iaru-r1-hf-bandplan", "verl-iaru-r1-hf-managers-handbook-v9", "rules-cqww-2026", "own-astral")
 ]

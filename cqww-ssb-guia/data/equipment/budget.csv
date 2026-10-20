@@ -1,22 +1,24 @@
 categoria,articulo,opcion,precio_eur,tienda,fecha_precio,fuente_url,verificado,iva_incluido,notas
-Transceptor,"Yaesu FT-710 Field (100 W, ATU interno; sin altavoz SP-40)",minima,1099.00,La Tienda del Radioaficionado,2026-10-20,https://www.tutiendaderadio.com/es/home/5711-yaesu-ft-710-field-emisora-transceptor-hf-y-50-mhz.html,si,si (21 %),Precio visto en resultado de búsqueda; fecha de la ficha desconocida; confirmar stock
-Alimentación,"Fuente 13,8 V CC de al menos 25 A continuos (el equipo pide 21 A en TX)",minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Antena,Media onda alimentada en punta (EFHW) multibanda 80/40-10 m apta para 100 W SSB,minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado); elegir potencia nominal con margen para ciclo de trabajo de concurso
-Cable coaxial,15-20 m de coaxial de 50 ohm tipo RG-213 con conectores PL-259,minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Choke de modo común,Choke de ferrita mezcla 31 en el coaxial (punto de alimentación o entrada al cuarto),minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Memorias de voz,Tarjeta SD para las memorias de voz del equipo,minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Micrófono,Micrófono de mano incluido con el equipo (confirmar qué incluye la versión Field),minima,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Escucha SDR,RTL-SDR Blog V4 + antena de hilo para recepción,minima,,,,,no,,"POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado); si ya se tiene, coste 0"
-Transceptor,"Icom IC-7300MK2 (100 W, ATU interno, USB-C, LAN, HDMI)",recomendada,1549.00,WiMo,2026-10-20,https://www.wimo.com/es/icom-ic-7300mk2-kw-50-70-mhz-transceiver,si,si (IVA alemán 19 %; envío aparte),"Precio verificado por el usuario el 2026-10-20; si WiMo aplica IVA español (21 %) sería ~1.575 € (POR VERIFICAR). Alternativa: Radiomanía 1.549,90 € con IVA y envío incluidos"
-Alimentación,"Fuente 13,8 V CC de 30 A de bajo ruido de RF",recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Antena,EFHW multibanda para 100 W SSB + opción vertical corta con radiales y acoplador remoto para 160/80 m,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Cable coaxial,15-20 m de coaxial de baja pérdida (tipo Ecoflex 10 o Aircell 7) con conectores,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Choke de modo común,Dos chokes de ferrita mezcla 31 (punto de alimentación y entrada al cuarto),recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Auriculares,Auriculares cerrados con micrófono de pértiga + adaptador al conector de micrófono del equipo,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-PTT,Pedal de PTT,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Medida,Medidor de ROE/vatímetro de paso para HF,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado); los equipos muestran ROE en pantalla (comprobar en manual)
-Medida,Carga ficticia de 50 ohm para 100 W,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Filtrado,Filtro paso bajo HF para 100 W (ayuda frente a interferencias en TV/radio de vecinos),recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Memorias de voz,Tarjeta SD para las memorias de voz del equipo,recomendada,,,,,no,,POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado)
-Escucha SDR,RTL-SDR Blog V4 + antena de hilo para recepción (servidor en la Raspberry Pi 5),recomendada,,,,,no,,"POR VERIFICAR: sin precio confirmado en esta sesión (cupo de búsquedas agotado); si ya se tiene, coste 0"
-Control remoto,"Icom RS-BA1 Version 2 (opcional; software de control remoto, plataforma POR VERIFICAR)",recomendada,121.00,tienda española no identificada en el resultado,2026-10-20,,no,si,POR VERIFICAR: el resultado de búsqueda no identifica la tienda; en Mac hay alternativas (SDR Control; wfview POR VERIFICAR)
+Transceptor,"Yaesu FT-710 Field (100 W, acoplador interno; sin altavoz SP-40)",minima,1099.00,La Tienda del Radioaficionado,2026-10-20,https://www.tutiendaderadio.com/es/home/5711-yaesu-ft-710-field-emisora-transceptor-hf-y-50-mhz.html,si,si (21 %),confirmar stock
+Antena,"EFHW Dxpatrol END-FEED 80–10 m (40 m de hilo, 1000 W SSB; sin 160 m)",minima,119.79,Astro Radio,2026-10-20,https://www.astroradio.com/p/antena-end-feed-10m-a-80m/,si,no consta (tienda española),si caben 40 m de hilo
+Cable coaxial,"20 m de RG-213 (3,09 €/m)",minima,61.80,Proyecto 4,2026-10-20,https://www.proyecto4.com/cables-coaxiales/404-rg-213.html,si,si,
+Choke de modo común,"Balun 1:1 ASP AS-111500 (1,8–30 MHz, 1,5 kW PEP) en el punto de alimentación",minima,54.45,Proyecto 4,2026-10-20,https://www.proyecto4.com/balun/3999-balun-asp-11-as-111500.html,si,si,confirmar que es de corriente
+Alimentación,"Telecom RPS-1230-SWM, conmutada 13,8 V, 30 A",minima,68.40,Ondamania,2026-10-20,https://www.ondamania.com/b2c/producto/02flrps1230swm/1/telecom-rps-1230-swm-fuente-de-alimentacion-conmutada-con-13-8-v-y-30-amp-max-,si,si,comprueba su ruido en HF
+Memorias de voz,Tarjeta SanDisk Ultra SDHC 32 GB,minima,23.41,Fnac,2026-10-20,https://www.fnac.es/Tarjeta-SDHC-SanDisk-Ultra-32-GB-Tarjeta-de-memoria-Tarjeta-SD/a1170703,si,si,
+Micrófono,Micrófono de mano del equipo (confirmar qué incluye la versión Field),minima,,,,,no,,POR VERIFICAR
+Escucha SDR,RTL-SDR Blog V4 + hilo de recepción (ya lo tienes),minima,0,—,2026-10-20,,si,,
+Transceptor,"Icom IC-7300MK2 (100 W, acoplador interno, USB-C, LAN, HDMI)",recomendada,1549.00,WiMo,2026-10-20,https://www.wimo.com/es/icom-ic-7300mk2-kw-50-70-mhz-transceiver,si,si (IVA alemán 19 %; envío aparte),precio que comprobaste; ≈ 1.575 € con IVA español
+Acoplador remoto,"Icom AH-730 (1,8–54 MHz con 7 m de hilo o más; 150 W PEP, 100 W continuos)",recomendada,498.00,WiMo,2026-10-20,https://www.wimo.com/en/icom-ah-730-automatic-tuner-waterproof-outdoor,si,si (IVA alemán),con cable de control de 10 m
+Soporte,Caña de fibra Spiderbeam 12 m HD con abrazaderas y cinturón de vientos (MF12-SET2),recomendada,118.00,Spiderbeam,2026-10-20,https://shop.spiderbeam.com/en/shop/package-2-spiderbeam-12m-fiberglass-pole-hd-clamps-guy-belt-1767,si,si (IVA alemán),"o Cgantenna 12 m: 70,18 €, Astro Radio"
+Cable coaxial,"20 m de Aircell 7 (4,36 €/m)",recomendada,87.20,Proyecto 4,2026-10-20,https://www.proyecto4.com/cables-coaxiales/779-aircell-7.html,si,si,
+Choke de modo común,Dos baluns 1:1 ASP AS-111500 (base de la antena y entrada al cuarto),recomendada,108.90,Proyecto 4,2026-10-20,https://www.proyecto4.com/balun/3999-balun-asp-11-as-111500.html,si,si,
+Alimentación,"Daiwa SS-330W, conmutada 30 A continuos",recomendada,179.00,Radiomanía,2026-10-20,https://radiomania.net/SS330W,si,si,agotada el 20-oct; alternativa: RPS-1230-SWM
+Auriculares,Cascos Heil Pro Set Elite IC (versión para Icom),recomendada,216.59,Astro Radio,2026-10-20,https://www.astroradio.com/en/p/proset_elite_ic/,si,si,
+Adaptador,Heil AD-1-I (cascos Heil al conector Icom de 8 pines),recomendada,29.02,Proyecto 4,2026-10-20,https://www.proyecto4.com/accesorios-c-113/marca-heil_sound,si,si,
+PTT,Pedal Heil FS-3,recomendada,36.30,Astro Radio,2026-10-20,https://www.astroradio.com/en/p/fs3_pedal_ptt_heil/,si,si,
+Medida,"Medidor de ROE y potencia Diamond SX-200 (1,8–200 MHz, 200 W)",recomendada,83.95,Ondamania,2026-10-20,https://www.ondamania.com/b2c/producto/diamondsx-200/1/diamond-sx-200-medidor-de-roe-y-potencia-original-japon,si,si,
+Memorias de voz,Tarjeta SanDisk Ultra SDHC 32 GB,recomendada,23.41,Fnac,2026-10-20,https://www.fnac.es/Tarjeta-SDHC-SanDisk-Ultra-32-GB-Tarjeta-de-memoria-Tarjeta-SD/a1170703,si,si,
+Escucha SDR,RTL-SDR Blog V4 (ya lo tienes; servidor en la Raspberry Pi 5),recomendada,0,—,2026-10-20,,si,,
+Varios,"Hilo radiante, radiales, conectores PL-259 y envíos",recomendada,,,,,no,,POR VERIFICAR
+Medida,"Carga ficticia D-Original AV-DL-200-M (35 W continuos, 200 W de pico)",opcional,66.40,Ondamania,2026-10-20,https://www.ondamania.com/b2c/producto/02flavdl200m/1/d-original-av-dl-200-m-carga-ficticia-o-artificial-con-conector-pl-hasta-1-ghz,si,si,"a 100 W, solo pasadas cortas"
+Filtrado,"Filtro paso bajo LPF30-2000 (30 MHz, 2 kW)",opcional,275.00,WiMo,2026-10-20,https://www.wimo.com/en/lpf30-2000,si,si (IVA alemán),solo si molestas a los vecinos
