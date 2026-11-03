@@ -176,7 +176,7 @@ En el *ALB* está siempre activado a nivel del balanceador (puedes desactivarlo 
 / Internet-facing o interno: el primero tiene IPs públicas y vive en subredes públicas; el _internal_ solo tiene IPs privadas. Patrón típico: ALB público → capa web → ALB interno → capa de aplicación.
 / Access logs: el ALB (y el NLB con listeners TLS) puede dejar en S3, cada 5 minutos, el detalle de cada petición: IP del cliente, latencias, ruta, códigos. Desactivados por defecto; analízalos con Athena.
 
-#practica[Vigila en CloudWatch `TargetResponseTime`, `HTTPCode_Target_5XX_Count` (errores de tu aplicación), `HTTPCode_ELB_5XX_Count` (errores del propio balanceador, a menudo sin targets sanos) y `UnHealthyHostCount`. Lo veremos en el capítulo de Observabilidad.]
+#practica[Vigila en CloudWatch `TargetResponseTime`, `HTTPCode_Target_5XX_Count` (errores de tu aplicación), `HTTPCode_ELB_5XX_Count` (del balanceador) y `UnHealthyHostCount` (capítulo de Observabilidad).]
 
 == Auto Scaling Groups
 
@@ -217,11 +217,11 @@ Un *Auto Scaling Group (ASG)* mantiene una flota de instancias EC2 del tamaño a
 === Políticas de escalado
 
 #tabla(("Política", "Cómo funciona", "Cuándo usarla"), columnas: (0.95fr, 2.6fr, 1.55fr), tamano: 8pt,
-  [*Target tracking*], [Fijas una métrica y un objetivo (CPU media del 50 %, 1000 peticiones por target...) y el ASG añade o quita instancias como un termostato; crea y gestiona las alarmas por ti], [La opción por defecto],
-  [*Step scaling*], [Alarmas de CloudWatch con escalones: +1 instancia si la CPU supera el 60 %, +3 si supera el 80 %], [Respuesta proporcional a la magnitud del pico],
-  [*Simple scaling*], [Un único ajuste por alarma; después espera a que termine el _cooldown_], [Heredada: mejor las anteriores],
-  [*Scheduled*], [Cambia mínimo, deseada y máximo a una hora concreta, con expresión _cron_], [Patrones conocidos: horario laboral, campañas],
-  [*Predictive*], [Aprende del histórico con _machine learning_ y lanza capacidad por adelantado], [Cargas cíclicas con arranques lentos],
+  [*Target tracking*], [Mantiene una métrica en un objetivo (CPU media del 50 %, peticiones por target...) como un termostato; crea las alarmas por ti], [La opción por defecto],
+  [*Step scaling*], [Alarmas con escalones: +1 instancia si la CPU pasa del 60 %, +3 si pasa del 80 %], [Respuesta proporcional al pico],
+  [*Simple scaling*], [Un ajuste por alarma y espera al _cooldown_], [Heredada],
+  [*Scheduled*], [Cambia mínimo, deseada y máximo a una hora (_cron_)], [Horario laboral, campañas],
+  [*Predictive*], [Aprende del histórico con _machine learning_ y escala por adelantado], [Cargas cíclicas, arranques lentos],
 )
 
 ```bash
@@ -241,7 +241,7 @@ Para que el grupo no «oscile», el *cooldown* (300 s por defecto) hace esperar 
 
 === Health checks y ciclo de vida
 
-Por defecto, el ASG solo usa los *health checks de EC2* (la instancia está encendida y pasa los _status checks_). Si el grupo está detrás de un balanceador, activa también los *health checks de ELB*: así se sustituyen las instancias cuyo servidor web no responde aunque la máquina siga viva. El periodo de gracia (_health check grace period_) da tiempo a que una instancia nueva arranque antes de evaluarla.
+Por defecto, el ASG solo usa los *health checks de EC2* (la máquina funciona y pasa los _status checks_). Detrás de un balanceador, activa también los *health checks de ELB* para sustituir instancias cuyo servidor web no responde aunque la máquina siga viva. El _health check grace period_ da tiempo a que una instancia nueva arranque antes de evaluarla.
 
 #diagrama(pie: [Los _lifecycle hooks_ pausan una instancia al entrar o salir del grupo para que ejecutes acciones propias (por defecto, hasta 1 hora) antes de continuar.])[
   #grid(columns: 9, column-gutter: 3pt, row-gutter: 5pt, align: center + horizon,
@@ -291,8 +291,7 @@ Las dos primeras instancias son On-Demand; por encima, una de cada cuatro es On-
   - Listener → reglas → target groups → targets (instancias, IPs, Lambda o un ALB detrás de un NLB).
   - Health checks superficiales; si todos fallan, el ALB hace _fail open_.
   - TLS con certificados de ACM (regionales; CloudFront usa `us-east-1`) y SNI para varios dominios en un listener.
-  - Cross-zone siempre activo y gratuito en ALB; opcional y con coste entre AZ en NLB y GWLB.
-  - Deregistration delay (300 s por defecto), slow start, stickiness y `X-Forwarded-For` para conocer la IP del cliente.
+  - Cross-zone siempre activo en ALB; opcional y con coste entre AZ en NLB y GWLB. Deregistration delay (300 s por defecto), slow start, stickiness y `X-Forwarded-For`.
   - Un ASG mantiene la capacidad deseada entre un mínimo y un máximo, en varias AZ, a partir de una launch template; target tracking es la política por defecto.
   - Health checks de ELB en el ASG, lifecycle hooks, instance refresh y warm pools para operar flotas; mixed instances para combinar On-Demand y Spot.
 ]

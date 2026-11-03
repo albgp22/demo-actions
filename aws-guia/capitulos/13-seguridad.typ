@@ -21,9 +21,6 @@
   place(center + bottom, rect(width: 8pt, height: 5.4pt, radius: 1.2pt, fill: color))
 })
 
-// Bloque no divisible (para listas de pasos y cajas cortas que no deben partirse)
-#let nb(body) = block(breakable: false, width: 100%, above: 1.1em, below: 1.1em, body)
-
 #capitulo("Seguridad: cifrado con KMS, secretos y protección", color: col.seguridad,
   subtitulo: [Cifra tus datos con claves que controlas, saca los secretos del código y levanta defensas en cada capa: del borde de la red a la respuesta ante incidentes.],
   objetivos: (
@@ -42,14 +39,14 @@ Imagina que alguien consigue una copia de tus datos: un snapshot compartido por 
 
 La primera parte del capítulo explica el cifrado y *AWS KMS* desde cero; la segunda, secretos, certificados, protección perimetral, detección y respuesta a incidentes. IAM, redes y observabilidad tienen sus propios capítulos: aquí solo los citamos.
 
-#nb(tarjetas(
+#tarjetas(
   tarjeta("Cifrado en reposo", subtitulo: "at rest: datos almacenados")[
     Volúmenes EBS, objetos de S3, bases de datos, snapshots, copias y logs. En AWS suele bastar un ajuste (o viene activado), con claves gestionadas por *KMS*: SSE-KMS en S3, cifrado de EBS y de RDS…
   ],
   tarjeta("Cifrado en tránsito", color: col.redes, subtitulo: "in transit: datos que viajan por la red")[
     Navegador → balanceador, aplicación → base de datos… Se consigue con *TLS* (HTTPS) y certificados de *ACM*. Puedes exigirlo: `aws:SecureTransport` en una bucket policy, `rds.force_ssl` en PostgreSQL.
   ],
-))
+)
 
 === Simétrico y asimétrico
 
@@ -107,7 +104,7 @@ La primera clasificación responde a quién crea y controla la clave; DynamoDB, 
 
 El *uso* de una clave (cifrar, firmar, generar MAC…) se fija al crearla y no se puede cambiar.
 
-#nb(tarjetas(columnas: 3,
+#tarjetas(columnas: 3,
   tarjeta("Simétricas", subtitulo: "la opción por defecto")[
     AES-256-GCM (`SYMMETRIC_DEFAULT`). La usan *todos* los servicios integrados; admite contexto de cifrado, rotación automática, material importado y multi-región.
   ],
@@ -117,7 +114,7 @@ El *uso* de una clave (cifrar, firmar, generar MAC…) se fija al crearla y no s
   tarjeta("HMAC", color: col.iam, subtitulo: "integridad y autenticidad")[
     Genera y verifica códigos HMAC (`GenerateMac`, `VerifyMac`) sin que la clave salga de KMS: prueba que un mensaje o un token no se ha alterado.
   ],
-))
+)
 
 == Quién puede usar una clave: key policies, IAM y grants
 
@@ -153,12 +150,12 @@ Si creas una clave sin indicar política, KMS le asigna la *política por defect
 }
 ```
 
-#nb(pasos(
+#pasos(
   [*Delegar en IAM.* El principal `…:root` no es el usuario raíz, sino la *cuenta entera*: «la cuenta decide, con IAM, quién usa esta clave». Sin esta sentencia, las políticas IAM no tienen efecto sobre la clave. Aquí `"Resource": "*"` significa «esta clave».],
   [*Administradores.* `AdminClaves` gestiona la clave (política, activación, borrado), pero no puede cifrar ni descifrar: *separación de funciones*.],
   [*Uso.* `AppPagos` genera claves de datos y descifra, pero solo a través de S3 en eu-west-1 (`kms:ViaService`), no con llamadas directas a KMS.],
   [*Otra cuenta.* La cuenta 444455556666 puede descifrar… si, además, su administrador lo concede con IAM, como verás enseguida.],
-))
+)
 
 #cuidado[Una key policy que deja fuera a todo el mundo (sin la sentencia de la cuenta ni administradores) vuelve la clave *inmanejable*, y solo AWS Support podrá ayudarte. KMS rechaza esas políticas salvo que fuerces `BypassPolicyLockoutSafetyCheck`. No lo hagas.]
 
@@ -212,14 +209,14 @@ Si KMS nunca deja salir sus claves, ¿cómo cifra S3 un objeto de 5 GB? No envi�
 
 #analogia[Cierras tus documentos en una caja con una llave cualquiera (la clave de datos), metes la llave en un sobre lacrado que solo el banco sabe abrir (KMS) y pegas el sobre a la caja. Quien robe la caja se lleva el sobre, pero sin el banco no lo abre. Y el banco nunca ve tus documentos: solo abre sobres.]
 
-#nb(pasos(
+#pasos(
   [*Pedir una clave de datos:* la aplicación (o S3, EBS…) llama a `GenerateDataKey` con la clave KMS, que genera una clave de datos aleatoria, normalmente AES-256.],
   [*Recibir dos copias:* la clave de datos *en claro* y otra *cifrada* con la clave KMS, que no sale del HSM.],
   [*Cifrar en local* los datos con la clave en claro (AES-GCM, rapidísimo), sean 4 KB o 40 GB.],
   [*Descartar la clave en claro* de la memoria en cuanto termina. Nunca se escribe en disco.],
   [*Guardar juntas* la clave cifrada y los datos cifrados (en los metadatos del objeto, en la cabecera del fichero…). La clave cifrada no es secreta: sin KMS no sirve de nada.],
   [*Para leer*, enviar la clave cifrada a `Decrypt`. Si hay permiso, KMS devuelve la clave en claro; se descifran los datos y se vuelve a descartar.],
-))
+)
 
 #diagrama(pie: [Cifrado envolvente. La clave KMS no sale de KMS: lo que viaja y se guarda junto a los datos es la clave de datos cifrada.])[
   #let lbl(t, al) = box(width: 2.5cm, align(al, text(6.6pt, fill: tinta, t)))
@@ -271,10 +268,10 @@ Rotar es generar material criptográfico nuevo. Las claves *AWS managed* rotan s
 
 *Deshabilitar o borrar* (las AWS managed y AWS owned no se pueden borrar):
 
-#nb(tarjetas(
+#tarjetas(
   tarjeta("Deshabilitar", color: col.balanceo, subtitulo: "reversible")[La clave deja de poder usarse al instante (todo `Decrypt` falla) y vuelve a funcionar al habilitarla. Úsalo para comprobar si algo depende aún de ella, con una alarma sobre los intentos de uso que registra CloudTrail.],
   tarjeta("Programar el borrado", color: col.iam, subtitulo: "irreversible al acabar la espera")[`ScheduleKeyDeletion` con una espera de *7 a 30 días* (30 por defecto), durante la que puedes cancelar. Después, la clave se destruye y lo cifrado con ella es *irrecuperable*.],
-))
+)
 
 === Material importado, custom key stores y cuotas
 
@@ -322,10 +319,10 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
 
 *EBS y RDS.* Con el *cifrado por defecto de EBS* activado en la región, todo volumen nuevo y toda copia de snapshot se cifran sin que nadie tenga que acordarse; un volumen existente se cifra creando otro desde su snapshot. En RDS, el cifrado se decide al crear la instancia y *no se activa en caliente* (capítulo de Bases de datos):
 
-#nb(pasos(
+#pasos(
   [Crea un snapshot manual de la instancia sin cifrar y *cópialo activando el cifrado* con la clave KMS elegida.],
   [*Restaura* una instancia nueva desde la copia cifrada y apunta la aplicación a su endpoint (si la parada es inaceptable, replica antes los datos, por ejemplo con AWS DMS).],
-))
+)
 
 == KMS frente a CloudHSM, cifrado en cliente y costes
 
@@ -342,10 +339,10 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
 
 *Cifrado del lado del cliente.* Si quieres que AWS solo vea texto cifrado, cifra antes de enviar. El *AWS Encryption SDK* (Java, Python, JavaScript, .NET, C, CLI…) implementa el cifrado envolvente con buenas prácticas: claves de datos de KMS, la clave cifrada junto a los datos en un formato portable, varias claves de envoltura y caché de claves de datos. Hay además clientes específicos para S3 y para bases de datos (AWS Database Encryption SDK).
 
-#nb(coste[Importes orientativos, que varían por región:
+#coste[Importes orientativos, que varían por región:
 - *Customer managed:* del orden de un dólar al mes por clave, prorrateado por horas; las primeras rotaciones lo incrementan, con un tope. Cada réplica multi-región cuenta como clave.
 - *Peticiones:* del orden de céntimos por cada 10 000 simétricas (las asimétricas, más), con capa gratuita mensual; también las de claves AWS managed, que no tienen cuota mensual.
-- La factura grande suele venir de las peticiones: un bucket con SSE-KMS y millones de lecturas sin Bucket Keys es el ejemplo clásico.])
+- La factura grande suele venir de las peticiones: un bucket con SSE-KMS y millones de lecturas sin Bucket Keys es el ejemplo clásico.]
 
 === KMS desde la línea de comandos
 
@@ -407,18 +404,18 @@ aws secretsmanager rotate-secret --secret-id prod/pagos/db \
 
 *AWS Certificate Manager (ACM)* emite, guarda y renueva certificados TLS para tus dominios. Los públicos son gratuitos con los servicios integrados: ACM los instala, protege la clave privada y los renueva antes de que caduquen.
 
-#nb(tarjetas(columnas: 3,
+#tarjetas(columnas: 3,
   tarjeta("Públicos", subtitulo: "confiables para los navegadores")[Emitidos por la CA de Amazon tras validar que controlas el dominio. Gratis con los servicios integrados; renovación automática.],
   tarjeta("Privados", color: col.datos, subtitulo: "con AWS Private CA")[Para servicios internos, mTLS o dispositivos, emitidos por tu propia CA privada (de pago). Los navegadores no confían en ellos.],
   tarjeta("Importados", color: col.neutro, subtitulo: "de otra CA")[Los subes a ACM para usarlos en servicios integrados. *ACM no los renueva*: avisa antes de que caduquen y tú los reimportas.],
-))
+)
 
 / Validación por DNS: añades a tu zona un CNAME que te da ACM (con Route 53, en un clic). Mientras exista, la renovación es automática y sin intervención. Es la opción recomendada.
 / Validación por email: los contactos del dominio (`admin@`, `webmaster@`…) aprueban la solicitud por correo, y las renovaciones pueden volver a requerirlo.
 
 ACM se integra con ELB (ALB y NLB), CloudFront, API Gateway, App Runner y otros servicios. Los certificados son *regionales*: el de un ALB debe estar en la región del ALB.
 
-#nb(cuidado[*CloudFront solo acepta certificados de ACM de us-east-1* (Norte de Virginia), porque es un servicio global, aunque tu origen esté en otra región. Lo mismo ocurre con las API _edge-optimized_ de API Gateway. Si no ves tu certificado en la distribución, casi seguro lo creaste en otra región.])
+#cuidado[*CloudFront solo acepta certificados de ACM de us-east-1* (Norte de Virginia), porque es un servicio global, aunque tu origen esté en otra región. Lo mismo ocurre con las API _edge-optimized_ de API Gateway. Si no ves tu certificado en la distribución, casi seguro lo creaste en otra región.]
 
 *¿Y en mi propia EC2?* Un certificado público estándar de ACM no se puede instalar en tu servidor: ACM no deja exportar su clave privada, solo usarlo a través de los servicios integrados. Lo habitual es poner delante un ALB o CloudFront (terminan TLS con el certificado de ACM), usar _ACM for Nitro Enclaves_ o recurrir a otra CA. Desde 2025 ACM ofrece también certificados públicos *exportables*, instalables donde quieras, pero tienen coste y hay que redesplegarlos tras cada renovación.
 
@@ -578,13 +575,13 @@ Ningún control es perfecto, así que se apilan: si una capa falla, la siguiente
 
 Ante una alarma seria —una instancia hablando con un servidor de mando y control, unas claves usadas desde un país inesperado—, improvisar es lo peor. Prepárate antes: GuardDuty y Security Hub activos, un _trail_ organizativo de CloudTrail en una cuenta de logs protegida, roles de respuesta listos y _runbooks_ ensayados. Después, el esqueleto básico es este:
 
-#nb(pasos(
+#pasos(
   [*Aislar.* Cambia el Security Group de la instancia por uno sin reglas y sácala del Auto Scaling group y del balanceador. Desactiva las claves de acceso comprometidas y revoca las sesiones activas del rol.],
   [*Preservar evidencias:* snapshots de los volúmenes EBS, captura de memoria si procede, etiquetas con el número de incidente y copia de los logs en un bucket con S3 Object Lock de otra cuenta.],
   [*Rotar credenciales:* claves de acceso, secretos, contraseñas y tokens a los que pudo llegar el atacante.],
   [*Investigar con CloudTrail* (y Detective): qué llamadas hizo la identidad comprometida, desde qué IP y qué creó o modificó (usuarios, roles, instancias en otras regiones…).],
   [*Recuperar y aprender:* reconstruye desde una AMI o una plantilla de IaC limpias, corrige la causa raíz, escribe un post-mortem sin culpables y automatiza la respuesta.],
-))
+)
 
 #cuidado[Terminar la instancia comprometida parece lo más rápido, pero destruye las evidencias (memoria, procesos, discos efímeros) que necesitas para entender qué pasó. Aísla primero; termina después.]
 

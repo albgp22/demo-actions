@@ -579,7 +579,7 @@ Juntemos todas las piezas. La @fig-redes-referencia muestra la VPC que encontrar
 - *Nada con IP pública salvo el balanceador y los NAT*; la administración, con Session Manager (AWS Systems Manager), sin bastiones ni SSH abierto.
 - *Security Groups encadenados* (`sg-alb → sg-app → sg-db`), NACL casi abiertas, endpoints para no pagar NAT de más y Flow Logs desde el primer día.
 
-#consejo[El asistente _VPC and more_ de la consola crea en un minuto la VPC, subredes públicas y privadas en varias AZ, tablas de rutas, IGW, NAT Gateways y un gateway endpoint de S3. Úsalo para aprender; en producción, define la red con infraestructura como código (capítulo de IaC).]
+#consejo[El asistente _VPC and more_ de la consola crea en un minuto la VPC, subredes públicas y privadas en varias AZ, tablas de rutas, IGW, NAT Gateways y un gateway endpoint de S3. Úsalo para aprender; en producción, define la red con infraestructura como código (lo verás en el capítulo dedicado a IaC).]
 
 #diagrama(pie: [Diseño de referencia: VPC de tres capas en tres AZ. El ALB tiene nodos en las tres subredes públicas, hay un NAT Gateway por AZ, la base de datos es Multi-AZ y los endpoints evitan el NAT.])[
   #fila(actor(etiqueta: "Usuarios"), flecha(etiqueta: "HTTPS"), internet(), flecha(), svc("IGW", "Internet Gateway", color: col.redes))
