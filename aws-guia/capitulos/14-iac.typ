@@ -153,7 +153,7 @@ En producción no actualices un stack a ciegas: crea antes un *change set*, una 
     flecha(etiqueta: "éxito", largo: 1.1cm, color: verde),
     caja([UPDATE_COMPLETE], color: verde),
     [], [], [], [], flecha-v(etiqueta: "error", largo: 0.6cm, color: rojo), [], [],
-    [], [], [], [], caja([*Rollback automático a v1*\ UPDATE_ROLLBACK_COMPLETE], color: rojo), [], [],
+    [], [], [], grid.cell(colspan: 3, caja([*Rollback automático a v1*\ #text(6.5pt, fill: gris)[UPDATE_ROLLBACK_COMPLETE]], color: rojo)), [],
   )
 ]
 
@@ -353,6 +353,7 @@ Desplegar *todo a la vez* es lo más simple, pero implica corte y una vuelta atr
 - Los *change sets* muestran el impacto antes de ejecutar y, si algo falla, hay *rollback*; `DeletionPolicy` y `UpdateReplacePolicy` protegen los datos. *Nested stacks*, *exports* y *StackSets* reutilizan, comparten y llevan stacks a muchas cuentas.
 - CDK genera CloudFormation desde código (constructs L1, L2, L3); Terraform gestiona varios proveedores con un *fichero de estado* en S3 con bloqueo (`use_lockfile`).
 - CodePipeline orquesta, CodeBuild prueba y CodeDeploy o ECS despliegan (rolling, blue/green, canary); AppConfig da feature flags.
+- Una cuenta por entorno, el mismo artefacto en todos, el pipeline asumiendo roles de despliegue y OIDC en lugar de claves de acceso.
 ]
 
 #repaso(

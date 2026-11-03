@@ -53,7 +53,7 @@ Antes de elegir servicio conviene distinguir tres formas de guardar datos, porqu
 
 == Amazon S3: conceptos esenciales
 
-Amazon S3 (_Simple Storage Service_) es probablemente el servicio más usado de AWS: almacena desde las imágenes de una web hasta _data lakes_ de exabytes, y casi todos los demás servicios lo usan para guardar logs, copias o artefactos.
+Amazon S3 (_Simple Storage Service_) es probablemente el servicio más usado de AWS: almacena desde las imágenes de una web hasta data lakes de exabytes, y casi todos los demás servicios lo usan para guardar logs, copias o artefactos.
 
 #ficha("Amazon S3", "Almacenamiento de objetos ilimitado, duradero y económico",
   ("Tipo", [Serverless; pago por GB-mes almacenado, por petición y por transferencia de salida]),
@@ -95,8 +95,8 @@ Cada objeto tiene una *clase de almacenamiento* que fija su precio por GB, su di
 )]
 
 - *Intelligent-Tiering* es la opción por defecto cuando no conoces el patrón de acceso: por una pequeña cuota de monitorización por objeto, mueve cada objeto a una capa infrecuente tras 30 días sin accesos y a una de archivo instantáneo tras 90, y lo devuelve a la frecuente en cuanto se lee, sin cargos de recuperación. Los objetos de menos de 128 KB no se mueven.
-- *Glacier Flexible Retrieval* y *Deep Archive* no se leen directamente: pides una *restauración* que crea una copia temporal. Flexible ofrece tres velocidades —_Expedited_ (1–5 min), _Standard_ (3–5 h) y _Bulk_ (5–12 h, gratuita)— y Deep Archive, _Standard_ (hasta 12 h) y _Bulk_ (hasta 48 h).
-- *Express One Zone* usa _directory buckets_ en la AZ que elijas, junto a tu cómputo, para entrenamiento de ML o analítica interactiva.
+- *Glacier Flexible Retrieval* y *Deep Archive* no se leen directamente: pides una *restauración* que crea una copia temporal. Flexible ofrece tres velocidades —_Expedited_ (1–5 min), _Standard_ (3–5 h) y _Bulk_ (5–12 h, gratuita)— y Deep Archive, Standard (hasta 12 h) y Bulk (hasta 48 h).
+- *Express One Zone* usa directory buckets en la AZ que elijas, junto a tu cómputo, para entrenamiento de ML o analítica interactiva.
 
 #examen[Las clases IA y Glacier Instant Retrieval facturan como mínimo 128 KB por objeto, y todas las que tienen duración mínima cobran los días restantes si borras o mueves antes el objeto. Glacier Flexible y Deep Archive añaden unos 40 KB de metadatos por objeto: archivar millones de ficheros diminutos sale caro, mejor agruparlos antes.]
 
@@ -167,7 +167,7 @@ La *replicación* copia objetos de forma asíncrona a otro bucket, en otra regi�
 
 - Exige versionado en origen y destino y un rol IAM que S3 asume para copiar; el destino puede estar en otra cuenta y usar otra clase de almacenamiento.
 - Solo replica objetos nuevos; para los ya existentes se usa *S3 Batch Replication*.
-- Los _delete markers_ se replican solo si lo indicas, y los borrados de versiones concretas nunca, lo que protege frente a borrados maliciosos. Tampoco es transitiva: con A → B → C, los objetos de A no llegan a C.
+- Los delete markers se replican solo si lo indicas, y los borrados de versiones concretas nunca, lo que protege frente a borrados maliciosos. Tampoco es transitiva: con A → B → C, los objetos de A no llegan a C.
 - *Replication Time Control (RTC)* garantiza por SLA que el 99,99 % de los objetos se replica en 15 minutos.
 
 #diagrama(pie: [Replicación entre regiones (CRR) hacia una cuenta de recuperación ante desastres.])[
@@ -298,14 +298,14 @@ Para gestionar miles de millones de objetos, *S3 Inventory* genera listados diar
   [*FSx for Windows File Server*], [SMB], [Recursos compartidos de Windows integrados con Active Directory (permisos NTFS, DFS)],
   [*FSx for Lustre*], [Lustre (POSIX)], [HPC, ML y renderizado: _throughput_ muy alto y latencia inferior al milisegundo; se enlaza con un bucket S3],
   [*FSx for NetApp ONTAP*], [NFS, SMB, iSCSI], [Migrar cabinas NetApp: multiprotocolo, _snapshots_, SnapMirror, deduplicación y compresión],
-  [*FSx for OpenZFS*], [NFS], [Migrar servidores ZFS o Linux: _snapshots_ y clones instantáneos, baja latencia],
+  [*FSx for OpenZFS*], [NFS], [Migrar servidores ZFS o Linux: snapshots y clones instantáneos, baja latencia],
 )]
 
 === Híbrido, migración y copias de seguridad
 
-/ AWS Storage Gateway: _appliance_ virtual en tu centro de datos (o en EC2) que expone almacenamiento de AWS con protocolos locales y una caché: *S3 File Gateway* (NFS/SMB sobre objetos de S3), *Volume Gateway* (volúmenes iSCSI con _snapshots_ en AWS) y *Tape Gateway* (cintas virtuales para tu software de backup, archivadas en Glacier).
+/ AWS Storage Gateway: _appliance_ virtual en tu centro de datos (o en EC2) que expone almacenamiento de AWS con protocolos locales y una caché: *S3 File Gateway* (NFS/SMB sobre objetos de S3), *Volume Gateway* (volúmenes iSCSI con snapshots en AWS) y *Tape Gateway* (cintas virtuales para tu software de backup, archivadas en Glacier).
 / AWS DataSync: transferencias en línea para migrar o sincronizar periódicamente: un agente lee de NFS, SMB, HDFS u otros almacenes de objetos (incluidas otras nubes) y copia a S3, EFS o FSx con cifrado, verificación de integridad, programación y límite de ancho de banda.
-/ Snow Family: dispositivos físicos (Snowball Edge) para mover decenas o cientos de terabytes sin red suficiente o para cómputo en el _edge_. AWS ha retirado parte de la familia (Snowmobile, Snowcone): consulta la disponibilidad actual y prefiere DataSync o Direct Connect cuando la red lo permita.
+/ Snow Family: dispositivos físicos (Snowball Edge) para mover decenas o cientos de terabytes sin red suficiente o para cómputo en el edge. AWS ha retirado parte de la familia (Snowmobile, Snowcone): consulta la disponibilidad actual y prefiere DataSync o Direct Connect cuando la red lo permita.
 / AWS Backup: copias centralizadas por políticas para EBS, EC2, RDS y Aurora, DynamoDB, EFS, FSx, S3 y más. Los *backup plans* (frecuencia, retención, paso a almacenamiento frío) se asignan por etiquetas; admite copias entre regiones y cuentas, *Vault Lock* (WORM), políticas de backup de AWS Organizations y pruebas de restauración automatizadas.
 
 #practica[Aplica la regla 3-2-1 en la nube: varias copias, en al menos dos ubicaciones (otra región) y una inmutable y aislada (otra cuenta, con Vault Lock u Object Lock en modo Compliance). Y prueba las restauraciones: una copia que nunca has restaurado es solo una esperanza.]
@@ -314,7 +314,7 @@ Para gestionar miles de millones de objetos, *S3 Inventory* genera listados diar
 
 #tabla(("Si necesitas…", "Usa"), columnas: (2.6fr, 1.4fr), tamano: 8.2pt,
   [Disco para el sistema operativo o una base de datos en EC2], [*Amazon EBS*],
-  [Guardar ficheros de cualquier tamaño a escala: backups, _data lake_, web, logs], [*Amazon S3*],
+  [Guardar ficheros de cualquier tamaño a escala: backups, data lake, web, logs], [*Amazon S3*],
   [Archivar durante años al mínimo coste], [*S3 Glacier Deep Archive*],
   [Una carpeta compartida por muchas instancias Linux, contenedores o Lambda], [*Amazon EFS*],
   [Recursos compartidos de Windows con Active Directory], [*FSx for Windows File Server*],

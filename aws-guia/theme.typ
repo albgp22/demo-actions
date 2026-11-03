@@ -197,7 +197,10 @@
 #let tabla(encabezado, columnas: auto, color: auto, tamano: 8.6pt, ..celdas) = context {
   let c = if color == auto { chap-color.get() } else { color }
   let n = encabezado.len()
-  block(above: 1.1em, below: 1.2em, table(
+  let ncol = if columnas == auto { n } else if type(columnas) == array { columnas.len() } else { columnas }
+  let filas = calc.ceil(celdas.pos().len() / ncol)
+  // Las tablas cortas no se parten entre páginas (evita 1–2 filas sueltas)
+  block(above: 1.1em, below: 1.2em, breakable: filas > 9, table(
     columns: if columnas == auto { n } else { columnas },
     stroke: (x, y) => if y > 0 { (bottom: 0.5pt + gris-claro) },
     inset: (x: 7pt, y: 6pt),

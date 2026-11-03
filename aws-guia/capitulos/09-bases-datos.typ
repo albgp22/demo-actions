@@ -44,7 +44,7 @@ Para decidir, pregúntate cómo vas a leer y escribir (por clave, con SQL y _joi
 
 #tabla(("Tipo", "Pensado para (ejemplos)", "Servicio de AWS"),
   columnas: (1.05fr, 2.1fr, 1.75fr), tamano: 8pt,
-  [*Relacional (OLTP)*], [SQL, _joins_ y transacciones ACID (ERP, tiendas, CRM)], [Amazon RDS, Amazon Aurora],
+  [*Relacional (OLTP)*], [SQL, joins y transacciones ACID (ERP, tiendas, CRM)], [Amazon RDS, Amazon Aurora],
   [*Clave-valor*], [Acceso por clave a cualquier escala en milisegundos (carritos, perfiles)], [Amazon DynamoDB],
   [*Documental*], [Documentos JSON flexibles (catálogos, contenidos)], [Amazon DocumentDB (API de MongoDB)],
   [*En memoria*], [Microsegundos y estructuras de datos (cachés, sesiones, rankings)], [Amazon ElastiCache, Amazon MemoryDB],
@@ -56,11 +56,11 @@ Para decidir, pregúntate cómo vas a leer y escribir (por clave, con SQL y _joi
   [*Data warehouse (OLAP)*], [Consultas analíticas sobre grandes volúmenes (BI, informes)], [Amazon Redshift; Athena sobre S3],
 )
 
-#examen[Las preguntas suelen esconder el servicio en una palabra clave: _joins_ y transacciones → RDS o Aurora; «milisegundos a cualquier escala, sin servidores» → DynamoDB; «microsegundos» → DAX o ElastiCache; «SQL sobre ficheros de S3 sin infraestructura» → Athena.]
-
 == Gestionada frente a autogestionada
 
 Nada te impide lanzar una instancia EC2, instalar PostgreSQL y administrarlo tú. Pero una base de datos en producción exige mucho más que instalarla: parches, copias y pruebas de restauración, réplicas, failover, monitorización, ampliar el disco a las tres de la mañana… Con un servicio gestionado, AWS asume esas tareas y tú te concentras en el modelo de datos y las consultas.
+
+#analogia[EC2 es comprar una casa: decides cada detalle, pero las goteras las arreglas tú. RDS es un piso con conserje: amueblas a tu gusto y el mantenimiento lo hace otro. DynamoDB es un hotel: pides habitación y la usas.]
 
 #diagrama(pie: [Quién se ocupa de cada tarea según el modelo de base de datos.])[
   #set par(justify: false)
@@ -98,8 +98,6 @@ Nada te impide lanzar una instancia EC2, instalar PostgreSQL y administrarlo tú
 
 Con RDS o Aurora *sigue siendo tuyo* el esquema, los índices, las consultas, los usuarios del motor, el tamaño de la instancia, la red (subredes y _Security Groups_) y la retención de copias. ¿Cuándo tiene sentido EC2? Cuando necesitas un motor o versión que RDS no ofrece, acceso de administrador al sistema operativo o extensiones no soportadas. Entre ambos extremos está *RDS Custom* (Oracle y SQL Server): automatiza copias y monitorización, pero te deja entrar en el sistema operativo.
 
-#analogia[EC2 es comprar una casa: decides cada detalle, pero las goteras las arreglas tú. RDS es un piso con conserje: amueblas a tu gusto y el mantenimiento lo hace otro. DynamoDB es un hotel: pides habitación y la usas.]
-
 == Amazon RDS
 
 #ficha("Amazon RDS", "Bases de datos relacionales gestionadas",
@@ -132,8 +130,8 @@ aws rds create-db-instance \
 
 RDS ofrece dos mecanismos que a menudo se confunden, porque los dos «copian la base de datos», pero responden a preguntas distintas: *Multi-AZ*, a «¿qué pasa si se cae?» (disponibilidad), y las *réplicas de lectura*, a «¿cómo atiendo más consultas?» (rendimiento). Piensa en Multi-AZ como la rueda de repuesto, que no usas hasta que pinchas, y en las réplicas como ventanillas extra, que atienden a más gente pero no sustituyen solas a la principal si cierra.
 
-- *Multi-AZ* mantiene un *standby* en otra AZ que recibe cada cambio de forma *síncrona*: una escritura no se confirma hasta que está en las dos AZ, así que al conmutar no se pierde nada. El standby *no admite conexiones*, solo espera. Si la primaria o su AZ fallan, RDS hace el _failover_ (la conmutación) solo y apunta al standby el mismo nombre DNS: la aplicación únicamente tiene que reconectar. En el *despliegue de clúster* (MySQL y PostgreSQL) hay un writer y *dos standbys legibles* en tres AZ, con failovers más rápidos.
-- Las *réplicas de lectura* (_read replicas_) reciben los cambios de forma *asíncrona*, así que pueden ir unos segundos por detrás (_replica lag_). Cada una tiene su propio endpoint, y es tu aplicación la que les envía las lecturas. Pueden estar en otra región y, ante un desastre, se *promocionan* a base de datos independiente, pero a mano.
+- *Multi-AZ* mantiene un *standby* en otra AZ que recibe cada cambio de forma *síncrona*: una escritura no se confirma hasta que está en las dos AZ, así que al conmutar no se pierde nada. El standby *no admite conexiones*, solo espera. Si la primaria o su AZ fallan, RDS hace el _failover_ (la conmutación) solo y apunta al standby el mismo nombre DNS: la aplicación únicamente tiene que reconectar. En el *despliegue de clúster* (MySQL y PostgreSQL) hay un writer y *dos standbys legibles* en tres AZ, con un endpoint de escritura, otro de lectura y failovers más rápidos.
+- Las *réplicas de lectura* (_read replicas_) reciben los cambios de forma *asíncrona*, así que pueden ir unos segundos por detrás (_replica lag_). Cada una tiene su propio endpoint, y es tu aplicación la que les envía las lecturas (MySQL, MariaDB y PostgreSQL admiten hasta 15). Pueden estar en otra región y, ante un desastre, se *promocionan* a base de datos independiente, pero a mano.
 
 #diagrama(pie: [Las tres formas de replicar en RDS: Multi-AZ de instancia, Multi-AZ de clúster y réplicas de lectura.])[
   #let c = col.datos
@@ -173,11 +171,9 @@ RDS ofrece dos mecanismos que a menudo se confunden, porque los dos «copian la 
   [*¿Sirve lecturas?*], [#no El standby solo espera], [#si Los dos standbys], [#si],
   [*Ubicación*], [Otra AZ], [Tres AZ], [Cualquier AZ u otra región],
   [*Failover*], [Automático, 60–120 s], [Automático, menos de 35 s], [Manual: se _promociona_],
-  [*Endpoint*], [El mismo (cambia el DNS)], [De escritura y de lectura], [Uno por réplica],
-  [*Motores*], [Todos], [MySQL y PostgreSQL], [Casi todos; hasta 15 por instancia en MySQL, MariaDB y PostgreSQL],
 )
 
-#examen[Multi-AZ = disponibilidad; réplica de lectura = rendimiento de lectura (y DR entre regiones). «El standby de Multi-AZ atenderá los informes» es falso salvo en el despliegue de *clúster*. Una réplica puede ser a su vez Multi-AZ, y replicar dentro de la región no genera cargos de transferencia; entre regiones, sí.]
+#examen[Multi-AZ = disponibilidad; réplica de lectura = rendimiento de lectura (y DR entre regiones). Una réplica puede ser a su vez Multi-AZ, y replicar dentro de la región no genera cargos de transferencia; entre regiones, sí.]
 
 === Copias de seguridad y restauración
 
@@ -185,10 +181,9 @@ RDS hace dos tipos de copias:
 
 - *Backups automáticos*: una instantánea diaria en la *ventana de backup* más los *logs de transacciones*, que se suben a S3 cada cinco minutos. Permiten una *restauración a un punto en el tiempo* (PITR) a cualquier segundo del periodo de retención —de 1 a 35 días—, normalmente hasta unos cinco minutos antes del presente.
 - *Snapshots manuales*: se conservan hasta que los borras, aunque elimines la instancia. Puedes copiarlos a otra región y compartirlos con otras cuentas (si están cifrados, con una clave KMS gestionada por el cliente, no con `aws/rds`).
+- *Coste*: las copias no se cobran hasta el 100 % del almacenamiento aprovisionado en la región; el exceso (snapshots acumulados, retenciones largas) se paga por GB-mes.
 
-#cuidado[Restaurar —un snapshot o un PITR— *siempre crea una instancia nueva*, con otro endpoint: no «rebobina» la existente, así que planifica cómo apuntará la aplicación a ella. Y al borrar una instancia, los backups automáticos desaparecen salvo que elijas conservarlos: haz siempre un snapshot final.]
-
-#coste[Las copias no se cobran hasta el 100 % del almacenamiento aprovisionado en la región; el exceso (snapshots manuales acumulados, retenciones largas) se paga por GB-mes. Y ojo: una instancia detenida para ahorrar vuelve a arrancar sola a los siete días.]
+#cuidado[Restaurar —un snapshot o un PITR— *siempre crea una instancia nueva*, con otro endpoint: no «rebobina» la existente, así que planifica cómo apuntará la aplicación a ella. Al borrar una instancia, los backups automáticos desaparecen salvo que elijas conservarlos: haz siempre un snapshot final. Y si detienes una instancia para ahorrar, vuelve a arrancar sola a los siete días.]
 
 === Seguridad: red, cifrado y credenciales
 
@@ -291,7 +286,7 @@ Con *Aurora Serverless v2*, la capacidad se mide en *ACU* (_Aurora Capacity Unit
 
 == Amazon DynamoDB
 
-DynamoDB es la base de datos NoSQL _serverless_ de AWS: sin instancias, parches ni ventanas de mantenimiento. Creas una tabla, eliges cómo pagar la capacidad y lees y escribes en milisegundos de un dígito, tengas cien ítems o cien mil millones. A cambio, te pide *diseñar la tabla a partir de tus patrones de acceso*.
+DynamoDB es la base de datos NoSQL serverless de AWS: sin instancias, parches ni ventanas de mantenimiento. Creas una tabla, eliges cómo pagar la capacidad y lees y escribes en milisegundos de un dígito, tengas cien ítems o cien mil millones. A cambio, te pide *diseñar la tabla a partir de tus patrones de acceso*.
 
 #ficha("Amazon DynamoDB", "Base de datos NoSQL clave-valor y documental, totalmente serverless",
   ("Ámbito", [Regional; los datos se replican en 3 AZ (global tables para multirregión)]),
@@ -348,21 +343,23 @@ Cada lectura y escritura consume *unidades de capacidad*. *1 RCU* (_read capacit
 
 ¿Eventual o fuerte? Por defecto, las lecturas son *eventualmente consistentes*: pueden no reflejar una escritura de hace un instante (normalmente todo converge en un segundo). Con `ConsistentRead=True` obtienes una lectura *fuertemente consistente*, que devuelve el último valor confirmado, a cambio del doble de capacidad:
 
-#tabla(("Necesidad", "Cálculo", "Capacidad"), columnas: (1.7fr, 1.7fr, 0.7fr), tamano: 8pt,
+#block(breakable: false)[#tabla(("Necesidad", "Cálculo", "Capacidad"), columnas: (1.7fr, 1.7fr, 0.7fr), tamano: 8pt,
   [80 lecturas/s de 6 KB, fuertemente consistentes], [6 KB → 2 bloques de 4 KB = 2 RCU × 80], [*160 RCU*],
   [Las mismas lecturas, eventualmente consistentes], [La mitad: 160 / 2], [*80 RCU*],
   [40 escrituras/s de 2,5 KB], [2,5 KB → 3 KB = 3 WCU × 40], [*120 WCU*],
   [Las mismas escrituras, dentro de transacciones], [El doble: 120 × 2], [*240 WCU*],
-)
+)]
 
 Esa capacidad se paga de una de estas dos maneras, y puedes cambiar de modo más adelante:
 
 #tarjetas(
   tarjeta("On-demand", subtitulo: "Pagas por petición")[Sin planificar: absorbe al instante hasta el doble del pico de tráfico anterior. Ideal para cargas nuevas, impredecibles o con picos; tras la rebaja de precios de finales de 2024, AWS lo recomienda por defecto para la mayoría de tablas.],
-  tarjeta("Aprovisionada", color: col.costes, subtitulo: "Reservas RCU y WCU")[Fijas las unidades por segundo y pagas por hora, las uses o no; *Auto Scaling* las ajusta y la capacidad reservada abarata más. Lo más económico con tráfico estable; si te quedas corto, hay _throttling_.],
+  tarjeta("Aprovisionada", color: col.costes, subtitulo: "Reservas RCU y WCU")[Fijas las unidades por segundo y pagas por hora, las uses o no; *Auto Scaling* las ajusta y la capacidad reservada abarata más. Lo más económico con tráfico estable; si te quedas corto, hay throttling.],
 )
 
 === Query frente a Scan
+
+Para leer un ítem concreto basta `GetItem` con su clave primaria completa: es la operación más rápida y barata. Para leer varios ítems hay dos operaciones muy distintas:
 
 #tarjetas(
   tarjeta("Query", subtitulo: "Eficiente: lee solo lo que pides")[
@@ -398,7 +395,7 @@ for p in resp["Items"]:      # más de 1 MB → paginar con LastEvaluatedKey
 
 Una Query solo busca por la clave primaria. Para consultar por otros atributos —«el pedido P81», sin saber de qué cliente es— creas *índices secundarios*: copias de la tabla organizadas con otra clave, que DynamoDB mantiene al día por ti. Decides qué atributos se *proyectan* (se copian) en el índice (`KEYS_ONLY`, `INCLUDE` o `ALL`), y como el índice solo contiene los ítems que tienen su clave, permite *índices dispersos* muy baratos.
 
-#tabla(("Característica", "LSI (índice secundario local)", "GSI (índice secundario global)"),
+#block(breakable: false)[#tabla(("Característica", "LSI (índice secundario local)", "GSI (índice secundario global)"),
   columnas: (1.15fr, 1.4fr, 1.4fr),
   [Clave del índice], [Misma partition key, *otra sort key*], [*Otra partition key* (y sort key opcional)],
   [Cuándo se crea], [Solo al crear la tabla], [En cualquier momento],
@@ -407,7 +404,7 @@ Una Query solo busca por la clave primaria. Para consultar por otros atributos �
   [Lecturas fuertemente consistentes], si, no,
   [Restricción de tamaño], [10 GB por valor de partition key], [Ninguna específica],
   [Alcance de la consulta], [Dentro de una colección de ítems], [Toda la tabla],
-)
+)]
 
 En la tabla `Pedidos` del ejemplo (clave `cliente` + `fecha`):
 
@@ -444,7 +441,7 @@ pedidos.update_item(
 
 === Introducción al single-table design
 
-DynamoDB no tiene _joins_: enumeras tus *patrones de acceso* y diseñas las claves para resolver cada uno con una sola Query. El *single-table design* lleva la idea al extremo: varias entidades en *una misma tabla*, con claves genéricas (`PK`, `SK`) y prefijos de tipo, para que los datos relacionados se lean juntos.
+DynamoDB no tiene joins: enumeras tus *patrones de acceso* y diseñas las claves para resolver cada uno con una sola Query. El *single-table design* lleva la idea al extremo: varias entidades en *una misma tabla*, con claves genéricas (`PK`, `SK`) y prefijos de tipo, para que los datos relacionados se lean juntos.
 
 #tabla(("PK", "SK", "Atributos", "Entidad"), columnas: (1.15fr, 1.75fr, 1.9fr, 0.75fr), tamano: 8pt,
   [`CLIENTE#ana`], [`PERFIL`], [nombre, email, fecha de alta], [Cliente],
@@ -459,7 +456,7 @@ DynamoDB no tiene _joins_: enumeras tus *patrones de acceso* y diseñas las clav
 - Líneas de un pedido: Query con `PK = "PEDIDO#P81"`.
 - Pedidos pendientes de todos los clientes: un GSI disperso, cuya clave (estado y fecha) solo llevan los pedidos pendientes.
 
-#cuidado[El single-table design no es obligatorio: exige conocer los patrones de acceso de antemano y complica la analítica y la evolución. Varias tablas bien diseñadas también son válidas.]
+No es obligatorio: exige conocer los patrones de acceso de antemano y complica la analítica y la evolución del modelo. Varias tablas bien diseñadas también son una opción válida.
 
 == Amazon ElastiCache y MemoryDB
 
@@ -472,12 +469,12 @@ Muchas aplicaciones leen los mismos datos una y otra vez (la ficha de un product
 
 *Valkey*, el _fork_ abierto de Redis nacido en 2024 (Linux Foundation) tras su cambio de licencia, tiene la misma API que Redis OSS y un precio inferior en ElastiCache: es la opción recomendada para proyectos nuevos. Memcached, más simple, solo sirve como caché volátil que escala en horizontal.
 
-#tabla(("", "Valkey / Redis OSS", "Memcached"), columnas: (1.5fr, 1fr, 1fr),
+#block(breakable: false)[#tabla(("", "Valkey / Redis OSS", "Memcached"), columnas: (1.5fr, 1fr, 1fr),
   [Estructuras de datos (hashes, listas, sets ordenados, streams…)], si, no,
   [Réplicas, Multi-AZ con failover y snapshots], si, no,
   [Particionado (_sharding_)], [#si Modo clúster], [#si Desde el cliente],
   [Pub/Sub, scripts Lua y transacciones], si, no,
-)
+)]
 
 === Estrategias de caché
 
@@ -493,28 +490,28 @@ Muchas aplicaciones leen los mismos datos una y otra vez (la ficha de un product
 
 #tarjetas(
   tarjeta("Lazy loading (cache-aside)", subtitulo: "Se carga al leer")[Solo se cachea lo que alguien pide y una caída de la caché no rompe nada. A cambio, cada fallo cuesta tres viajes y el dato puede quedar *obsoleto* hasta que caduque su TTL.],
-  tarjeta("Write-through", subtitulo: "Se actualiza al escribir")[Cada escritura en la base de datos actualiza también la caché: datos siempre frescos. A cambio, escrituras más lentas y caché llena de datos que quizá nadie lea. Combina ambos y pon siempre un TTL.],
+  tarjeta("Write-through", subtitulo: "Se actualiza al escribir")[Cada escritura actualiza también la caché: datos siempre frescos, a cambio de escrituras más lentas y de cachear datos que quizá nadie lea. Combina ambos y pon siempre un TTL.],
 )
 
-*Amazon MemoryDB* va un paso más allá: es una *base de datos* en memoria, compatible con Valkey y Redis OSS, que guarda cada escritura en un log transaccional distribuido en varias AZ. Lee en microsegundos, escribe en pocos milisegundos y no pierde datos si cae un nodo: puede ser la base de datos principal, no solo una caché.
+*Amazon MemoryDB* va un paso más allá: es una *base de datos* en memoria, compatible con Valkey y Redis OSS, que guarda cada escritura en un log transaccional distribuido en varias AZ. No pierde datos si cae un nodo, así que puede ser la base de datos principal, no solo una caché.
 
-#examen[«Caché delante de una base de datos» → ElastiCache; «caché para DynamoDB sin cambiar el código de acceso» → DAX; «base de datos principal en memoria, duradera y compatible con Redis» → MemoryDB.]
+#examen[«Caché delante de una base de datos» → ElastiCache; «caché para DynamoDB sin tocar el código» → DAX; «base de datos principal en memoria y duradera» → MemoryDB.]
 
 == Otras bases de datos de propósito específico
 
 #tabla(("Servicio", "Modelo", "Lo esencial"), columnas: (1.25fr, 1.1fr, 3fr), tamano: 8pt,
   [*Amazon DocumentDB*], [Documental (API de MongoDB)], [Documentos JSON con índices y consultas ricas; almacenamiento al estilo Aurora (6 copias en 3 AZ) y _elastic clusters_ para repartir datos.],
-  [*Amazon Keyspaces*], [Columnar ancha (Cassandra)], [Compatible con CQL y los drivers de Cassandra, pero _serverless_: on-demand o aprovisionado, sin nodos.],
+  [*Amazon Keyspaces*], [Columnar ancha (Cassandra)], [Compatible con CQL y los drivers de Cassandra, pero serverless: on-demand o aprovisionado, sin nodos.],
   [*Amazon Neptune*], [Grafos], [Grafos de propiedades (Gremlin, openCypher) y RDF (SPARQL): fraude, recomendaciones, relaciones de varios saltos.],
   [*Amazon Timestream*], [Series temporales], [Para proyectos nuevos, *Timestream for InfluxDB*; Timestream for LiveAnalytics dejó de aceptar clientes nuevos en 2025.],
-  [*Amazon OpenSearch Service*], [Búsqueda, logs y vectores], [OpenSearch gestionado (sucesor de Elasticsearch), en clústeres o Serverless: texto completo, logs y búsqueda vectorial (que también ofrece `pgvector` en PostgreSQL).],
+  [*Amazon OpenSearch Service*], [Búsqueda, logs y vectores], [OpenSearch gestionado (antes Amazon Elasticsearch Service), en clústeres o Serverless: texto completo, logs y búsqueda vectorial.],
 )
 
 === Analítica: Redshift y Athena
 
 *Amazon Redshift* es el _data warehouse_ de AWS. Guarda los datos por *columnas* —sumar importes solo lee esa columna, muy comprimida— y reparte el trabajo con una arquitectura *MPP* (_massively parallel processing_): un nodo líder planifica y los nodos de cómputo ejecutan en paralelo. Los nodos RA3 separan cómputo y almacenamiento, *Redshift Spectrum* consulta S3 sin cargar los datos y *Redshift Serverless* elimina el clúster (pagas por RPU-hora). Las integraciones *zero-ETL* traen datos de Aurora, RDS y DynamoDB casi en tiempo real.
 
-*Amazon Athena* es un motor SQL _serverless_ que consulta ficheros en S3 (CSV, JSON, Parquet, ORC…) usando el catálogo de AWS Glue. No hay nada que aprovisionar y se paga por datos escaneados: perfecto para consultas ad hoc sobre un _data lake_ o sobre logs, como los de los balanceadores:
+*Amazon Athena* es un motor SQL serverless que consulta ficheros en S3 (CSV, JSON, Parquet, ORC…) usando el catálogo de AWS Glue. No hay nada que aprovisionar y se paga por datos escaneados: perfecto para consultas ad hoc sobre un _data lake_ o sobre logs, como los de los balanceadores:
 
 ```sql
 SELECT elb_status_code, count(*) AS peticiones
@@ -549,7 +546,7 @@ DMS mueve *datos*, no traduce esquemas: en una migración heterogénea, primero 
 - PITR de hasta 35 días (restaurar crea una instancia nueva); RDS Proxy agrupa conexiones y Blue/Green reduce el riesgo de actualizar.
 - Aurora separa cómputo y almacenamiento: 6 copias en 3 AZ, hasta 15 réplicas con poco retardo, endpoints de escritura y lectura, Serverless v2 desde 0 ACU y Global Database.
 - DynamoDB se diseña desde las claves: partition key con muchos valores, Query en lugar de Scan, GSI para accesos nuevos y RCU/WCU por bloques de 4 KB y 1 KB; TTL, Streams, transacciones, global tables y DAX lo completan.
-- ElastiCache (Valkey, Redis OSS, Memcached) acelera lecturas con _lazy loading_ o _write-through_; MemoryDB es una base de datos en memoria duradera.
+- ElastiCache (Valkey, Redis OSS, Memcached) acelera lecturas con lazy loading o write-through; MemoryDB es una base de datos en memoria duradera.
 - DMS migra con parada mínima (carga completa + CDC); SCT convierte el esquema en migraciones heterogéneas.
 ]
 

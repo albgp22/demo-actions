@@ -88,7 +88,7 @@ La transferencia es la partida que más sorprende, porque no aparece en ningún 
 
 === Etiquetas de asignación de costes
 
-Las etiquetas (_tags_) responden a «¿cuánto cuesta este proyecto?». Define un esquema común —`Proyecto`, `Entorno`, `Equipo`, `CentroDeCoste`—, aplícalo desde la IaC (con `default_tags`, como en el capítulo de IaC) y hazlo obligatorio con *tag policies* de Organizations o SCP que denieguen crear recursos sin etiquetas. Las *Cost Categories* agrupan cuentas, servicios y etiquetas en categorías de negocio.
+Las etiquetas (_tags_) responden a «¿cuánto cuesta este proyecto?». Define un esquema común —`Proyecto`, `Entorno`, `Equipo`, `CentroDeCoste`—, aplícalo desde la IaC (con `default_tags`, como en el capítulo de Infraestructura como código) y hazlo obligatorio con *tag policies* de Organizations o SCP que denieguen crear recursos sin etiquetas. Las *Cost Categories* agrupan cuentas, servicios y etiquetas en categorías de negocio.
 
 #cuidado[Tus etiquetas no aparecen en Cost Explorer ni en Data Exports hasta que las *activas* como etiquetas de asignación de costes en la consola de facturación (en la cuenta de administración). Y no todo el gasto es etiquetable: el plan de soporte, por ejemplo, no lleva etiquetas.]
 
@@ -109,8 +109,8 @@ Los modelos y la estrategia habitual —*compromisos* para la base que nunca baj
 #tarjetas(columnas: 3,
   tarjeta("Rightsizing", subtitulo: "ajustar el tamaño")[Compute Optimizer y CloudWatch delatan lo sobredimensionado. Baja de talla *antes* de comprometerte.],
   tarjeta("Apagar fuera de horario", subtitulo: "dev y test")[Sin noches ni fines de semana eliminas casi dos tercios de las horas (EventBridge Scheduler, Instance Scheduler).],
-  tarjeta("Graviton", subtitulo: "procesadores Arm de AWS")[Más baratas por hora que sus equivalentes x86 y con mejor relación precio-rendimiento; también en Lambda, Fargate y RDS.],
-  tarjeta("Clases de S3 y lifecycle", subtitulo: "datos fríos, precio frío")[Reglas que mueven a Standard-IA o Glacier, Intelligent-Tiering, y expirar versiones antiguas y multipart incompletos.],
+  tarjeta("Graviton", subtitulo: "procesadores Arm de AWS")[Instancias más baratas por hora que sus equivalentes x86 y con mejor relación precio-rendimiento; también en Lambda, Fargate y RDS.],
+  tarjeta("Clases de S3 y lifecycle", subtitulo: "datos fríos, precio frío")[Reglas que mueven los datos a Standard-IA o Glacier (o Intelligent-Tiering) y expiran versiones antiguas y subidas multipart incompletas.],
   tarjeta("gp3 en lugar de gp2", subtitulo: "EBS")[Más barato por GB, con 3 000 IOPS y 125 MB/s de base sea cual sea el tamaño; se cambia en caliente.],
   tarjeta("Serverless si es intermitente", subtitulo: "pagar por actividad")[Lambda, DynamoDB on-demand o Aurora Serverless v2 (que puede bajar a 0 ACU) no cobran cómputo en reposo.],
 )

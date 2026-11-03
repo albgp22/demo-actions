@@ -23,7 +23,7 @@
 
 #seccion[Cifras y límites clave]
 
-Valores por defecto o máximos a finales de 2026. Un asterisco (\*) indica una cuota *ajustable* desde Service Quotas; «car.» son caracteres. Antes de diseñar al límite, comprueba la documentación.
+Valores por defecto o máximos vigentes al redactar esta guía (2026). Un asterisco (\*) indica una cuota *ajustable* desde Service Quotas; «car.» son caracteres. Antes de diseñar al límite, comprueba la documentación.
 
 #tarjetas(columnas: 3,
   tarjeta("Lambda", color: col.serverless)[#kv(
@@ -58,7 +58,7 @@ Valores por defecto o máximos a finales de 2026. Un asterisco (\*) indica una c
   )],
   tarjeta("S3", color: col.almacenamiento)[#kv(
     ([Objeto máximo], [50 TB]),
-    ([Hasta fin de 2025], [5 TB]),
+    ([Antes de dic. 2025], [5 TB]),
     ([Una sola PUT], [5 GB]),
     ([Multipart], [10 000 partes]),
     ([Tamaño de parte], [5 MiB–5 GiB]),
@@ -202,7 +202,7 @@ aws ce get-cost-and-usage --time-period Start=2026-10-01,End=2026-11-01 \
   [Disco de bloque para una instancia], [EBS], [Instance store para datos temporales],
   [Sistema de ficheros compartido], [EFS], [FSx (Windows, Lustre, ONTAP, OpenZFS)],
   [Desacoplar con una cola], [SQS], [SQS FIFO si importa el orden],
-  [Un mensaje para muchos suscriptores], [SNS], [EventBridge si hay que filtrar por contenido],
+  [Un mensaje para muchos suscriptores], [SNS], [EventBridge si necesitas reglas más ricas o más destinos],
   [Bus de eventos con reglas, SaaS o horarios], [EventBridge], [SNS para fan-out simple],
   [Streaming en tiempo real con relectura], [Kinesis Data Streams], [Amazon MSK si necesitas Kafka],
   [Cargar streams en S3 o Redshift sin código], [Data Firehose], [Glue para ETL por lotes],
@@ -222,5 +222,5 @@ aws ce get-cost-and-usage --time-period Start=2026-10-01,End=2026-11-01 \
   [Métricas, logs y alarmas], [CloudWatch], [X-Ray para trazas distribuidas],
   [Infraestructura como código], [CloudFormation o CDK], [Terraform si usas varios proveedores],
   [Copias de seguridad centralizadas], [AWS Backup], [Vault Lock para copias inmutables],
-  [Entrar en una instancia sin SSH], [Session Manager], [EC2 Instance Connect],
+  [Entrar en una instancia sin SSH], [Session Manager], [EC2 Instance Connect (SSH con claves temporales)],
 )

@@ -58,7 +58,7 @@
 
 == ¿Qué significa _serverless_?
 
-_Serverless_ («sin servidor») no significa que no haya servidores: significa que *no son asunto tuyo*. AWS los aprovisiona, parchea, escala y reemplaza; tú entregas código o configuración y pagas por el uso real. Un servicio es _serverless_ cuando reúne cuatro rasgos:
+_Serverless_ («sin servidor») no significa que no haya servidores: significa que *no son asunto tuyo*. AWS los aprovisiona, parchea, escala y reemplaza; tú entregas código o configuración y pagas por el uso real. Un servicio es serverless cuando reúne cuatro rasgos:
 
 #tarjetas(columnas: 4,
   tarjeta("Sin servidores")[Ni sistema operativo que parchear ni capacidad que dimensionar.],
@@ -69,7 +69,7 @@ _Serverless_ («sin servidor») no significa que no haya servidores: significa q
 
 El ecosistema va más allá de Lambda: API Gateway, Step Functions, S3, DynamoDB, SQS, SNS, EventBridge, Fargate o Aurora Serverless v2 comparten esta filosofía, y combinándolos construyes aplicaciones completas sin una sola instancia EC2. A cambio aceptas límites (duración, tamaño de los mensajes), latencias de arranque ocasionales, una arquitectura distribuida más difícil de depurar y un coste que, con carga alta y constante, puede superar al de instancias o contenedores.
 
-#analogia[Tener servidores es como tener coche: pagas compra, seguro y garaje aunque lo uses una hora al día. _Serverless_ es un taxi: pagas por trayecto, no te ocupas del mantenimiento y, si mañana necesitas diez, aparecen diez; eso sí, no eliges el motor.]
+#analogia[Tener servidores es como tener coche: pagas compra, seguro y garaje aunque lo uses una hora al día. Serverless es un taxi: pagas por trayecto, no te ocupas del mantenimiento y, si mañana necesitas diez, aparecen diez; eso sí, no eliges el motor.]
 
 == AWS Lambda: funciones bajo demanda
 
@@ -150,7 +150,7 @@ Un *cold start* es la latencia extra de una invocación que necesita un entorno 
 
 #tarjetas(
   tarjeta("SnapStart", subtitulo: "Java, Python y .NET")[
-    Al *publicar una versión*, Lambda ejecuta Init y guarda una instantánea cifrada de la microVM; los entornos nuevos se *restauran* desde ella. Gratis en Java; en Python y .NET se cobran caché y restauraciones. Ojo: los valores únicos generados en Init (aleatorios, conexiones) se comparten; regenéralos con _runtime hooks_.
+    Al *publicar una versión*, Lambda ejecuta Init y guarda una instantánea cifrada de la microVM; los entornos nuevos se *restauran* desde ella. Gratis en Java; en Python y .NET se cobran caché y restauraciones. Ojo: lo que debería ser único (aleatorios, conexiones) se repite en cada entorno restaurado; regenéralo con _runtime hooks_.
   ],
   tarjeta("Concurrencia aprovisionada", color: col.datos, subtitulo: "Cualquier runtime")[
     Mantiene N entornos *ya inicializados*: cero cold starts dentro de ese margen. Se configura sobre una versión o un alias y se paga mientras está activa, haya tráfico o no. Se puede escalar con Application Auto Scaling, por ejemplo con una programación para las horas punta.
@@ -196,7 +196,7 @@ Hay tres formas de llegar a una función, y en cada una cambia quién espera la 
   ]
 ]
 
-El comportamiento depende del origen (colas y _streams_ se explican a fondo en el capítulo de Mensajería e integración). Con *SQS*, Lambda añade sondeadores a medida que crece la cola y, si un lote falla, sus mensajes vuelven a la cola para reintentarse hasta acabar en su DLQ. Un _stream_ de *Kinesis* o de *DynamoDB Streams* se divide en _shards_ (particiones ordenadas): Lambda procesa un lote por shard a la vez (hasta 10 con el _parallelization factor_) y respeta el orden, así que un lote que falla *bloquea el shard* hasta que tiene éxito o caduca. Para evitarlo, puedes partir en dos el lote que falla y enviar los registros fallidos a un destino.
+El comportamiento depende del origen (colas y _streams_ se explican a fondo en el capítulo de Mensajería e integración). Con *SQS*, Lambda añade sondeadores a medida que crece la cola y, si un lote falla, sus mensajes vuelven a la cola y se reintentan; tras varios fallos, acaban en su DLQ. Un stream de *Kinesis* o de *DynamoDB Streams* se divide en _shards_ (particiones ordenadas): Lambda procesa un lote por shard a la vez (hasta 10 con el _parallelization factor_) y respeta el orden, así que un lote que falla *bloquea el shard* hasta que tiene éxito o caduca. Para evitarlo, puedes partir en dos el lote que falla y enviar los registros fallidos a un destino.
 
 == Permisos, red y configuración
 
@@ -250,7 +250,7 @@ En la práctica, SAM o CodeDeploy desplazan el tráfico gradualmente (`Canary10P
     svc("CW", "Alarma", sub: "CloudWatch · rollback", color: col.observabilidad))
 ]
 
-Para exponer una función por HTTPS sin más, una *function URL* da un endpoint dedicado (`https://<id>.lambda-url.<región>.on.aws`) con autenticación `AWS_IAM` o `NONE`, CORS y _response streaming_. No ofrece _throttling_ por cliente, API keys, caché ni dominio propio: para eso, CloudFront delante (que firma las peticiones con OAC) o API Gateway.
+Para exponer una función por HTTPS sin más, una *function URL* da un endpoint dedicado (`https://<id>.lambda-url.<región>.on.aws`) con autenticación `AWS_IAM` o `NONE`, CORS y _response streaming_. No ofrece throttling por cliente, API keys, caché ni dominio propio: para eso, CloudFront delante (que firma las peticiones con OAC) o API Gateway.
 
 == Buenas prácticas con Lambda
 
@@ -262,7 +262,7 @@ Para exponer una función por HTTPS sin más, una *function URL* da un endpoint 
 - *Observa*: Lambda envía la salida estándar a CloudWatch Logs, con formato JSON y niveles nativos (capítulo de Observabilidad).
 - *Apóyate en Powertools for AWS Lambda*, biblioteca de código abierto de AWS (Python, TypeScript, Java y .NET) que aplica estas prácticas en pocas líneas: logs JSON, trazas de X-Ray, métricas, idempotencia sobre DynamoDB, respuestas parciales de lote y secretos con caché.
 
-#coste[Pagas por petición (del orden de 0,20 USD por millón) y por GB-segundo, más la concurrencia aprovisionada, el `/tmp` extra y la transferencia de datos; la capa gratuita incluye un millón de peticiones al mes. Lambda es imbatible con tráfico bajo o irregular; con carga alta y constante, compara con Fargate o EC2 (los Compute Savings Plans también cubren Lambda) o con *Lambda Managed Instances* (finales de 2025), que ejecuta tus funciones sobre instancias EC2 gestionadas por Lambda.]
+#coste[Pagas por petición (del orden de 0,20 USD por millón) y por GB-segundo, más extras como la concurrencia aprovisionada; la capa gratuita incluye un millón de peticiones al mes. Lambda es imbatible con tráfico bajo o irregular; con carga alta y constante, compara con Fargate o EC2 (los Compute Savings Plans también cubren Lambda) o con *Lambda Managed Instances* (finales de 2025), que ejecuta tus funciones sobre instancias EC2 gestionadas por Lambda.]
 
 == Amazon API Gateway
 
@@ -271,16 +271,16 @@ API Gateway es la puerta de entrada gestionada de tus APIs: recibe peticiones HT
 #ficha("Amazon API Gateway", "APIs REST, HTTP y WebSocket totalmente gestionadas",
   ("Tipo", [Serverless; pago por millón de peticiones (mensajes y minutos de conexión en WebSocket)]),
   ("Ámbito", [Regional; las REST API también pueden ser _edge-optimized_ (vía CloudFront) o privadas]),
-  ("Límites clave", [_Payload_ de 10 MB; integración de unos 30 s (ampliable en REST); 10~000 peticiones/s por cuenta y región (ampliable)]))
+  ("Límites clave", [Payload de 10 MB; 10~000 peticiones/s por cuenta y región (ampliable); el backend debe responder en 29 s (REST; ampliable en APIs regionales y privadas desde 2024) o 30 s (HTTP API): para trabajos largos, responde un 202 y procesa de forma asíncrona]))
 
 #tabla(("Característica", "REST API", "HTTP API", "WebSocket API"), columnas: (1.35fr, 1.25fr, 1.25fr, 1.15fr), tamano: 8.2pt,
   [Modelo y precio], [Petición-respuesta; la más cara], [Petición-respuesta; más barata y rápida], [Conexión persistente bidireccional],
-  [Endpoints], [_Edge-optimized_, regional, privado], [Regional], [Regional],
+  [Endpoints], [Edge-optimized, regional, privado], [Regional], [Regional],
   [Autorización], [IAM, Cognito, Lambda, políticas de recurso], [IAM, JWT (OIDC/OAuth 2.0), Lambda], [IAM, Lambda en `$connect`],
-  [API keys], si, no, si,
   [Caché y AWS WAF], si, no, no,
-  [*Elígela si…*], [Necesitas API keys, caché, WAF, validación, endpoints privados o transformar peticiones], [Te basta con enrutar a Lambda o a HTTP con JWT o IAM: es la opción por defecto], [Haces chats, notificaciones o paneles en tiempo real],
 )
+
+Empieza por *HTTP API*, la opción por defecto si solo enrutas a Lambda o a un servicio HTTP con JWT o IAM. Elige *REST API* si necesitas API keys, caché, WAF, validación, endpoints privados o transformar peticiones, y *WebSocket* para chats, notificaciones o paneles en tiempo real.
 
 *Stages.* Una API se compone de *rutas* (`POST /pedidos`), cada una con su integración, y se despliega en *stages* (`dev`, `prod`) con su propia URL, límites, logs y *stage variables* (por ejemplo, a qué alias de Lambda apuntar). En REST cada cambio exige un despliegue explícito y los stages admiten canary; las HTTP API pueden desplegarse solas. Un *dominio personalizado* con certificado de ACM publica `api.miempresa.com`.
 
@@ -289,7 +289,6 @@ API Gateway es la puerta de entrada gestionada de tus APIs: recibe peticiones HT
 / Throttling: _token bucket_ de 10~000 peticiones/s con ráfagas de 5000 por cuenta y región, más límites por stage y método; el exceso recibe *429 Too Many Requests*. En REST, los *usage plans* asocian *API keys* a límites y cuotas por cliente (por ejemplo, 1000 peticiones al día en el plan gratuito).
 / Caché (REST): por stage, de 0,5 GB a 237 GB, TTL de 300 s por defecto (máx. 3600 s); se paga por hora, se use o no.
 / CORS: si `app.ejemplo.com` llama a una API de otro dominio, el navegador exige cabeceras `Access-Control-Allow-*` y a menudo un `OPTIONS` previo. Las HTTP API traen CORS integrado; en REST con proxy, *tu función* debe devolver las cabeceras.
-/ Timeouts: la integración tiene 29 s en REST (desde 2024, ampliables en APIs regionales y privadas a costa de cuota de _throttling_) y 30 s en HTTP API. Para trabajos largos, responde un 202 y procesa de forma asíncrona.
 
 #cuidado[Las API keys *identifican* a un cliente para aplicarle un plan, pero *no autentican*: cualquiera que vea la clave puede usarla. Combínalas con IAM, Cognito o un Lambda authorizer.]
 
@@ -299,17 +298,24 @@ Encadenar funciones que se llaman entre sí produce código frágil: ¿quién re
 
 #ficha("AWS Step Functions", "Orquestación serverless de flujos de trabajo",
   ("Tipo", [Serverless; Standard por transición de estado, Express por ejecución y duración]),
-  ("Ideal para", [Procesos de negocio, ETL, orquestar microservicios, aprobaciones humanas, procesamiento masivo en paralelo]))
+  ("Ideal para", [Procesos de negocio, ETL, microservicios, aprobaciones humanas, proceso masivo en paralelo]))
 
-#tabla(("", "Standard", "Express"), columnas: (1.1fr, 1.5fr, 1.5fr), tamano: 8.2pt,
+#block(breakable: false)[#tabla(("", "Standard", "Express"), columnas: (1.1fr, 1.5fr, 1.5fr), tamano: 8.2pt,
   [Duración máxima], [1 año], [5 minutos],
   [Semántica], [Exactamente una vez], [Al menos una vez (asíncrona) o como máximo una vez (síncrona)],
   [Precio e historial], [Por transición; historial de 90 días en la consola], [Por ejecución, duración y memoria; historial en CloudWatch Logs],
   [Esperar trabajos y _callbacks_], si, no,
   [Casos típicos], [Procesos largos, aprobaciones, ETL], [Eventos de alto volumen (más de 100~000 ejecuciones/s)],
-)
+)]
 
-#place(bottom, float: true, clearance: 1.2em, grid(columns: (1.12fr, 1fr), column-gutter: 10pt,
+
+/ Task: hace el trabajo: invoca una Lambda, llama a un servicio de AWS o a una API HTTPS, o espera un _callback_.
+/ Choice, Parallel, Map: bifurcan según los datos, ejecutan ramas en paralelo o recorren una lista; el Map *distribuido* procesa millones de objetos de S3 con hasta 10~000 ejecuciones hijas a la vez.
+/ Wait, Pass, Succeed, Fail: esperan (sin pagar cómputo), transforman datos o terminan.
+
+Cada Task, Parallel o Map puede declarar *Retry* (qué errores reintentar, cuántas veces y con qué _backoff_) y *Catch* (a qué estado saltar al agotar los reintentos). Los errores se identifican por nombre: los tuyos o predefinidos como `States.Timeout`, `States.TaskFailed` o el comodín `States.ALL`.
+
+#grid(columns: (1.12fr, 1fr), column-gutter: 10pt,
   [
     #show raw.line: set text(size: 7.2pt)
     ```json
@@ -354,22 +360,9 @@ Encadenar funciones que se llaman entre sí produce código frágil: ¿quién re
       _terminal("Fin", color: col.almacenamiento), [], [],
     )
   ],
-))
+)
 
-/ Task: hace el trabajo: invoca una Lambda, llama a un servicio de AWS o a una API HTTPS, o espera un _callback_.
-/ Choice, Parallel, Map: bifurcan según los datos, ejecutan ramas en paralelo o recorren una lista; el Map *distribuido* procesa millones de objetos de S3 con hasta 10~000 ejecuciones hijas a la vez.
-/ Wait, Pass, Succeed, Fail: esperan (sin pagar cómputo), transforman datos o terminan.
-
-Cada Task, Parallel o Map puede declarar *Retry* (qué errores reintentar, cuántas veces y con qué _backoff_) y *Catch* (a qué estado saltar al agotar los reintentos). Los errores se identifican por nombre: los tuyos o predefinidos como `States.Timeout`, `States.TaskFailed` o el comodín `States.ALL`.
-
-
-Step Functions no necesita Lambda para todo: con las *integraciones optimizadas* (DynamoDB, SQS, SNS, ECS/Fargate, Batch, Glue, EventBridge, Bedrock…) y las del *AWS SDK* (`arn:aws:states:::aws-sdk:servicio:acción`, más de 200 servicios) llama a las APIs directamente, de tres maneras:
-
-/ Request Response: lanza la petición y sigue en cuanto el servicio responde.
-/ Run a Job (`.sync`): espera a que termine el trabajo, como una tarea de ECS o un _job_ de Glue.
-/ Wait for Callback (`.waitForTaskToken`): se pausa hasta que alguien devuelve un _token_, por ejemplo tras una aprobación humana.
-
-Además llama a APIs HTTPS de terceros, transforma datos con JSONata y permite relanzar (_redrive_) una ejecución desde el paso que falló.
+Step Functions no necesita Lambda para todo: con las *integraciones optimizadas* (DynamoDB, SQS, SNS, ECS/Fargate, Batch, Glue, EventBridge, Bedrock…) y las del *AWS SDK* (`arn:aws:states:::aws-sdk:servicio:acción`, más de 200 servicios) llama a las APIs directamente, de tres maneras: *Request Response* sigue en cuanto el servicio responde; *Run a Job* (`.sync`) espera a que termine el trabajo, como una tarea de ECS o un _job_ de Glue, y *Wait for Callback* (`.waitForTaskToken`) se pausa hasta que alguien devuelve un _token_, por ejemplo tras una aprobación humana. Además transforma datos con JSONata y permite relanzar (_redrive_) una ejecución desde el paso que falló.
 
 == Desplegar con AWS SAM
 
@@ -397,20 +390,20 @@ Resources:
 
 
 #block(breakable: false)[#resumen[
-- _Serverless_: nada que administrar, escala sola (incluso a cero), pago por uso y alta disponibilidad.
+- Serverless: nada que administrar, escala sola (incluso a cero), pago por uso y alta disponibilidad.
 - Lambda: un *handler* por evento, hasta 15 min y 10~240 MB de memoria, con CPU proporcional.
 - El entorno pasa por *Init → Invoke (reutilizable) → Shutdown*; los *cold starts* se mitigan con SnapStart o concurrencia aprovisionada.
-- La concurrencia regional (1000 por defecto) es compartida; la *reservada* garantiza y limita, la *aprovisionada* pre-inicializa.
+- La concurrencia regional (1000 por defecto) es compartida; la *reservada* garantiza y limita, la *aprovisionada* preinicializa.
 - Invocación *síncrona* (reintenta el cliente), *asíncrona* (reintenta Lambda; destinos y DLQ) y *event source mapping* (Lambda sondea SQS, Kinesis o DynamoDB Streams).
 - El *execution role* define qué hace la función; la *resource-based policy*, quién puede invocarla.
 - Versiones inmutables y *aliases* ponderados permiten despliegues canary con _rollback_ automático.
-- API Gateway: REST (más funciones), HTTP (más barata) y WebSocket; autorización IAM, JWT/Cognito o Lambda; _throttling_ con 429.
+- API Gateway: REST (más funciones), HTTP (más barata) y WebSocket; autorización IAM, JWT/Cognito o Lambda; throttling con 429.
 - Step Functions orquesta pasos con Retry y Catch: Standard (flujos largos) o Express (alto volumen).
 ]]
 
 #repaso(
   ([¿Por qué conviene crear los clientes del SDK fuera del handler?], [Porque ese código se ejecuta una vez, en la fase Init, y se reutiliza en todas las invocaciones del mismo entorno.]),
-  ([Una API en Java sufre _cold starts_ en horas punta. ¿Qué opciones tienes?], [SnapStart (sin coste extra en Java) o concurrencia aprovisionada sobre un alias, escalada con una programación.]),
+  ([Una API en Java sufre cold starts en horas punta. ¿Qué opciones tienes?], [SnapStart (sin coste extra en Java) o concurrencia aprovisionada sobre un alias, escalada con una programación.]),
   ([¿Qué ocurre si una invocación asíncrona falla repetidamente?], [Lambda la reintenta (2 veces por defecto) y, si sigue fallando o caduca, la envía al destino de fallo o a la DLQ; sin ellos, se pierde.]),
   ([Una función en una VPC no puede llamar a una API externa. ¿Por qué?], [Sus ENI no tienen IP pública: necesita una subred privada con ruta a un NAT Gateway.]),
   ([Necesitas API keys con cuotas por cliente y caché. ¿REST o HTTP API?], [REST API: las HTTP API no tienen _usage plans_, API keys ni caché.]),

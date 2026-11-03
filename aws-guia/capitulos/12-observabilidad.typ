@@ -22,7 +22,7 @@
   box(width: x0 + paso * n, height: h + 1.1cm, {
     // Ventana de evaluación que dispara la alarma (t5 a t9)
     place(top + left, dx: x0 + 4 * paso + 1pt, dy: -3pt,
-      rect(width: 5 * paso - 2pt, height: h + 6pt, radius: 4pt, fill: col.iam.lighten(94%),
+      rect(width: 5 * paso - 2pt, height: h + 4pt, radius: 4pt, fill: col.iam.lighten(94%),
         stroke: (paint: col.iam.lighten(35%), thickness: 0.8pt, dash: "dashed")))
     // Ejes
     for t in (0, 50, 100) {
@@ -104,7 +104,7 @@
 
 == Por qué observar: los tres pilares
 
-*Monitorizar* es vigilar lo que ya sabes que puede fallar: la CPU, el disco, un proceso. *Observar* va más allá: poder responder preguntas nuevas —"¿por qué solo fallan los pagos con tarjeta de este país?"— a partir de las señales que el sistema ya emite, sin desplegar código nuevo. En AWS esas señales son de tres tipos:
+*Monitorizar* es vigilar lo que ya sabes que puede fallar: la CPU, el disco, un proceso. *Observar* va más allá: poder responder preguntas nuevas —«¿por qué solo fallan los pagos con tarjeta de este país?»— a partir de las señales que el sistema ya emite, sin desplegar código nuevo. En AWS esas señales son de tres tipos:
 
 #tarjetas(columnas: 3,
   tarjeta("Métricas", subtitulo: "¿Va algo mal?")[Series numéricas en el tiempo: latencia, errores, CPU. Baratas de guardar y consultar; la base de alarmas y tendencias. → *CloudWatch Metrics*.],
@@ -138,7 +138,7 @@ A estas señales de tus aplicaciones se suma la *auditoría* de la propia cuenta
 
 #ficha("Amazon CloudWatch", "Métricas, logs, alarmas y paneles para AWS y tus aplicaciones",
   ("Ámbito", [Regional; los dashboards y la observabilidad entre cuentas reúnen varias regiones y cuentas]),
-  ("Incluye", [Metrics, Alarms, Logs, Dashboards, Synthetics, RUM, Application Signals y varios "Insights"]),
+  ("Incluye", [Metrics, Alarms, Logs, Dashboards, Synthetics, RUM, Application Signals y varios «Insights»]),
   ("Facturación", [Métricas personalizadas, peticiones a la API, alarmas, GB de logs ingeridos, almacenados y analizados, dashboards…, con una capa gratuita]))
 
 / Namespace: contenedor de métricas: `AWS/EC2`, `AWS/Lambda`… o uno tuyo, como `TiendaOnline`.
@@ -186,9 +186,9 @@ En Lambda y contenedores es más eficiente el *Embedded Metric Format* (EMF): es
 
 Una *alarma* vigila una métrica (o una expresión matemática que combine varias) y compara cada periodo con un umbral. Tiene tres estados: `OK`, `ALARM` e `INSUFFICIENT_DATA` (no hay datos suficientes: la métrica acaba de empezar, la instancia está parada…), y cada cambio de estado puede disparar acciones.
 
-Para no despertar a nadie por un pico aislado, decides cuántos periodos evaluar (*N*, `EvaluationPeriods`) y cuántos de ellos deben superar el umbral (*M*, `DatapointsToAlarm`): con "3 de 5", la alarma salta cuando 3 de los últimos 5 periodos lo superan, aunque no sean consecutivos. También eliges cómo tratar los datos que faltan: como ausentes, como dentro del umbral (`notBreaching`), como fuera (`breaching`) o ignorándolos.
+Para no despertar a nadie por un pico aislado, decides cuántos periodos evaluar (*N*, `EvaluationPeriods`) y cuántos de ellos deben superar el umbral (*M*, `DatapointsToAlarm`): con «3 de 5», la alarma salta cuando 3 de los últimos 5 periodos lo superan, aunque no sean consecutivos. También eliges cómo tratar los datos que faltan: como ausentes, como dentro del umbral (`notBreaching`), como fuera (`breaching`) o ignorándolos.
 
-#diagrama(pie: [Alarma "3 de 5" sobre la CPU media, con umbral del 80 % y periodos de 1 minuto. El pico aislado de t3 no la dispara; en t9, tres de los últimos cinco periodos superan el umbral y pasa a `ALARM`.])[
+#diagrama(pie: [Alarma «3 de 5» sobre la CPU media, con umbral del 80 % y periodos de 1 minuto. El pico aislado de t3 no la dispara; en t9, tres de los últimos cinco periodos superan el umbral y pasa a `ALARM`.])[
   #_grafico-alarma()
 ]
 
@@ -204,7 +204,7 @@ aws cloudwatch put-metric-alarm --alarm-name cpu-alta-web \
 ```
 
 - *Acciones*: notificar a un tema de *SNS* (correo, SMS, chat, webhooks), ejecutar una política de *Auto Scaling*, detener, terminar, reiniciar o recuperar una *instancia EC2*, invocar una función *Lambda* o crear un OpsItem o un incidente en *Systems Manager*.
-- *Alarmas compuestas*: combinan otras alarmas con `AND`, `OR` y `NOT` ("latencia alta *y* errores altos") para avisar solo cuando importa y reducir el ruido.
+- *Alarmas compuestas*: combinan otras alarmas con `AND`, `OR` y `NOT` («latencia alta *y* errores altos») para avisar solo cuando importa y reducir el ruido.
 - *Detección de anomalías*: en lugar de un umbral fijo, CloudWatch aprende el comportamiento habitual de la métrica, con sus ciclos diarios y semanales, y dibuja una banda de valores esperados; la alarma salta cuando el valor sale de ella.
 
 == CloudWatch Logs
@@ -332,7 +332,7 @@ Así es un evento (resumido): quién (`userIdentity`), qué (`eventName`), cuán
 - *Conformance packs*: paquetes de reglas y remediaciones que se despliegan como una unidad, incluso en toda la organización, con plantillas para marcos como CIS o PCI DSS.
 - *Agregadores*: reúnen el cumplimiento de varias cuentas y regiones en una sola vista.
 
-#cuidado[AWS Config es *detectivo*: avisa (y puede corregir) después del cambio, pero no lo impide. Para impedirlo usa controles *preventivos*, como las SCP o las políticas IAM (capítulo "IAM (II): permisos — políticas y evaluación"). Además, se factura por _configuration item_ registrado y por evaluación de reglas: en cuentas con muchos cambios, limita los tipos de recurso que registra.]
+#cuidado[AWS Config es *detectivo*: avisa (y puede corregir) después del cambio, pero no lo impide. Para impedirlo usa controles *preventivos*, como las SCP o las políticas IAM (capítulo «IAM (II): permisos — políticas y evaluación»). Además, se factura por _configuration item_ registrado y por evaluación de reglas: en cuentas con muchos cambios, limita los tipos de recurso que registra.]
 
 == Reaccionar a eventos y otros logs
 

@@ -13,21 +13,6 @@
 #let nm(i) = box(baseline: 1.2pt, circle(radius: 3.9pt, fill: white, inset: 0pt,
   align(center + horizon, text(5.4pt, weight: "bold", fill: col.arquitectura, str(i)))))
 
-// Flecha horizontal hacia la izquierda (mismo estilo que `flecha`)
-#let flecha-izq(etiqueta: none, largo: 1.4cm, color: gris-flecha, punteada: false) = box(
-  width: largo, height: 2.6em, {
-    let st = (paint: color, thickness: 1.2pt, dash: if punteada { "dashed" } else { none })
-    place(right + horizon, line(length: largo - 5pt, stroke: st))
-    place(left + horizon, polygon(fill: color, (7pt, 0pt), (0pt, 3.5pt), (7pt, 7pt)))
-    if etiqueta != none {
-      place(center + top, dy: -1pt, box(width: largo + 0.8cm, align(center, {
-        set par(justify: false, leading: 0.3em)
-        text(6.4pt, fill: color.darken(25%), weight: "medium", etiqueta)
-      })))
-    }
-  },
-)
-
 // Abanico (fan-out): una barra con n flechas hacia abajo
 #let abanico(ancho, piezas: 3, alto: 0.55cm, color: gris-flecha) = box(width: ancho + 8pt, height: alto, {
   place(top + left, dx: 4pt, line(length: ancho, stroke: 1.2pt + color))
@@ -151,8 +136,8 @@ Varios servicios pequeños, cada uno con su equipo, su ciclo de despliegue y sus
         svc("SQS", "Amazon SQS", sub: "eventos", color: col.integracion)),
     ),
     columna(espacio: 24pt,
-      flecha-izq(etiqueta: [#n(5) imagen], largo: 1.2cm),
-      flecha-izq(etiqueta: "secretos", largo: 1.2cm),
+      flecha(izquierda: true, etiqueta: [#n(5) imagen], largo: 1.2cm),
+      flecha(izquierda: true, etiqueta: "secretos", largo: 1.2cm),
       flecha(etiqueta: "logs", largo: 1.2cm)),
     columna(espacio: 8pt,
       svc("ECR", "Amazon ECR", sub: "imágenes", color: col.contenedores),
@@ -223,7 +208,7 @@ Cuando un trabajo tarda (procesar un fichero, generar un informe), no lo hagas d
     [], [], [], [], flecha-v(etiqueta: [#n(4) sondeo], largo: 0.6cm), [], [],
     [], [],
     svc("SNS", "SNS", sub: "trabajo-completado", color: col.integracion),
-    flecha-izq(etiqueta: [#n(6) publica], largo: 1.5cm),
+    flecha(izquierda: true, etiqueta: [#n(6) publica], largo: 1.5cm),
     svc("λ", "Workers", sub: "Lambda o ECS", color: col.serverless),
     flecha(etiqueta: [#n(5) guarda], largo: 1.5cm),
     svc("DDB", "Resultados", sub: "S3 o DynamoDB", color: col.datos),
@@ -275,7 +260,7 @@ Una web corporativa, una documentación o el front-end de una aplicación de una
   [*Route 53* responde con registros alias (A y AAAA) que apuntan a la distribución.],
   [*CloudFront* termina HTTPS con un certificado de *ACM*, que para CloudFront debe estar en *#box[us-east-1]*; WAF filtra el tráfico y una *CloudFront Function* reescribe las rutas de la SPA (`/perfil` → `/index.html`) o añade cabeceras de seguridad.],
   [Si el objeto no está en caché, CloudFront lo lee del *bucket privado* mediante *OAC*; el bucket sigue sin ningún acceso público.],
-  [Las peticiones `/api/*` usan otro _behavior_ con otro origen (API Gateway o un ALB) y sin caché: una sola distribución y un solo dominio para el front-end y la API, sin problemas de CORS.],
+  [Las peticiones `/api/*` usan otro _behavior_ con otro origen (API Gateway o un ALB) y sin caché: una sola distribución y un solo dominio para el front-end y la API, así que el navegador no necesita CORS (capítulo de Serverless).],
   [El pipeline publica con `aws s3 sync` y crea una invalidación (o, mejor, usa nombres de fichero con _hash_ para no tener que invalidar).],
 )
 

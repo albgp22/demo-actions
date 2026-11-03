@@ -81,24 +81,9 @@ Amazon SQS (_Simple Queue Service_) ofrece colas totalmente gestionadas: los *pr
   ("Ideal para", [Desacoplar productores y consumidores, colas de trabajo, absorber picos]),
   ("Límites clave", [Mensaje de hasta 1 MiB; retención de 1 minuto a 14 días (4 por defecto); _visibility timeout_ de hasta 12 horas]))
 
-=== Standard frente a FIFO
-
-#block(breakable: false)[#tarjetas(
-  tarjeta("Standard", subtitulo: "Rendimiento prácticamente ilimitado")[
-    - Entrega *al menos una vez*: un mensaje puede llegar duplicado.
-    - Orden *aproximado* (_best effort_): «pedido pagado» podría llegar antes que «pedido creado».
-    - Casi sin límite de mensajes por segundo.
-  ],
-  tarjeta("FIFO", color: col.datos, subtitulo: "Orden estricto y sin duplicados")[
-    - Orden estricto *dentro de cada message group*.
-    - Procesamiento *exactamente una vez* (deduplicación en una ventana de 5 min).
-    - 300 operaciones/s por acción (3000 mensajes/s con lotes); mucho más en modo de alto rendimiento. El nombre acaba en `.fifo`.
-  ],
-)]
-
-En una cola FIFO, cada mensaje lleva un *MessageGroupId*: los mensajes de un mismo grupo (un pedido, un cliente) se entregan en orden y de uno en uno, mientras que grupos distintos se procesan en paralelo; por eso el paralelismo lo marca el número de grupos. La *deduplicación* descarta repetidos durante 5 minutos, según un *MessageDeduplicationId* explícito o un hash del cuerpo (_content-based deduplication_).
-
 === Ciclo de vida de un mensaje
+
+Leer un mensaje no lo borra: así, si el consumidor falla a medias, el mensaje no se pierde. El diagrama muestra el recorrido completo:
 
 #diagrama(pie: [Un mensaje recibido queda invisible durante el visibility timeout; si no se borra, reaparece y, tras varios intentos, va a la DLQ.])[
   #set text(hyphenate: false)
@@ -113,7 +98,7 @@ En una cola FIFO, cada mensaje lleva un *MessageGroupId*: los mensajes de un mis
   #v(6pt)
   #fila(espacio: 3pt,
     _seg(col.almacenamiento, "Visible", "esperando consumidor", ancho: 2.6cm),
-    flecha(etiqueta: "ReceiveMessage", largo: 1.7cm),
+    flecha(etiqueta: "ReceiveMessage", largo: 2.2cm),
     _seg(col.balanceo, "Invisible (en vuelo)", "visibility timeout: 30 s por defecto", ancho: 3.6cm),
     flecha(largo: 0.8cm),
     columna(espacio: 3pt,
@@ -151,6 +136,25 @@ sqs.create_queue(
 
 #cuidado[Da a la DLQ una retención mayor que la de la cola de origen: en las colas Standard la caducidad se cuenta desde que el mensaje entró en la cola original, así que un mensaje veterano podría expirar nada más llegar a la DLQ.]
 
+=== Standard frente a FIFO
+
+Al crear la cola eliges su tipo, y no se puede cambiar después:
+
+#block(breakable: false)[#tarjetas(
+  tarjeta("Standard", subtitulo: "Rendimiento prácticamente ilimitado")[
+    - Entrega *al menos una vez*: en raras ocasiones, un mensaje llega dos veces.
+    - Orden *aproximado* (_best effort_): «pedido pagado» podría llegar antes que «pedido creado».
+    - Casi sin límite de mensajes por segundo.
+  ],
+  tarjeta("FIFO", color: col.datos, subtitulo: "Orden estricto y sin duplicados")[
+    - Orden estricto *dentro de cada message group*.
+    - Procesamiento *exactamente una vez* (deduplicación en una ventana de 5 min).
+    - 300 operaciones/s por acción (3000 mensajes/s con lotes); mucho más en modo de alto rendimiento. El nombre acaba en `.fifo`.
+  ],
+)]
+
+En una cola FIFO, cada mensaje lleva un *MessageGroupId*: los mensajes de un mismo grupo (un pedido, un cliente) se entregan en orden y de uno en uno, mientras que grupos distintos se procesan en paralelo; por eso el paralelismo lo marca el número de grupos. La *deduplicación* descarta repetidos durante 5 minutos, según un *MessageDeduplicationId* explícito o un hash del cuerpo (_content-based deduplication_).
+
 === Lotes, costes y escalado de consumidores
 
 `SendMessageBatch`, `DeleteMessageBatch` y `ChangeMessageVisibilityBatch` agrupan hasta 10 mensajes, y `ReceiveMessage` devuelve hasta 10 por llamada: menos peticiones, menos coste. Para escalar consumidores en EC2 o ECS, usa como métrica el *backlog por consumidor* (mensajes visibles ÷ consumidores activos) con una política de _target tracking_: si cada consumidor procesa 10 mensajes/s y aceptas 30 s de retraso, el objetivo es 300 mensajes por consumidor. Vigila con una alarma `ApproximateAgeOfOldestMessage`: si crece, los consumidores no dan abasto.
@@ -183,7 +187,7 @@ SNS (_Simple Notification Service_) implementa *publicación-suscripción*: un p
 
 #ficha("Amazon SNS", "Mensajería pub/sub totalmente gestionada",
   ("Tipo", [Serverless; pago por millón de publicaciones; las entregas a SQS y Lambda no se cobran, las de HTTP, email o SMS sí]),
-  ("Suscriptores", [Colas SQS, funciones Lambda, endpoints HTTP/HTTPS, Data Firehose, email, SMS y notificaciones _push_ móviles]),
+  ("Suscriptores", [Colas SQS, funciones Lambda, endpoints HTTP/HTTPS, Data Firehose, email, SMS y notificaciones push móviles]),
   ("Ideal para", [Difundir un evento a varios sistemas (_fan-out_) y notificar a personas]))
 
 / Filtros: cada suscripción puede tener una *filter policy* sobre los atributos del mensaje o sobre su cuerpo JSON, para recibir solo lo que le interesa. Esta solo deja pasar pedidos creados o cancelados, de fuera de EE. UU. y de al menos 1000 euros:
@@ -316,23 +320,23 @@ Una cola entrega cada mensaje a *un* consumidor y lo borra. Un *stream* es disti
   tarjeta("Amazon Data Firehose", subtitulo: "Antes Kinesis Data Firehose")[Entrega datos en streaming *sin gestionar capacidad* a S3, Redshift, OpenSearch, Splunk, Snowflake, tablas Apache Iceberg o endpoints HTTP. Agrupa por tamaño o tiempo (casi tiempo real), transforma con Lambda, convierte a Parquet y comprime; se paga por GB. La forma más sencilla de llevar logs y eventos a un _data lake_.],
   tarjeta("Managed Service for Apache Flink", color: col.observabilidad, subtitulo: "Antes Kinesis Data Analytics")[Ejecuta aplicaciones Apache Flink (Java, Python o SQL) que procesan streams *con estado*: ventanas temporales, agregaciones, _joins_ y detección de anomalías sobre datos de Kinesis o MSK.],
   tarjeta("Amazon MSK", color: col.datos, subtitulo: "Apache Kafka gestionado")[Clústeres Kafka provisionados (con _brokers_ Standard o Express) o MSK Serverless, y MSK Connect para conectores. Elígelo si ya usas Kafka o necesitas su ecosistema, retenciones largas y relectura por _offset_.],
-  tarjeta("Amazon MQ", color: col.neutro, subtitulo: "ActiveMQ y RabbitMQ gestionados")[_Brokers_ con protocolos estándar (JMS, AMQP, MQTT, STOMP, OpenWire) para *migrar* aplicaciones que ya los usan sin reescribirlas. Para desarrollos nuevos, SQS y SNS escalan mejor y no hay _brokers_ que dimensionar.],
+  tarjeta("Amazon MQ", color: col.neutro, subtitulo: "ActiveMQ y RabbitMQ gestionados")[Brokers con protocolos estándar (JMS, AMQP, MQTT, STOMP, OpenWire) para *migrar* aplicaciones que ya los usan sin reescribirlas. Para desarrollos nuevos, SQS y SNS escalan mejor y no hay brokers que dimensionar.],
 )
 
 == ¿Qué servicio elijo?
 
 #tabla(("Servicio", "Modelo", "¿Quién recibe cada mensaje?", "Orden", "Retención y relectura", "Ideal para"),
   columnas: (1fr, 1fr, 1.25fr, 0.9fr, 1.25fr, 1.4fr), tamano: 7.8pt,
-  [*SQS*], [Cola (_pull_)], [Un consumidor], [Solo FIFO], [Hasta 14 días; sin relectura], [Colas de trabajo, amortiguar picos],
-  [*SNS*], [Pub/sub (_push_)], [Todos los suscriptores], [Solo FIFO], [No guarda (salvo archivo en FIFO)], [_Fan-out_, notificaciones],
-  [*EventBridge*], [Bus con reglas (_push_)], [Los destinos de cada regla que coincide], [No], [Archivo y _replay_ opcionales], [Integrar servicios, SaaS y eventos de AWS],
-  [*Kinesis Data Streams*], [Stream (_pull_)], [Todos, cada uno a su ritmo], [Por shard], [De 24 h a 365 días; relectura], [Telemetría, clics, analítica en tiempo real],
-  [*Amazon MSK*], [Stream Kafka], [Todos los grupos de consumidores], [Por partición], [Configurable; relectura por _offset_], [Plataformas y ecosistema Kafka],
+  [*SQS*], [Cola (pull)], [Un consumidor], [Solo FIFO], [Hasta 14 días; sin relectura], [Colas de trabajo, amortiguar picos],
+  [*SNS*], [Pub/sub (push)], [Todos los suscriptores], [Solo FIFO], [No guarda (salvo archivo en FIFO)], [Fan-out, notificaciones],
+  [*EventBridge*], [Bus con reglas (push)], [Los destinos de cada regla que coincide], [No], [Archivo y _replay_ opcionales], [Integrar servicios, SaaS y eventos de AWS],
+  [*Kinesis Data Streams*], [Stream (pull)], [Todos, cada uno a su ritmo], [Por shard], [De 24 h a 365 días; relectura], [Telemetría, clics, analítica en tiempo real],
+  [*Amazon MSK*], [Stream Kafka], [Todos los grupos de consumidores], [Por partición], [Configurable; relectura por offset], [Plataformas y ecosistema Kafka],
 )
 
 == Patrones de integración
 
-Ya conoces dos patrones básicos: la *cola de trabajo*, en la que varios consumidores idénticos compiten por los mensajes de una cola (_competing consumers_) y escalas añadiendo consumidores, y el _fan-out_. Sobre ellos se construyen los demás. El primer dilema es quién dirige el flujo:
+Ya conoces dos patrones básicos: la *cola de trabajo*, en la que varios consumidores idénticos compiten por los mensajes de una cola (_competing consumers_) y escalas añadiendo consumidores, y el fan-out. Sobre ellos se construyen los demás. El primer dilema es quién dirige el flujo:
 
 #block(breakable: false)[#tarjetas(
   tarjeta("Coreografía", subtitulo: "EventBridge, SNS")[Cada servicio reacciona a eventos y publica los suyos; nadie dirige. Muy desacoplado y fácil de ampliar, pero el flujo completo es difícil de ver y depurar.],
@@ -362,13 +366,13 @@ En la práctica se combinan: orquestación *dentro* de un dominio (el proceso de
 
 #block(breakable: false)[#resumen[
 - Desacoplar con mensajería asíncrona da resiliencia, absorbe picos y permite escalar y evolucionar cada parte; a cambio exige tolerar duplicados y consistencia eventual.
-- *SQS* es una cola _pull_: Standard (al menos una vez, rendimiento casi ilimitado) o FIFO (orden por _message group_ y exactamente una vez).
+- *SQS* es una cola pull: Standard (al menos una vez, rendimiento casi ilimitado) o FIFO (orden por _message group_ y exactamente una vez).
 - Un mensaje recibido queda invisible durante el *visibility timeout*; si no se borra, reaparece y, tras `maxReceiveCount`, va a la *DLQ*.
 - Usa long polling, lotes y, con Lambda, respuestas parciales de lote; el tamaño máximo de mensaje es 1 MiB.
-- *SNS* empuja cada publicación a todos sus suscriptores, con filtros por suscripción; *SNS + SQS* es el patrón _fan-out_.
-- *EventBridge* enruta eventos por contenido con reglas y patrones JSON; añade schema registry, archivo y _replay_, Pipes y Scheduler.
+- *SNS* empuja cada publicación a todos sus suscriptores, con filtros por suscripción; *SNS + SQS* es el patrón fan-out.
+- *EventBridge* enruta eventos por contenido con reglas y patrones JSON; añade schema registry, archivo y replay, Pipes y Scheduler.
 - *Kinesis Data Streams* es un log ordenado por shard que leen varios consumidores, con relectura de hasta 365 días; Firehose entrega a destinos, Flink procesa con estado, y MSK (Kafka) y Amazon MQ (ActiveMQ, RabbitMQ) cubren ecosistemas y migraciones existentes.
-- Patrones clave: cola de trabajo, _fan-out_, coreografía frente a orquestación, saga, _outbox_ e idempotencia.
+- Patrones clave: cola de trabajo, fan-out, coreografía frente a orquestación, saga, outbox e idempotencia.
 ]]
 
 #repaso(

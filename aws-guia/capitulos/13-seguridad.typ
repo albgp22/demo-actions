@@ -59,16 +59,16 @@ El cifrado *simétrico* usa la misma clave para cifrar y descifrar: es rápido y
     [#text(9pt, weight: "bold", fill: col.seguridad)[Simétrico] \ #text(7pt, fill: gris)[una clave compartida \ AES-256]],
     fila(espacio: 3pt,
       caja([Texto en claro]),
-      flecha(etiqueta: [#llave() clave K], largo: 2.2cm),
+      flecha(etiqueta: [#llave() clave K], largo: 2.55cm),
       caja([#candado() Texto cifrado], color: col.seguridad),
-      flecha(etiqueta: [#llave() la misma clave K], largo: 2.2cm),
+      flecha(etiqueta: [#llave() la misma clave K], largo: 2.55cm),
       caja([Texto en claro])),
     [#text(9pt, weight: "bold", fill: col.datos)[Asimétrico] \ #text(7pt, fill: gris)[par de claves \ RSA, ECC]],
     fila(espacio: 3pt,
       caja([Texto en claro]),
-      flecha(etiqueta: [#llave(color: col.almacenamiento) clave pública], largo: 2.2cm),
+      flecha(etiqueta: [#llave(color: col.almacenamiento) clave pública], largo: 2.55cm),
       caja([#candado(color: col.datos) Texto cifrado], color: col.datos),
-      flecha(etiqueta: [#llave(color: col.datos) clave privada], largo: 2.2cm),
+      flecha(etiqueta: [#llave(color: col.datos) clave privada], largo: 2.55cm),
       caja([Texto en claro])),
   )
 ]
@@ -404,7 +404,7 @@ aws secretsmanager rotate-secret --secret-id prod/pagos/db \
 
 *Rotación.* Según la programación (cada N días o una expresión `rate`/`cron`), Secrets Manager invoca la función de rotación, que sigue cuatro pasos: `createSecret` genera la contraseña nueva como versión `AWSPENDING`, `setSecret` la cambia en la base de datos, `testSecret` comprueba que funciona y `finishSecret` le mueve la etiqueta `AWSCURRENT` (la anterior pasa a `AWSPREVIOUS`). Quien lee `AWSCURRENT` obtiene la nueva sin redesplegar. Cachea el secreto (en Lambda, la extensión _AWS Parameters and Secrets Lambda Extension_ lo hace por ti), pero reléelo si la conexión falla por credenciales.
 
-#examen[¿Credenciales que deben rotar solas? *Secrets Manager*. ¿Configuración o un secreto sin rotación al menor coste? *Parameter Store* con `SecureString`. Ambos se referencian desde CloudFormation (`{{resolve:secretsmanager:...}}`, `{{resolve:ssm-secure:...}}`, capítulo de IaC) y desde las tareas de ECS.]
+#examen[¿Credenciales que deben rotar solas? *Secrets Manager*. ¿Configuración o un secreto sin rotación al menor coste? *Parameter Store* con `SecureString`. Ambos se referencian desde CloudFormation (`{{resolve:secretsmanager:...}}`, `{{resolve:ssm-secure:...}}`, capítulo de Infraestructura como código) y desde las tareas de ECS.]
 
 == Certificados TLS con ACM
 
