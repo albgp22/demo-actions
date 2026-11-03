@@ -82,12 +82,12 @@ El *drift* (deriva) es la diferencia entre lo que declara tu código y lo que ex
 
 == AWS CloudFormation
 
-CloudFormation es el servicio de IaC nativo de AWS. Le entregas una *plantilla* YAML o JSON y crea un *stack*: el conjunto de recursos que se crean, actualizan y borran como una unidad. Resuelve las dependencias, crea en paralelo lo que puede y, si algo falla, deshace los cambios.
+CloudFormation, el servicio de IaC nativo de AWS, convierte una *plantilla* YAML o JSON en un *stack*: recursos que se crean, actualizan y borran como una unidad, en paralelo cuando se puede y deshaciendo los cambios si algo falla.
 
 #ficha("AWS CloudFormation", "Infraestructura declarativa nativa de AWS",
   ("Unidad", [*Stack*: recursos con un ciclo de vida común, en una cuenta y una región]),
-  ("Coste", [Gratuito para los recursos de AWS: pagas lo que crea (las extensiones de terceros se cobran por operación)]),
-  ("Extras", [Change sets, drift, StackSets e _IaC generator_ (crea plantillas a partir de recursos ya desplegados)]))
+  ("Coste", [Gratuito para los recursos de AWS: pagas lo que crea (las extensiones de terceros, por operación)]),
+  ("Extras", [Change sets, drift, StackSets e _IaC generator_ (plantillas a partir de lo ya desplegado)]))
 
 #diagrama(pie: [Secciones de una plantilla de CloudFormation. Solo `Resources` es obligatoria; existen también `Metadata`, `Rules` y `Transform` (macros, como la de SAM).])[
   #grid(columns: (1fr, 1fr, 1fr), column-gutter: 7pt, row-gutter: 7pt,
@@ -229,20 +229,15 @@ bucket.grantRead(fn);                        // política IAM de mínimo privile
     flecha(largo: 1.1cm),
     svc("AWS", "Recursos", color: col.fundamentos),
   )
-  #v(2pt)
-  #zona("cdk bootstrap · stack CDKToolkit", color: col.neutro)[
-    #fila(espacio: 10pt,
-      svc("S3", "Bucket de assets", color: col.almacenamiento),
-      svc("ECR", "Repositorio de imágenes", color: col.contenedores),
-      svc("IAM", "Roles IAM", sub: "de despliegue", color: col.iam))
-  ]
+  #v(4pt)
+  #caja([*cdk bootstrap* (stack CDKToolkit, una vez por cuenta y región): bucket de assets, repositorio ECR y roles IAM], color: col.neutro, relleno: gris-claro.lighten(50%))
 ]
 
 *AWS SAM* (_Serverless Application Model_) es una extensión de CloudFormation para lo visto en el capítulo de Serverless: con `Transform: AWS::Serverless-2016-10-31` usas tipos abreviados como `AWS::Serverless::Function`, que se expanden en rol, permisos, API y eventos. La SAM CLI añade `sam build`, `sam deploy --guided` y pruebas locales con Docker (`sam local invoke`).
 
 == Terraform
 
-*Terraform*, de HashiCorp, es la herramienta de IaC más extendida fuera del ecosistema nativo de AWS. Usa su propio lenguaje declarativo, *HCL*, y *proveedores* que le permiten gestionar AWS, otras nubes y cientos de servicios (GitHub, Datadog, Kubernetes…) con el mismo flujo: `terraform init`, `terraform plan` (qué cambiará) y `terraform apply`.
+*Terraform*, de HashiCorp, es la herramienta de IaC más extendida fuera de AWS: con su lenguaje declarativo, *HCL*, y sus *proveedores* gestiona AWS, otras nubes y cientos de servicios con el mismo flujo: `terraform init`, `plan` (qué cambiará) y `apply`.
 
 A diferencia de CloudFormation, Terraform guarda un *fichero de estado* que relaciona cada recurso con su identificador real. Es crítico y puede contener secretos: guárdalo en un *backend remoto* (un bucket S3 versionado, cifrado y restringido) con *bloqueo*, para que dos `apply` simultáneos no lo corrompan. Desde Terraform 1.11 el backend S3 bloquea de forma nativa con `use_lockfile = true`; la tabla de DynamoDB que se usaba antes está marcada como obsoleta.
 
@@ -257,12 +252,10 @@ terraform {
     use_lockfile = true            # bloqueo nativo en S3
   }
 }
-
 provider "aws" {
   region = "eu-west-1"
   default_tags { tags = { Proyecto = "subidas" } }   # etiquetas en todo
 }
-
 resource "aws_s3_bucket" "subidas" { bucket = "miempresa-subidas-prod" }
 output "arn_bucket" { value = aws_s3_bucket.subidas.arn }
 ```
@@ -274,7 +267,7 @@ output "arn_bucket" { value = aws_s3_bucket.subidas.arn }
   [*Rollback automático*], si, [#si vía CloudFormation], [#no se corrige y se vuelve a aplicar],
 ))
 
-#consejo[¿Cuál elegir? Todo en AWS y un equipo que programa: CDK. Plantillas sin dependencias: CloudFormation. Varios proveedores con un mismo flujo: Terraform u *OpenTofu*, el fork abierto creado en 2023 tras el cambio de licencia de Terraform.]
+#consejo[¿Cuál elegir? Todo en AWS y un equipo que programa: CDK. Plantillas sin dependencias: CloudFormation. Varios proveedores: Terraform u *OpenTofu*, su fork abierto desde 2023.]
 
 == CI/CD en AWS
 
@@ -287,6 +280,8 @@ La *integración continua* (CI) compila y prueba cada cambio en cuanto llega al 
 )
 
 #nota(titulo: "¿Dónde vive el código?")[AWS cerró *CodeCommit* (repositorios Git) a nuevos clientes a mediados de 2024 y lo reabrió en noviembre de 2025. Aun así, lo habitual es usar GitHub, GitLab o Bitbucket conectados a CodePipeline con *AWS CodeConnections* (antes CodeStar Connections), o el CI del proveedor autenticándose en AWS con OIDC.]
+
+Si tu CI vive en GitHub Actions, no guardes claves de acceso en el repositorio: registra GitHub como *proveedor de identidad OIDC* en IAM y crea un rol cuya política de confianza solo acepte tokens de tu repositorio y rama (condición sobre `token.actions.githubusercontent.com:sub`, p. ej. `repo:miorg/subidas:ref:refs/heads/main`). El workflow declara `id-token: write` y usa `aws-actions/configure-aws-credentials`; STS le da credenciales temporales.
 
 Un `buildspec.yml` típico para una aplicación en contenedores ejecuta los tests, construye la imagen, la sube a ECR y genera el `imagedefinitions.json` que consume la acción de despliegue en ECS:
 
@@ -339,8 +334,6 @@ artifacts:
   )
 ]
 
-Si tu CI vive en GitHub Actions, no guardes claves de acceso en el repositorio: registra GitHub como *proveedor de identidad OIDC* en IAM y crea un rol cuya política de confianza solo acepte tokens de tu repositorio y rama (condición sobre `token.actions.githubusercontent.com:sub`, p. ej. `repo:miorg/subidas:ref:refs/heads/main`). El workflow declara `id-token: write` y usa `aws-actions/configure-aws-credentials`; STS le da credenciales temporales.
-
 == Estrategias de despliegue
 
 Desplegar es decidir *cómo* pasa el tráfico de la versión actual (v1) a la nueva (v2) y cómo vuelves atrás si algo va mal.
@@ -360,31 +353,30 @@ Desplegar es decidir *cómo* pasa el tráfico de la versión actual (v1) a la nu
   )
 ]
 
-Desplegar *todo a la vez* es lo más simple, pero implica corte y una vuelta atrás lenta. Las demás estrategias las ofrecen CodeDeploy, los despliegues nativos de ECS (desde 2025), los alias ponderados de Lambda y los target groups ponderados del ALB. Los *feature flags* separan *desplegar* de *lanzar*: el código llega desactivado y lo enciendes por configuración para un porcentaje de usuarios. *AWS AppConfig* los gestiona: valida cada cambio, lo propaga gradualmente con un periodo de observación (_bake time_) y lo revierte si salta una alarma.
+Desplegar *todo a la vez* es lo más simple, pero implica corte y una vuelta atrás lenta; las demás estrategias las ofrecen CodeDeploy, ECS (de forma nativa desde 2025), los alias ponderados de Lambda y los target groups del ALB. Los *feature flags* separan *desplegar* de *lanzar*: el código llega desactivado y lo enciendes por configuración para un porcentaje de usuarios. *AWS AppConfig* los gestiona: valida cada cambio, lo propaga gradualmente con un periodo de observación (_bake time_) y lo revierte si salta una alarma.
 
 == Entornos y buenas prácticas
 
 #practica[
   - *Una cuenta por entorno* (dev, staging, prod); el pipeline vive en una cuenta de herramientas y asume roles de despliegue (en CDK, `cdk bootstrap --trust`). Más en el capítulo de Arquitecturas de referencia.
   - *El mismo artefacto y la misma plantilla en todos los entornos*; solo cambian los parámetros. Los secretos, en Secrets Manager o Parameter Store.
-  - Consola de *solo lectura* en producción; stacks *pequeños y por ciclo de vida* (red, datos, aplicación).
-  - Publica el change set o el `plan` en la _pull request_ y pasa cfn-lint, cfn-guard, cdk-nag, Checkov o tflint.
+  - Consola de *solo lectura* en producción, stacks *pequeños y por ciclo de vida* y el change set o `plan` revisado en la _pull request_.
   - Mínimo privilegio para el pipeline, OIDC en lugar de claves y etiquetas desde el código (lo agradecerá el capítulo de Costes).
 ]
 
 #resumen[
-- La IaC hace la infraestructura *reproducible, revisable y trazable* y permite detectar el *drift* provocado por cambios manuales.
+- La IaC hace la infraestructura *reproducible, revisable y trazable* y destapa el *drift* de los cambios manuales.
 - Una plantilla de CloudFormation tiene `Parameters`, `Mappings`, `Conditions`, `Resources` (la única obligatoria) y `Outputs`; `!Ref`, `!GetAtt`, `!Sub` e `!ImportValue` conectan las piezas.
-- Los *change sets* muestran el impacto (incluido el reemplazo) antes de ejecutar; si algo falla, hay *rollback* automático.
-- `DeletionPolicy` y `UpdateReplacePolicy` protegen los datos; *nested stacks* reutilizan, *exports* comparten y *StackSets* llegan a muchas cuentas.
+- Los *change sets* muestran el impacto antes de ejecutar y, si algo falla, hay *rollback*; `DeletionPolicy` y `UpdateReplacePolicy` protegen los datos.
+- *Nested stacks* reutilizan, *exports* comparten y *StackSets* llegan a muchas cuentas y regiones.
 - CDK genera CloudFormation desde código (constructs L1, L2, L3); Terraform gestiona varios proveedores con un *fichero de estado* en S3 con bloqueo (`use_lockfile`).
-- CodePipeline orquesta, CodeBuild compila y prueba, y CodeDeploy o ECS despliegan con rolling, blue/green o canary; AppConfig aporta feature flags.
+- CodePipeline orquesta, CodeBuild prueba y CodeDeploy o ECS despliegan (rolling, blue/green, canary); AppConfig da feature flags.
 ]
 
 #repaso(
   ([¿Qué es el drift y cómo lo detectas?], [La diferencia entre el código y la realidad, casi siempre por cambios manuales. Con la detección de drift de CloudFormation o con `terraform plan`.]),
-  ([¿Qué diferencia hay entre `!Ref` y `!GetAtt`?], [`!Ref` devuelve un parámetro o el identificador físico del recurso (el nombre de un bucket); `!GetAtt`, un atributo concreto, como el ARN o el nombre DNS.]),
+  ([¿Qué diferencia hay entre `!Ref` y `!GetAtt`?], [`!Ref` devuelve un parámetro o el ID físico del recurso (el nombre de un bucket); `!GetAtt`, un atributo como el ARN.]),
   ([¿Cómo evitas perder una base de datos RDS al borrar el stack o al reemplazarla?], [`DeletionPolicy` y `UpdateReplacePolicy` con `Snapshot` o `Retain`, protección contra terminación y revisar `Replacement` en el change set.]),
-  ([¿Por qué hay que bloquear el estado de Terraform y cómo se hace en AWS?], [Para que dos ejecuciones simultáneas no lo corrompan: backend S3 con `use_lockfile = true` (antes, una tabla de DynamoDB, hoy obsoleta).]),
+  ([¿Por qué hay que bloquear el estado de Terraform?], [Para que dos ejecuciones simultáneas no lo corrompan; en AWS, backend S3 con `use_lockfile = true`.]),
   ([¿En qué se diferencian blue/green y canary?], [Blue/green cambia todo el tráfico de una vez a una versión nueva completa (vuelta atrás inmediata); canary envía antes un pequeño porcentaje y observa las alarmas.]),
 )

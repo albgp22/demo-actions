@@ -334,7 +334,7 @@ Todo rol tiene dos políticas que responden a preguntas distintas. La *trust pol
 Asumir un rol es una conversación con *AWS STS* (_Security Token Service_), el servicio que emite credenciales temporales:
 
 #pasos(
-  [El principal llama a `sts:AssumeRole` con el ARN del rol y un *nombre de sesión*. Si es una identidad de IAM, su propia política debe permitirle `sts:AssumeRole` sobre ese rol.],
+  [El principal llama a `sts:AssumeRole` con el ARN del rol y un *nombre de sesión*. Si la trust policy confía en una cuenta entera, o el rol está en otra cuenta, su política de identidad debe permitirle además `sts:AssumeRole` sobre ese rol.],
   [STS comprueba la *trust policy*: ¿confía en quien llama? ¿Se cumplen sus condiciones (MFA, External ID…)?],
   [Si todo encaja, STS devuelve *credenciales temporales*: `AccessKeyId` (empieza por `ASIA`), `SecretAccessKey`, `SessionToken` y `Expiration`.],
   [El principal firma sus peticiones con ellas. Para AWS ahora es la sesión `assumed-role/NombreDelRol/NombreDeSesion`.],
@@ -436,7 +436,7 @@ Las organizaciones bien gestionadas separan producción, desarrollo o cada equip
   [No es un rol ni una política que se adjunte: por sí mismo no concede nada hasta que lo *asignas* a una cuenta. No es un principal.],
   [Definir perfiles —«Desarrollador», «SoloLectura», «Administrador»— una sola vez y desplegarlos en tantas cuentas como necesites.],
   [`PowerUser` = política gestionada `PowerUserAccess` + sesión de 8 horas, asignado al grupo `Developers` en las cuentas `dev` y `test`.],
-  [Editar a mano el rol que genera en cada cuenta (Identity Center lo sobrescribe), o usar una política propia que no existe con ese nombre en alguna cuenta asignada.])
+  [Tocar a mano el rol que genera en cada cuenta (lo gestiona Identity Center), o usar una política propia que no existe con ese nombre en alguna cuenta asignada.])
 
 === Qué ocurre por debajo
 

@@ -303,7 +303,7 @@ Esta es la política del bucket en la cuenta B. Fíjate en que nombra al rol con
 }
 ```
 
-#nota[Si en lugar de esto la cuenta A *asume un rol* de la cuenta B, el acceso deja de ser «entre cuentas» a efectos de evaluación: la sesión del rol pertenece a B y se evalúa como cualquier petición de B. Es la opción 2 del escenario 6 del capítulo anterior.]
+#nota[Si en lugar de esto la cuenta A *asume un rol* de la cuenta B (el camino «con un rol en B» del escenario 6 del capítulo anterior), solo la llamada a `AssumeRole` es entre cuentas y necesita los dos permisos: la política de identidad en A y la trust policy en B. Después, la sesión del rol pertenece a B y sus peticiones se evalúan como cualquier otra de B.]
 
 == Condiciones útiles y variables de política
 
@@ -416,7 +416,8 @@ La política de los desarrolladores solo les deja crear roles *si llevan el boun
     {
       "Sid": "CrearRolesSoloConLimite",
       "Effect": "Allow",
-      "Action": ["iam:CreateRole", "iam:AttachRolePolicy", "iam:PutRolePolicy"],
+      "Action": ["iam:CreateRole", "iam:PutRolePermissionsBoundary",
+                 "iam:AttachRolePolicy", "iam:PutRolePolicy"],
       "Resource": "arn:aws:iam::111122223333:role/apps/*",
       "Condition": {"StringEquals": {
         "iam:PermissionsBoundary": "arn:aws:iam::111122223333:policy/LimiteApps"}}
@@ -530,7 +531,7 @@ Las *RCP* (_resource control policies_, 2024) son la otra mitad: limitan lo que 
   [*Cuenta de gestión y roles vinculados a servicios*], [No les afectan], [No les afectan],
   [*Política por defecto*], [`FullAWSAccess`], [`RCPFullAWSAccess`])
 
-#practica(titulo: "Estrategia multicuenta y AWS Control Tower")[Una estructura habitual separa una OU *Security* (cuentas de archivo de logs y de herramientas de seguridad), una OU *Infrastructure* (red y servicios compartidos), una OU *Workloads* con producción y no producción en cuentas distintas, y una OU *Sandbox* para experimentar con límites estrictos. *AWS Control Tower* automatiza esta *landing zone*: crea las cuentas de logs y auditoría, aplica *controles* preventivos (SCP y RCP), detectivos (reglas de AWS Config) y proactivos (hooks de CloudFormation), y ofrece una *Account Factory* para crear cuentas ya configuradas. Organizations admite además otros tipos de políticas: de etiquetas, de copias de seguridad y declarativas, entre otras.]
+#practica(titulo: "Estrategia multicuenta y AWS Control Tower")[Una estructura habitual separa una OU *Security* (cuentas de archivo de logs y de herramientas de seguridad), una OU *Infrastructure* (red y servicios compartidos), una OU *Workloads* con producción y no producción en cuentas distintas, y una OU *Sandbox* para experimentar con límites estrictos. *AWS Control Tower* automatiza esta *landing zone*: crea las cuentas de logs y auditoría, aplica *controles* preventivos (políticas de Organizations como las SCP), detectivos (reglas de AWS Config) y proactivos (hooks de CloudFormation), y ofrece una *Account Factory* para crear cuentas ya configuradas. Organizations admite además otros tipos de políticas: de etiquetas, de copias de seguridad y declarativas, entre otras.]
 
 == Depurar un AccessDenied paso a paso
 
@@ -650,7 +651,7 @@ Antes de leer la solución, decide tú: ¿se permite la petición? Recuerda las 
     {"aws:SourceIp": "203.0.113.0/24"}}
 }
 ```], false,
-  [La condición no se cumple, así que la sentencia no aplica y no queda ningún Allow: deny implícito. Ojo: si la petición llegara a S3 por un VPC endpoint, `aws:SourceIp` tampoco serviría, porque no contiene la IP pública.])
+  [La condición no se cumple, así que la sentencia no aplica y no queda ningún Allow: deny implícito. Ojo: si la petición llegara a S3 por un VPC endpoint, `aws:SourceIp` tampoco serviría: esa clave no está presente en las peticiones que llegan por un endpoint.])
 
 #_ejercicio(4, [El rol `analitica` (cuenta A) lee un objeto de `datos-b` (cuenta B), cuya política de bucket no menciona a la cuenta A.],
   [```json

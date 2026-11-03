@@ -17,8 +17,8 @@
   set par(justify: false, leading: 0.45em)
   grid(columns: (1fr, auto), column-gutter: 6pt, row-gutter: 4.6pt,
     ..pares.pos().map(((k, v)) => (
-      text(7.6pt, fill: gris.darken(25%), k),
-      align(right, text(7.8pt, weight: "bold", fill: tinta, v)),
+      text(7.2pt, fill: gris.darken(25%), hyphenate: false, k),
+      align(right, text(7.5pt, weight: "bold", fill: tinta, v)),
     )).flatten())
 }
 
@@ -27,7 +27,7 @@
 
 #seccion[Cifras y límites clave]
 
-Valores por defecto o máximos a finales de 2026. Un asterisco (\*) indica una cuota *ajustable* desde Service Quotas; antes de diseñar al límite, comprueba la documentación.
+Valores por defecto o máximos a finales de 2026. Un asterisco (\*) indica una cuota *ajustable* desde Service Quotas; «car.» son caracteres. Antes de diseñar al límite, comprueba la documentación.
 
 #tarjetas(columnas: 3,
   tarjeta("Lambda", color: col.serverless)[#kv(
@@ -36,14 +36,14 @@ Valores por defecto o máximos a finales de 2026. Un asterisco (\*) indica una c
     ([/tmp efímero], [512 MB–10 GB]),
     ([Payload síncrono], [6 MB]),
     ([Payload asíncrono], [1 MB]),
-    ([Zip / descomprimido], [50 / 250 MB]),
+    ([Zip / sin comprimir], [50 / 250 MB]),
     ([Imagen de contenedor], [10 GB]),
-    ([Concurrencia/región], [1 000\*]),
+    ([Concurrencia], [1 000\*]),
   )],
   tarjeta("SQS", color: col.integracion)[#kv(
     ([Mensaje], [1 MiB]),
     ([Retención], [1 min–14 días]),
-    ([Retención por defecto], [4 días]),
+    ([… por defecto], [4 días]),
     ([Visibility timeout], [0 s–12 h]),
     ([… por defecto], [30 s]),
     ([Long polling], [hasta 20 s]),
@@ -52,8 +52,8 @@ Valores por defecto o máximos a finales de 2026. Un asterisco (\*) indica una c
   )],
   tarjeta("DynamoDB", color: col.datos)[#kv(
     ([Ítem], [400 KB]),
-    ([RCU (lectura fuerte/s)], [4 KB]),
-    ([WCU (escritura/s)], [1 KB]),
+    ([1 RCU: lectura fuerte/s], [4 KB]),
+    ([1 WCU: escritura/s], [1 KB]),
     ([Query / Scan], [1 MB/página]),
     ([BatchWrite / Get], [25 / 100 ítems]),
     ([Transacción], [100 acciones]),
@@ -81,43 +81,43 @@ Valores por defecto o máximos a finales de 2026. Un asterisco (\*) indica una c
   )],
   tarjeta("EC2, EBS y ELB", color: col.computo)[#kv(
     ([Aviso de Spot], [2 min]),
-    ([Linux: facturación por s], [mín. 60 s]),
+    ([Linux: por segundo], [mín. 60 s]),
     ([IMDS], [169.254.169.254]),
     ([gp3: IOPS base], [3 000]),
-    ([gp3: rendimiento base], [125 MB/s]),
+    ([gp3: MB/s base], [125 MB/s]),
     ([ALB idle timeout], [60 s]),
-    ([Deregistration delay], [300 s]),
+    ([Deregistration], [300 s]),
   )],
   tarjeta("IAM y Organizations", color: col.iam)[#kv(
-    ([Usuarios por cuenta], [5 000]),
+    ([Usuarios IAM], [5 000]),
     ([Grupos por usuario], [10]),
     ([Sesión de un rol], [1 h (máx. 12 h)]),
     ([Roles encadenados], [máx. 1 h]),
-    ([Política gestionada], [6 144 caracteres]),
+    ([Política gestionada], [6 144 car.]),
     ([SCP por destino], [5]),
-    ([Tamaño de SCP], [5 120 caracteres]),
+    ([Tamaño de SCP], [5 120 car.]),
     ([Niveles de OU], [5]),
   )],
   tarjeta("Observabilidad", color: col.observabilidad)[#kv(
-    ([CloudTrail (historial)], [90 días]),
-    ([Retención de métricas], [15 meses]),
+    ([CloudTrail: historial], [90 días]),
+    ([Métricas: retención], [15 meses]),
     ([Resolución estándar], [1 min]),
     ([Alta resolución], [1 s]),
-    ([EC2 básico / detallado], [5 / 1 min]),
+    ([EC2 básico / detall.], [5 / 1 min]),
     ([CloudWatch Logs], [sin caducidad]),
   )],
   tarjeta("KMS", color: col.seguridad)[#kv(
-    ([Encrypt directo (más: envelope)], [4 KB]),
+    ([Encrypt directo], [4 KB]),
     ([Espera de borrado], [7–30 días]),
     ([… por defecto], [30 días]),
     ([Rotación automática], [anual]),
-    ([Periodo configurable], [90–2 560 días]),
+    ([Configurable], [90–2 560 días]),
   )],
   tarjeta("API Gateway y streaming", color: col.serverless)[#kv(
     ([API GW: timeout], [29 s\*]),
     ([API GW: payload], [10 MB]),
     ([Step Functions Std.], [1 año]),
-    ([Step Functions Express], [5 min]),
+    ([Step Functions Expr.], [5 min]),
     ([Kinesis: retención], [24 h–365 días]),
     ([Shard: escritura], [1 MB/s]),
     ([Shard: lectura], [2 MB/s]),
@@ -188,6 +188,8 @@ aws ce get-cost-and-usage --time-period Start=2026-10-01,End=2026-11-01 \
 #consejo[Añade `--query` (JMESPath) y `--output table` o `text` para filtrar la salida, `--dry-run` en EC2 para comprobar permisos sin ejecutar nada, y `--debug` para ver qué petición firma la CLI cuando algo falla.]
 
 #seccion[¿Qué servicio uso para…?]
+
+#set text(hyphenate: false)
 
 #tabla(("Necesito…", "Usa", "Alternativa o matiz"), columnas: (2.3fr, 1.55fr, 2.4fr), tamano: 8pt,
   [Ejecutar código por eventos, en tareas cortas], [Lambda], [Contenedores si dura más de 15 min o la carga es constante],
