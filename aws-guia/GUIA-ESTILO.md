@@ -60,7 +60,8 @@ Mira con la herramienta Read los PNG de las páginas con diagramas o tablas: com
   - Lambda: hasta 15 min, hasta 10 240 MB de memoria, /tmp efímero hasta 10 GB, payload síncrono de 6 MB; SnapStart.
   - Aurora Serverless v2 puede escalar a 0 ACU (2024); existe Aurora DSQL (GA 2025). DynamoDB: ítem máx. 400 KB.
   - Amazon Data Firehose (antes Kinesis Data Firehose); Amazon Managed Service for Apache Flink (antes Kinesis Data Analytics).
-  - AWS CodeCommit y Cloud9 cerraron a nuevos clientes en 2024: menciónalo si hablas de ellos.
+  - AWS CodeCommit cerró a nuevos clientes en julio de 2024 y volvió a abrirse en noviembre de 2025. Cloud9 cerró a nuevos clientes en 2024.
+  - S3: tamaño máximo de objeto 50 TB desde diciembre de 2025 (antes 5 TB); una sola PUT, hasta 5 GB.
   - EKS Auto Mode (2024). ECS Service Connect.
 
 ## Componentes disponibles (`theme.typ`)
