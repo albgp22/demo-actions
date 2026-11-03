@@ -15,7 +15,7 @@
 // Filas «dato · valor» dentro de una tarjeta
 #let kv(..pares) = {
   set par(justify: false, leading: 0.45em)
-  grid(columns: (1.7fr, 1fr), column-gutter: 4pt, row-gutter: 4.6pt,
+  grid(columns: (1fr, auto), column-gutter: 6pt, row-gutter: 4.6pt,
     ..pares.pos().map(((k, v)) => (
       text(7.6pt, fill: gris.darken(25%), k),
       align(right, text(7.8pt, weight: "bold", fill: tinta, v)),
