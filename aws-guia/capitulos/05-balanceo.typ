@@ -187,7 +187,7 @@ Un *Auto Scaling Group (ASG)* mantiene una flota de instancias EC2 del tamaño a
     columna(
       svc("CW", "CloudWatch", sub: "alarma: CPU media del grupo", color: col.observabilidad),
       flecha-v(etiqueta: "dispara", largo: 0.7cm),
-      svc("ASG", "Escalado", sub: "política target tracking: 50 %", color: col.computo),
+      svc("ASG", "Escalado", sub: "target tracking: 50 %", color: col.computo),
       v(0.5cm),
     ),
     box(inset: (bottom: 1.25cm), flecha(etiqueta: "ajusta la deseada", largo: 1.6cm)),

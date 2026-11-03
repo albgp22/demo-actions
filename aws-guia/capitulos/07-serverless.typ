@@ -405,9 +405,9 @@ Resources:
 ```
 
 
-#resumen[
-- _Serverless_: sin servidores que gestionar, escalado automático (incluso a cero), pago por uso y alta disponibilidad de serie.
-- Lambda ejecuta un *handler* por evento: hasta 15 min y de 128 MB a 10~240 MB de memoria (y CPU proporcional).
+#block(breakable: false)[#resumen[
+- _Serverless_: nada que administrar, escala sola (incluso a cero), pago por uso y alta disponibilidad.
+- Lambda: un *handler* por evento, hasta 15 min y 10~240 MB de memoria, con CPU proporcional.
 - El entorno pasa por *Init → Invoke (reutilizable) → Shutdown*; los *cold starts* se mitigan con SnapStart o concurrencia aprovisionada.
 - La concurrencia regional (1000 por defecto) es compartida; la *reservada* garantiza y limita, la *aprovisionada* pre-inicializa.
 - Invocación *síncrona* (reintenta el cliente), *asíncrona* (reintenta Lambda; destinos y DLQ) y *event source mapping* (Lambda sondea SQS, Kinesis o DynamoDB Streams).
@@ -415,7 +415,7 @@ Resources:
 - Versiones inmutables y *aliases* ponderados permiten despliegues canary con _rollback_ automático.
 - API Gateway: REST (más funciones), HTTP (más barata) y WebSocket; autorización IAM, JWT/Cognito o Lambda; _throttling_ con 429.
 - Step Functions orquesta pasos con Retry y Catch: Standard (flujos largos) o Express (alto volumen).
-]
+]]
 
 #repaso(
   ([¿Por qué conviene crear los clientes del SDK fuera del handler?], [Porque ese código se ejecuta una vez, en la fase Init, y se reutiliza en todas las invocaciones del mismo entorno.]),

@@ -284,16 +284,21 @@
 )
 
 // Flecha horizontal
-#let flecha(etiqueta: none, largo: 1.4cm, color: rgb("#7A8699"), doble: false, punteada: false) = box(
+#let flecha(etiqueta: none, largo: 1.4cm, color: rgb("#7A8699"), doble: false, punteada: false, izquierda: false) = box(
   width: largo, height: 2.6em,
   {
     let st = (paint: color, thickness: 1.2pt, dash: if punteada { "dashed" } else { none })
-    let ini = if doble { 5pt } else { 0pt }
-    place(left + horizon, dx: ini, line(length: largo - ini - 5pt, stroke: st))
-    place(right + horizon, polygon(fill: color, (0pt, 0pt), (7pt, 3.5pt), (0pt, 7pt)))
-    if doble { place(left + horizon, polygon(fill: color, (7pt, 0pt), (0pt, 3.5pt), (7pt, 7pt))) }
+    let punta-der = not izquierda or doble
+    let punta-izq = izquierda or doble
+    let ini = if punta-izq { 5pt } else { 0pt }
+    let fin = if punta-der { 5pt } else { 0pt }
+    place(left + horizon, dx: ini, line(length: largo - ini - fin, stroke: st))
+    if punta-der { place(right + horizon, polygon(fill: color, (0pt, 0pt), (7pt, 3.5pt), (0pt, 7pt))) }
+    if punta-izq { place(left + horizon, polygon(fill: color, (7pt, 0pt), (0pt, 3.5pt), (7pt, 7pt))) }
     if etiqueta != none {
-      place(center + top, dy: -1pt, box(width: largo + 0.8cm, align(center, {
+      // La etiqueta crece hacia arriba desde justo encima de la línea: aunque ocupe
+      // dos líneas, nunca pisa la flecha.
+      place(center + bottom, dy: -1.3em - 3pt, box(width: largo + 0.8cm, align(center, {
         set par(justify: false, leading: 0.3em)
         text(6.4pt, fill: color.darken(25%), weight: "medium", etiqueta)
       })))
@@ -594,10 +599,19 @@
 
   // Código
   show raw: set text(font: ("JetBrains Mono", "DejaVu Sans Mono"), features: (calt: 0), ligatures: false)
-  show raw.where(block: false): it => box(
-    fill: rgb("#EEF1F6"), inset: (x: 3pt, y: 0pt), outset: (y: 2.5pt), radius: 2.5pt,
-    text(8.6pt, fill: rgb("#24324A"), it),
-  )
+  // Código en línea. Los fragmentos cortos van en una caja indivisible; los largos (ARN,
+  // comandos) usan `highlight` para poder partirse entre líneas sin descolocar el párrafo.
+  show raw.where(block: false): it => if it.text.len() <= 28 {
+    box(
+      fill: rgb("#EEF1F6"), inset: (x: 3pt, y: 0pt), outset: (y: 2.5pt), radius: 2.5pt,
+      text(8.6pt, fill: rgb("#24324A"), it),
+    )
+  } else {
+    highlight(
+      fill: rgb("#EEF1F6"), top-edge: 0.95em, bottom-edge: -0.3em, extent: 2pt, radius: 2.5pt,
+      text(8.6pt, fill: rgb("#24324A"), it),
+    )
+  }
   show raw.where(block: true): it => context {
     let c = chap-color.get()
     block(

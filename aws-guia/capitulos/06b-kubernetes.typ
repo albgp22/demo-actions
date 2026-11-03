@@ -461,6 +461,8 @@ Los PVC se convierten en almacenamiento de AWS gracias a los drivers *CSI* (Cont
 
 En EKS conviven dos sistemas de permisos: *IAM*, que protege las API de AWS, y el *RBAC* de Kubernetes, que protege la API del clúster. Se cruzan en dos direcciones opuestas, y casi todas las dudas vienen de mezclarlas:
 
+#[
+#set text(hyphenate: false)
 #tabla(("", "A · De fuera hacia dentro", "B · De dentro hacia fuera"), columnas: (0.95fr, 2fr, 2fr), tamano: 8.2pt,
   [*Pregunta*], [¿Quién puede usar el clúster y qué puede hacer en él?], [¿Qué puede hacer un pod en los servicios de AWS?],
   [*Quién actúa, y contra qué API*], [Personas y pipelines con una identidad IAM (usuario, rol o permission set), contra la API de Kubernetes (`kubectl`, Helm...)], [El código de un pod, identificado por su *ServiceAccount* (su identidad en Kubernetes), contra las API de AWS (S3, SQS...)],
@@ -468,9 +470,10 @@ En EKS conviven dos sistemas de permisos: *IAM*, que protege las API de AWS, y e
   [*Cómo se configura*], [Access entry + RoleBinding (o access policy)], [Asociación de EKS Pod Identity (o IRSA)],
   [*Si falla*], [`Unauthorized` o `Forbidden` en `kubectl`], [`AccessDenied` en la llamada a AWS],
 )
+]
 
 #diagrama(pie: [Las dos direcciones de IAM en EKS. Arriba, una persona entra al clúster: IAM la identifica y RBAC decide qué puede hacer. Abajo, un pod actúa en AWS con el rol IAM asociado a su ServiceAccount.])[
-  #zona("A · ¿Quién puede usar el clúster? (de IAM a Kubernetes)", color: col.iam, punteada: false, relleno: white)[
+  #zona("A · ¿Quién puede usar el clúster? De fuera hacia dentro", color: col.iam, punteada: false, relleno: white)[
     #fila(espacio: 2pt,
       actor(etiqueta: "Ana (rol IAM)"),
       flecha(etiqueta: "kubectl + token IAM", largo: 1.9cm),
@@ -482,7 +485,7 @@ En EKS conviven dos sistemas de permisos: *IAM*, que protege las API de AWS, y e
     )
   ]
   #v(4pt)
-  #zona("B · ¿Qué puede hacer el pod en AWS? (de Kubernetes a IAM)", color: k8s, punteada: false, relleno: white)[
+  #zona("B · ¿Qué puede hacer el pod en AWS? De dentro hacia fuera", color: k8s, punteada: false, relleno: white)[
     #fila(espacio: 2pt,
       columna(espacio: 2pt, pod(t: "web", ancho: 1.1cm), text(6pt, fill: gris, [ServiceAccount web])),
       flecha(etiqueta: "pide credenciales", largo: 1.9cm),

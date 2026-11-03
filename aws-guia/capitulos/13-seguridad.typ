@@ -423,7 +423,7 @@ ACM se integra con ELB (ALB y NLB), CloudFront, API Gateway, App Runner y otros 
 
 #cuidado[*CloudFront solo acepta certificados de ACM de us-east-1* (Norte de Virginia), porque es un servicio global, aunque tu origen esté en otra región. Lo mismo ocurre con las API _edge-optimized_ de API Gateway. Si no ves tu certificado en la distribución, casi seguro lo creaste en otra región.]
 
-*¿Y en mi propia EC2?* Un certificado público estándar de ACM no se puede instalar en tu servidor: ACM no deja exportar su clave privada, solo usarlo a través de los servicios integrados. Lo habitual es poner delante un ALB o CloudFront (terminan TLS con el certificado de ACM), usar _ACM for Nitro Enclaves_ o recurrir a otra CA. Desde 2025 ACM ofrece también certificados públicos *exportables*, instalables donde quieras, pero tienen coste y hay que redesplegarlos tras cada renovación.
+*¿Y en mi propia EC2?* Un certificado público estándar de ACM no se puede instalar en tu servidor: ACM no deja exportar su clave privada, solo usarlo a través de los servicios integrados. Lo habitual es poner delante un ALB o CloudFront, que terminan TLS con él, o usar _ACM for Nitro Enclaves_. Desde 2025 hay también certificados públicos *exportables*, instalables donde quieras, pero tienen coste y hay que redesplegarlos tras cada renovación.
 
 == Protección perimetral: WAF, Shield y firewalls
 
@@ -475,23 +475,11 @@ Shield protege frente a ataques de denegación de servicio distribuida (DDoS). T
 
 *AWS Firewall Manager* centraliza WAF, Shield Advanced, Security Groups, Network Firewall y el firewall DNS de Route 53 Resolver en todas las cuentas de una organización: defines una política («todo ALB de producción lleva esta web ACL») y la aplica, también a cuentas y recursos futuros. Requiere AWS Organizations y AWS Config.
 
-*AWS Network Firewall* es un firewall gestionado y con estado para tus VPC: filtra de la capa 3 a la 7, con reglas compatibles con Suricata (IPS), listas de dominios permitidos para la salida e inspección de TLS. Se despliega en subredes dedicadas y el tráfico llega a sus endpoints por las tablas de rutas; con Transit Gateway, una VPC central inspecciona el de muchas otras. Se paga por hora de endpoint y por GB procesado.
+*AWS Network Firewall* es un firewall gestionado y con estado para tus VPC: filtra de la capa 3 a la 7, con reglas compatibles con Suricata (IPS), listas de dominios permitidos para la salida e inspección de TLS. Se despliega en subredes dedicadas a las que el tráfico llega por las tablas de rutas (con Transit Gateway, una VPC central inspecciona muchas) y se paga por hora de endpoint y por GB procesado.
 
 == Detección y respuesta: GuardDuty, Security Hub y más
 
 Prevenir no basta: algo acabará escapándose. Estos servicios vigilan cuentas, cargas y datos, y generan *hallazgos* (_findings_) cuando detectan algo sospechoso. Son regionales, se activan con pocos clics y se gestionan para toda la organización desde una cuenta de *administrador delegado*.
-
-#tabla(("Servicio", "Qué hace", "Qué datos analiza", "Ejemplo de hallazgo o uso"), columnas: (1fr, 1.45fr, 1.8fr, 1.6fr), tamano: 8pt,
-  [*GuardDuty*], [Detecta amenazas con inteligencia de amenazas, aprendizaje automático y anomalías], [CloudTrail, VPC Flow Logs y DNS (sin que tengas que activarlos); opcionalmente S3, EKS, RDS, Lambda, ejecución y malware], [Credenciales de una instancia usadas desde fuera de AWS; minería de criptomonedas],
-  [*Security Hub*], [Agrega y prioriza hallazgos; comprueba la postura frente a estándares], [Hallazgos de los demás servicios y de terceros; controles basados en AWS Config], [Puntuación frente a AWS Foundational Security Best Practices, CIS o PCI DSS],
-  [*Inspector*], [Gestiona vulnerabilidades de forma continua], [Instancias EC2, imágenes de contenedor en ECR y funciones Lambda], [CVE crítica en un paquete de la AMI; puerto expuesto a Internet],
-  [*Macie*], [Descubre datos sensibles y riesgos en S3], [Objetos y configuración de los buckets], [CSV con números de tarjeta en un bucket público],
-  [*Detective*], [Ayuda a investigar el origen y el alcance], [CloudTrail, Flow Logs, hallazgos de GuardDuty, logs de EKS → grafo de comportamiento], [Todas las llamadas e IP de un rol sospechoso en las últimas horas],
-)
-
-En 2025 AWS renombró las comprobaciones de postura de Security Hub como *Security Hub CSPM* y amplió Security Hub para correlacionar hallazgos y priorizar riesgos, pero el patrón no cambia: los detectores envían hallazgos a un punto central, de ahí pasan a *EventBridge* (capítulo de Mensajería) y una regla dispara la respuesta automática, como resume la figura de más abajo. Por ejemplo, una regla cuyo patrón seleccione los eventos `GuardDuty Finding` con `severity` de 7 o más (alta o crítica) puede invocar una función que aísle la instancia.
-
-#practica[Activa GuardDuty y Security Hub en *todas* las cuentas y regiones, también las que no usas: con credenciales robadas, un atacante suele lanzar instancias justo donde nadie mira. Con un administrador delegado en AWS Organizations, las cuentas nuevas quedan cubiertas solas.]
 
 #diagrama(pie: [Detección y respuesta automatizada: los hallazgos convergen en Security Hub, EventBridge los enruta y Lambda, SSM o SNS responden. Detective ayuda a investigar.])[
   #set text(hyphenate: false)
@@ -523,6 +511,18 @@ En 2025 AWS renombró las comprobaciones de postura de Security Hub como *Securi
     ],
   )
 ]
+
+#tabla(("Servicio", "Qué hace", "Qué datos analiza", "Ejemplo de hallazgo o uso"), columnas: (1fr, 1.45fr, 1.8fr, 1.6fr), tamano: 8pt,
+  [*GuardDuty*], [Detecta amenazas con inteligencia de amenazas, aprendizaje automático y anomalías], [CloudTrail, VPC Flow Logs y DNS (sin que tengas que activarlos); opcionalmente S3, EKS, RDS, Lambda, ejecución y malware], [Credenciales de una instancia usadas desde fuera de AWS; minería de criptomonedas],
+  [*Security Hub*], [Agrega y prioriza hallazgos; comprueba la postura frente a estándares], [Hallazgos de los demás servicios y de terceros; controles basados en AWS Config], [Puntuación frente a AWS Foundational Security Best Practices, CIS o PCI DSS],
+  [*Inspector*], [Gestiona vulnerabilidades de forma continua], [Instancias EC2, imágenes de contenedor en ECR y funciones Lambda], [CVE crítica en un paquete de la AMI; puerto expuesto a Internet],
+  [*Macie*], [Descubre datos sensibles y riesgos en S3], [Objetos y configuración de los buckets], [CSV con números de tarjeta en un bucket público],
+  [*Detective*], [Ayuda a investigar el origen y el alcance], [CloudTrail, Flow Logs, hallazgos de GuardDuty, logs de EKS → grafo de comportamiento], [Todas las llamadas e IP de un rol sospechoso en las últimas horas],
+)
+
+En 2025 AWS renombró las comprobaciones de postura de Security Hub como *Security Hub CSPM* y amplió Security Hub para correlacionar hallazgos y priorizar riesgos, pero el patrón no cambia: los detectores envían hallazgos a un punto central, de ahí pasan a *EventBridge* (capítulo de Mensajería) y una regla dispara la respuesta automática, como resume la figura. Por ejemplo, una regla cuyo patrón seleccione los eventos `GuardDuty Finding` con `severity` de 7 o más (alta o crítica) puede invocar una función que aísle la instancia.
+
+#practica[Activa GuardDuty y Security Hub en *todas* las cuentas y regiones, también las que no usas: con credenciales robadas, un atacante suele lanzar instancias justo donde nadie mira. Con un administrador delegado en AWS Organizations, las cuentas nuevas quedan cubiertas solas.]
 
 == Defensa en profundidad
 
@@ -574,26 +574,22 @@ Ningún control es perfecto, así que se apilan: si una capa falla, la siguiente
 
 == Respuesta a incidentes
 
-Ante una alarma seria —una instancia hablando con un servidor de mando y control, unas claves usadas desde un país inesperado—, improvisar es lo peor. Prepárate antes: GuardDuty y Security Hub activos, un _trail_ organizativo de CloudTrail en una cuenta de logs protegida, roles de respuesta listos y _runbooks_ ensayados. Después, el esqueleto básico es este:
+Ante una alarma seria —una instancia hablando con un servidor de mando y control, unas claves usadas desde un país inesperado—, improvisar es lo peor. Prepárate antes: GuardDuty y Security Hub activos, un _trail_ de organización en una cuenta de logs protegida, roles de respuesta listos y _runbooks_ ensayados. El esqueleto básico es este:
 
-#block(breakable: false, width: 100%, above: 1em, below: 1.1em, pasos(
-  [*Aislar.* Cambia el Security Group de la instancia por uno sin reglas y sácala del Auto Scaling group y del balanceador. Desactiva las claves de acceso comprometidas y revoca las sesiones activas del rol.],
+#pasos(
+  [*Aislar, no terminar.* Cambia el Security Group de la instancia por uno sin reglas y sácala del Auto Scaling group y del balanceador; terminarla destruiría la memoria y los discos efímeros que necesitas para investigar. Desactiva las claves de acceso comprometidas y revoca las sesiones activas del rol.],
   [*Preservar evidencias:* snapshots de los volúmenes EBS, captura de memoria si procede, etiquetas con el número de incidente y copia de los logs en un bucket con S3 Object Lock de otra cuenta.],
   [*Rotar credenciales:* claves de acceso, secretos, contraseñas y tokens a los que pudo llegar el atacante.],
   [*Investigar con CloudTrail* (y Detective): qué llamadas hizo la identidad comprometida, desde qué IP y qué creó o modificó (usuarios, roles, instancias en otras regiones…).],
   [*Recuperar y aprender:* reconstruye desde una AMI o una plantilla de IaC limpias, corrige la causa raíz, escribe un post-mortem sin culpables y automatiza la respuesta.],
-))
-
-#cuidado[Terminar la instancia comprometida parece lo más rápido, pero destruye las evidencias (memoria, procesos, discos efímeros) que necesitas para entender qué pasó. Aísla primero; termina después.]
+)
 
 #resumen[
-- Cifra en reposo (KMS) y en tránsito (TLS con ACM). Con KMS, la clave se convierte en un segundo punto de control de acceso.
-- KMS guarda las claves en HSM y nunca las deja salir. Hay claves *AWS owned*, *AWS managed* (`aws/servicio`, rotación anual, key policy de solo lectura) y *customer managed* (control total).
+- Cifra en reposo (KMS) y en tránsito (TLS con ACM). KMS guarda las claves en HSM, nunca las deja salir y se convierte en un segundo punto de control de acceso. Hay claves *AWS owned*, *AWS managed* (`aws/servicio`, rotación anual, key policy de solo lectura) y *customer managed* (control total).
 - Toda clave tiene exactamente una *key policy*; sin la sentencia que delega en la cuenta, IAM no basta. Entre cuentas hace falta permiso en la key policy *y* en IAM de la cuenta consumidora.
 - *Cifrado envolvente:* `GenerateDataKey` → cifrar en local → descartar la clave en claro → guardar la clave cifrada con los datos → `Decrypt` para leer.
 - La rotación mantiene el ID y el ARN y conserva el material antiguo. Borrar una clave exige una espera de 7 a 30 días y es irreversible.
-- S3 Bucket Keys reduce las peticiones a KMS. RDS no se cifra en caliente: snapshot → copia cifrada → restaurar.
-- *Secrets Manager* para secretos que rotan; *Parameter Store* para configuración. ACM renueva certificados gratis; para CloudFront, en us-east-1.
+- S3 Bucket Keys reduce las peticiones a KMS; RDS no se cifra en caliente (snapshot → copia cifrada → restaurar). *Secrets Manager* para secretos que rotan; *Parameter Store* para configuración. ACM renueva certificados gratis; para CloudFront, en us-east-1.
 - WAF filtra en la capa 7, Shield frena DDoS, Firewall Manager gobierna las políticas y Network Firewall inspecciona las VPC.
 - GuardDuty, Inspector y Macie detectan; Security Hub agrega; EventBridge automatiza la respuesta. Ante un incidente, aísla y preserva antes de borrar nada.
 ]
