@@ -130,16 +130,16 @@ Kubernetes es *declarativo*: no le das órdenes («arranca tres contenedores»),
       text(7.6pt, weight: "bold", fill: k8s.darken(30%), "Controlador")
       v(1pt)
       align(left, text(6.5pt, fill: tinta)[
-        *1* · observa el estado actual \
-        *2* · compara: 3 deseados, 2 reales \
-        *3* · actúa: pide un pod nuevo \
+        *1* · observa: hay 2 pods \
+        *2* · compara: se desean 3 \
+        *3* · actúa: crea 1 pod \
         #text(fill: k8s.darken(20%), weight: "bold")[↻ y vuelta a empezar]
       ])
     })),
     columna(espacio: 0pt,
       flecha(etiqueta: "actúa", largo: 1.25cm),
       flecha-izq(etiqueta: "observa", largo: 1.25cm)),
-    zona("Estado actual (nodos)", color: k8s, punteada: false, relleno: white)[
+    zona("Estado actual", color: k8s, punteada: false, relleno: white, ancho: 4cm)[
       #columna(espacio: 5pt,
         fila(espacio: 4pt, pod(t: "web"), pod(t: "web"), pod(t: "✘ web", caido: true)),
         fila(espacio: 4pt, text(6.3pt, fill: gris, [nodo caído:]), pod(t: "nuevo", punteado: true)),
@@ -225,12 +225,15 @@ Todo en Kubernetes es un *objeto* de la API descrito en YAML, con un tipo (`kind
 
 Un *Pod* es la unidad mínima de despliegue: uno o varios contenedores que comparten IP y volúmenes y corren juntos en un nodo (normalmente uno principal y, a veces, un *sidecar* auxiliar). Los pods son efímeros: si mueren, un controlador crea otros, con otra IP. Por eso se gestionan con estos objetos:
 
+#[
+#set table.cell(breakable: false)
 #tabla(("Objeto", "Qué garantiza (y ejemplo típico)"), columnas: (0.9fr, 4.6fr),
   [*Deployment*], [Aplicaciones sin estado, como una API web. Escala y hace *rolling updates*: cambia pods viejos por nuevos poco a poco, sin corte, al ritmo de `maxSurge` y `maxUnavailable` (25 % por defecto), con vuelta atrás. Por debajo gestiona *ReplicaSets*, que mantienen _N_ copias idénticas.],
   [*StatefulSet*], [Pods con identidad estable (`db-0`, `db-1`...), DNS propio y un volumen persistente cada uno, creados en orden: bases de datos, Kafka.],
   [*DaemonSet*], [Un pod en cada nodo (o en los elegidos): agentes de logs y de métricas, el plugin de red.],
   [*Job* / *CronJob*], [Pods que se ejecutan hasta terminar con éxito, con reintentos; el CronJob los lanza con horario cron: migraciones, informes.],
 )
+]
 
 === Services, DNS e Ingress
 
@@ -537,7 +540,7 @@ Una aplicación que usa S3 o DynamoDB nunca debe tirar de claves de acceso en un
 
 *Add-ons gestionados.* EKS ofrece como add-ons el software que el clúster necesita además de tus aplicaciones, en versiones probadas, compatibles y parcheadas por AWS que tú decides cuándo instalar o actualizar. Los imprescindibles son *VPC CNI*, *CoreDNS* y *kube-proxy*; les siguen *EKS Pod Identity Agent*, los drivers CSI (*EBS*, *EFS*, *Mountpoint for S3*) y *CloudWatch Observability*.
 
-*Versiones y actualizaciones.* Kubernetes publica unas tres versiones menores al año; EKS da a cada una un *soporte estándar* de algo más de un año y, después, un *soporte extendido* de aproximadamente otro año, con tarifa más alta. Al agotarse el soporte, EKS actualiza solo el control plane; con la *política de actualización* en `STANDARD`, lo hará al acabar el estándar, sin pasar por el extendido. Mejor adelantarse:
+*Versiones y actualizaciones.* Kubernetes publica unas tres versiones menores al año. EKS da a cada una algo más de un año de *soporte estándar* y, después, alrededor de otro año de *soporte extendido*, más caro; al agotarse, actualiza solo el control plane (con la *política de actualización* en `STANDARD`, lo hace al acabar el estándar). Mejor adelantarse:
 
 #pasos(
   [*Prepara*: notas de la versión y *EKS Cluster Insights*, que detecta, entre otras cosas, el uso de APIs que desaparecen.],
@@ -546,9 +549,9 @@ Una aplicación que usa S3 o DynamoDB nunca debe tirar de claves de acceso en un
   [*Nodos*: AMI nueva en los managed node groups; Karpenter reemplaza los desfasados (_drift_); en Fargate, reinicia los pods; Auto Mode lo hace solo. Los nodos pueden ir por detrás del control plane, nunca por delante.],
 )
 
-*Observabilidad* (capítulo de Observabilidad). *Container Insights* (CloudWatch, con su add-on) recoge métricas y logs de clúster, nodos, pods y contenedores; *Amazon Managed Service for Prometheus* guarda métricas de Prometheus sin servidores que operar y *Amazon Managed Grafana* las muestra en paneles; *Fluent Bit*, un DaemonSet ligero, envía los logs a CloudWatch Logs, S3 u OpenSearch. Los *logs del control plane* (API server, auditoría, autenticador, scheduler, controller manager) van a CloudWatch Logs, pero vienen desactivados: activa al menos el de auditoría.
+*Observabilidad* (capítulo de Observabilidad). *Container Insights* (CloudWatch) recoge métricas y logs de clúster, nodos, pods y contenedores; *Amazon Managed Service for Prometheus* y *Amazon Managed Grafana* guardan y muestran métricas de Prometheus sin servidores que operar; *Fluent Bit*, un DaemonSet ligero, envía los logs a CloudWatch Logs, S3 u OpenSearch. Los *logs del control plane* (API server, auditoría, autenticador, scheduler, controller manager) van a CloudWatch Logs, pero vienen desactivados: activa al menos el de auditoría.
 
-*Cifrado de los Secrets con KMS.* Desde marzo de 2025, EKS cifra por defecto todos los datos de la API de Kubernetes, Secrets incluidos, en clústeres 1.28 o posteriores, con *cifrado de sobre* (_envelope encryption_): cada objeto se cifra con una clave de datos protegida por una clave de KMS propiedad de AWS, sin coste adicional. Para controlar tú esa clave (política, rotación, auditoría, revocación), usa una *customer managed key* de KMS (capítulo de Seguridad).
+*Cifrado de los Secrets con KMS.* Desde marzo de 2025, EKS cifra por defecto todos los datos de la API de Kubernetes, Secrets incluidos, en clústeres 1.28 o posteriores, con *cifrado de sobre* (_envelope encryption_): cada objeto se cifra con una clave de datos protegida por una clave de KMS propiedad de AWS, sin coste. Para controlar tú esa clave (política, rotación, auditoría), usa una *customer managed key* (capítulo de Seguridad).
 
 == Buenas prácticas y errores comunes
 
@@ -567,8 +570,8 @@ Una aplicación que usa S3 o DynamoDB nunca debe tirar de claves de acceso en un
   ],
   tarjeta("Coste y operación", color: col.costes, subtitulo: "Sin sorpresas")[
     - Karpenter o Auto Mode, con Spot y consolidación.
-    - Requests ajustadas y ALB compartidos (IngressGroup).
-    - Versiones en soporte estándar; todo en Git (IaC y GitOps).
+    - Requests ajustadas; ALB compartidos.
+    - IaC, GitOps y versiones en soporte estándar.
   ],
 )
 ]
@@ -576,7 +579,7 @@ Una aplicación que usa S3 o DynamoDB nunca debe tirar de claves de acceso en un
 #tabla(("Síntoma", "Causa habitual", "Por dónde empezar"), columnas: (1.05fr, 2.2fr, 1.45fr), tamano: 8.2pt,
   [`Pending`], [Ningún nodo tiene hueco para sus requests o cumple sus afinidades, o su volumen EBS está en otra AZ], [`kubectl describe pod` y el autoscaler de nodos],
   [`ContainerCreating` atascado], [Subred sin IP libres o volumen que no se monta], [Eventos del pod; logs de `aws-node`],
-  [`ImagePullBackOff`], [Imagen o etiqueta inexistente, sin permiso en ECR o sin ruta a ECR (subred privada sin NAT ni VPC endpoints)], [`kubectl describe pod`],
+  [`ImagePullBackOff`], [Imagen inexistente, sin permiso en ECR o sin ruta a ECR (sin NAT ni VPC endpoints)], [`kubectl describe pod`],
   [`CrashLoopBackOff`], [La aplicación termina al arrancar o la liveness probe es demasiado agresiva], [`kubectl logs --previous`],
   [Service sin respuesta], [El selector no coincide con las labels o la readiness probe falla], [`kubectl get endpointslices`],
 )

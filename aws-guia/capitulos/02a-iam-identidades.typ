@@ -226,37 +226,34 @@ $ aws sts get-caller-identity
   [El usuario `emergencia-admin`, con MFA en una llave física guardada bajo llave, para cuando falla el proveedor de identidad corporativo.],
   [Un usuario compartido por varias personas, o access keys copiadas en el código, en un fichero `.env` o en un repositorio Git.])
 
-En nuestro edificio, un usuario IAM es un empleado con tarjeta permanente para *una* sede: si trabaja en diez sedes necesita diez tarjetas, y cuando se va hay que anular las diez. Puede tener tres tipos de credenciales:
+En nuestro edificio, es un empleado con tarjeta permanente para *una* sede: si trabaja en diez, necesita diez tarjetas, y al irse hay que anular las diez. Sus credenciales:
 
 #tabla(("Credencial", "Para qué sirve", "Lo que debes saber"), columnas: (1fr, 1.4fr, 2.3fr),
   [*Contraseña*], [Entrar en la consola], [Aplica una política de contraseñas y combínala siempre con MFA.],
   [*MFA*], [Segundo factor al iniciar sesión], [App TOTP, llave FIDO2 o _passkey_; hasta 8 dispositivos por usuario.],
   [*Access keys*], [Firmar peticiones desde la CLI, los SDK o la API], [Un ID (`AKIA…`) y una clave secreta. *No caducan*: si se filtran, cualquiera actúa como ese usuario hasta que las desactives. Máximo dos por usuario, para rotarlas.])
 
-#cuidado(titulo: "Por qué evitar las access keys")[Las claves permanentes acaban donde no deben: el código, una imagen de contenedor, un portátil robado, un repositorio público. Hay bots que rastrean GitHub y las usan en minutos (típicamente, para minar criptomonedas con tus instancias). En los escenarios del final verás la alternativa sin claves para cada caso; si aun así necesitas una, rótala, limita sus permisos y vigila su último uso (`aws iam get-access-key-last-used`).]
+#cuidado(titulo: "Por qué evitar las access keys")[Acaban donde no deben —el código, una imagen de contenedor, un repositorio público— y hay bots que las rastrean y las usan en minutos (típicamente, para minar criptomonedas). Al final del capítulo verás la alternativa sin claves para cada caso; si aun así necesitas una, rótala y vigila su último uso (`aws iam get-access-key-last-used`).]
 
 == Grupos IAM
 
 #_concepto("Grupo IAM", "un conjunto de usuarios IAM que comparten permisos",
   [Una colección de usuarios IAM de una cuenta a la que adjuntas políticas; sus miembros heredan esos permisos.],
-  [*No es un principal*: no tiene credenciales, no inicia sesión, no puede asumir roles ni aparecer como `Principal` en una política. No contiene otros grupos y no es un grupo de Identity Center.],
+  [*No es un principal*: sin credenciales, no inicia sesión, no asume roles ni aparece como `Principal`. No contiene otros grupos ni es un grupo de Identity Center.],
   [Gestionar permisos por función en vez de usuario a usuario: altas, bajas y cambios de puesto son meter o sacar a alguien del grupo.],
   [El grupo `Auditores` con la política gestionada `SecurityAudit`: cuando llega un auditor nuevo, basta con añadirlo.],
   [Adjuntar políticas a cada usuario por separado, o intentar nombrar un grupo en la política de un bucket (no funciona: no es un principal).])
 
-¿Y si un usuario está en varios grupos? Sus permisos son la *unión* de todo lo que permiten sus políticas propias y las de todos sus grupos (un usuario puede pertenecer a 10 grupos como máximo, y los grupos no se anidan). La excepción es la prohibición explícita: un `Deny` en cualquiera de esas políticas gana siempre.
+¿Y si un usuario está en varios grupos (hasta 10)? Sus permisos son la *unión* de lo que permiten sus políticas propias y las de todos sus grupos, salvo lo que prohíba explícitamente alguna: un `Deny` gana siempre.
 
 #diagrama(pie: [Ana hereda los permisos de sus dos grupos, pero el Deny de su política propia anula una parte de lo que le da el grupo Desarrolladores.])[
-  #fila(espacio: 8pt,
-    columna(espacio: 5pt,
-      zona("Grupo Desarrolladores", color: col.iam)[#caja([Allow ec2:\*], ancho: 4.3cm, color: _verde)],
-      zona("Grupo Soporte", color: col.iam)[#caja([Allow support:\*], ancho: 4.3cm, color: _verde)],
-      zona("Política propia de Ana", color: col.iam)[#caja([Deny ec2:TerminateInstances], ancho: 4.3cm, color: _rojo)]),
-    flecha(largo: 1.3cm),
-    actor(etiqueta: "Ana", color: col.iam),
-    flecha(etiqueta: "resultado", largo: 1.5cm),
-    caja([*Permisos efectivos de Ana* \ todo EC2 salvo terminar instancias \ + todo AWS Support], ancho: 4.4cm, color: col.fundamentos),
-  )
+  #fila(espacio: 6pt,
+    zona("Grupo Desarrolladores", color: col.iam)[#caja([Allow ec2:\*], ancho: 3.9cm, color: _verde)],
+    zona("Grupo Soporte", color: col.iam)[#caja([Allow support:\*], ancho: 3.9cm, color: _verde)],
+    zona("Política propia de Ana", color: col.iam)[#caja([Deny ec2:TerminateInstances], ancho: 4.2cm, color: _rojo)])
+  #v(2pt)
+  #fila(espacio: 8pt, actor(etiqueta: "Ana", color: col.iam), flecha(etiqueta: "resultado", largo: 1.6cm),
+    caja([*Permisos efectivos de Ana:* todo EC2 salvo terminar instancias, más todo AWS Support], ancho: 8.4cm, color: col.fundamentos))
 ]
 
 == Roles IAM: identidades que se asumen
@@ -604,20 +601,14 @@ steps:
 ```
 
 #_escenario(6, [La cuenta A lee un bucket de la cuenta B], "Política de recurso o rol en B")[
-  #_mini(columna(espacio: 6pt,
-    fila(espacio: 4pt, text(7.5pt, weight: "bold", fill: gris)[Opción 1],
-      zona("Cuenta A", color: col.iam)[#svc("ROL", "Rol analitica", color: col.iam)],
-      flecha(etiqueta: "GetObject", largo: 1.6cm),
-      zona("Cuenta B", color: col.fundamentos)[#svc("S3", "Bucket datos-b", sub: "su política permite al rol de A", color: col.almacenamiento)]),
-    fila(espacio: 4pt, text(7.5pt, weight: "bold", fill: gris)[Opción 2],
-      zona("Cuenta A", color: col.iam)[#svc("ROL", "Rol analitica", color: col.iam)],
+  #_mini(fila(espacio: 4pt,
+      zona("Cuenta A", color: col.iam)[#svc("ROL", "Rol analitica", sub: "puede sts:AssumeRole sobre lector-b", color: col.iam)],
       flecha(etiqueta: "AssumeRole", largo: 1.6cm),
-      zona("Cuenta B", color: col.fundamentos)[#fila(espacio: 4pt,
+      zona("Cuenta B · 222222222222", color: col.fundamentos)[#fila(espacio: 4pt,
         svc("ROL", "Rol lector-b", sub: "trust: cuenta A", color: col.iam),
         flecha(etiqueta: "GetObject", largo: 1.4cm),
-        svc("S3", "Bucket datos-b", color: col.almacenamiento))]),
-  ))
-  *Opción 1:* la política del bucket en B permite el acceso al rol de A, y la política de identidad de ese rol permite `s3:GetObject` sobre el bucket: entre cuentas hacen falta *los dos permisos*. *Opción 2:* A asume un rol de B y trabaja «dentro» de B, sin sus propios permisos durante la sesión; útil si hay que tocar muchos recursos.
+        svc("S3", "Bucket datos-b", color: col.almacenamiento))]))
+  Hay dos caminos. *Con un rol en B* (el del diagrama): A asume `lector-b` y trabaja «dentro» de B, sin sus propios permisos durante la sesión; útil si hay que tocar muchos recursos. *Con una política de recurso*: la política del bucket permite el acceso al rol de A y la política de identidad de ese rol permite `s3:GetObject` sobre el bucket; entre cuentas hacen falta *los dos permisos* (lo verás con detalle en el capítulo siguiente).
 ]
 
 #_escenario(7, [Un proveedor SaaS externo audita tu cuenta], "Rol con External ID")[
@@ -648,7 +639,6 @@ steps:
     #_faq([¿Un rol tiene contraseña o access keys?], [No. Solo produce credenciales temporales para quien lo asume.])
     #_faq([¿Qué diferencia hay entre un rol y un permission set?], [El permission set es la plantilla que defines en Identity Center; el rol es lo que Identity Center crea a partir de ella en cada cuenta asignada (`AWSReservedSSO_…`).])
     #_faq([¿Por qué no usar usuarios IAM para las personas?], [Tienen credenciales permanentes, se multiplican por cuenta y hay que darlos de baja uno a uno. Identity Center da una identidad por persona, MFA central y credenciales temporales.])
-    #_faq([¿Si asumo un rol, conservo mis permisos?], [No. Durante la sesión solo tienes los del rol. Para volver a los tuyos, sales del rol.])
   ],
   [
     #_faq([¿Qué es el usuario root y cuándo lo uso?], [La identidad con la que se creó la cuenta, con acceso total. Solo para las tareas que lo exigen (cambiar el correo de la cuenta, cerrarla…), con MFA y sin access keys.])

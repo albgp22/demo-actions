@@ -97,7 +97,7 @@ La primera clasificación responde a quién crea y controla la clave; DynamoDB, 
   [¿La usas desde tu código?], no, [#no (solo vía el servicio)], si,
   [Rotación], [La decide AWS], [Automática y obligatoria, cada año], [Opcional: automática (365 días por defecto, de 90 a 2560) o bajo demanda],
   [¿Compartir con otra cuenta?], no, no, si,
-  [Coste], [Gratis], [Sin cuota mensual; pagas las peticiones], [Cuota mensual por clave + peticiones],
+  [Coste], [Gratis], [Sin cuota mensual; las peticiones pueden cobrarse], [Cuota mensual por clave + peticiones],
 )
 
 #examen[Si el enunciado pide editar la key policy, rotar a voluntad, compartir la clave con otra cuenta o poder borrarla, la respuesta es una *customer managed*.]
@@ -121,7 +121,6 @@ El *uso* de una clave (cifrar, firmar, generar MAC…) se fija al crearla y no s
 == Quién puede usar una clave: key policies, IAM y grants
 
 En casi todo AWS, una política IAM basta para acceder a un recurso de tu cuenta (capítulo de IAM (II)). KMS es la excepción: *la key policy manda*. Nadie —ni siquiera el usuario raíz— puede usar ni administrar una clave si su key policy no lo permite, directamente o delegando en IAM. Hay tres mecanismos: la *key policy* (obligatoria: toda clave tiene *exactamente una*), las *políticas IAM* (solo cuentan si la key policy delega en la cuenta) y los *grants* (permisos puntuales que se crean y revocan por API).
-
 
 === Una key policy, comentada
 
@@ -154,12 +153,12 @@ Si creas una clave sin indicar política, KMS le asigna la *política por defect
 
 #pasos(
   [*Delegar en IAM.* El principal `…:root` no es el usuario raíz, sino la *cuenta entera*: «la cuenta decide, con IAM, quién usa esta clave». Sin esta sentencia, las políticas IAM no tienen efecto sobre la clave. Aquí `"Resource": "*"` significa «esta clave».],
-  [*Administradores.* `AdminClaves` gestiona la clave (política, activación, borrado), pero no puede cifrar ni descifrar: *separación de funciones*.],
+  [*Administradores.* `AdminClaves` gestiona la clave (política, activación, borrado), pero esta key policy no le deja cifrar ni descifrar: *separación de funciones*.],
   [*Uso.* `AppPagos` genera claves de datos y descifra, pero solo a través de S3 en eu-west-1 (`kms:ViaService`), no con llamadas directas a KMS.],
   [*Otra cuenta.* La cuenta 444455556666 puede descifrar… si, además, su administrador lo concede con IAM, como verás enseguida.],
 )
 
-#cuidado[Una key policy que deja fuera a todo el mundo (sin la sentencia de la cuenta ni administradores) vuelve la clave *inmanejable*, y solo AWS Support podrá ayudarte. KMS rechaza esas políticas salvo que fuerces `BypassPolicyLockoutSafetyCheck`. No lo hagas.]
+#cuidado[Una key policy que deja fuera a todo el mundo vuelve la clave *inmanejable*: solo AWS Support podrá ayudarte. Por eso KMS rechaza una política que impediría a quien la envía volver a cambiarla, salvo que fuerces `BypassPolicyLockoutSafetyCheck`.]
 
 === Cómo se evalúa una petición
 
@@ -207,7 +206,7 @@ Para que la cuenta B use una clave de la cuenta A hace falta permiso *en los dos
   )
 ]
 
-#examen[Las claves AWS managed (`aws/rds`, `aws/ebs`…) *no se pueden compartir*: no puedes editar su key policy. Para compartir un snapshot cifrado de EBS o RDS, cópialo primero cifrándolo con una customer managed cuya key policy permita a la cuenta destino.]
+#examen[Las claves AWS managed (`aws/rds`, `aws/ebs`…) *no se pueden compartir*: no puedes editar su key policy. Si un snapshot de EBS o RDS está cifrado con una de ellas, cópialo cifrándolo con una customer managed cuya key policy permita a la cuenta destino y comparte la copia.]
 
 == Cifrado envolvente (envelope encryption)
 
@@ -216,7 +215,7 @@ Si KMS nunca deja salir sus claves, ¿cómo cifra S3 un objeto de 5 GB? No envi�
 #analogia[Cierras tus documentos en una caja con una llave cualquiera (la clave de datos), metes la llave en un sobre lacrado que solo el banco sabe abrir (KMS) y pegas el sobre a la caja. Quien robe la caja se lleva el sobre, pero sin el banco no lo abre. Y el banco nunca ve tus documentos: solo abre sobres.]
 
 #pasos(
-  [*Pedir una clave de datos:* la aplicación (o S3, EBS…) llama a `GenerateDataKey` con la clave KMS, que genera una clave de datos aleatoria, normalmente AES-256.],
+  [*Pedir una clave de datos:* la aplicación (o S3, EBS…) llama a `GenerateDataKey` indicando la clave KMS, y KMS genera una clave de datos aleatoria, normalmente AES-256.],
   [*Recibir dos copias:* la clave de datos *en claro* y otra *cifrada* con la clave KMS, que no sale del HSM.],
   [*Cifrar en local* los datos con la clave en claro (AES-GCM, rapidísimo), sean 4 KB o 40 GB.],
   [*Descartar la clave en claro* de la memoria en cuanto termina. Nunca se escribe en disco.],
@@ -258,7 +257,7 @@ Así se resuelven a la vez el *tamaño* (no hay límite de 4 KB), el *rendimient
 
 ```bash
 aws kms generate-data-key --key-id alias/app-pagos --key-spec AES_256
-# "CiphertextBlob": "AQIDAHh...",  <- clave de datos cifrada: guárdala con los datos
+# "CiphertextBlob": "AQIDAHh...",  <- clave cifrada: guárdala con los datos
 # "Plaintext":      "c2VjcmV0...",  <- clave en claro (Base64): úsala y bórrala
 ```
 
@@ -353,7 +352,7 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
 
 #coste[Importes orientativos, que varían por región:
 - *Customer managed:* del orden de un dólar al mes por clave, prorrateado por horas; las primeras rotaciones lo incrementan, con un tope. Cada réplica multi-región cuenta como clave.
-- *Peticiones:* del orden de céntimos por cada 10 000 simétricas (las asimétricas, más), con capa gratuita mensual; también las de claves AWS managed, que no tienen cuota mensual.
+- *Peticiones:* del orden de céntimos por cada 10 000 simétricas (más las asimétricas), con capa gratuita; las de claves AWS managed también pueden cobrarse.
 - La factura grande suele venir de las peticiones, no de las claves.]
 
 === KMS desde la línea de comandos
@@ -400,8 +399,8 @@ Leer un secreto desde Python es una sola llamada, y programar su rotación desde
 import json, boto3
 
 sm = boto3.client("secretsmanager", region_name="eu-west-1")
-resp = sm.get_secret_value(SecretId="prod/pagos/db")      # versión AWSCURRENT
-cred = json.loads(resp["SecretString"])                   # usuario, contraseña, host
+resp = sm.get_secret_value(SecretId="prod/pagos/db")  # versión AWSCURRENT
+cred = json.loads(resp["SecretString"])               # usuario, contraseña, host
 ```
 
 ```bash
@@ -467,7 +466,7 @@ Los Security Groups y las NACL (capítulo de Redes) filtran por IP, puerto y pro
   ("Se asocia a", [CloudFront (web ACL global, creada en us-east-1), ALB, API Gateway (REST), AppSync, Cognito, App Runner y Verified Access. No a un NLB ni a una EC2]),
   ("Web ACL", [Reglas por prioridad sobre IP, país, cabeceras, URI o cuerpo (inyección SQL, XSS, regex…), con acciones Allow, Block, Count (probar sin bloquear), CAPTCHA o Challenge]),
   ("Reglas gestionadas", [Grupos de AWS (riesgos como los del OWASP Top 10, reputación de IP…) o de Marketplace. Bot Control (de pago) identifica bots; hay grupos contra el robo de cuentas]),
-  ("Rate-based", [Bloquean un tiempo a quien supere N peticiones en una ventana de minutos, por IP u otra clave: fuerza bruta y DDoS de capa 7]),
+  ("Rate-based", [Bloquean a quien supere N peticiones en una ventana de minutos, mientras la supere, agrupando por IP u otra clave: fuerza bruta y DDoS de capa 7]),
   ("Coste", [Por web ACL y regla al mes + por millón de peticiones; Bot Control y similares, aparte]))
 
 === AWS Shield

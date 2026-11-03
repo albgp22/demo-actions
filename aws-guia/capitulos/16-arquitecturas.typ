@@ -38,17 +38,21 @@
 })
 
 // Cuenta de AWS (diagrama multi-cuenta)
-#let cuenta(nombre, desc, color: col.fundamentos, ancho: 2.75cm) = box(
+#let cuenta(nombre, desc, color: col.fundamentos, ancho: 2.9cm) = box(
   width: ancho, fill: white, radius: (right: 4pt),
   stroke: (left: 3pt + color, top: 0.8pt + color.lighten(30%), right: 0.8pt + color.lighten(30%), bottom: 0.8pt + color.lighten(30%)),
   inset: (left: 6pt, right: 5pt, y: 4pt),
   align(left, {
     set par(justify: false, leading: 0.35em)
+    set text(hyphenate: false)
     text(7.2pt, weight: "bold", fill: tinta, nombre)
     linebreak()
     text(6.2pt, fill: gris, desc)
   }),
 )
+
+// Elemento de checklist que no se parte entre líneas
+#let chk(t) = box[#si #t]
 
 #capitulo(text(hyphenate: false)[Arquitecturas de referencia], color: col.arquitectura,
   subtitulo: [Ocho diseños que verás una y otra vez, explicados pieza a pieza: el punto de partida para tus propias arquitecturas.],
@@ -336,8 +340,8 @@ Una sola cuenta para todo mezcla permisos, costes y riesgos. La práctica recome
   #zona("AWS Organizations · landing zone con AWS Control Tower", color: col.iam, punteada: false, relleno: white)[
     #fila(espacio: 10pt,
       cuenta("Cuenta de administración", [Organizations, facturación consolidada, IAM Identity Center. *Sin cargas de trabajo*.], color: col.iam, ancho: 6cm),
-      caja([#n(1) Control Tower · Account Factory · controles preventivos y detectivos], color: col.iam))
-    #flecha-v(etiqueta: [#n(2) SCP y RCP heredadas por OU], largo: 0.6cm)
+      caja([#n(1) *Control Tower*: Account Factory y controles], color: col.iam))
+    #align(center, flecha-v(etiqueta: [#n(2) SCP y RCP heredadas por OU], largo: 0.6cm))
     #grid(columns: 4, column-gutter: 6pt, align: top,
       zona([#nm(3) OU Security], color: col.seguridad)[#columna(espacio: 5pt,
         cuenta("Log Archive", [CloudTrail y Config de toda la organización, inmutables], color: col.seguridad),
@@ -346,10 +350,10 @@ Una sola cuenta para todo mezcla permisos, costes y riesgos. La práctica recome
         cuenta("Network", [Transit Gateway, salida a Internet, DNS], color: col.redes),
         cuenta("Shared Services", [pipelines, artefactos, AMIs], color: col.redes))],
       zona([#nm(5) OU Workloads], color: col.contenedores)[#columna(espacio: 5pt,
-        zona("Prod", color: col.iam)[#cuenta("app-prod", [producción], color: col.iam, ancho: 2.5cm)],
+        zona("Prod", color: col.iam)[#cuenta("app-prod", [producción], color: col.iam, ancho: 2.6cm)],
         zona("No prod", color: col.neutro)[#columna(espacio: 4pt,
-          cuenta("app-staging", [preproducción], color: col.neutro, ancho: 2.5cm),
-          cuenta("app-dev", [desarrollo], color: col.neutro, ancho: 2.5cm))])],
+          cuenta("app-staging", [preproducción], color: col.neutro, ancho: 2.6cm),
+          cuenta("app-dev", [desarrollo], color: col.neutro, ancho: 2.6cm))])],
       zona([#nm(5) OU Sandbox], color: col.costes)[#columna(espacio: 5pt,
         cuenta("sandbox-ana", [experimentos con presupuesto], color: col.costes),
         cuenta("sandbox-luis", [limpieza automática], color: col.costes))],
@@ -374,23 +378,24 @@ Una sola cuenta para todo mezcla permisos, costes y riesgos. La práctica recome
 
 Multi-AZ te protege de la caída de un centro de datos; para sobrevivir a la de una región entera necesitas una segunda región. Dos cifras guían el diseño: el *RPO* (_Recovery Point Objective_, cuántos datos puedes perder) y el *RTO* (_Recovery Time Objective_, cuánto tiempo puedes estar sin servicio).
 
-#let estrategia(t, rpo, sec, coste, c) = block(width: 100%, height: 2.75cm, fill: c, radius: 6pt, inset: 7pt, align(left, {
+#let estrategia(t, rpo, sec, coste, c) = block(width: 100%, height: 2.9cm, fill: c, radius: 6pt, inset: 7pt, align(left, {
   set par(justify: false, leading: 0.4em)
-  grid(columns: (1fr, auto), column-gutter: 4pt,
-    text(8.4pt, weight: "bold", fill: white, t),
-    text(8.4pt, weight: "bold", fill: white.transparentize(15%), coste))
+  set text(hyphenate: false)
+  text(8.4pt, weight: "bold", fill: white, t)
   v(1pt)
-  text(6.8pt, weight: "bold", fill: white, [RPO/RTO: #rpo])
+  grid(columns: (1fr, auto), column-gutter: 4pt,
+    text(6.8pt, weight: "bold", fill: white, [RPO/RTO: #rpo]),
+    text(7.6pt, weight: "bold", fill: white.transparentize(10%), coste))
   v(2pt)
   text(6.7pt, fill: white.transparentize(5%), sec)
 }))
 
 #diagrama(pie: [Arriba, las cuatro estrategias de recuperación: cuanto menor es el RPO/RTO, mayor es el coste. Abajo, un _warm standby_: Route 53 envía el tráfico a la primaria, los datos se replican de forma continua y, ante un desastre, la secundaria se promueve y escala.])[
   #grid(columns: (1fr, 1fr, 1fr, 1fr), column-gutter: 6pt,
-    estrategia("Backup y restauración", "horas", [En la región secundaria solo hay copias (AWS Backup, snapshots, S3); todo se recrea con IaC al activarla.], "$", col.arquitectura.lighten(35%)),
-    estrategia("Pilot light", "decenas de minutos", [Datos replicados y la infraestructura básica creada, pero sin servidores de aplicación en marcha.], "$$", col.arquitectura.lighten(15%)),
-    estrategia("Warm standby", "minutos", [Una copia completa funcionando a escala reducida, lista para crecer.], "$$$", col.arquitectura),
-    estrategia("Activo-activo", "casi cero", [Ambas regiones sirven tráfico a la vez; datos replicados en ambos sentidos.], "$$$$", col.arquitectura.darken(30%)),
+    estrategia("Copia y restauración", "horas", [Solo copias (AWS Backup, snapshots); todo se recrea con IaC al activarla.], "$", col.arquitectura.lighten(35%)),
+    estrategia("Pilot light", "decenas de min", [Datos replicados e infraestructura básica; sin servidores de aplicación.], "$$", col.arquitectura.lighten(15%)),
+    estrategia("Warm standby", "minutos", [Copia completa funcionando a escala reducida, lista para crecer.], "$$$", col.arquitectura),
+    estrategia("Activo-activo", "casi cero", [Ambas regiones sirven tráfico; datos replicados en ambos sentidos.], "$$$$", col.arquitectura.darken(30%)),
   )
   #v(4pt)
   #fila(text(7pt, fill: gris)[menos coste], flecha(largo: 8cm, doble: true), text(7pt, fill: gris)[menor RPO y RTO])
@@ -433,13 +438,13 @@ Un plan de DR que no se ensaya no existe: programa simulacros y mide el RTO real
 
 Antes de dar por buena una arquitectura, repásala con los seis pilares del *AWS Well-Architected Framework*; la *Well-Architected Tool* de la consola (gratuita) guía la revisión y ofrece _lenses_ específicas.
 
-#tabla(("Pilar", "Comprueba que…"), columnas: (1.15fr, 4.6fr), tamano: 8pt,
-  [*Excelencia operativa*], [#si Todo se despliega con IaC y pipelines #h(4pt) #si Despliegues pequeños, frecuentes y reversibles #h(4pt) #si Alarmas accionables con _runbooks_ #h(4pt) #si Revisiones post-incidente sin culpables],
-  [*Seguridad*], [#si Multi-cuenta y acceso con Identity Center, sin claves de larga duración #h(4pt) #si Mínimo privilegio y SCP #h(4pt) #si Cifrado en reposo (KMS) y en tránsito (TLS) #h(4pt) #si CloudTrail, GuardDuty y Security Hub activos; WAF en lo público],
-  [*Fiabilidad*], [#si Multi-AZ en todas las capas #h(4pt) #si Auto Scaling y health checks #h(4pt) #si Backups probados restaurándolos #h(4pt) #si RPO y RTO definidos y DR ensayado #h(4pt) #si Cuotas vigiladas],
-  [*Eficiencia del rendimiento*], [#si Servicios gestionados o serverless donde encajen #h(4pt) #si Cachés (CloudFront, ElastiCache, DAX) #h(4pt) #si Pruebas de carga #h(4pt) #si Tipos de instancia y Graviton elegidos con datos],
-  [*Optimización de costes*], [#si Etiquetas, presupuestos y alertas #h(4pt) #si Rightsizing y apagado de no-prod #h(4pt) #si Savings Plans para la base #h(4pt) #si Lifecycle en S3, retención de logs y endpoints en lugar de NAT],
-  [*Sostenibilidad*], [#si Capacidad ajustada a la demanda real #h(4pt) #si Graviton y serverless #h(4pt) #si Borrado de datos y recursos sin uso #h(4pt) #si Regiones y horarios con menor impacto],
+#tabla(("Pilar", "Comprueba que…"), columnas: (1.4fr, 4.4fr), tamano: 8pt,
+  [#text(hyphenate: false)[*Excelencia operativa*]], [#chk[Todo se despliega con IaC y pipelines] #h(5pt) #chk[Despliegues pequeños, frecuentes y reversibles] #h(5pt) #chk[Alarmas accionables con _runbooks_] #h(5pt) #chk[Revisiones post-incidente sin culpables]],
+  [#text(hyphenate: false)[*Seguridad*]], [#chk[Multi-cuenta y acceso con Identity Center, sin claves de larga duración] #h(5pt) #chk[Mínimo privilegio y SCP] #h(5pt) #chk[Cifrado en reposo (KMS) y en tránsito (TLS)] #h(5pt) #chk[CloudTrail, GuardDuty y Security Hub activos; WAF en lo público]],
+  [#text(hyphenate: false)[*Fiabilidad*]], [#chk[Multi-AZ en todas las capas] #h(5pt) #chk[Auto Scaling y health checks] #h(5pt) #chk[Backups probados restaurándolos] #h(5pt) #chk[RPO y RTO definidos y DR ensayado] #h(5pt) #chk[Cuotas vigiladas]],
+  [#text(hyphenate: false)[*Eficiencia del rendimiento*]], [#chk[Servicios gestionados o serverless donde encajen] #h(5pt) #chk[Cachés (CloudFront, ElastiCache, DAX)] #h(5pt) #chk[Pruebas de carga] #h(5pt) #chk[Tipos de instancia y Graviton elegidos con datos]],
+  [#text(hyphenate: false)[*Optimización de costes*]], [#chk[Etiquetas, presupuestos y alertas] #h(5pt) #chk[Rightsizing y apagado de no-prod] #h(5pt) #chk[Savings Plans para la base] #h(5pt) #chk[Lifecycle en S3, retención de logs y endpoints en lugar de NAT]],
+  [#text(hyphenate: false)[*Sostenibilidad*]], [#chk[Capacidad ajustada a la demanda real] #h(5pt) #chk[Graviton y serverless] #h(5pt) #chk[Borrado de datos y recursos sin uso] #h(5pt) #chk[Regiones y horarios con menor impacto]],
 )
 
 #resumen[
