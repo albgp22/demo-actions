@@ -265,15 +265,13 @@ Las *probes* son las comprobaciones de salud que kubelet hace a cada contenedor 
   [*readiness*], [¿Puede atender tráfico ahora?], [Se le retira de los Services, sin reiniciarlo, hasta que se recupere.],
 )
 
-Para los datos que deben sobrevivir al pod, Kubernetes separa lo que pides de lo que te dan:
-
-/ PersistentVolumeClaim (PVC): la petición: «20 GiB en modo `ReadWriteOnce`» (un nodo; `ReadWriteMany` si son varios).
+/ PersistentVolumeClaim (PVC): para los datos que deben sobrevivir al pod, la aplicación pide almacenamiento: «20 GiB en modo `ReadWriteOnce`» (un nodo; `ReadWriteMany` si son varios).
 / PersistentVolume (PV): el volumen real que la satisface; en AWS, un volumen EBS o un sistema de ficheros EFS.
 / StorageClass: la receta para crear PV bajo demanda (_aprovisionamiento dinámico_): qué driver y con qué parámetros.
 
 == Manos a la obra: YAML, kubectl y Helm
 
-Así se describe una aplicación web: un Deployment con tres réplicas y un Service que las agrupa. Fíjate en cómo las labels conectan ambos objetos.
+Así se describe una aplicación web: un Deployment con tres réplicas y un Service que las agrupa, conectados por sus labels.
 
 ```yaml
 apiVersion: apps/v1
@@ -375,6 +373,7 @@ Operar Kubernetes por tu cuenta obliga a cuidar etcd, la alta disponibilidad del
 
 La vía más rápida es *eksctl*, la CLI oficial de EKS: a partir de un fichero declarativo crea, con CloudFormation por debajo, la VPC, el clúster, los add-ons y los nodos.
 
+#block(breakable: false)[
 ```yaml
 # cluster.yaml
 apiVersion: eksctl.io/v1alpha5
@@ -387,6 +386,7 @@ managedNodeGroups:                          # nodos en subredes privadas
   - { name: general, instanceTypes: ["m7i.large", "m6i.large"],
       minSize: 2, desiredCapacity: 3, maxSize: 6, privateNetworking: true }
 ```
+]
 
 ```bash
 eksctl create cluster -f cluster.yaml     # VPC, clúster, add-ons y nodos

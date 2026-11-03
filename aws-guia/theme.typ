@@ -222,14 +222,16 @@
 // ---------------------------------------------------------------------
 #let pasos(color: auto, ..items) = context {
   let c = if color == auto { chap-color.get() } else { color }
-  block(above: 1em, below: 1.1em, grid(
-    columns: (auto, 1fr), column-gutter: 10pt, row-gutter: 9pt,
-    ..items.pos().enumerate().map(((i, it)) => (
-      circle(radius: 9pt, fill: c, inset: 0pt,
-        align(center + horizon, text(8.5pt, fill: white, weight: "bold", str(i + 1)))),
-      align(horizon, block(it)),
-    )).flatten()
-  ))
+  block(above: 1em, below: 1.1em, {
+    for (i, it) in items.pos().enumerate() {
+      block(breakable: false, above: 0pt, below: 9pt, grid(
+        columns: (auto, 1fr), column-gutter: 10pt,
+        circle(radius: 9pt, fill: c, inset: 0pt,
+          align(center + horizon, text(8.5pt, fill: white, weight: "bold", str(i + 1)))),
+        align(horizon, block(it)),
+      ))
+    }
+  })
 }
 
 // ---------------------------------------------------------------------
@@ -536,7 +538,7 @@
   set heading(numbering: "1.1")
   show heading.where(level: 1): it => {
     set par(justify: false, leading: 0.35em)
-    text(32pt, weight: "extrabold", fill: white, it.body)
+    text(32pt, weight: "extrabold", fill: white, hyphenate: false, it.body)
   }
   show heading.where(level: 2): it => {
     v(1.5em, weak: true)
@@ -550,7 +552,7 @@
         },
         {
           set par(justify: false)
-          text(15pt, weight: "bold", fill: marino, it.body)
+          text(15pt, weight: "bold", fill: marino, hyphenate: false, it.body)
         },
       )
     })
@@ -559,11 +561,11 @@
     v(1.1em, weak: true)
     block(sticky: true, below: 0.7em, context {
       let c = chap-color.get()
-      text(11.5pt, weight: "bold", fill: c.darken(15%), [#box(width: 4pt, height: 9pt, fill: c, radius: 1pt) #h(3pt) #it.body])
+      text(11.5pt, weight: "bold", fill: c.darken(15%), hyphenate: false, [#box(width: 4pt, height: 9pt, fill: c, radius: 1pt) #h(3pt) #it.body])
     })
   }
   show heading.where(level: 4): it => block(sticky: true, above: 1em, below: 0.6em,
-    text(10pt, weight: "bold", fill: tinta, it.body))
+    text(10pt, weight: "bold", fill: tinta, hyphenate: false, it.body))
 
   // Listas
   set list(indent: 4pt, body-indent: 7pt, marker: (
@@ -593,6 +595,7 @@
       width: 100%, fill: rgb("#F7F9FC"), radius: (right: 6pt),
       stroke: (left: 3pt + c, rest: 0.5pt + gris-claro),
       inset: (x: 12pt, y: 10pt), above: 1em, below: 1.1em,
+      breakable: it.text.split("\n").len() > 22,
       {
         if it.lang != none {
           place(top + right, dx: 6pt, dy: -5pt, text(6.3pt, weight: "bold", fill: c, tracking: 0.8pt, upper(it.lang)))
