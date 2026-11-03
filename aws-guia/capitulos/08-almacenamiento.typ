@@ -60,10 +60,10 @@ Amazon S3 (_Simple Storage Service_) es probablemente el servicio más usado de 
   ("Tipo", [Serverless; pago por GB-mes almacenado, por petición y por transferencia de salida]),
   ("Ámbito", [Buckets regionales, con nombres únicos en todo AWS]),
   ("Durabilidad", [Diseñado para el 99,999999999 % (11 nueves): datos repartidos en al menos 3 AZ, salvo las clases One Zone]),
-  ("Límites clave", [Un único PUT sube hasta 5 GB (por encima, _multipart upload_); 3500 escrituras y 5500 lecturas por segundo por prefijo]))
+  ("Límites clave", [Objetos de hasta 50 TB; un único PUT sube hasta 5 GB (por encima, _multipart upload_); 3500 escrituras y 5500 lecturas por segundo por prefijo]))
 
 / Bucket: contenedor de objetos que creas en una región; los datos no salen de ella salvo que los copies o repliques. Su nombre (3–63 caracteres: minúsculas, números, guiones y puntos) es *único en todo AWS*: si alguien tiene `fotos`, tú no.
-/ Objeto: los datos —desde 0 bytes hasta varios terabytes— más metadatos (tipo de contenido, metadatos propios, hasta 10 etiquetas) y, si hay versionado, un identificador de versión. Es inmutable: para cambiarlo se sube entero de nuevo.
+/ Objeto: los datos —desde 0 bytes hasta 50 TB (desde diciembre de 2025; antes, 5 TB)— más metadatos (tipo de contenido, metadatos propios, hasta 10 etiquetas) y, si hay versionado, un identificador de versión. Es inmutable: para cambiarlo se sube entero de nuevo.
 / Clave: el nombre completo del objeto en el bucket, como `facturas/2026/03/f-0042.pdf`.
 / Prefijo: S3 no tiene carpetas, su espacio de nombres es plano. La consola las simula con prefijos (`facturas/2026/`) y el delimitador `/`, que también sirven para filtrar listados, reglas y permisos.
 
@@ -186,22 +186,21 @@ La *replicación* copia objetos de forma asíncrona a otro bucket, en otra regi�
 
 == Seguridad en S3
 
-Casi todas las fugas de datos en S3 de la última década fueron buckets públicos por error. Hoy los valores por defecto son seguros, pero conviene entender las capas:
+La mayoría de las fugas de datos en S3 de la última década se debieron a buckets públicos por error. Hoy los valores por defecto son seguros, pero conviene entender las capas:
 
 / Block Public Access: cuatro ajustes, a nivel de cuenta, bucket o access point, que impiden ACL y políticas públicas aunque alguien las escriba. Activado por defecto en los buckets nuevos desde 2023; actívalo también a nivel de cuenta.
 / Object Ownership: con *Bucket owner enforced*, valor por defecto desde 2023, las ACL quedan deshabilitadas y el dueño del bucket posee todos los objetos: el acceso se controla solo con políticas.
-/ Políticas: las *políticas IAM* dicen qué puede hacer una identidad; la *bucket policy*, quién puede acceder al bucket, incluidas otras cuentas y servicios. Un `Deny` explícito en cualquiera de ellas gana siempre (capítulo «IAM (II): permisos — políticas y evaluación»). Verás una bucket policy completa en el apartado de alojamiento web.
+/ Políticas: las *políticas IAM* dicen qué puede hacer una identidad; la *bucket policy*, quién puede acceder al bucket, incluidas otras cuentas y servicios. Un `Deny` explícito en cualquiera de ellas gana siempre. Cómo se evalúan, con una bucket policy de ejemplo, lo viste en «IAM (II): permisos — políticas y evaluación».
 
 === Cifrado
 
-En tránsito, S3 admite HTTPS (y puedes exigirlo con la condición `aws:SecureTransport`). En reposo, *todos los objetos nuevos se cifran por defecto* con SSE-S3 desde 2023; puedes elegir otro método por bucket u objeto. Las claves de KMS se tratan en el capítulo «Seguridad: cifrado con KMS, secretos y protección».
+En tránsito, S3 admite HTTPS, y puedes exigirlo con una bucket policy que deniegue las peticiones con `aws:SecureTransport` igual a `false`. En reposo, *todos los objetos nuevos se cifran por defecto* desde 2023 con *SSE-S3*: S3 gestiona las claves, sin coste ni configuración. Por bucket u objeto puedes elegir otro método:
 
-#tabla(("Método", "Quién gestiona la clave", "Cuándo usarlo"), columnas: (0.9fr, 1.6fr, 2.3fr), tamano: 8.2pt,
-  [*SSE-S3*], [S3, con AES-256], [Por defecto; sin coste ni configuración],
-  [*SSE-KMS*], [AWS KMS (clave de AWS o tuya)], [Controlar quién usa la clave y auditarlo en CloudTrail. Cada operación llama a KMS (con coste): activa las *S3 Bucket Keys* para reducir esas llamadas hasta un 99 %],
-  [*DSSE-KMS*], [AWS KMS, con dos capas de cifrado], [Normativas que exigen doble cifrado],
-  [*SSE-C*], [Tú: envías la clave en cada petición], [Si debes custodiar las claves fuera de AWS; S3 no la guarda y exige HTTPS. Si no lo usas, puedes bloquearlo con una política],
-)
+/ SSE-KMS: con una clave de AWS KMS, controlas con políticas quién puede usarla y cada uso queda auditado en CloudTrail. Cada operación llama a KMS (con coste): activa las *S3 Bucket Keys*, que reducen esas llamadas hasta un 99 %.
+/ DSSE-KMS: dos capas de cifrado con KMS, para normativas que exigen doble cifrado.
+/ SSE-C: envías tu propia clave en cada petición (siempre por HTTPS) y S3 no la guarda.
+
+Cómo funcionan las claves de KMS y qué permisos necesitas para leer un objeto cifrado se explica en el capítulo «Seguridad: cifrado con KMS, secretos y protección».
 
 === URLs prefirmadas, Access Points y VPC endpoints
 
@@ -236,7 +235,7 @@ Para descargar basta la CLI: `aws s3 presign s3://informes/2026/q3.pdf --expires
 ]
 
 - Un *Access Point* es un punto de acceso con nombre, su propia política y, si quieres, restringido a una VPC. Simplifica buckets compartidos por muchos equipos: una política por consumidor en lugar de una bucket policy gigante. Un *Multi-Region Access Point* ofrece un único endpoint global que enruta cada petición al bucket replicado más cercano.
-- Para dar *acceso entre cuentas* hacen falta dos permisos: la bucket policy debe permitir a la otra cuenta (o a un rol concreto de ella) y, en esa cuenta, una política IAM debe conceder la acción a la identidad que accede. Alternativa: que la otra cuenta asuma un rol de la tuya.
+- El *acceso entre cuentas* exige dos permisos: que la bucket policy permita a la otra cuenta (o a un rol suyo) y que una política IAM de esa cuenta conceda la acción a quien accede. Alternativa: que la otra cuenta asuma un rol de la tuya.
 - Desde tu VPC, un *gateway endpoint* para S3 (gratuito, mediante una ruta) evita pasar por Internet o por un NAT Gateway; un *interface endpoint* (de pago) además es accesible desde tu red local. La bucket policy puede exigir `aws:SourceVpce` para aceptar solo tráfico de tu endpoint (capítulo de Redes).
 
 #block(breakable: false)[#practica[Activa Block Public Access a nivel de cuenta, exige TLS, usa SSE-KMS con Bucket Keys para datos sensibles, revisa los hallazgos de IAM Access Analyzer y, para auditar accesos, activa los eventos de datos de CloudTrail o los _server access logs_. Amazon Macie detecta datos personales en tus buckets.]]
@@ -244,11 +243,9 @@ Para descargar basta la CLI: `aws s3 presign s3://informes/2026/q3.pdf --expires
 == Rendimiento
 
 / Peticiones por prefijo: al menos 3500 escrituras y 5500 lecturas por segundo *por prefijo*, sin límite de prefijos: reparte las claves y paraleliza. Mientras S3 escala puede responder `503 Slow Down`; los SDK reintentan con _backoff_ exponencial.
-/ Multipart upload: divide el objeto en partes que se suben en paralelo y se reintentan por separado. Recomendado desde unos 100 MB y obligatorio por encima de 5 GB; `aws s3 cp` lo usa automáticamente.
+/ Multipart upload: divide el objeto en partes (hasta 10~000) que se suben en paralelo y se reintentan por separado. Recomendado desde unos 100 MB y obligatorio por encima de 5 GB; `aws s3 cp` lo usa automáticamente. Las subidas que nunca se completan dejan partes invisibles que se *facturan*: de ahí la regla `AbortIncompleteMultipartUpload` del ejemplo de lifecycle.
 / Byte-range fetches: la cabecera `Range` descarga solo una parte del objeto, para paralelizar descargas o leer la cabecera de un fichero grande.
 / Transfer Acceleration: enruta las transferencias por las ubicaciones _edge_ de CloudFront y la red de AWS (`bucket.s3-accelerate.amazonaws.com`); útil desde lejos, con un cargo por GB acelerado.
-
-#coste[Las subidas multipart que nunca se completan dejan partes invisibles que se *facturan*. Añade siempre una regla `AbortIncompleteMultipartUpload`, como la del ejemplo de lifecycle.]
 
 == Eventos de S3
 

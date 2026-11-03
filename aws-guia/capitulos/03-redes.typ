@@ -79,16 +79,48 @@
     text(7.5pt, weight: "bold", font: "JetBrains Mono", ligatures: false, features: (calt: 0), fill: c.darken(30%), valor))),
   align(center, text(6.3pt, fill: gris, nombre)))
 
-// Una AZ del diseño de referencia
+// Icono compacto (como `svc`, pero más estrecho) para diagramas densos
+#let _mini(abbr, titulo, color, sub: none) = box(width: 1.75cm, align(center + top, stack(dir: ttb, spacing: 3pt,
+  align(center, box(width: 0.85cm, height: 0.85cm, radius: 4pt,
+    fill: gradient.linear(color.lighten(8%), color.darken(18%), angle: 90deg),
+    align(center + horizon, text(7.4pt, weight: "bold", fill: white, abbr)))),
+  align(center, {
+    set par(justify: false, leading: 0.35em)
+    text(6.6pt, weight: "semibold", fill: tinta, hyphenate: false, titulo)
+    if sub != none { linebreak(); text(5.8pt, fill: gris, sub) }
+  }),
+)))
+
+// Una AZ del diseño de referencia: nodo del ALB y NAT en la pública, app y datos en las privadas
 #let _az(letra, pub, app, dat, rds) = zona("AZ " + letra, color: col.neutro)[
   #columna(espacio: 2pt,
-    zona("Pública " + pub, color: col.almacenamiento, ancho: 3.55cm)[#svc("NAT", "NAT Gateway", color: col.redes)],
-    flecha-v(largo: 0.45cm, arriba: true),
-    zona("App " + app, color: col.computo, ancho: 3.55cm)[#svc("ECS", "Tareas o EC2", color: col.computo)],
-    flecha-v(largo: 0.45cm),
-    zona("Datos " + dat, color: col.datos, ancho: 3.55cm)[#svc("RDS", rds, color: col.datos)],
+    zona("Pública " + pub, color: col.almacenamiento, ancho: 4.3cm)[#fila(espacio: 2pt,
+      _mini("ALB", [Nodo del ALB], col.balanceo), _mini("NAT", [NAT Gateway], col.redes))],
+    flecha-v(largo: 0.5cm, doble: true),
+    zona("App " + app, color: col.computo, ancho: 4.3cm)[#_mini("ECS", [Tareas o EC2], col.computo)],
+    flecha-v(largo: 0.5cm),
+    zona("Datos " + dat, color: col.datos, ancho: 4.3cm)[#_mini("RDS", rds, col.datos)],
   )
 ]
+
+// Flecha hacia la izquierda (espejo de `flecha` del tema)
+#let _flecha-izq(etiqueta: none, largo: 1.4cm, color: rgb("#7A8699")) = box(width: largo, height: 2.6em, {
+  place(right + horizon, line(length: largo - 5pt, stroke: 1.2pt + color))
+  place(left + horizon, polygon(fill: color, (7pt, 0pt), (0pt, 3.5pt), (7pt, 7pt)))
+  if etiqueta != none {
+    place(center + top, dy: -1pt, box(width: largo + 0.8cm, align(center, {
+      set par(justify: false, leading: 0.3em)
+      text(6.4pt, fill: color.darken(25%), weight: "medium", etiqueta)
+    })))
+  }
+})
+
+// Casilla de comprobación de un cortafuegos (diagrama del recorrido de un paquete)
+#let _chk(c, cuerpo) = box(width: 4.05cm, fill: c.lighten(91%), stroke: 0.9pt + c, radius: 4pt,
+  inset: (x: 5pt, y: 4.5pt), align(left, {
+    set par(justify: false, leading: 0.4em)
+    text(6.7pt, fill: tinta, cuerpo)
+  }))
 
 // =====================================================================
 
@@ -106,7 +138,7 @@
 
 == Direccionamiento IP y CIDR en cinco minutos
 
-Casi todo lo que despliegas en AWS —una instancia EC2, una base de datos RDS, una tarea de ECS, un balanceador o una función Lambda conectada a tu red— recibe una dirección IP dentro de una red que diseñas tú. Antes de construirla, repasemos cómo se escriben y se reparten esas direcciones: con cuatro ideas tendrás suficiente para todo el capítulo.
+Casi todo lo que despliegas en AWS —una instancia EC2, una base de datos RDS, una tarea de ECS, un balanceador o una función Lambda conectada a tu red— recibe una dirección IP dentro de una red que diseñas tú. Antes de construirla, repasemos cómo se escriben y se reparten esas direcciones.
 
 Una dirección *IPv4* tiene 32 bits que se escriben como cuatro números de 0 a 255 (octetos) separados por puntos, como `10.0.1.25`. La notación *CIDR* (_Classless Inter-Domain Routing_) describe un bloque de direcciones con una dirección base y un *prefijo*: en `10.0.0.0/16`, los primeros 16 bits son fijos e identifican la red, y los 16 restantes quedan libres para numerar equipos. Cuantos más bits fijos, más pequeño es el bloque: un /_n_ contiene 2#super[32−_n_] direcciones. Para redes privadas se usan los rangos de la RFC 1918, que no se enrutan en Internet: `10.0.0.0/8`, `172.16.0.0/12` y `192.168.0.0/16`.
 
@@ -146,7 +178,7 @@ Una *VPC* (_Virtual Private Cloud_) es una red virtual aislada lógicamente del 
   ("Coste", [La VPC, las subredes, las tablas de rutas, los Security Groups y las NACL son gratis. Se paga por NAT Gateway, endpoints de interfaz, VPN, Transit Gateway, IPv4 públicas y transferencia de datos]),
   ("Cuotas", [5 VPC por región y 5 bloques IPv4 por VPC por defecto (ambas ajustables)]))
 
-#analogia[Una VPC es como una planta de oficinas que alquilas en exclusiva: tú numeras los despachos (direcciones IP), levantas tabiques (subredes), decides dónde está la puerta a la calle (Internet Gateway) y pones vigilantes en cada puerta (Security Groups y NACL).]
+#analogia[Una VPC es como una planta de oficinas que alquilas en exclusiva: tú numeras los despachos (direcciones IP), levantas tabiques para separar zonas (subredes), decides dónde está la puerta a la calle (Internet Gateway), pones un control en la entrada de cada zona (NACL) y un vigilante en la puerta de cada despacho (Security Group).]
 
 === VPC por defecto frente a VPC personalizada
 
@@ -175,7 +207,7 @@ Lo habitual es un *plan de direccionamiento* central: por ejemplo, `10.0.0.0/16`
 
 Si te quedas corto, puedes *asociar bloques CIDR secundarios* a la VPC y crear subredes en ellos. No pueden solaparse y hay combinaciones restringidas: si el bloque principal pertenece a `10.0.0.0/8`, no puedes añadir bloques de los otros rangos RFC 1918, pero sí del rango `100.64.0.0/10`, muy usado para dar direcciones a los pods de Kubernetes (lo verás en el capítulo «Kubernetes y Amazon EKS»).
 
-La VPC también puede ser *dual stack*: le asocias un bloque IPv6 /56 proporcionado por Amazon (o tus propias direcciones) y cada subred recibe un /64. Las IPv6 que asigna Amazon son públicas (globalmente únicas): lo que decide si son accesibles desde Internet son las rutas y los cortafuegos, y no hace falta NAT para salir. A cambio, no tienen el coste por hora de las IPv4 públicas. También puedes crear subredes solo IPv6.
+La VPC también puede ser *dual stack*: le asocias un bloque IPv6 /56 proporcionado por Amazon (o tus propias direcciones) y cada subred recibe un /64. Las IPv6 que asigna Amazon son públicas (globalmente únicas): lo que decide si son accesibles desde Internet son las rutas y los cortafuegos, y no hace falta NAT para salir. Además, no tienen el coste por hora de las IPv4 públicas. También puedes crear subredes solo IPv6.
 
 == Subredes y zonas de disponibilidad
 
@@ -208,7 +240,7 @@ El CIDR de una subred debe estar contenido en el de la VPC (entre /16 y /28) y n
 
 == Tablas de rutas
 
-Cada subred está asociada a exactamente una *tabla de rutas* (_route table_), que decide adónde enviar el tráfico según su destino. Una misma tabla puede servir a varias subredes. Toda VPC tiene una *tabla principal* (_main_), que se aplica a las subredes sin asociación explícita.
+Cada subred está asociada a exactamente una *tabla de rutas* (_route table_): una lista de reglas que, para cada destino (un rango CIDR), indica el siguiente salto o *target* (un gateway, un peering, una interfaz de red...). Una misma tabla puede servir a varias subredes. Toda VPC tiene una *tabla principal* (_main_), que se aplica a las subredes sin asociación explícita.
 
 Todas las tablas incluyen la *ruta local* (el CIDR de la VPC hacia `local`), que permite que cualquier subred alcance a cualquier otra dentro de la VPC. No se puede borrar: dentro de una VPC, el aislamiento entre subredes no lo dan las rutas, sino los Security Groups y las NACL. Esta es la tabla de una subred privada típica:
 
@@ -227,7 +259,7 @@ Cuando varias rutas coinciden con un destino, gana la *más específica*, la de 
 - Una IP de S3 figura en la _prefix list_, cuyos bloques son más específicos que `/0`: va por el endpoint.
 - `8.8.8.8` solo coincide con `0.0.0.0/0`: sale por el NAT Gateway.
 
-Otros _targets_ habituales: Internet Gateway (`igw-`), Egress-only IGW (`eigw-`), _virtual private gateway_ de una VPN (`vgw-`) o una interfaz de red (`eni-`), como la de un _appliance_ de seguridad.
+Otros targets habituales: Internet Gateway (`igw-`), Egress-only IGW (`eigw-`), _virtual private gateway_ de una VPN (`vgw-`) o una interfaz de red (`eni-`), como la de un _appliance_ de seguridad.
 
 #practica[Deja la tabla principal como privada (solo la ruta local) y asocia explícitamente cada subred a su tabla. Así, una subred nueva que olvides asociar nunca quedará expuesta a Internet por accidente.]
 
@@ -237,7 +269,7 @@ Otros _targets_ habituales: Internet Gateway (`igw-`), Egress-only IGW (`eigw-`)
 
 El *Internet Gateway* (IGW) conecta la VPC con Internet. Es gestionado, redundante y escala solo: no es un cuello de botella ni un punto único de fallo, y no tiene coste propio. Cada VPC admite uno como máximo. Para IPv4 traduce 1:1 la IP privada de la instancia a su IP pública: el sistema operativo solo ve la privada. Y si quieres un freno de emergencia, *VPC Block Public Access* (2024) bloquea por cuenta y región el tráfico de los Internet Gateways, con exclusiones para las VPC o subredes que deban ser públicas.
 
-¿Qué hace *pública* a una subred? Solo una cosa: que su tabla de rutas tenga una ruta `0.0.0.0/0` (o `::/0`) hacia un IGW. No existe ninguna casilla «subred pública», y el nombre que le pongas no cambia nada. Para que una instancia sea accesible desde Internet deben cumplirse cuatro condiciones:
+¿Qué hace *pública* a una subred? Solo una cosa: que su tabla de rutas tenga una ruta `0.0.0.0/0` (o `::/0`) hacia un IGW. No existe ninguna casilla «subred pública», y el nombre que le pongas no cambia nada. Una subred *privada* es, sencillamente, la que no tiene esa ruta: nada de lo que vive en ella es alcanzable desde Internet, aunque tuviera IP pública. Para que una instancia sea accesible desde Internet deben cumplirse cuatro condiciones:
 
 #pasos(
   [La tabla de rutas de su subred tiene una ruta hacia el Internet Gateway.],
@@ -256,10 +288,11 @@ Una *IPv4 pública automática* se asigna al lanzar la instancia desde el _pool_
 
 Las instancias de una subred privada no tienen IP pública, pero a menudo necesitan salir a Internet (parches, APIs externas). El *NAT Gateway* lo resuelve: se crea en una subred pública con una Elastic IP, y la tabla de rutas de las subredes privadas envía `0.0.0.0/0` hacia él. Traduce las conexiones salientes a su IP pública y deja volver las respuestas, pero nunca acepta conexiones iniciadas desde Internet.
 
-#diagrama(pie: [Subred pública y subred privada. El Internet Gateway da entrada y salida a la subred pública; la privada solo puede salir, a través del NAT Gateway.])[
-  #fila(actor(etiqueta: "Clientes"), flecha(doble: true), internet(), flecha(doble: true), svc("IGW", "Internet Gateway", color: col.redes))
-  #v(-2pt)
-  #flecha-v(doble: true, largo: 0.7cm)
+#diagrama(pie: [Subred pública y subred privada. El Internet Gateway, conectado a la VPC, da entrada y salida a la subred pública; la privada solo puede salir, a través del NAT Gateway.])[
+  #let izq = fila(actor(etiqueta: "Clientes"), flecha(doble: true), internet(), flecha(doble: true))
+  #fila(espacio: 0pt, izq, svc("IGW", "Internet Gateway", color: col.redes), hide(izq))
+  #v(-4pt)
+  #flecha-v(doble: true, largo: 0.6cm)
   #v(-2pt)
   #zona("VPC 10.0.0.0/16", color: col.redes)[
     #columna(espacio: 2pt,
@@ -284,26 +317,46 @@ Las instancias de una subred privada no tienen IP pública, pero a menudo necesi
   ]
 ]
 
-Antes del NAT Gateway se usaban *NAT instances*: instancias EC2 configuradas para hacer NAT. Hoy solo tienen sentido en laboratorios o con presupuestos mínimos:
+Con estas piezas, cada subred encaja en uno de tres tipos según adónde envía su ruta por defecto (`0.0.0.0/0`, «todo lo demás»):
 
-#tabla(("", "NAT Gateway", "NAT instance"), columnas: (1fr, 1.7fr, 1.7fr), tamano: 8pt,
-  [Gestión], [Gestionado por AWS; redundante dentro de su AZ], [Una EC2 (con el _source/destination check_ desactivado) que administras, parcheas y haces redundante tú],
-  [Ancho de banda], [5 Gbps, escala solo hasta 100 Gbps], [El del tipo de instancia],
-  [Security Groups], [#no #h(2pt) Solo la NACL de su subred], [#si],
-  [Coste], [Por hora + por GB procesado], [El de la instancia; más barata con poco tráfico],
+#tabla(("Tipo de subred", "Ruta por defecto hacia", "¿Entrada desde Internet?", "¿Salida a Internet?", "Qué suele alojar"), columnas: (0.9fr, 1.05fr, 1.35fr, 1.2fr, 1.5fr), tamano: 8pt,
+  [*Pública*], [Internet Gateway], [Sí, si el recurso tiene IP pública y los cortafuegos lo permiten], [Sí], [Balanceadores, NAT Gateways],
+  [*Privada*], [NAT Gateway], [No], [Solo las conexiones que inicia ella], [Aplicaciones, contenedores, Lambda en la VPC],
+  [*Aislada*], [Ninguna: solo la ruta local], [No], [No], [Bases de datos, cachés],
 )
 
-#cuidado(titulo: "Alta disponibilidad: un NAT por AZ")[Un NAT Gateway clásico es *zonal*: si su AZ cae, todas las subredes que lo usan se quedan sin salida. El patrón recomendado es un NAT Gateway por AZ y una tabla de rutas privada por AZ que apunte a su NAT local; de paso evitas pagar tráfico entre AZ. Desde noviembre de 2025 existe además un modo *regional*: un único NAT Gateway que se extiende solo a las AZ donde tienes recursos, sin necesidad de subred pública (se factura por AZ activa y no admite NAT privado).]
+Antes del NAT Gateway se usaban *NAT instances*: instancias EC2 configuradas para hacer NAT (con el _source/destination check_ desactivado) que tú administras, parcheas y haces redundantes. Su ancho de banda es el del tipo de instancia y admiten Security Groups; el NAT Gateway, en cambio, está gestionado, es redundante dentro de su AZ, escala solo de 5 a 100 Gbps y no admite Security Groups (solo lo filtra la NACL de su subred). Hoy las NAT instances solo tienen sentido en laboratorios o con presupuestos mínimos.
+
+#cuidado(titulo: "Alta disponibilidad: un NAT por AZ")[Un NAT Gateway clásico es *zonal*: si su AZ cae, todas las subredes que lo usan se quedan sin salida. El patrón recomendado es un NAT Gateway por AZ y una tabla de rutas privada por AZ que apunte a su NAT local; de paso evitas pagar tráfico entre AZ. Desde finales de 2025 existe además un modo *regional*: un único NAT Gateway que se extiende automáticamente a las AZ donde tienes recursos y que no necesita subred pública.]
 
 #coste[Cada NAT Gateway se paga por hora de existencia y por GB procesado, además de su IPv4 pública y de la transferencia a Internet. En us-east-1 ronda los 0,045 USD por hora y por GB (varía según la región): tres NAT suponen unos 100 USD al mes antes de mover un solo byte. Lo que más infla la factura es el tráfico hacia S3, DynamoDB o ECR que cruza el NAT sin necesidad: los *VPC Endpoints* lo evitan.]
 
 === Egress-only Internet Gateway
 
-Con IPv6 no hace falta NAT para salir a Internet, porque las direcciones que asigna Amazon ya son públicas. Para que las instancias puedan iniciar conexiones IPv6 hacia Internet sin aceptar conexiones entrantes se usa un *Egress-only Internet Gateway*, con la ruta `::/0 → eigw-…`. Es _stateful_ como el NAT, pero no traduce direcciones y no tiene coste por hora. Existen también NAT Gateways *privados*, sin IP pública, para conectar redes con CIDR solapados.
+Con IPv6 no hace falta NAT para salir a Internet, porque las direcciones que asigna Amazon ya son públicas. Para que las instancias puedan iniciar conexiones IPv6 hacia Internet sin aceptar conexiones entrantes se usa un *Egress-only Internet Gateway*, con la ruta `::/0 → eigw-…`. Como el NAT, recuerda las conexiones que salen y solo deja volver sus respuestas (es _stateful_), pero no traduce direcciones y no tiene coste por hora. Existen también NAT Gateways *privados*, sin IP pública, para conectar redes con CIDR solapados.
 
 == Security Groups y Network ACL
 
-AWS te da dos cortafuegos complementarios. El *Security Group* (SG) protege interfaces de red concretas (la ENI de una instancia, un balanceador, una base de datos RDS...); la *Network ACL* (NACL) filtra el tráfico que entra en una subred o sale de ella.
+AWS te da dos cortafuegos complementarios que actúan en puntos distintos del camino. La *Network ACL* (NACL) vigila la frontera de una subred: filtra todo lo que entra en ella o sale de ella. El *Security Group* (SG) va pegado a cada interfaz de red (ENI): la de una instancia, un balanceador, una base de datos RDS... Una petición que llega de Internet a una instancia supera los dos controles, y la diferencia decisiva aparece en la respuesta:
+
+#diagrama(pie: [Recorrido de una petición HTTPS y de su respuesta. La NACL, en la frontera de la subred, revisa cada sentido por separado; el Security Group recuerda la conexión y deja salir la respuesta sin necesidad de regla de salida.])[
+  #let cab(c, t) = box(width: 4.05cm, align(center, text(7.2pt, weight: "bold", fill: c.darken(20%), t)))
+  #grid(columns: 7, column-gutter: 2pt, row-gutter: 4pt, align: center + horizon,
+    [], [], cab(col.redes)[NACL · frontera de la subred], [], cab(col.seguridad)[Security Group · ENI de la instancia], [], [],
+    grid.cell(rowspan: 2, actor(etiqueta: "Cliente")),
+    flecha(etiqueta: "petición a :443", largo: 1.55cm),
+    _chk(col.redes)[*Entrada*: ¿alguna regla permite TCP 443? #si],
+    flecha(largo: 0.7cm),
+    _chk(col.seguridad)[*Entrada*: ¿alguna regla permite TCP 443? #si],
+    flecha(largo: 0.7cm),
+    grid.cell(rowspan: 2, svc("EC2", "Servidor web", color: col.computo)),
+    _flecha-izq(etiqueta: "respuesta a :51234", largo: 1.55cm),
+    _chk(col.redes)[*Salida*: necesita su propia regla para los puertos efímeros (1024–65535); sin ella, la respuesta se descarta],
+    _flecha-izq(largo: 0.7cm),
+    _chk(col.seguridad)[*Salida*: sin regla; recuerda la conexión y deja pasar la respuesta #si],
+    _flecha-izq(largo: 0.7cm),
+  )
+]
 
 #tabla(("Característica", "Security Group", "Network ACL"), columnas: (1.05fr, 1.55fr, 1.55fr),
   [Se aplica a], [Interfaces de red (ENI) de los recursos], [Subredes completas],
@@ -347,7 +400,7 @@ Los cambios se aplican al instante. Puedes referenciar SG de una VPC emparejada 
 
 === NACL y puertos efímeros
 
-Al ser _stateless_, una NACL evalúa por separado el paquete de ida y el de vuelta. La respuesta de un servidor se dirige al *puerto efímero* que eligió el cliente: Linux usa por defecto el rango 32768–60999, Windows 49152–65535, y los balanceadores y el NAT Gateway 1024–65535. Por eso la NACL debe permitir 1024–65535 en el sentido de las respuestas. Ejemplo para una subred que solo aloja el balanceador:
+Al ser stateless, una NACL evalúa por separado el paquete de ida y el de vuelta. La respuesta de un servidor se dirige al *puerto efímero* (temporal) que eligió el cliente al abrir la conexión: Linux usa por defecto el rango 32768–60999, Windows 49152–65535, y los balanceadores y el NAT Gateway 1024–65535. Por eso la NACL debe permitir 1024–65535 en el sentido de las respuestas. Ejemplo para una subred que solo aloja el balanceador:
 
 #tabla(("Regla", "Sentido", "Protocolo y puertos", "Origen / destino", "Acción"), columnas: (0.55fr, 0.75fr, 1.3fr, 1.25fr, 2.1fr), tamano: 8pt,
   [90], [Entrada], [Todo], [`203.0.113.0/24`], [DENY: red maliciosa conocida],
@@ -359,7 +412,7 @@ Al ser _stateless_, una NACL evalúa por separado el paquete de ida y el de vuel
   [\*], [Salida], [Todo], [`0.0.0.0/0`], [DENY implícito],
 )
 
-#examen[SG: _stateful_, solo _allow_, nivel de ENI. NACL: _stateless_, _allow_ y _deny_, nivel de subred, reglas numeradas. Si te piden bloquear una IP o un rango concreto, la respuesta es una NACL (o AWS WAF, si el tráfico es HTTP), nunca un Security Group.]
+#examen[SG: stateful, solo allow, en cada ENI. NACL: stateless, allow y deny, en la frontera de la subred, reglas numeradas. Si te piden bloquear una IP o un rango concreto, la respuesta es una NACL (o AWS WAF, si el tráfico es HTTP), nunca un Security Group.]
 
 #practica[Haz de los SG tu control principal y deja las NACL casi abiertas, para bloqueos gruesos (rangos concretos, aislar subredes sensibles). Replicar toda la lógica en las NACL multiplica los errores con los puertos efímeros.]
 
@@ -414,7 +467,7 @@ Cada endpoint admite una *endpoint policy*: una política JSON que limita qué s
 }
 ```
 
-En sentido contrario, la *bucket policy* puede exigir que las peticiones lleguen por tu endpoint con la condición `aws:SourceVpce`. Crear un gateway endpoint es un solo comando (`aws ec2 create-vpc-endpoint --vpc-endpoint-type Gateway`) en el que indicas el servicio (`com.amazonaws.eu-west-1.s3`) y las tablas de rutas que deben recibir la ruta.
+En sentido contrario, la *bucket policy* puede exigir que las peticiones lleguen por tu endpoint con la condición `aws:SourceVpce`. Para crear un gateway endpoint basta con indicar el servicio (`com.amazonaws.eu-west-1.s3`) y las tablas de rutas que deben recibir la ruta.
 
 === PrivateLink para tus propios servicios
 
@@ -465,7 +518,7 @@ Con decenas de VPC más conexiones a tu centro de datos, la malla de peerings se
 ]
 
 #ficha("AWS Transit Gateway", "Router regional gestionado para interconectar VPC y redes locales",
-  ("Ámbito", [Regional; se comparte entre cuentas con AWS RAM y se une a TGW de otras regiones mediante _peering_]),
+  ("Ámbito", [Regional; se comparte entre cuentas con AWS RAM y se une a TGW de otras regiones mediante peering]),
   ("Attachments", [VPC, Site-to-Site VPN, Direct Connect Gateway, peering de TGW y Connect (SD-WAN)]),
   ("Segmentación", [Varias tablas de rutas: producción y desarrollo aisladas entre sí, ambas con acceso a servicios compartidos]),
   ("Coste", [Por hora de cada attachment + por GB procesado]))
@@ -482,7 +535,7 @@ Para redes globales gestionadas mediante políticas, *AWS Cloud WAN* lleva la mi
 
 Conectar AWS con tu centro de datos u oficinas es el escenario *híbrido*. Dispones de tres herramientas, que a menudo se combinan:
 
-/ Site-to-Site VPN: túneles IPsec cifrados sobre Internet entre tu router (*customer gateway*) y un *virtual private gateway* asociado a una VPC o un Transit Gateway. Cada conexión incluye dos túneles hacia endpoints distintos de AWS y admite rutas estáticas o BGP. Desde finales de 2025, las conexiones a Transit Gateway o Cloud WAN pueden usar túneles «grandes» de hasta 5 Gbps.
+/ Site-to-Site VPN: túneles IPsec cifrados sobre Internet entre tu router (*customer gateway*) y, en el lado de AWS, un *virtual private gateway* (VGW, asociado a una VPC) o un Transit Gateway. Cada conexión incluye dos túneles hacia endpoints distintos de AWS y admite rutas estáticas o BGP.
 / Client VPN: acceso remoto para personas, compatible con OpenVPN, con autenticación mediante Active Directory, SAML (tu proveedor de identidad) o certificados.
 / Direct Connect: un enlace físico privado entre tu red y AWS a través de una ubicación de Direct Connect, dedicado (1, 10, 100 o 400 Gbps) o alojado (_hosted_) mediante un socio. No va cifrado por defecto: usa MACsec en las conexiones dedicadas compatibles o una VPN por encima. Llega a tus VPC mediante _virtual interfaces_ y un *Direct Connect Gateway*.
 
