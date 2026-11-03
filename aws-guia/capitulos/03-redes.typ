@@ -119,10 +119,10 @@
     [Diseñar subredes públicas y privadas repartidas en varias AZ],
     [Entender tablas de rutas, Internet Gateway y NAT Gateway],
     [Combinar Security Groups y Network ACL con criterio],
-    [Acceder en privado a servicios de AWS con VPC Endpoints],
+    [Acceder en privado a servicios de AWS con VPC endpoints],
     [Conectar VPC entre sí y con tu red local],
   ),
-  servicios: ("Amazon VPC", "NAT Gateway", "VPC Endpoints", "AWS PrivateLink", "AWS Transit Gateway", "VPC Lattice", "Site-to-Site VPN", "AWS Direct Connect", "Route 53 Resolver", "VPC Flow Logs"))
+  servicios: ("Amazon VPC", "NAT Gateway", "VPC endpoints", "AWS PrivateLink", "AWS Transit Gateway", "Amazon VPC Lattice", "AWS Site-to-Site VPN", "AWS Direct Connect", "Route 53 Resolver", "VPC Flow Logs"))
 
 == Direccionamiento IP y CIDR en cinco minutos
 
@@ -130,17 +130,17 @@ Casi todo lo que despliegas en AWS —una instancia EC2, una base de datos RDS, 
 
 Una dirección *IPv4* tiene 32 bits que se escriben como cuatro números de 0 a 255 (octetos) separados por puntos, como `10.0.1.25`. La notación *CIDR* (_Classless Inter-Domain Routing_) describe un bloque de direcciones con una dirección base y un *prefijo*: en `10.0.0.0/16`, los primeros 16 bits son fijos e identifican la red, y los 16 restantes quedan libres para numerar equipos. Cuantos más bits fijos, más pequeño es el bloque: un /_n_ contiene 2#super[32−_n_] direcciones. Para redes privadas se usan los rangos de la RFC 1918, que no se enrutan en Internet: `10.0.0.0/8`, `172.16.0.0/12` y `192.168.0.0/16`.
 
-#diagrama(pie: [Cada bit del prefijo queda fijo (en color) y los restantes numeran direcciones (en blanco). Del /16 al /28, el bloque pasa de 65 536 a 16 direcciones.])[
+#diagrama(pie: [Cada bit del prefijo queda fijo (en color) y los restantes numeran direcciones (en blanco). Del /16 al /28, el bloque pasa de 65~536 a 16 direcciones.])[
   #grid(columns: 2, column-gutter: 14pt, row-gutter: 12pt, align: (left + horizon, center + horizon),
-    .._bits-fila("10.0.0.0", 16, "VPC", "16 bits libres: 65 536 IPs"),
-    .._bits-fila("10.0.1.0", 24, "Subred", "8 bits libres: 256 IPs"),
-    .._bits-fila("10.0.1.16", 28, "Mínimo", "4 bits libres: 16 IPs"),
+    .._bits-fila("10.0.0.0", 16, "VPC", "16 bits libres: 65 536 IP"),
+    .._bits-fila("10.0.1.0", 24, "Subred", "8 bits libres: 256 IP"),
+    .._bits-fila("10.0.1.16", 28, "Mínimo", "4 bits libres: 16 IP"),
   )
 ]
 
 #tabla(("Prefijo", "Direcciones", "Utilizables en AWS", "Uso típico"), columnas: (0.75fr, 0.95fr, 1.15fr, 3fr),
   [#strong("/16")], [65~536], [65~531], [VPC grande: es el máximo que admite AWS],
-  [#strong("/20")], [4~096], [4~091], [Subredes de la VPC por defecto; subredes para contenedores],
+  [#strong("/20")], [4096], [4091], [Subredes de la VPC por defecto; subredes para contenedores],
   [#strong("/24")], [256], [251], [La subred «clásica»: fácil de leer y de calcular],
   [#strong("/26")], [64], [59], [Subred pequeña (por ejemplo, para bases de datos)],
   [#strong("/28")], [16], [11], [El mínimo permitido: subredes de tránsito o para _endpoints_],
@@ -154,7 +154,7 @@ En cada subred, AWS reserva las cuatro primeras direcciones y la última. Para l
 
 La última se reserva aunque la VPC no admite difusión (_broadcast_). Por eso una /24 ofrece 251 direcciones utilizables y una /28, solo 11. Y recuerda que balanceadores, NAT Gateways, endpoints o tareas de Fargate crean interfaces de red (ENI) en tus subredes: cada una consume una dirección.
 
-#examen[Las cinco IPs reservadas son un clásico. Si te piden «al menos 30 instancias en una subred», una /27 no basta (32 − 5 = 27 utilizables): necesitas una /26.]
+#examen[Las cinco IP reservadas son un clásico. Si te piden «al menos 30 instancias en una subred», una /27 no basta (32 − 5 = 27 utilizables): necesitas una /26.]
 
 == Amazon VPC: tu red privada en la nube
 
@@ -163,7 +163,7 @@ Una *VPC* (_Virtual Private Cloud_) es una red virtual aislada lógicamente del 
 #ficha("Amazon VPC", "Red virtual privada y aislada dentro de una región",
   ("Ámbito", [Regional; cada subred pertenece a una única AZ]),
   ("Tamaño", [IPv4 de /16 a /28, ampliable con bloques secundarios; IPv6 opcional]),
-  ("Coste", [La VPC, las subredes, las tablas de rutas, los Security Groups y las NACL son gratis. Se paga por NAT Gateway, endpoints de interfaz, VPN, Transit Gateway, IPv4 públicas y transferencia de datos]),
+  ("Facturación", [La VPC, las subredes, las tablas de rutas, los Security Groups y las NACL son gratis. Se paga por NAT Gateway, endpoints de interfaz, VPN, Transit Gateway, IPv4 públicas y transferencia de datos]),
   ("Cuotas", [5 VPC por región y 5 bloques IPv4 por VPC por defecto (ambas ajustables)]))
 
 #analogia[Una VPC es como una planta de oficinas que alquilas en exclusiva: tú numeras los despachos (direcciones IP), levantas tabiques para separar zonas (subredes), decides dónde está la puerta a la calle (Internet Gateway), pones un control en la entrada de cada zona (NACL) y un vigilante en la puerta de cada despacho (Security Group).]
@@ -188,36 +188,36 @@ La VPC también puede ser *dual stack*: le asocias un bloque IPv6 /56 proporcion
 
 == Subredes y zonas de disponibilidad
 
-Una *subred* es un trozo del CIDR de la VPC que vive en una única AZ; al lanzar una instancia eliges la subred y, con ella, la AZ. Como una subred no puede abarcar varias AZ, la alta disponibilidad se consigue *repitiendo* cada capa en dos o, mejor, tres AZ.
+Una *subred* es un trozo del CIDR de la VPC que vive en una única AZ; al lanzar una instancia eliges la subred y, con ella, la AZ. Como una subred no puede abarcar varias AZ, la alta disponibilidad se consigue *repitiendo* cada capa en dos o, mejor, tres AZ. Para alinear subredes entre cuentas, guíate por el AZ ID (`euw1-az1`) y no por el nombre, que cambia de una cuenta a otra (capítulo de Fundamentos).
 
 El CIDR de una subred debe estar contenido en el de la VPC (entre /16 y /28) y no puede solaparse con el de otras subredes. El atributo _Auto-assign public IPv4 address_ decide si las instancias nuevas reciben una IP pública. La @fig-redes-plan muestra un plan típico de tres capas en tres AZ, que reutilizaremos al final del capítulo.
 
-#diagrama(pie: [Plan de direcciones para una VPC 10.0.0.0/16 con tres capas en tres AZ. La capa de aplicación recibe bloques grandes porque los contenedores consumen muchas IPs.])[
+#diagrama(pie: [Plan de direcciones para una VPC 10.0.0.0/16 con tres capas en tres AZ. La capa de aplicación recibe bloques grandes porque los contenedores consumen muchas IP.])[
   #grid(columns: (2.9cm, 1fr, 1fr, 1fr), column-gutter: 6pt, row-gutter: 6pt, align: center + horizon,
     [], ..("eu-west-1a", "eu-west-1b", "eu-west-1c").map(z => text(7.5pt, weight: "bold", fill: col.redes.darken(20%), z)),
     _capa("Pública", "ALB, NAT Gateway", col.almacenamiento),
-    _celda("10.0.0.0/24", "251 IPs", col.almacenamiento),
-    _celda("10.0.1.0/24", "251 IPs", col.almacenamiento),
-    _celda("10.0.2.0/24", "251 IPs", col.almacenamiento),
+    _celda("10.0.0.0/24", "251 IP", col.almacenamiento),
+    _celda("10.0.1.0/24", "251 IP", col.almacenamiento),
+    _celda("10.0.2.0/24", "251 IP", col.almacenamiento),
     _capa("Aplicación", "Privada · EC2, ECS, Lambda", col.computo),
-    _celda("10.0.16.0/20", "4 091 IPs", col.computo),
-    _celda("10.0.32.0/20", "4 091 IPs", col.computo),
-    _celda("10.0.48.0/20", "4 091 IPs", col.computo),
+    _celda("10.0.16.0/20", "4091 IP", col.computo),
+    _celda("10.0.32.0/20", "4091 IP", col.computo),
+    _celda("10.0.48.0/20", "4091 IP", col.computo),
     _capa("Datos", "Privada · RDS, ElastiCache", col.datos),
-    _celda("10.0.64.0/24", "251 IPs", col.datos),
-    _celda("10.0.65.0/24", "251 IPs", col.datos),
-    _celda("10.0.66.0/24", "251 IPs", col.datos),
+    _celda("10.0.64.0/24", "251 IP", col.datos),
+    _celda("10.0.65.0/24", "251 IP", col.datos),
+    _celda("10.0.66.0/24", "251 IP", col.datos),
     grid.cell(colspan: 4, block(width: 100%, stroke: (paint: gris, dash: "dashed", thickness: 0.7pt),
       radius: 4pt, inset: 5pt,
       text(7pt, fill: gris.darken(15%))[Libre: casi el 80 % del /16 queda disponible para nuevas capas, una cuarta AZ o servicios futuros])),
   )
 ] <fig-redes-plan>
 
-#examen[Los nombres de AZ (`eu-west-1a`) se asignan de forma independiente en cada cuenta: tu `eu-west-1a` puede no ser la misma AZ física que la de otra cuenta. Para coordinarte entre cuentas usa el *AZ ID* (`euw1-az1`), que identifica la misma ubicación física para todos.]
-
 == Tablas de rutas
 
 Cada subred está asociada a exactamente una *tabla de rutas* (_route table_): una lista de reglas que, para cada destino (un rango CIDR), indica el siguiente salto o *target* (un gateway, un peering, una interfaz de red...). Una misma tabla puede servir a varias subredes. Toda VPC tiene una *tabla principal* (_main_), que se aplica a las subredes sin asociación explícita.
+
+#practica[Deja la tabla principal como privada (solo la ruta local) y asocia explícitamente cada subred a su tabla. Así, una subred nueva que olvides asociar nunca quedará expuesta a Internet por accidente.]
 
 Todas las tablas incluyen la *ruta local* (el CIDR de la VPC hacia `local`), que permite que cualquier subred alcance a cualquier otra dentro de la VPC. No se puede borrar: dentro de una VPC, el aislamiento entre subredes no lo dan las rutas, sino los Security Groups y las NACL. Esta es la tabla de una subred privada típica:
 
@@ -238,9 +238,7 @@ Cuando varias rutas coinciden con un destino, gana la *más específica*, la de 
 
 Otros targets habituales: Internet Gateway (`igw-`), Egress-only IGW (`eigw-`), _virtual private gateway_ de una VPN (`vgw-`) o una interfaz de red (`eni-`), como la de un _appliance_ de seguridad.
 
-#practica[Deja la tabla principal como privada (solo la ruta local) y asocia explícitamente cada subred a su tabla. Así, una subred nueva que olvides asociar nunca quedará expuesta a Internet por accidente.]
-
-== Internet Gateway, IPs públicas y NAT
+== Internet Gateway, IP públicas y NAT
 
 === Internet Gateway y subredes públicas
 
@@ -263,7 +261,7 @@ Una *IPv4 pública automática* se asigna al lanzar la instancia desde el _pool_
 
 === NAT Gateway: salida a Internet para subredes privadas
 
-Las instancias de una subred privada no tienen IP pública, pero a menudo necesitan salir a Internet (parches, APIs externas). El *NAT Gateway* lo resuelve: se crea en una subred pública con una Elastic IP, y la tabla de rutas de las subredes privadas envía `0.0.0.0/0` hacia él. Traduce las conexiones salientes a su IP pública y deja volver las respuestas, pero nunca acepta conexiones iniciadas desde Internet.
+Las instancias de una subred privada no tienen IP pública, pero a menudo necesitan salir a Internet (parches, API externas). El *NAT Gateway* lo resuelve: se crea en una subred pública con una Elastic IP, y la tabla de rutas de las subredes privadas envía `0.0.0.0/0` hacia él. Traduce las conexiones salientes a su IP pública y deja volver las respuestas, pero nunca acepta conexiones iniciadas desde Internet.
 
 #diagrama(pie: [Subred pública y subred privada. El Internet Gateway, conectado a la VPC, da entrada y salida a la subred pública; la privada solo puede salir, a través del NAT Gateway.])[
   #let izq = fila(actor(etiqueta: "Clientes"), flecha(doble: true), internet(), flecha(doble: true))
@@ -306,7 +304,7 @@ Antes del NAT Gateway se usaban *NAT instances*: instancias EC2 configuradas par
 
 #cuidado(titulo: "Alta disponibilidad: un NAT por AZ")[Un NAT Gateway clásico es *zonal*: si su AZ cae, todas las subredes que lo usan se quedan sin salida. El patrón recomendado es un NAT Gateway por AZ y una tabla de rutas privada por AZ que apunte a su NAT local; de paso evitas pagar tráfico entre AZ. Desde finales de 2025 existe además un modo *regional*: un único NAT Gateway que se extiende automáticamente a las AZ donde tienes recursos y que no necesita subred pública.]
 
-#coste[Cada NAT Gateway se paga por hora de existencia y por GB procesado, además de su IPv4 pública y de la transferencia a Internet. En us-east-1 ronda los 0,045 USD por hora y por GB (varía según la región): tres NAT suponen unos 100 USD al mes antes de mover un solo byte. Lo que más infla la factura es el tráfico hacia S3, DynamoDB o ECR que cruza el NAT sin necesidad: los *VPC Endpoints* lo evitan.]
+#coste[Cada NAT Gateway se paga por hora de existencia y por GB procesado, además de su IPv4 pública y de la transferencia a Internet. En us-east-1 ronda los 0,045 USD por hora y por GB (varía según la región): tres NAT suponen unos 100 USD al mes antes de mover un solo byte. Lo que más infla la factura es el tráfico hacia S3, DynamoDB o ECR que cruza el NAT sin necesidad: los *VPC endpoints* lo evitan.]
 
 === Egress-only Internet Gateway
 
@@ -369,7 +367,7 @@ La gran ventaja de los SG es que una regla puede tener como origen *otro Securit
 
 #tabla(("Security Group", "Entrada", "Salida"), columnas: (0.9fr, 1.6fr, 1.9fr),
   [`sg-alb`], [TCP 443 desde `0.0.0.0/0` y `::/0`], [TCP 8080 hacia `sg-app`],
-  [`sg-app`], [TCP 8080 desde `sg-alb`], [TCP 5432 hacia `sg-db`; TCP 443 hacia `0.0.0.0/0` (APIs, parches)],
+  [`sg-app`], [TCP 8080 desde `sg-alb`], [TCP 5432 hacia `sg-db`; TCP 443 hacia `0.0.0.0/0` (API, parches)],
   [`sg-db`], [TCP 5432 desde `sg-app`], [Ninguna: las respuestas salen solas],
 )
 
@@ -398,14 +396,14 @@ Al ser stateless, una NACL evalúa por separado el paquete de ida y el de vuelta
 
 #practica[Haz de los SG tu control principal y deja las NACL casi abiertas, para bloqueos gruesos (rangos concretos, aislar subredes sensibles). Replicar toda la lógica en las NACL multiplica los errores con los puertos efímeros.]
 
-== VPC Endpoints y PrivateLink
+== VPC endpoints y PrivateLink
 
-Una instancia de una subred privada que llama a S3, SQS o Secrets Manager habla con endpoints públicos de AWS: sin más, necesita un NAT Gateway y paga su procesamiento. Los *VPC Endpoints* permiten llegar a esos servicios por la red privada de AWS, sin Internet Gateway, sin NAT y sin IP pública. Hay dos tipos principales:
+Una instancia de una subred privada que llama a S3, SQS o Secrets Manager habla con endpoints públicos de AWS: sin más, necesita un NAT Gateway y paga su procesamiento. Los *VPC endpoints* permiten llegar a esos servicios por la red privada de AWS, sin Internet Gateway, sin NAT y sin IP pública. Hay dos tipos principales:
 
 #tabla(("", "Gateway endpoint", "Interface endpoint (PrivateLink)"), columnas: (1.15fr, 1.5fr, 1.75fr),
   [Servicios], [Solo S3 y DynamoDB], [La mayoría de servicios de AWS, de terceros y los tuyos propios],
   [Funcionamiento], [Una ruta en la tabla de rutas (prefix list → `vpce-`)], [Una ENI con IP privada en cada subred elegida],
-  [DNS], [Sin cambios: se usan los nombres públicos], [DNS privado: el nombre del servicio resuelve a IPs privadas],
+  [DNS], [Sin cambios: se usan los nombres públicos], [DNS privado: el nombre del servicio resuelve a IP privadas],
   [Accesible desde on-premises u otras VPC], no, si,
   [Security Groups], no, si,
   [Coste], [*Gratis*], [Por hora y AZ + por GB procesado],
@@ -502,7 +500,7 @@ Con decenas de VPC más conexiones a tu centro de datos, la malla de peerings se
   ("Ámbito", [Regional; se comparte entre cuentas con AWS RAM y se une a TGW de otras regiones mediante peering]),
   ("Attachments", [VPC, Site-to-Site VPN, Direct Connect Gateway, peering de TGW y Connect (SD-WAN)]),
   ("Segmentación", [Varias tablas de rutas: producción y desarrollo aisladas entre sí, ambas con acceso a servicios compartidos]),
-  ("Coste", [Por hora de cada attachment + por GB procesado]))
+  ("Facturación", [Por hora de cada attachment + por GB procesado]))
 
 Para redes globales gestionadas mediante políticas, *AWS Cloud WAN* lleva la misma idea a varias regiones desde una sola consola.
 
@@ -597,7 +595,7 @@ La entrada se aceptó, pero la respuesta se rechazó. Un Security Group nunca bl
 
 *Reachability Analyzer* responde a «¿puede A hablar con B?» analizando la *configuración* (rutas, SG, NACL, endpoints, peerings, Transit Gateway...) entre un origen y un destino, por ejemplo del Internet Gateway a una instancia por el puerto 443, y señala el componente que bloquea el camino. No envía paquetes reales, así que funciona antes incluso de desplegar la aplicación; se paga por análisis. Su hermano, *Network Access Analyzer*, busca accesos no deseados a gran escala («¿qué es accesible desde Internet?»).
 
-== Diseño de referencia: VPC multi-AZ de tres capas
+== Diseño de referencia: VPC Multi-AZ de tres capas
 
 Juntemos todas las piezas. La @fig-redes-referencia muestra la VPC que encontrarás, con variaciones, en la mayoría de aplicaciones web en producción; usa el plan de direcciones de la @fig-redes-plan. Las decisiones de diseño, una a una:
 
@@ -629,7 +627,7 @@ Juntemos todas las piezas. La @fig-redes-referencia muestra la VPC que encontrar
 ] <fig-redes-referencia>
 
 #resumen[
-- Una *VPC* es una red privada regional; cada subred vive en una sola AZ y pierde *5 IPs* reservadas. Elige un CIDR (de /16 a /28) que no se solape con tus otras redes: no se puede cambiar, solo ampliar con bloques secundarios.
+- Una *VPC* es una red privada regional; cada subred vive en una sola AZ y pierde *5 IP* reservadas. Elige un CIDR (de /16 a /28) que no se solape con tus otras redes: no se puede cambiar, solo ampliar con bloques secundarios.
 - Las *tablas de rutas* deciden el camino: gana la ruta más específica y la ruta local no se puede borrar.
 - La ruta por defecto (`0.0.0.0/0`) define el tipo de subred: *pública* si va a un Internet Gateway (la instancia necesita además IP pública y cortafuegos que la dejen pasar), *privada* si sale por un *NAT Gateway* y *aislada* si no tiene salida.
 - El NAT Gateway se paga por hora y por GB, y conviene uno por AZ (o el modo regional); en IPv6 se usa el Egress-only IGW. Todas las IPv4 públicas se cobran por hora desde 2024.

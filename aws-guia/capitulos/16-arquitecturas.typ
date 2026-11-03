@@ -22,7 +22,7 @@
   }
 })
 
-// Cuenta de AWS (diagrama multi-cuenta)
+// Cuenta de AWS (diagrama multicuenta)
 #let cuenta(nombre, desc, color: col.fundamentos, ancho: 2.9cm) = box(
   width: ancho, fill: white, radius: (right: 4pt),
   stroke: (left: 3pt + color, top: 0.8pt + color.lighten(30%), right: 0.8pt + color.lighten(30%), bottom: 0.8pt + color.lighten(30%)),
@@ -44,12 +44,12 @@
   objetivos: (
     [Web de tres capas altamente disponible],
     [Microservicios en contenedores con ECS],
-    [APIs serverless y procesamiento por eventos],
+    [API serverless y procesamiento por eventos],
     [Sitios estáticos y pipelines de datos],
-    [Estrategia multi-cuenta con Organizations],
+    [Estrategia multicuenta con Organizations],
     [Recuperación ante desastres multirregión],
   ),
-  servicios: ("Route 53", "CloudFront", "ALB", "ECS Fargate", "Lambda", "DynamoDB", "SQS", "EventBridge", "Kinesis", "Organizations"))
+  servicios: ("Amazon Route 53", "Amazon CloudFront", "Application Load Balancer", "Amazon ECS en Fargate", "AWS Lambda", "Amazon DynamoDB", "Amazon SQS", "Amazon EventBridge", "Amazon Kinesis", "AWS Organizations"))
 
 Este capítulo junta las piezas de toda la guía en ocho arquitecturas habituales. En cada diagrama, los números siguen el recorrido de una petición o de un dato y coinciden con los pasos, que explican qué hace cada pieza y *por qué* está ahí. Son puntos de partida: contrástalos con la checklist Well-Architected del final.
 
@@ -313,7 +313,7 @@ Recoger eventos de aplicaciones, dispositivos o logs, guardarlos en un _data lak
 
 #consejo(titulo: "Variantes")[Sin varios consumidores, las apps pueden escribir directamente en Firehose. Para tiempo real, *Managed Service for Apache Flink*; para un _data warehouse_ muy concurrente, *Redshift*; las tablas *Apache Iceberg* (también en *S3 Tables*) añaden transacciones al lake.]
 
-== Estrategia multi-cuenta con Organizations
+== Estrategia multicuenta con Organizations
 
 Una sola cuenta para todo mezcla permisos, costes y riesgos. La práctica recomendada es una *landing zone*: muchas cuentas pequeñas, agrupadas por función y gobernadas desde un único punto.
 
@@ -329,7 +329,7 @@ Una sola cuenta para todo mezcla permisos, costes y riesgos. La práctica recome
         cuenta("Audit", [GuardDuty y Security Hub como administrador delegado], color: col.seguridad))],
       zona([#nm(4) OU Infra], color: col.redes)[#columna(espacio: 5pt,
         cuenta("Network", [Transit Gateway, salida a Internet, DNS], color: col.redes),
-        cuenta("Shared Services", [pipelines, artefactos, AMIs], color: col.redes))],
+        cuenta("Shared Services", [pipelines, artefactos, AMI], color: col.redes))],
       zona([#nm(5) OU Workloads], color: col.contenedores)[#columna(espacio: 5pt,
         zona("Prod", color: col.iam)[#cuenta("app-prod", [producción], color: col.iam, ancho: 2.6cm)],
         zona("No prod", color: col.neutro)[#columna(espacio: 4pt,

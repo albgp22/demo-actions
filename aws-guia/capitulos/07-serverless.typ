@@ -45,18 +45,18 @@
 
 // ---------------------------------------------------------------------
 #capitulo("Serverless: Lambda, API Gateway y Step Functions", color: col.serverless,
-  subtitulo: [Ejecuta código, publica APIs y orquesta procesos sin aprovisionar ni administrar un solo servidor.],
+  subtitulo: [Ejecuta código, publica tus API y orquesta procesos sin aprovisionar ni administrar un solo servidor.],
   objetivos: (
     [Qué significa realmente _serverless_ y cuándo encaja],
     [Cómo ejecuta Lambda tu código: entorno, _cold starts_ y concurrencia],
     [Los modos de invocación y cómo se gestionan los errores],
     [Permisos, VPC, secretos, versiones y _aliases_],
-    [Publicar APIs con API Gateway: tipos, autorización y límites],
+    [Publicar API con API Gateway: tipos, autorización y límites],
     [Orquestar flujos con Step Functions y desplegar con SAM],
   ),
   servicios: ("AWS Lambda", "Amazon API Gateway", "AWS Step Functions", "AWS SAM"))
 
-== ¿Qué significa _serverless_?
+== ¿Qué significa serverless?
 
 _Serverless_ («sin servidor») no significa que no haya servidores: significa que *no son asunto tuyo*. AWS los aprovisiona, parchea, escala y reemplaza; tú entregas código o configuración y pagas por el uso real. Un servicio es serverless cuando reúne cuatro rasgos:
 
@@ -78,10 +78,10 @@ Lambda ejecuta tu código en respuesta a eventos —una petición HTTP, un fiche
 #ficha("AWS Lambda", "Cómputo serverless dirigido por eventos",
   ("Tipo", [Serverless; pago por petición y por duración (GB-segundo, al milisegundo)]),
   ("Ámbito", [Regional; Lambda reparte los entornos entre varias AZ]),
-  ("Ideal para", [APIs, procesamiento de eventos y ficheros, tareas programadas, «pegamento» entre servicios]),
+  ("Ideal para", [API, procesamiento de eventos y ficheros, tareas programadas, «pegamento» entre servicios]),
   ("Límites clave", [15 min por invocación; de 128 MB a 10~240 MB de memoria; _payload_ síncrono de 6 MB; 1000 ejecuciones concurrentes por región por defecto (ampliable)]))
 
-=== El modelo de ejecución: eventos y _handler_
+=== El modelo de ejecución: eventos y handler
 
 Toda función tiene un *handler*, el punto de entrada que Lambda llama en cada invocación con dos argumentos: el *evento* (un JSON cuya forma depende del origen) y el *contexto* (metadatos como el identificador de la petición o el tiempo restante). Lo que devuelve el handler es la respuesta.
 
@@ -104,7 +104,7 @@ def lambda_handler(event, context):
 
 El cliente de DynamoDB se crea *fuera* del handler: ese código se ejecuta una sola vez, al preparar el entorno de ejecución (lo verás enseguida), y se reutiliza en las invocaciones siguientes. Es la optimización más sencilla y rentable de Lambda.
 
-=== _Runtimes_, paquetes y recursos
+=== Runtimes, paquetes y recursos
 
 Hay *runtimes gestionados* para Node.js, Python, Java, .NET y Ruby, y *runtimes de solo sistema operativo* (`provided.al2023`) para Go, Rust o runtimes propios. AWS los parchea y los retira según un calendario publicado. El código se empaqueta como *.zip* (hasta 50 MB comprimido en subida directa y 250 MB descomprimido) o como *imagen de contenedor* de hasta 10 GB alojada en ECR. Puedes elegir `x86_64` o `arm64` (Graviton), con un precio por GB-segundo en torno a un 20 % menor.
 
@@ -207,7 +207,7 @@ Los permisos de una función van en dos direcciones, y confundirlas es un error 
     Rol IAM que Lambda asume al ejecutar tu código: escribir logs (`AWSLambdaBasicExecutionRole`) y lo que haga tu código, como leer de DynamoDB o de una cola.
   ],
   tarjeta("Resource-based policy", color: col.iam, subtitulo: "¿Quién puede invocarla?")[
-    Política de la función que permite invocarla a servicios (S3, SNS, API Gateway…) o a otras cuentas. La consola la crea al añadir un disparador.
+    La política de recurso de la función: permite invocarla a servicios (S3, SNS, API Gateway…) o a otras cuentas. La consola la crea al añadir un disparador.
   ],
 )
 
@@ -228,7 +228,7 @@ Cómo se combinan estas políticas con las de identidad lo explica el capítulo 
 
 *Layers.* Un _layer_ es un .zip con bibliotecas, un runtime o datos que se monta en `/opt` y se comparte entre funciones; cada función admite hasta 5, dentro de los 250 MB descomprimidos (con imágenes de contenedor todo va en la imagen).
 
-== Versiones, _aliases_ y _function URLs_
+== Versiones, aliases y function URLs
 
 Mientras desarrollas editas `$LATEST`, la versión mutable. Al *publicar una versión*, Lambda congela código y configuración en una versión numerada e inmutable (`:5`, `:6`…) con su propio ARN. Un *alias* (`prod`, `staging`) es un puntero a una versión: los clientes apuntan al alias, y promocionar o volver atrás es mover el puntero. Un alias también puede repartir el tráfico entre *dos versiones* con pesos: la base de los despliegues *canary*.
 
@@ -266,12 +266,12 @@ Para exponer una función por HTTPS sin más, una *function URL* da un endpoint 
 
 == Amazon API Gateway
 
-API Gateway es la puerta de entrada gestionada de tus APIs: recibe peticiones HTTP o WebSocket, las autentica, aplica límites y las enruta a un _backend_ —Lambda, un servicio HTTP u otro servicio de AWS—. Escala solo y se paga por petición.
+API Gateway es la puerta de entrada gestionada de tus API: recibe peticiones HTTP o WebSocket, las autentica, aplica límites y las enruta a un _backend_ —Lambda, un servicio HTTP u otro servicio de AWS—. Escala solo y se paga por petición.
 
-#ficha("Amazon API Gateway", "APIs REST, HTTP y WebSocket totalmente gestionadas",
+#ficha("Amazon API Gateway", "API REST, HTTP y WebSocket totalmente gestionadas",
   ("Tipo", [Serverless; pago por millón de peticiones (mensajes y minutos de conexión en WebSocket)]),
   ("Ámbito", [Regional; las REST API también pueden ser _edge-optimized_ (vía CloudFront) o privadas]),
-  ("Límites clave", [Payload de 10 MB; 10~000 peticiones/s por cuenta y región (ampliable); el backend debe responder en 29 s (REST; ampliable en APIs regionales y privadas desde 2024) o 30 s (HTTP API): para trabajos largos, responde un 202 y procesa de forma asíncrona]))
+  ("Límites clave", [Payload de 10 MB; 10~000 peticiones/s por cuenta y región (ampliable); el backend debe responder en 29 s (REST; ampliable en API regionales y privadas desde 2024) o 30 s (HTTP API): para trabajos largos, responde un 202 y procesa de forma asíncrona]))
 
 #tabla(("Característica", "REST API", "HTTP API", "WebSocket API"), columnas: (1.35fr, 1.25fr, 1.25fr, 1.15fr), tamano: 8.2pt,
   [Modelo y precio], [Petición-respuesta; la más cara], [Petición-respuesta; más barata y rápida], [Conexión persistente bidireccional],
@@ -362,11 +362,11 @@ Cada Task, Parallel o Map puede declarar *Retry* (qué errores reintentar, cuán
   ],
 )
 
-Step Functions no necesita Lambda para todo: con las *integraciones optimizadas* (DynamoDB, SQS, SNS, ECS/Fargate, Batch, Glue, EventBridge, Bedrock…) y las del *AWS SDK* (`arn:aws:states:::aws-sdk:servicio:acción`, más de 200 servicios) llama a las APIs directamente, de tres maneras: *Request Response* sigue en cuanto el servicio responde; *Run a Job* (`.sync`) espera a que termine el trabajo, como una tarea de ECS o un _job_ de Glue, y *Wait for Callback* (`.waitForTaskToken`) se pausa hasta que alguien devuelve un _token_, por ejemplo tras una aprobación humana. Además transforma datos con JSONata y permite relanzar (_redrive_) una ejecución desde el paso que falló.
+Step Functions no necesita Lambda para todo: con las *integraciones optimizadas* (DynamoDB, SQS, SNS, ECS/Fargate, Batch, Glue, EventBridge, Bedrock…) y las del *AWS SDK* (`arn:aws:states:::aws-sdk:servicio:acción`, más de 200 servicios) llama a las API directamente, de tres maneras: *Request Response* sigue en cuanto el servicio responde; *Run a Job* (`.sync`) espera a que termine el trabajo, como una tarea de ECS o un _job_ de Glue, y *Wait for Callback* (`.waitForTaskToken`) se pausa hasta que alguien devuelve un _token_, por ejemplo tras una aprobación humana. Además transforma datos con JSONata y permite relanzar (_redrive_) una ejecución desde el paso que falló.
 
 == Desplegar con AWS SAM
 
-*AWS SAM* (_Serverless Application Model_) es una extensión de AWS CloudFormation, el servicio de infraestructura como código de AWS, que verás junto a CDK y Terraform en el capítulo de Infraestructura como código. Con recursos abreviados describes funciones, APIs y eventos, y su CLI construye, prueba en local y despliega (`sam build`, `sam local invoke`, `sam deploy --guided`). Estas líneas crean función, rol, HTTP API, tabla, alias y despliegue canary:
+*AWS SAM* (_Serverless Application Model_) es una extensión de AWS CloudFormation, el servicio de infraestructura como código de AWS, que verás junto a CDK y Terraform en el capítulo de Infraestructura como código. Con recursos abreviados describes funciones, API y eventos, y su CLI construye, prueba en local y despliega (`sam build`, `sam local invoke`, `sam deploy --guided`). Estas líneas crean función, rol, HTTP API, tabla, alias y despliegue canary:
 
 ```yaml
 Transform: AWS::Serverless-2016-10-31

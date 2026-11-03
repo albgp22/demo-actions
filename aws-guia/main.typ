@@ -44,10 +44,10 @@
     box(width: 2cm, height: 4pt, radius: 2pt, fill: acento)
     v(10pt)
     set par(justify: false)
-    text(13pt, fill: white.transparentize(15%),
-      [Los conceptos esenciales para diseñar, construir y operar en la nube: de IAM y las redes a los contenedores, las bases de datos, la mensajería y la entrega de contenido.])
+    text(13pt, fill: white.transparentize(15%), hyphenate: false,
+      [Los conceptos esenciales para diseñar, construir y operar en la nube: de IAM y las redes a los contenedores y Kubernetes, las bases de datos, la mensajería, el cifrado y la entrega de contenido.])
     v(22pt)
-    let temas = ("IAM", "VPC", "EC2", "ELB", "ECS", "Lambda", "S3", "RDS", "DynamoDB", "SQS", "SNS", "CloudFront", "CloudWatch", "KMS", "CloudFormation")
+    let temas = ("IAM", "VPC", "EC2", "ELB", "ECS", "EKS", "Lambda", "S3", "RDS", "DynamoDB", "SQS", "SNS", "CloudFront", "CloudWatch", "KMS", "CloudFormation")
     temas.map(t => box(stroke: 0.8pt + white.transparentize(60%), radius: 10pt, inset: (x: 7pt, y: 3.5pt),
       text(8pt, weight: "semibold", fill: white.transparentize(10%), t))).join(h(5pt))
   }))
@@ -66,9 +66,9 @@
     text(30pt, weight: "extrabold", fill: marino, "Cómo leer esta guía")
   })
 
-  Esta guía recorre los servicios y conceptos de AWS que aparecen una y otra vez en cualquier proyecto real: identidad y permisos, redes, cómputo, contenedores y Kubernetes, _serverless_, almacenamiento, bases de datos, mensajería, entrega de contenido, observabilidad, seguridad y cifrado, infraestructura como código y costes. Cada capítulo empieza por el _porqué_ de cada servicio, construye los conceptos paso a paso y termina con un resumen y preguntas de repaso.
+  Esta guía recorre los servicios y conceptos de AWS que aparecen una y otra vez en cualquier proyecto real: identidad y permisos, redes, cómputo, contenedores y Kubernetes, _serverless_, almacenamiento, bases de datos, mensajería, entrega de contenido, observabilidad, seguridad y cifrado, infraestructura como código y costes. Cada capítulo parte del _porqué_ de sus servicios, construye los conceptos paso a paso y termina con un resumen y preguntas de repaso; el último, _Arquitecturas de referencia_, junta todas las piezas en diseños completos.
 
-  Puedes leerla de principio a fin —el orden está pensado para que cada capítulo se apoye en los anteriores— o saltar directamente al servicio que necesites. Los capítulos de _Fundamentos_, _IAM_ y _Redes_ son la base de todo lo demás: si eres nuevo en AWS, empieza por ellos. IAM ocupa dos capítulos a propósito: el primero responde a _quién_ (usuarios, grupos, roles y _permission sets_) y el segundo a _qué puede hacer_ (políticas y evaluación de permisos). Es el tema que más dudas genera y el que más conviene dominar.
+  Puedes leerla de principio a fin —el orden está pensado para que cada capítulo se apoye en los anteriores— o saltar directamente al servicio que necesites. Los capítulos de _Fundamentos_, _IAM_ y _Redes_ son la base de todo lo demás: si eres nuevo en AWS, empieza por ellos. IAM ocupa dos capítulos a propósito: el primero responde a _quién_ (usuarios, grupos, roles y _permission sets_) y el segundo a _qué puede hacer_ (políticas y evaluación de permisos). Es el tema que más dudas genera y el que más conviene dominar. También tienen espacio propio _Kubernetes y Amazon EKS_, justo después de _Contenedores_, y el cifrado con KMS, que ocupa la primera mitad de _Seguridad_. Al final, el _Glosario_ y la _Chuleta de referencia rápida_ reúnen términos, cifras clave y comandos para consultar en cualquier momento.
 
   #v(4pt)
   #text(11pt, weight: "bold", fill: marino, "Cajas que encontrarás a lo largo del texto")
@@ -100,39 +100,55 @@
     v(-2pt)
     text(30pt, weight: "extrabold", fill: marino, "Mapa de servicios")
   })
-  AWS ofrece más de doscientos servicios, pero la inmensa mayoría de arquitecturas se construyen con un núcleo reducido. Este mapa agrupa los que trata esta guía por categoría; el color de cada categoría es el mismo que verás en los capítulos y en los diagramas.
+  AWS ofrece más de doscientos servicios, pero la inmensa mayoría de arquitecturas se construyen con un núcleo reducido. Este mapa agrupa por categoría los que trata esta guía, en el mismo orden que los capítulos; el color de cada categoría es el que verás en su capítulo y en los diagramas.
   #v(8pt)
-  #let cat(nombre, color, servicios) = block(
-    width: 100%, radius: 7pt, clip: true, stroke: 0.8pt + color.lighten(50%), breakable: false,
+  #let cat(nombre, color, servicios, alto: auto) = block(
+    width: 100%, height: alto, radius: 7pt, clip: true, stroke: 0.8pt + color.lighten(50%), breakable: false,
+    fill: color.lighten(95%),
     {
+      set par(justify: false)
+      set text(hyphenate: false)
       block(width: 100%, spacing: 0pt, fill: gradient.linear(color, color.darken(25%)), inset: (x: 10pt, y: 7pt),
         text(9pt, weight: "bold", fill: white, upper(nombre)))
-      block(width: 100%, spacing: 0pt, inset: (x: 10pt, y: 8pt), fill: color.lighten(95%), {
-        set par(justify: false, leading: 0.5em)
+      block(width: 100%, spacing: 0pt, inset: (x: 10pt, y: 8pt), {
+        set par(leading: 0.5em)
         for (s, d) in servicios {
           block(below: 5pt, [#text(8.4pt, weight: "bold", fill: color.darken(20%), s) #h(2pt) #text(7.6pt, fill: gris, d)])
         }
       })
     },
   )
-  #grid(columns: (1fr, 1fr, 1fr), column-gutter: 8pt, row-gutter: 8pt,
-    cat("Identidad y gobierno", col.iam, (("IAM", "usuarios, roles, políticas"), ("IAM Identity Center", "acceso centralizado"), ("Organizations", "multi-cuenta, SCP"), ("STS", "credenciales temporales"))),
-    cat("Redes", col.redes, (("VPC", "red privada virtual"), ("Transit Gateway", "hub de redes"), ("PrivateLink", "servicios privados"), ("VPN / Direct Connect", "conexión híbrida"))),
-    cat("Cómputo", col.computo, (("EC2", "máquinas virtuales"), ("EBS / EFS", "discos y ficheros"), ("Auto Scaling", "elasticidad"), ("Systems Manager", "operación de flotas"))),
-    cat("Balanceo", col.balanceo, (("ALB", "capa 7, HTTP/HTTPS"), ("NLB", "capa 4, TCP/UDP"), ("GWLB", "appliances de red"), ("ACM", "certificados TLS"))),
-    cat("Contenedores", col.contenedores, (("ECS", "orquestador de AWS"), ("Fargate", "contenedores sin servidores"), ("ECR", "registro de imágenes"), ("EKS", "Kubernetes gestionado"))),
-    cat("Serverless", col.serverless, (("Lambda", "funciones bajo demanda"), ("API Gateway", "APIs gestionadas"), ("Step Functions", "orquestación"), ("App Runner", "web apps gestionadas"))),
-    cat("Almacenamiento", col.almacenamiento, (("S3", "almacenamiento de objetos"), ("S3 Glacier", "archivo"), ("FSx", "sistemas de ficheros"), ("AWS Backup", "copias centralizadas"))),
-    cat("Bases de datos", col.datos, (("RDS / Aurora", "relacionales"), ("DynamoDB", "clave-valor NoSQL"), ("ElastiCache", "caché en memoria"), ("Redshift", "data warehouse"))),
-    cat("Integración", col.integracion, (("SQS", "colas"), ("SNS", "pub/sub"), ("EventBridge", "bus de eventos"), ("Kinesis", "streaming"))),
-    cat("Edge y DNS", col.edge, (("CloudFront", "CDN global"), ("Route 53", "DNS gestionado"), ("Global Accelerator", "red global de AWS"), ("Lambda@Edge", "código en el borde"))),
-    cat("Observabilidad", col.observabilidad, (("CloudWatch", "métricas, logs, alarmas"), ("CloudTrail", "auditoría de API"), ("X-Ray", "trazas distribuidas"), ("AWS Config", "estado y cumplimiento"))),
-    cat("Seguridad", col.seguridad, (("KMS", "claves de cifrado"), ("Secrets Manager", "secretos"), ("WAF / Shield", "protección web"), ("GuardDuty", "detección de amenazas"))),
+  // Una fila de categorías: todas las cajas toman la altura de la más alta
+  #let fila-cats(..cs) = layout(size => {
+    let xs = cs.pos()
+    let w = (size.width - (xs.len() - 1) * 8pt) / xs.len()
+    let h = calc.max(..xs.map(c => measure(block(width: w, cat(..c))).height))
+    block(above: 0pt, below: 8pt, grid(columns: (1fr,) * xs.len(), column-gutter: 8pt, ..xs.map(c => cat(..c, alto: h))))
+  })
+  #fila-cats(
+    ("Identidad y gobierno", col.iam, (("IAM", "usuarios, roles, políticas"), ("IAM Identity Center", "acceso centralizado"), ("Organizations", "multicuenta, SCP"), ("STS", "credenciales temporales"))),
+    ("Redes", col.redes, (("VPC", "red privada virtual"), ("Transit Gateway", "hub de redes"), ("PrivateLink", "servicios privados"), ("VPN / Direct Connect", "conexión híbrida"))),
+    ("Cómputo", col.computo, (("EC2", "máquinas virtuales"), ("EBS / EFS", "discos y ficheros"), ("EC2 Image Builder", "AMI doradas"), ("Systems Manager", "operación de flotas"))),
   )
-  #v(4pt)
-  #grid(columns: (1fr, 1fr), column-gutter: 8pt,
-    cat("Infraestructura como código", col.iac, (("CloudFormation", "plantillas declarativas"), ("CDK", "IaC con lenguajes de programación"), ("CodePipeline / CodeBuild", "CI/CD"))),
-    cat("Costes", col.costes, (("Cost Explorer", "análisis de gasto"), ("Budgets", "presupuestos y alertas"), ("Savings Plans", "descuentos por compromiso"))),
+  #fila-cats(
+    ("Balanceo y escalado", col.balanceo, (("ALB", "capa 7, HTTP/HTTPS"), ("NLB", "capa 4, TCP/UDP"), ("GWLB", "appliances de red"), ("Auto Scaling", "elasticidad"))),
+    ("Contenedores", col.contenedores, (("ECS", "orquestador de AWS"), ("Fargate", "sin servidores"), ("ECR", "registro de imágenes"), ("App Runner", "web apps gestionadas"))),
+    ("Kubernetes", col.contenedores, (("EKS", "Kubernetes gestionado"), ("EKS Auto Mode", "nodos gestionados"), ("Karpenter", "autoescalado de nodos"), ("EKS Pod Identity", "roles IAM para pods"))),
+  )
+  #fila-cats(
+    ("Serverless", col.serverless, (("Lambda", "funciones bajo demanda"), ("API Gateway", "API gestionadas"), ("Step Functions", "orquestación"), ("SAM", "despliegue serverless"))),
+    ("Almacenamiento", col.almacenamiento, (("S3", "almacenamiento de objetos"), ("S3 Glacier", "archivo"), ("FSx", "sistemas de ficheros"), ("AWS Backup", "copias centralizadas"))),
+    ("Bases de datos", col.datos, (("RDS / Aurora", "relacionales"), ("DynamoDB", "clave-valor NoSQL"), ("ElastiCache", "caché en memoria"), ("Redshift", "data warehouse"))),
+  )
+  #fila-cats(
+    ("Integración", col.integracion, (("SQS", "colas"), ("SNS", "pub/sub"), ("EventBridge", "bus de eventos"), ("Kinesis", "streaming"))),
+    ("Edge y DNS", col.edge, (("CloudFront", "CDN global"), ("Route 53", "DNS gestionado"), ("Global Accelerator", "red global de AWS"), ("Lambda@Edge", "código en el borde"))),
+    ("Observabilidad", col.observabilidad, (("CloudWatch", "métricas, logs, alarmas"), ("CloudTrail", "auditoría de API"), ("X-Ray", "trazas distribuidas"), ("AWS Config", "estado y cumplimiento"))),
+  )
+  #fila-cats(
+    ("Seguridad", col.seguridad, (("KMS", "claves de cifrado"), ("Secrets Manager", "secretos"), ("ACM", "certificados TLS"), ("WAF / Shield", "protección web"), ("GuardDuty", "detección de amenazas"))),
+    ("IaC y DevOps", col.iac, (("CloudFormation", "plantillas declarativas"), ("CDK", "IaC programable"), ("Terraform", "IaC multiproveedor"), ("CodePipeline / CodeBuild", "CI/CD"))),
+    ("Costes", col.costes, (("Cost Explorer", "análisis de gasto"), ("Budgets", "presupuestos y alertas"), ("Savings Plans", "descuentos por compromiso"), ("Compute Optimizer", "ajuste de tamaño"))),
   )
 ]
 

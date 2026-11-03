@@ -63,8 +63,8 @@ La red de CloudFront tiene más de 700 puntos de presencia en más de 50 países
 #ficha("Amazon CloudFront", "Red de distribución de contenidos (CDN) global de AWS",
   ("Ámbito", [Global: una distribución se despliega en toda la red (o en parte, según la _price class_)]),
   ("Protocolos", [HTTP/1.1, HTTP/2 y HTTP/3; IPv4 e IPv6; WebSocket]),
-  ("Contenido", [Estático (imágenes, JS, vídeo) y dinámico (APIs, HTML personalizado)]),
-  ("Coste", [Por GB servido a los usuarios (varía por zona geográfica) y por peticiones; la transferencia desde orígenes de AWS hasta CloudFront es gratuita]))
+  ("Contenido", [Estático (imágenes, JS, vídeo) y dinámico (API, HTML personalizado)]),
+  ("Facturación", [Por GB servido a los usuarios (varía por zona geográfica) y por peticiones; la transferencia desde orígenes de AWS hasta CloudFront es gratuita]))
 
 La unidad de configuración es la *distribución*. Cada una recibe un nombre de CloudFront, como `d111111abcdef8.cloudfront.net`, y admite tus propios dominios (_alternate domain names_, como `www.ejemplo.com`) con su certificado TLS. Una distribución tiene uno o varios *orígenes*, de donde CloudFront obtiene el contenido:
 
@@ -74,7 +74,7 @@ La unidad de configuración es la *distribución*. Cada una recibe un nombre de 
 
 Un *origin group* combina un origen primario y uno secundario: si el primario devuelve ciertos códigos de error (por ejemplo, 500, 502, 503 o 504) o no responde, CloudFront reintenta la petición en el secundario. Funciona con peticiones GET, HEAD y OPTIONS.
 
-Los *cache behaviors* deciden qué hacer con cada petición. Cada uno asocia un patrón de ruta (_path pattern_, como `/api/*` o `*.jpg`) con un origen y sus ajustes: protocolos y métodos HTTP permitidos, políticas de caché, compresión, funciones de borde o la obligación de usar URLs firmadas. CloudFront los evalúa en orden y aplica el primero que coincide, así que los patrones más específicos van primero; el comportamiento por defecto (`*`) recoge el resto. En la figura, la API no se cachea y las imágenes y el sitio sí: `CachingDisabled` y `CachingOptimized` son políticas de caché gestionadas, que verás a continuación.
+Los *cache behaviors* deciden qué hacer con cada petición. Cada uno asocia un patrón de ruta (_path pattern_, como `/api/*` o `*.jpg`) con un origen y sus ajustes: protocolos y métodos HTTP permitidos, políticas de caché, compresión, funciones de borde o la obligación de usar URL firmadas. CloudFront los evalúa en orden y aplica el primero que coincide, así que los patrones más específicos van primero; el comportamiento por defecto (`*`) recoge el resto. En la figura, la API no se cachea y las imágenes y el sitio sí: `CachingDisabled` y `CachingOptimized` son políticas de caché gestionadas, que verás a continuación.
 
 #diagrama(pie: [Una distribución con tres cache behaviors: cada patrón de ruta va a su origen, con su propia política de caché.])[
   #fila(espacio: 4pt,
@@ -190,7 +190,7 @@ Una petición a CloudFront recorre dos tramos cifrados: del usuario a la edge lo
 - *Certificado de tu dominio*: emitido por ACM (gratuito y con renovación automática) y obligatoriamente en `us-east-1` (Norte de Virginia), aunque tu aplicación viva en otra región.
 - *Viewer protocol policy*: _HTTP and HTTPS_, _Redirect HTTP to HTTPS_ (lo habitual) o _HTTPS only_. Una *security policy* fija la versión mínima de TLS.
 - *Origin protocol policy* (orígenes personalizados): _HTTP only_, _HTTPS only_ o _Match viewer_. Con HTTPS, el certificado del origen debe ser válido para su nombre: nada de certificados autofirmados.
-- *SNI* (_Server Name Indication_) sirve muchos certificados desde las mismas IPs; es la opción por defecto y gratuita. Las IPs dedicadas, para clientes antiguos sin SNI, se pagan aparte y son caras.
+- *SNI* (_Server Name Indication_) sirve muchos certificados desde las mismas IP; es la opción por defecto y gratuita. Las IP dedicadas, para clientes antiguos sin SNI, se pagan aparte y son caras.
 
 #examen[«Certificado para CloudFront» = ACM en `us-east-1`. En cambio, el certificado de un ALB debe estar en la región del propio ALB.]
 
@@ -200,7 +200,7 @@ Para contenido privado o de pago (cursos, descargas, vídeo), CloudFront puede e
 
 #tabla(("", "Signed URL", "Signed cookies"), columnas: (0.9fr, 1.8fr, 1.8fr),
   [Alcance], [Un fichero por URL], [Muchos ficheros (por ejemplo, `/premium/*`)],
-  [Cambia las URLs], [#si #h(2pt) Añade parámetros de firma], [#no],
+  [Cambia las URL], [#si #h(2pt) Añade parámetros de firma], [#no],
   [Ideal para], [Una descarga concreta; clientes que no admiten cookies], [Vídeo HLS o DASH con cientos de segmentos; zonas de suscriptores],
   [Política], [_Canned_ (solo caducidad) o _custom_ (comodines, fecha de inicio, rango de IP)], [Las mismas opciones],
 )
@@ -274,7 +274,7 @@ CloudFront publica en CloudWatch (región `us-east-1`) métricas como peticiones
 #ficha("Amazon Route 53", "DNS gestionado, registro de dominios y health checks",
   ("Ámbito", [Global]),
   ("Zonas", [Públicas (Internet) y privadas (asociadas a una o varias VPC)]),
-  ("Coste", [Cuota mensual por zona alojada y por millón de consultas (las consultas alias a recursos de AWS son gratuitas), por health check y, si registras dominios, por dominio y año]),
+  ("Facturación", [Cuota mensual por zona alojada y por millón de consultas (las consultas alias a recursos de AWS son gratuitas), por health check y, si registras dominios, por dominio y año]),
   ("SLA", [100 % de disponibilidad del servicio de DNS]))
 
 === Zonas alojadas y tipos de registro
@@ -293,7 +293,7 @@ Una *hosted zone* contiene los registros de un dominio (`ejemplo.com`) y sus sub
 
 === Registros alias y el apex
 
-El estándar DNS prohíbe un CNAME en el *apex* (la raíz de la zona, `ejemplo.com`), porque allí ya existen los registros SOA y NS y un CNAME no puede convivir con otros registros del mismo nombre. Los registros *alias* resuelven el problema: Route 53 responde directamente con las IPs (A o AAAA) del recurso de destino —una distribución de CloudFront, un balanceador, un bucket configurado como sitio web, un API Gateway, un endpoint de VPC u otro registro de la zona—, sigue sus cambios automáticamente y no cobra las consultas cuando el destino es un recurso de AWS. El TTL lo marca el destino.
+El estándar DNS prohíbe un CNAME en el *apex* (la raíz de la zona, `ejemplo.com`), porque allí ya existen los registros SOA y NS y un CNAME no puede convivir con otros registros del mismo nombre. Los registros *alias* resuelven el problema: Route 53 responde directamente con las IP (A o AAAA) del recurso de destino —una distribución de CloudFront, un balanceador, un bucket configurado como sitio web, un API Gateway, un endpoint de VPC u otro registro de la zona—, sigue sus cambios automáticamente y no cobra las consultas cuando el destino es un recurso de AWS. El TTL lo marca el destino.
 
 #examen[«Apuntar `ejemplo.com` (sin www) a un ALB o a CloudFront» → registro *alias*. CNAME solo para subdominios, y nunca hacia una IP.]
 
@@ -356,13 +356,13 @@ Con todo lo visto ya puedes montar la arquitectura más rentable para publicar u
 #tabla(("", "CloudFront", "Global Accelerator"), columnas: (1fr, 1.6fr, 1.6fr), tamano: 8pt,
   [Qué es], [CDN con caché], [Acelerador de red (capa 4), sin caché],
   [Protocolos], [HTTP y HTTPS (también WebSocket)], [TCP y UDP],
-  [Punto de entrada], [Un nombre DNS (las IPs cambian)], [Dos IPs estáticas anycast],
+  [Punto de entrada], [Un nombre DNS (las IP cambian)], [Dos IP estáticas anycast],
   [Failover entre regiones], [Origin groups, petición a petición], [Automático en segundos, sin depender de cachés DNS],
-  [Casos típicos], [Webs, APIs, vídeo, descargas], [Juegos, VoIP, IoT; clientes que necesitan IPs fijas en listas de permitidos],
+  [Casos típicos], [Webs, API, vídeo, descargas], [Juegos, VoIP, IoT; clientes que necesitan IP fijas en listas de permitidos],
   [Facturación], [Por GB y por peticiones], [Cuota por hora + recargo por GB transferido],
 )
 
-#examen[IPs fijas, UDP o failover regional en segundos, sin caché → Global Accelerator. Contenido HTTP cacheable, funciones en el borde o WAF → CloudFront.]
+#examen[IP fijas, UDP o failover regional en segundos, sin caché → Global Accelerator. Contenido HTTP cacheable, funciones en el borde o WAF → CloudFront.]
 
 #resumen[
 - *CloudFront* es la CDN de AWS: más de 700 puntos de presencia y una capa de Regional Edge Caches para reducir la latencia, descargar el origen y proteger la aplicación.
@@ -373,7 +373,7 @@ Con todo lo visto ya puedes montar la arquitectura más rentable para publicar u
 - El certificado de CloudFront va en *ACM de `us-east-1`*; redirige HTTP a HTTPS y usa SNI. Las *signed URLs* protegen ficheros concretos; las *signed cookies*, conjuntos de ficheros.
 - *CloudFront Functions* (eventos viewer, submilisegundo, baratas) frente a *Lambda\@Edge* (cuatro eventos, acceso a red, más potente).
 - *Route 53*: zonas públicas y privadas, registros *alias* en el apex, TTL, ocho políticas de enrutamiento y health checks para el failover.
-- *Global Accelerator*: dos IPs anycast estáticas, TCP y UDP y failover rápido, pero sin caché.
+- *Global Accelerator*: dos IP anycast estáticas, TCP y UDP y failover rápido, pero sin caché.
 ]
 
 #repaso(
@@ -383,5 +383,5 @@ Con todo lo visto ya puedes montar la arquitectura más rentable para publicar u
   ([¿Por qué no puedes crear un CNAME para `ejemplo.com` hacia tu distribución?], [Porque el DNS no permite un CNAME en el apex de la zona; usa registros alias A y AAAA.]),
   ([Quieres enviar el 10 % del tráfico a la nueva versión de tu aplicación. ¿Qué política de Route 53 usas?], [Weighted (ponderada), con pesos 90 y 10.]),
   ([Una función debe consultar un servicio externo de autorización antes de ir al origen. ¿CloudFront Functions o Lambda\@Edge?], [Lambda\@Edge: las CloudFront Functions no tienen acceso a red.]),
-  ([Un juego multijugador por UDP necesita IPs fijas y un failover rápido entre regiones. ¿CloudFront o Global Accelerator?], [Global Accelerator: ofrece dos IPs anycast estáticas, admite UDP y conmuta entre regiones en segundos; CloudFront solo sirve HTTP y HTTPS.]),
+  ([Un juego multijugador por UDP necesita IP fijas y un failover rápido entre regiones. ¿CloudFront o Global Accelerator?], [Global Accelerator: ofrece dos IP anycast estáticas, admite UDP y conmuta entre regiones en segundos; CloudFront solo sirve HTTP y HTTPS.]),
 )

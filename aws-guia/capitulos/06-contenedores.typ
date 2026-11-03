@@ -305,6 +305,8 @@ aws ecs execute-command --cluster prod --task "$TASK_ID" --container api \
 
 Juntando todas las piezas, este es el despliegue típico de una API en contenedores: un ALB público, un servicio ECS en Fargate repartido en subredes privadas de dos AZ y una base de datos RDS Multi-AZ, con acceso privado a ECR, CloudWatch Logs y Secrets Manager mediante VPC endpoints.
 
+#coste[Si las tareas de subredes privadas descargan imágenes a través de un NAT Gateway, pagas su procesamiento por GB en cada despliegue y cada escalado. Los VPC endpoints de ECR (`ecr.api` y `ecr.dkr`), el endpoint _gateway_ de S3 (gratuito, ahí están las capas) y el de CloudWatch Logs suelen salir más baratos y mantienen el tráfico dentro de AWS.]
+
 #diagrama(pie: [Arquitectura de referencia: ALB público → servicio ECS en Fargate en subredes privadas → RDS. Las tareas descargan la imagen de ECR, envían logs y leen secretos a través de VPC endpoints, sin salir a Internet.])[
   #fila(espacio: 3pt,
     actor(etiqueta: "Usuarios"),
@@ -335,8 +337,6 @@ Juntando todas las piezas, este es el despliegue típico de una API en contenedo
   )
 ]
 
-#coste[Si las tareas de subredes privadas descargan imágenes a través de un NAT Gateway, pagas su procesamiento por GB en cada despliegue y cada escalado. Los VPC endpoints de ECR (`ecr.api` y `ecr.dkr`), el endpoint _gateway_ de S3 (gratuito, ahí están las capas) y el de CloudWatch Logs suelen salir más baratos y mantienen el tráfico dentro de AWS.]
-
 == ¿ECS, EKS o App Runner?
 
 *Amazon Elastic Kubernetes Service (EKS)* es la otra gran opción para orquestar contenedores en AWS: Kubernetes gestionado. AWS opera el plano de control de Kubernetes, el orquestador de código abierto más extendido, y tú eliges dónde corren los contenedores (EC2, Fargate o EKS Auto Mode). Lo estudiaremos a fondo en el capítulo «Kubernetes y Amazon EKS»; aquí basta con saber cuándo conviene cada uno:
@@ -351,7 +351,7 @@ Juntando todas las piezas, este es el despliegue típico de una API en contenedo
   [*Elígelo si*], [Quieres simplicidad y todo tu entorno está en AWS], [Ya usas Kubernetes, necesitas portabilidad o su ecosistema],
 )
 
-En el otro extremo está *AWS App Runner*, aún más sencillo: le das una imagen de contenedor (o el código fuente) y se encarga de construir, desplegar, servir con HTTPS, escalar según las peticiones y conectarse a tu VPC. Es cómodo para webs y APIs sin equipo de plataforma, a cambio de mucho menos control sobre la red y el despliegue; antes de elegirlo para un proyecto nuevo, revisa su estado y sus límites en la documentación.
+En el otro extremo está *AWS App Runner*, aún más sencillo: le das una imagen de contenedor (o el código fuente) y se encarga de construir, desplegar, servir con HTTPS, escalar según las peticiones y conectarse a tu VPC. Es cómodo para webs y API sin equipo de plataforma, a cambio de mucho menos control sobre la red y el despliegue; antes de elegirlo para un proyecto nuevo, revisa su estado y sus límites en la documentación.
 
 #resumen[
   - Un contenedor empaqueta la aplicación y sus dependencias y comparte el kernel del host; nace de una imagen OCI inmutable.
@@ -362,7 +362,7 @@ En el otro extremo está *AWS App Runner*, aún más sencillo: le das una imagen
   - El *execution role* prepara la tarea (ECR, logs, secretos); el *task role* da permisos a tu código. Confundirlos es el error más común.
   - Despliegues rolling con circuit breaker, blue/green y vuelta atrás por alarmas; target groups de tipo `ip`; escalado con Application Auto Scaling; *Service Connect* entre servicios.
   - Secretos inyectados desde Secrets Manager o Parameter Store; logs a CloudWatch con `awslogs` o FireLens.
-  - *ECS* es lo más sencillo y no cobra el plano de control; *EKS* ofrece Kubernetes estándar y portable; *App Runner*, la máxima sencillez para webs y APIs.
+  - *ECS* es lo más sencillo y no cobra el plano de control; *EKS* ofrece Kubernetes estándar y portable; *App Runner*, la máxima sencillez para webs y API.
 ]
 
 #repaso(

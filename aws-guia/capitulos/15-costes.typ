@@ -17,7 +17,7 @@
     [A qué servicios llega cada descuento por compromiso],
     [Optimizar y evitar las trampas típicas],
   ),
-  servicios: ("Cost Explorer", "AWS Budgets", "Data Exports", "Cost Anomaly Detection", "Compute Optimizer", "Savings Plans"))
+  servicios: ("AWS Cost Explorer", "AWS Budgets", "AWS Data Exports", "AWS Cost Anomaly Detection", "AWS Compute Optimizer", "Savings Plans"))
 
 == El modelo de pago por uso
 
@@ -38,7 +38,7 @@ En AWS no compras servidores: pagas por segundo, por hora, por GB o por petició
   tarjeta("Transferencia de datos", subtitulo: "la gran olvidada")[Salida a Internet, tráfico entre AZ y regiones, y procesamiento del NAT Gateway.],
 )
 
-La transferencia es la partida que más sorprende, porque no aparece en ningún «recurso» de la consola. La regla: *entrar es gratis y salir cuesta*; *cruzar zonas de disponibilidad cuesta en los dos sentidos*; *entre regiones paga la de origen*; y lo que atraviesa un *NAT Gateway* paga además su procesamiento por GB, vaya a Internet o a S3. Dentro de una AZ, con IPs privadas, es gratis, y servir contenido por CloudFront suele salir más barato que hacerlo desde EC2 o S3.
+La transferencia es la partida que más sorprende, porque no aparece en ningún «recurso» de la consola. La regla: *entrar es gratis y salir cuesta*; *cruzar zonas de disponibilidad cuesta en los dos sentidos*; *entre regiones paga la de origen*; y lo que atraviesa un *NAT Gateway* paga además su procesamiento por GB, vaya a Internet o a S3. Dentro de una AZ, con IP privadas, es gratis, y servir contenido por CloudFront suele salir más barato que hacerlo desde EC2 o S3.
 
 #diagrama(pie: [Qué tráfico se paga: en verde, gratis; en naranja, pago por GB o por hora; en rojo, salida a Internet o entre regiones. Los importes varían por región y volumen; lo importante es el patrón.])[
   #grid(columns: (3.6cm, 2.9cm, 3.2cm, 4.2cm), align: center + horizon, row-gutter: 0pt,
@@ -99,7 +99,7 @@ Las etiquetas (_tags_) responden a «¿cuánto cuesta este proyecto?». Define u
   tarjeta("Apagar fuera de horario", subtitulo: "dev y test")[Sin noches ni fines de semana eliminas casi dos tercios de las horas (EventBridge Scheduler, Instance Scheduler).],
   tarjeta("Graviton", subtitulo: "procesadores Arm de AWS")[Instancias más baratas por hora que sus equivalentes x86 y con mejor relación precio-rendimiento; también en Lambda, Fargate y RDS.],
   tarjeta("Clases de S3 y lifecycle", subtitulo: "datos fríos, precio frío")[Reglas que mueven los datos a Standard-IA o Glacier (o Intelligent-Tiering) y expiran versiones antiguas y subidas multipart incompletas.],
-  tarjeta("gp3 en lugar de gp2", subtitulo: "EBS")[Más barato por GB, con 3 000 IOPS y 125 MB/s de base sea cual sea el tamaño; se cambia en caliente.],
+  tarjeta("gp3 en lugar de gp2", subtitulo: "EBS")[Más barato por GB, con 3000 IOPS y 125 MiB/s de base sea cual sea el tamaño; se cambia en caliente.],
   tarjeta("Serverless si es intermitente", subtitulo: "pagar por actividad")[Lambda, DynamoDB on-demand o Aurora Serverless v2 (que puede bajar a 0 ACU) no cobran cómputo en reposo.],
 )
 
@@ -121,9 +121,9 @@ Con los recursos ya ajustados, toca comprometer el uso estable. Los modelos y la
 
 #tabla(("Trampa", "Por qué cuesta", "Cómo evitarla"), columnas: (1.2fr, 2.5fr, 2.3fr), tamano: 8pt,
   [*NAT Gateway*], [Hora por cada AZ más cada GB procesado, incluido el tráfico a S3, DynamoDB o ECR.], [Endpoints de gateway (y de interfaz si compensa); VPC Flow Logs para ver quién lo usa.],
-  [*IPv4 públicas y Elastic IPs*], [Desde febrero de 2024 cada IPv4 pública se cobra por hora (instancias, balanceadores, NAT), también las EIP sin asociar.], [Subredes privadas tras un balanceador, IPv6 donde se pueda, liberar EIP; inventario con VPC IPAM.],
+  [*IPv4 públicas y Elastic IP*], [Desde febrero de 2024 cada IPv4 pública se cobra por hora (instancias, balanceadores, NAT), también las Elastic IP sin asociar.], [Subredes privadas tras un balanceador, IPv6 donde se pueda, liberar las Elastic IP que sobren; inventario con VPC IPAM.],
   [*Logs sin retención*], [Los GB almacenados se acumulan mes a mes, para siempre.], [Retención por grupo de logs; archivo en S3.],
-  [*Snapshots y AMIs huérfanos*], [Se pagan por GB-mes aunque el volumen original ya no exista.], [Data Lifecycle Manager o AWS Backup con retención.],
+  [*Snapshots y AMI huérfanos*], [Se pagan por GB-mes aunque el volumen original ya no exista.], [Data Lifecycle Manager o AWS Backup con retención.],
   [*EBS sin adjuntar*], [Un volumen en estado _available_ cuesta lo mismo que uno en uso.], [Revisión periódica: snapshot si hace falta y borrar.],
   [*Tráfico entre AZ*], [Microservicios «habladores» o réplicas en otra AZ pagan cada GB en ambos sentidos.], [Afinidad por AZ, cachés locales y compresión.],
   [*Recursos olvidados*], [Entornos de prueba, balanceadores o clústeres en otra región siguen facturando.], [Etiquetas obligatorias, presupuestos y limpieza automática.],
@@ -155,7 +155,7 @@ La métrica más útil es el *coste unitario* (por cliente, por pedido, por mill
 ]
 
 #repaso(
-  ([¿Qué tráfico de datos no se cobra?], [La entrada desde Internet, el tráfico dentro de la misma AZ con IPs privadas, el acceso a S3 o DynamoDB por un endpoint de gateway en la misma región y la transferencia de un origen de AWS a CloudFront.]),
+  ([¿Qué tráfico de datos no se cobra?], [La entrada desde Internet, el tráfico dentro de la misma AZ con IP privadas, el acceso a S3 o DynamoDB por un endpoint de gateway en la misma región y la transferencia de un origen de AWS a CloudFront.]),
   ([Has etiquetado todo, pero las etiquetas no salen en Cost Explorer. ¿Por qué?], [Hay que activarlas como etiquetas de asignación de costes en la consola de facturación; hasta entonces no aparecen en los informes.]),
   ([Una instancia de desarrollo funciona 24/7 al 3 % de CPU. ¿Por qué cuesta lo mismo que si fuera al 90 % y qué haces?], [Porque se paga lo aprovisionado, no lo usado. Baja de talla con las recomendaciones de Compute Optimizer y apágala fuera de horario (EventBridge Scheduler o Instance Scheduler); si la carga es intermitente, valora un servicio serverless.]),
   ([La partida de NAT Gateway se ha disparado. ¿Qué revisas?], [Qué tráfico pasa por él (VPC Flow Logs); llevar S3 y DynamoDB a endpoints de gateway y valorar endpoints de interfaz para servicios como ECR o CloudWatch.]),

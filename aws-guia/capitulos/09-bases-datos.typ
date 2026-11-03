@@ -96,7 +96,7 @@ Nada te impide lanzar una instancia EC2, instalar PostgreSQL y administrarlo tú
   #text(7pt, fill: gris)[_Compartido_: tú decides y configuras (tamaño, Multi-AZ, retención) y AWS lo ejecuta.]
 ]
 
-Con RDS o Aurora *sigue siendo tuyo* el esquema, los índices, las consultas, los usuarios del motor, el tamaño de la instancia, la red (subredes y _Security Groups_) y la retención de copias. ¿Cuándo tiene sentido EC2? Cuando necesitas un motor o versión que RDS no ofrece, acceso de administrador al sistema operativo o extensiones no soportadas. Entre ambos extremos está *RDS Custom* (Oracle y SQL Server): automatiza copias y monitorización, pero te deja entrar en el sistema operativo.
+Con RDS o Aurora *sigue siendo tuyo* el esquema, los índices, las consultas, los usuarios del motor, el tamaño de la instancia, la red (subredes y Security Groups) y la retención de copias. ¿Cuándo tiene sentido EC2? Cuando necesitas un motor o versión que RDS no ofrece, acceso de administrador al sistema operativo o extensiones no soportadas. Entre ambos extremos está *RDS Custom* (Oracle y SQL Server): automatiza copias y monitorización, pero te deja entrar en el sistema operativo.
 
 == Amazon RDS
 
@@ -179,7 +179,7 @@ RDS ofrece dos mecanismos que a menudo se confunden, porque los dos «copian la 
 
 RDS hace dos tipos de copias:
 
-- *Backups automáticos*: una instantánea diaria en la *ventana de backup* más los *logs de transacciones*, que se suben a S3 cada cinco minutos. Permiten una *restauración a un punto en el tiempo* (PITR) a cualquier segundo del periodo de retención —de 1 a 35 días—, normalmente hasta unos cinco minutos antes del presente.
+- *Backups automáticos*: un snapshot diario en la *ventana de backup* más los *logs de transacciones*, que se suben a S3 cada cinco minutos. Permiten una *restauración a un punto en el tiempo* (PITR) a cualquier segundo del periodo de retención —de 1 a 35 días—, normalmente hasta unos cinco minutos antes del presente.
 - *Snapshots manuales*: se conservan hasta que los borras, aunque elimines la instancia. Puedes copiarlos a otra región y compartirlos con otras cuentas (si están cifrados, con una clave KMS gestionada por el cliente, no con `aws/rds`).
 - *Coste*: las copias no se cobran hasta el 100 % del almacenamiento aprovisionado en la región; el exceso (snapshots acumulados, retenciones largas) se paga por GB-mes.
 
@@ -187,7 +187,7 @@ RDS hace dos tipos de copias:
 
 === Seguridad: red, cifrado y credenciales
 
-- *Red*: subredes privadas (un _DB subnet group_ con al menos dos AZ), sin acceso público, y el puerto del motor abierto solo al _Security Group_ de la aplicación (capítulo de Redes).
+- *Red*: subredes privadas (un _DB subnet group_ con al menos dos AZ), sin acceso público, y el puerto del motor abierto solo al Security Group de la aplicación (capítulo de Redes).
 - *Cifrado en reposo* con KMS: cubre almacenamiento, backups, snapshots, réplicas y logs. Se elige *al crear* la instancia; para cifrar una existente, copia un snapshot activando el cifrado y restaura desde él (detalles en «Seguridad: cifrado con KMS, secretos y protección»).
 - *Cifrado en tránsito* con TLS, obligatorio si lo fijas por parámetro (`rds.force_ssl` en PostgreSQL, `require_secure_transport` en MySQL).
 - *Credenciales*: contraseña maestra gestionada en *Secrets Manager*, o *autenticación IAM* (MySQL, MariaDB y PostgreSQL): la aplicación obtiene con su rol un *token* válido 15 minutos (`aws rds generate-db-auth-token`) y lo usa como contraseña, por TLS. El rol necesita el permiso `rds-db:connect` sobre ese usuario de la base de datos y, en PostgreSQL, el usuario debe tener el rol `rds_iam` (`GRANT rds_iam TO app_lectura;`).

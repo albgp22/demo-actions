@@ -99,11 +99,11 @@
     [Permissions boundaries, SCP y RCP para poner límites],
     [Depurar un AccessDenied y aplicar el mínimo privilegio],
   ),
-  servicios: ("AWS IAM", "AWS Organizations", "IAM Access Analyzer", "Policy Simulator", "AWS CloudTrail", "AWS Control Tower"))
+  servicios: ("AWS IAM", "AWS Organizations", "IAM Access Analyzer", "IAM Policy Simulator", "AWS CloudTrail", "AWS Control Tower"))
 
 == Del quién al qué: tres reglas de oro
 
-En el capítulo anterior viste *quién* hace cada petición y *cómo* obtiene sus credenciales (los pasos 1 y 2 del mapa de IAM). Este capítulo trata el paso 3: *qué puede hacer*. En nuestro edificio, ya sabemos quién lleva cada tarjeta o acreditación; ahora toca decidir qué puertas abre cada una, qué dicen los carteles de cada sala y qué normas de la empresa están por encima de todo. Todo se apoya en tres reglas que conviene grabarse a fuego:
+En el capítulo «IAM (I)» viste *quién* hace cada petición y *cómo* obtiene sus credenciales (los pasos 1 y 2 del mapa de IAM). Este capítulo trata el paso 3: *qué puede hacer*. En nuestro edificio, ya sabemos quién lleva cada tarjeta o acreditación; ahora toca decidir qué puertas abre cada una, qué dicen los carteles de cada sala y qué normas de la empresa están por encima de todo. Todo se apoya en tres reglas que conviene grabarse a fuego:
 
 #diagrama(pie: [Las tres reglas de la autorización en AWS. La tercera no tiene excepciones: ningún Allow puede anular un Deny explícito.])[
   #fila(espacio: 5pt,
@@ -342,7 +342,7 @@ Esta es la política del bucket en la cuenta B. Fíjate en que nombra al rol con
 }
 ```
 
-#nota[Si en lugar de esto la cuenta A *asume un rol* de la cuenta B (el camino «con un rol en B» del escenario 6 del capítulo anterior), solo la llamada a `AssumeRole` es entre cuentas y necesita los dos permisos: la política de identidad en A y la trust policy en B. Después, la sesión del rol pertenece a B y sus peticiones se evalúan como cualquier otra de B.]
+#nota[Si en lugar de esto la cuenta A *asume un rol* de la cuenta B (el camino «con un rol en B» del escenario 6 de «IAM (I)»), solo la llamada a `AssumeRole` es entre cuentas y necesita los dos permisos: la política de identidad en A y la trust policy en B. Después, la sesión del rol pertenece a B y sus peticiones se evalúan como cualquier otra de B.]
 
 == Condiciones útiles y variables de política
 
@@ -578,7 +578,7 @@ Con las RCP ya tienes los tres «techos» de AWS. Se confunden a menudo, sobre t
 
 == Depurar un AccessDenied paso a paso
 
-Tarde o temprano verás un mensaje como este. No lo resuelvas a ciegas añadiendo permisos: léelo.
+#block(sticky: true)[Tarde o temprano verás un mensaje como este. No lo resuelvas a ciegas añadiendo permisos: léelo.]
 
 ```text
 An error occurred (AccessDenied) when calling the GetObject operation:

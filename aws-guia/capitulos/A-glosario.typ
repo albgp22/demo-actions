@@ -39,7 +39,7 @@
 #T[ALB][_Application Load Balancer_. Balanceador de capa 7 (HTTP, HTTPS, gRPC, WebSocket) con reglas por ruta, host o cabeceras hacia _target groups_.]
 #T[Alias][En _Route 53_, registro que apunta a un recurso de AWS (CloudFront, ELB…), incluso en el dominio raíz, sin coste por consulta. En Lambda y KMS, nombre de una versión o de una clave que se reasigna sin tocar a los clientes.]
 #T[AMI][_Amazon Machine Image_. Plantilla para lanzar instancias EC2 (volumen raíz, permisos, mapeo de dispositivos); es regional, pero se puede copiar a otras.]
-#T[API Gateway][Servicio para publicar APIs REST, HTTP y WebSocket con autorización, _throttling_ y transformación de peticiones.]
+#T[API Gateway][Servicio para publicar API REST, HTTP y WebSocket con autorización, _throttling_ y transformación de peticiones.]
 #T[AppConfig][Configuración dinámica y _feature flags_ con validación, despliegue gradual y reversión automática por alarmas.]
 #T[ARN][_Amazon Resource Name_. Identificador único de un recurso, con la forma `arn:partición:servicio:` `región:cuenta:recurso`.]
 #T[ASG][_Auto Scaling group_. Grupo de instancias EC2 con capacidad mínima, deseada y máxima que sustituye las no sanas y escala según políticas.]
@@ -90,7 +90,7 @@
 #T[Data key][Clave de datos: clave simétrica que genera _KMS_ (`GenerateDataKey`) para cifrar datos en local; se guarda cifrada junto a ellos.]
 #T[Data lake][Repositorio central, normalmente en S3, con datos en bruto y procesados listos para analítica.]
 #T[DAX][_DynamoDB Accelerator_. Caché en memoria compatible con la API de DynamoDB, con latencias de microsegundos.]
-#T[DeletionPolicy][Atributo de CloudFormation que decide si un recurso se borra, se conserva o se guarda en una instantánea al eliminar el stack.]
+#T[DeletionPolicy][Atributo de CloudFormation que decide si un recurso se borra, se conserva o se guarda en un snapshot al eliminar el stack.]
 #T[Deployment][Objeto de Kubernetes que mantiene N réplicas de un _pod_ sin estado y las actualiza poco a poco (para aplicaciones con estado, StatefulSet; un pod por _nodo_, DaemonSet).]
 #T[Direct Connect][Conexión de red dedicada y privada entre tu centro de datos y AWS.]
 #T[Distribución][Configuración de CloudFront con sus orígenes, _behaviors_, certificados y dominios.]
@@ -106,9 +106,9 @@
 #T[ECS][_Elastic Container Service_. Orquestador de contenedores de AWS: ejecuta tareas y servicios sobre _Fargate_ o EC2.]
 #T[Edge location][Punto de presencia de la red de AWS donde CloudFront cachea contenido y Route 53 responde consultas.]
 #T[EFS][_Elastic File System_. Sistema de ficheros NFS gestionado y elástico, compartible entre muchas instancias y AZ.]
-#T[EIP][_Elastic IP_. IPv4 pública estática reservada para tu cuenta; como toda IPv4 pública, se factura por hora.]
 #T[EKS][_Elastic Kubernetes Service_. Kubernetes gestionado: AWS opera el plano de control y, con Auto Mode, también los nodos.]
 #T[EKS Pod Identity][Forma de dar un rol IAM a los pods de EKS mediante asociaciones y un agente en el nodo; más sencilla que _IRSA_.]
+#T[Elastic IP][IPv4 pública estática reservada para tu cuenta (a veces abreviada EIP); como toda IPv4 pública, se factura por hora.]
 #T[ElastiCache][Caché en memoria gestionada compatible con Valkey, Redis OSS y Memcached.]
 #T[ELB][_Elastic Load Balancing_. Familia de balanceadores: _ALB_, _NLB_, _GWLB_ y el Classic, heredado.]
 #T[Encryption context][Pares clave-valor no secretos vinculados a una operación de _KMS_: hay que repetirlos al descifrar y quedan registrados en CloudTrail.]
@@ -132,7 +132,7 @@
 
 #L("G")
 #T[Glacier][Clases de archivo de S3 (Instant Retrieval, Flexible Retrieval y Deep Archive), muy baratas y con distintos tiempos de recuperación.]
-#T[Global Accelerator][Red global de AWS con IPs anycast estáticas que acelera el tráfico TCP/UDP y conmuta entre regiones.]
+#T[Global Accelerator][Red global de AWS con IP anycast estáticas que acelera el tráfico TCP/UDP y conmuta entre regiones.]
 #T[Glue][Integración de datos serverless: catálogo, crawlers que descubren esquemas y ETL sobre Spark.]
 #T[Grant][Permiso puntual sobre una _KMS key_ para un _principal_ concreto, que se crea y revoca por API sin tocar la _key policy_; los servicios lo usan para cifrar y descifrar en tu nombre.]
 #T[Graviton][Procesadores Arm de AWS, con mejor relación precio-rendimiento en EC2, Lambda, Fargate, RDS y otros servicios.]
@@ -144,7 +144,7 @@
 #L("H")
 #T[Health check][Comprobación periódica del estado de un destino (ELB, Route 53, Auto Scaling) para dejar de enviarle tráfico si falla.]
 #T[Helm][Gestor de paquetes de Kubernetes: instala aplicaciones como charts parametrizables.]
-#T[Hosted zone][Zona hospedada: contenedor de los registros DNS de un dominio en Route 53, pública o privada (asociada a VPC).]
+#T[Hosted zone][Zona alojada: contenedor de los registros DNS de un dominio en Route 53, pública o privada (asociada a VPC).]
 #T[HSM][_Hardware Security Module_. Dispositivo resistente a manipulaciones que genera y guarda claves y opera con ellas por dentro; _KMS_ y _CloudHSM_ usan HSM validados FIPS 140.]
 
 #L("I")
@@ -178,9 +178,9 @@
 
 #L("L")
 #T[Lake Formation][Gobierno de _data lakes_ en S3 con permisos finos por base de datos, tabla, columna y fila.]
-#T[Lambda][Funciones serverless que se ejecutan por eventos, hasta 15 minutos y 10 240 MB de memoria, con pago por uso.]
+#T[Lambda][Funciones serverless que se ejecutan por eventos, hasta 15 minutos y 10~240 MB de memoria, con pago por uso.]
 #T[Lambda\@Edge][Funciones Lambda que se ejecutan en las ubicaciones regionales de CloudFront para personalizar peticiones y respuestas.]
-#T[Landing zone][Entorno multi-cuenta bien diseñado (cuentas, OU, políticas y logs centralizados) desde el que crecer de forma segura.]
+#T[Landing zone][Entorno multicuenta bien diseñado (cuentas, OU, políticas y logs centralizados) desde el que crecer de forma segura.]
 #T[Launch template][Plantilla versionada con la configuración de lanzamiento de instancias (AMI, tipo, red, _user data_) que usa Auto Scaling.]
 #T[Lifecycle (S3)][Reglas que mueven objetos a clases más baratas o los eliminan según su antigüedad.]
 #T[Listener][Proceso de un balanceador que escucha en un puerto y protocolo y aplica reglas para reenviar a _target groups_.]
@@ -242,7 +242,7 @@
 #T[Rightsizing][Ajustar el tamaño de los recursos a su uso real.]
 #T[Rol IAM][Identidad sin credenciales permanentes que asumen usuarios, servicios o cuentas para obtener credenciales temporales.]
 #T[Rolling][Despliegue por lotes en el que la versión antigua y la nueva conviven durante el proceso.]
-#T[Root user][Usuario raíz: identidad creada con la cuenta, con acceso total. Protégelo con MFA y no lo uses en el día a día.]
+#T[Root user][Usuario root (o raíz): identidad creada con la cuenta, con acceso total. Protégelo con MFA y no lo uses en el día a día.]
 #T[Route 53][DNS gestionado de AWS, con registro de dominios, _health checks_ y políticas de enrutamiento.]
 #T[Route table][Tabla de rutas: reglas que deciden a dónde se envía el tráfico que sale de una subred.]
 #T[RPO y RTO][_Recovery Point Objective_ (cuántos datos se pueden perder) y _Recovery Time Objective_ (cuánto tiempo sin servicio) ante un desastre.]
@@ -276,12 +276,12 @@
 #T[Stateful y stateless][Un cortafuegos con estado (_Security Group_) recuerda cada conexión y deja pasar sola la respuesta; uno sin estado (_NACL_) evalúa cada paquete y necesita reglas en ambos sentidos.]
 #T[Step Functions][Orquestación serverless de flujos de trabajo definidos como máquinas de estados.]
 #T[STS][_Security Token Service_. Emite credenciales temporales (AssumeRole, federación) para identidades de AWS.]
-#T[Subred][Rango de IPs de una VPC ubicado en una sola AZ; es pública si su tabla de rutas apunta a un _IGW_.]
+#T[Subred][Rango de IP de una VPC ubicado en una sola AZ; es pública si su tabla de rutas apunta a un _IGW_.]
 #T[Systems Manager][Conjunto de herramientas para operar flotas: _Session Manager_, _Parameter Store_, Patch Manager, Run Command…]
 
 #L("T")
 #T[Tag][Etiqueta: par clave-valor de un recurso para organizarlo, controlar el acceso (_ABAC_) y asignar costes.]
-#T[Target group][Conjunto de destinos (instancias, IPs, funciones Lambda) a los que un balanceador envía tráfico y cuya salud comprueba.]
+#T[Target group][Conjunto de destinos (instancias, IP, funciones Lambda) a los que un balanceador envía tráfico y cuya salud comprueba.]
 #T[Task definition][Plantilla de ECS que describe los contenedores de una tarea: imagen, CPU, memoria, puertos, roles y logs.]
 #T[Task role][Rol IAM que usa el código de una tarea de ECS para llamar a otros servicios; no confundir con el _execution role_.]
 #T[Terraform][IaC multiproveedor de HashiCorp, con lenguaje HCL y un fichero de estado.]

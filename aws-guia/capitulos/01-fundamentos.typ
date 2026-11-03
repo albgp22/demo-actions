@@ -248,7 +248,7 @@
     [Cuentas, usuario root, ARN, etiquetas y cuotas],
     [Alta disponibilidad, tolerancia a fallos y recuperación ante desastres],
   ),
-  servicios: ("Infraestructura global", "AWS CLI", "AWS CloudShell", "Service Quotas", "Billing and Cost Management", "Well-Architected Tool"))
+  servicios: ("Infraestructura global", "AWS CLI", "AWS CloudShell", "Service Quotas", "AWS Billing and Cost Management", "AWS Well-Architected Tool"))
 
 == ¿Qué es la nube?
 
@@ -286,6 +286,8 @@ Una *región* es un área geográfica concreta con varios centros de datos, iden
 
 Cada región se divide en al menos tres *zonas de disponibilidad* (_Availability Zones_, AZ). Una AZ es uno o más centros de datos con energía, refrigeración y red redundantes, separada de las demás por muchos kilómetros (pero a menos de 100 km) para que un incendio o un corte eléctrico no afecte a dos a la vez. Las AZ se conectan con fibra dedicada y latencias de un solo dígito de milisegundos, lo que permite repartir una aplicación entre varias sin sacrificar rendimiento.
 
+#examen[Los nombres de AZ (`eu-west-1a`) se asignan de forma independiente en cada cuenta: tu `eu-west-1a` puede ser otra ubicación física que la de otra cuenta. Para coordinarte entre cuentas usa el *AZ ID* (`euw1-az1`).]
+
 Las *Local Zones* acercan un subconjunto de servicios (EC2, EBS, subredes…) a grandes ciudades, con latencias de milisegundos de un dígito; se nombran a partir de su región (`us-west-2-lax-1a`) y hay que habilitarlas. Las *Wavelength Zones* viven dentro de redes 5G de operadores. Con *AWS Outposts*, AWS instala y gestiona su hardware en tu centro de datos. Las *ubicaciones de borde* ejecutan CloudFront, Route 53, Global Accelerator, WAF y Shield; no lanzas instancias en ellas.
 
 #diagrama(pie: [Una región agrupa varias AZ aisladas, cada una con uno o más centros de datos. Fuera de las regiones, AWS acerca su infraestructura a los usuarios.])[
@@ -306,8 +308,6 @@ Las *Local Zones* acercan un subconjunto de servicios (EC2, EBS, subredes…) a 
     zona("Edge locations", color: col.edge)[#svc("PoP", "CDN y DNS", sub: "CloudFront, Route 53", color: col.edge)],
   )
 ]
-
-#examen[Los nombres de AZ (`eu-west-1a`) se asignan de forma independiente en cada cuenta: tu `eu-west-1a` puede ser otra ubicación física que la de otra cuenta. Para coordinarte entre cuentas usa el *AZ ID* (`euw1-az1`).]
 
 === Cómo elegir una región
 
@@ -385,7 +385,7 @@ aws s3 ls --profile prod --region eu-south-2    # perfil y región explícitos
 
 == Cuentas, usuario root e identificadores
 
-Una *cuenta AWS* es el contenedor de tus recursos y, a la vez, un *límite de seguridad* y de *facturación*. Se identifica con 12 dígitos (`123456789012`); lo habitual es usar varias, agrupadas con AWS Organizations, que verás en el capítulo IAM (II).
+Una *cuenta AWS* es el contenedor de tus recursos y, a la vez, un *límite de seguridad* y de *facturación*. Se identifica con 12 dígitos (`123456789012`); lo habitual es usar varias, agrupadas con AWS Organizations, que verás en el capítulo «IAM (II)».
 
 === El usuario root
 
@@ -414,7 +414,7 @@ arn:aws:s3:::mis-fotos/*                             # comodín: todos los objet
 
 == Etiquetas y cuotas de servicio
 
-Una *etiqueta* (_tag_) es un par clave-valor que adjuntas a un recurso, como `Entorno=prod` o `Proyecto=tienda`. Sirven para *repartir costes* (las _cost allocation tags_ se activan en la consola de facturación), *automatizar* (apagar de noche todo lo que tenga `Horario=oficina`), *controlar el acceso* por atributos (ABAC, capítulo IAM (II)) y *organizar* (Resource Groups, Tag Editor). La mayoría de servicios admiten hasta 50 etiquetas por recurso, que distinguen mayúsculas y minúsculas; el prefijo `aws:` está reservado. Define unas pocas obligatorias y aplícalas desde tu código de infraestructura.
+Una *etiqueta* (_tag_) es un par clave-valor que adjuntas a un recurso, como `Entorno=prod` o `Proyecto=tienda`. Sirven para *repartir costes* (las _cost allocation tags_ se activan en la consola de facturación), *automatizar* (apagar de noche todo lo que tenga `Horario=oficina`), *controlar el acceso* por atributos (ABAC, capítulo «IAM (II)») y *organizar* (Resource Groups, Tag Editor). La mayoría de servicios admiten hasta 50 etiquetas por recurso, que distinguen mayúsculas y minúsculas; el prefijo `aws:` está reservado. Define unas pocas obligatorias y aplícalas desde tu código de infraestructura.
 
 Cada cuenta tiene además *cuotas* por servicio y, casi siempre, por región: protegen a AWS de abusos y a ti de errores caros. Unas son *ajustables* y se amplían pidiéndolo en la consola de *Service Quotas* (o con `aws service-quotas`); otras son *fijas*, parte del diseño del servicio. Revísalas antes de un lanzamiento, porque un aumento puede tardar desde minutos hasta días.
 
@@ -430,7 +430,7 @@ AWS factura *por uso*: tiempo de cómputo, GB-mes almacenados, peticiones y GB t
 
 La *capa gratuita* (_Free Tier_) cambió el 15 de julio de 2025: las cuentas nuevas reciben *créditos promocionales* y eligen entre un plan gratuito, limitado en tiempo y servicios, y un plan de pago; algunos servicios mantienen ofertas «siempre gratuitas». Las cuentas anteriores conservan sus ofertas de 12 meses hasta que vencen. Consulta las condiciones vigentes.
 
-#coste[Sorpresas habituales: recursos olvidados en otra región, NAT Gateways, IPv4 públicas (de pago por hora desde febrero de 2024), _snapshots_ huérfanos y transferencia de salida. Crea un presupuesto con alertas en AWS Budgets *el primer día*.]
+#coste[Sorpresas habituales: recursos olvidados en otra región, NAT Gateways, IPv4 públicas (de pago por hora desde febrero de 2024), snapshots huérfanos y transferencia de salida. Crea un presupuesto con alertas en AWS Budgets *el primer día*.]
 
 == Disponibilidad, tolerancia a fallos y recuperación ante desastres
 
@@ -473,7 +473,7 @@ AWS describe cuatro estrategias, de más barata y lenta a más cara y rápida. E
   ([Debes guardar datos de clientes europeos dentro de la UE y la mayoría de usuarios están en España. ¿Qué miras primero al elegir región?], [El cumplimiento (una región de la UE) y después la latencia, por ejemplo `eu-south-2`; luego, servicios disponibles y precio.]),
   ([¿Por qué conviene desplegar una aplicación en al menos dos AZ?], [Porque las AZ están aisladas físicamente: si una falla, la otra sigue sirviendo.]),
   ([En EC2, ¿quién aplica los parches del sistema operativo? ¿Y en RDS?], [En EC2, el cliente. En RDS, AWS, dentro de la ventana de mantenimiento que elige el cliente.]),
-  ([Tienes un volumen EBS en `eu-west-1a` y quieres conectarlo a una instancia de `eu-west-1b`. ¿Qué haces?], [EBS es zonal: crea un _snapshot_ del volumen (los _snapshots_ son regionales) y restaura a partir de él un volumen nuevo en `eu-west-1b`.]),
+  ([Tienes un volumen EBS en `eu-west-1a` y quieres conectarlo a una instancia de `eu-west-1b`. ¿Qué haces?], [EBS es zonal: crea un snapshot del volumen (los snapshots son regionales) y restaura a partir de él un volumen nuevo en `eu-west-1b`.]),
   ([¿Por qué el ARN de un objeto S3 no lleva región ni cuenta?], [Porque los nombres de bucket son únicos en todo el mundo: el nombre basta para identificarlo.]),
   ([El negocio tolera perder 5 minutos de datos y 30 minutos de caída, con presupuesto ajustado. ¿Qué estrategia de DR encaja?], [_Pilot light_: datos replicados de forma continua (RPO de minutos) e infraestructura lista para arrancar en decenas de minutos, sin pagar una copia completa en marcha.]),
 )

@@ -65,7 +65,7 @@ Antes de la nube, conseguir un servidor implicaba pedirlo, esperar semanas, inst
   ("Facturación", [Por segundo (mínimo 60 s) en Linux y Windows; por hora en algunas AMI comerciales. Aparte: EBS, IPv4 públicas y transferencia de datos]),
   ("Límites clave", [Cuotas de vCPU por región y grupo de familias (ajustables en Service Quotas)]))
 
-#datos(("750+", [tipos de instancia disponibles]), ("60 s", [mínimo facturable; después, por segundo]), ("2 min", [de aviso antes de interrumpir una Spot]), ("90 %", [descuento máximo de Spot frente a On-Demand]))
+#datos(("750+", [tipos de instancia disponibles]), ("60 s", [mínimo facturable; después, por segundo]), ("2 min", [de aviso antes de interrumpir una Spot]), ("90 %", [de descuento máximo con Spot]))
 
 Da igual que lances la instancia desde la consola, la CLI, CloudFormation o un grupo de Auto Scaling: siempre decides los mismos ocho ingredientes, que este capítulo recorre uno por uno.
 
@@ -74,7 +74,7 @@ Da igual que lances la instancia desde la consola, la CLI, CloudFormation o un g
     mini("AMI", [Imagen (AMI)], col.computo),
     mini("m7g", [Tipo de instancia], col.computo),
     mini("EBS", [Discos: EBS o locales], col.almacenamiento),
-    mini("VPC", [Red: subred, ENI, IPs], col.redes),
+    mini("VPC", [Red: subred, ENI, IP], col.redes),
     mini("SG", [Security Groups], col.seguridad),
     mini("IAM", [Rol IAM (instance profile)], col.iam),
     mini("SSM", [Acceso: Session Manager o SSH], col.observabilidad),
@@ -166,7 +166,7 @@ Dentro de cada familia, el nombre completo no es arbitrario: se lee por partes.
       })
       it(c1, "Familia", [`m`: propósito general])
       it(c2, "Generación", [7.ª; cuanto más alta, más moderna])
-      it(c3, "Atributos", [`g`: procesador AWS Graviton (ARM)])
+      it(c3, "Atributos", [`g`: procesador AWS Graviton (Arm)])
       it(c4, "Tamaño", [`xlarge`: 4 vCPU y 16 GiB de memoria])
     },
   )
@@ -199,7 +199,7 @@ Las instancias *T* son baratas porque no garantizan el 100 % de la CPU: tienen u
 
 === Graviton y el sistema Nitro
 
-*AWS Graviton* son los procesadores ARM64 diseñados por AWS (Graviton2, 3 y 4; letra `g`): mejor relación precio-rendimiento y menor consumo que las x86 comparables, también en RDS, ElastiCache, Lambda o Fargate. Java, Python, Node.js, Go o .NET funcionan sin cambios; solo necesitas binarios o imágenes de contenedor `arm64` (o multiarquitectura).
+*AWS Graviton* son los procesadores Arm (`arm64`) diseñados por AWS (Graviton2, 3 y 4; letra `g`): mejor relación precio-rendimiento y menor consumo que las x86 comparables, también en RDS, ElastiCache, Lambda o Fargate. Java, Python, Node.js, Go o .NET funcionan sin cambios; solo necesitas binarios o imágenes de contenedor `arm64` (o multiarquitectura).
 
 Por debajo de las instancias modernas está el *AWS Nitro System*: AWS sacó las funciones de virtualización (red VPC, acceso a EBS, almacenamiento local, gestión) de la CPU principal y las llevó a *tarjetas Nitro* dedicadas, con un hipervisor mínimo y un chip de seguridad como raíz de confianza. Consecuencias prácticas:
 
@@ -262,7 +262,7 @@ Una instancia pasa por estados bien definidos. Conocerlos evita sustos, tanto en
 ]
 
 #tabla(("Acción", "Qué se conserva", "IPv4 pública automática", "Instance store", "RAM"), columnas: (0.9fr, 2fr, 1.3fr, 1fr, 1fr), tamano: 8pt,
-  [*Reboot*], [Todo: mismo host, IPs y volúmenes], [Se mantiene], [Se conserva], [Se pierde],
+  [*Reboot*], [Todo: mismo host, IP y volúmenes], [Se mantiene], [Se conserva], [Se pierde],
   [*Stop / start*], [Volúmenes EBS, ID, IP privada y Elastic IP], [Cambia], [Se pierde], [Se pierde],
   [*Hibernate*], [Lo mismo que _stop_ más la RAM], [Cambia], [Se pierde], [Se restaura],
   [*Terminate*], [Nada, salvo volúmenes con `DeleteOnTermination=false`], [Se libera], [Se pierde], [Se pierde],
@@ -274,7 +274,7 @@ Al terminar se borra por defecto el volumen raíz y se conservan los demás vol�
 
 Una instancia puede usar discos de red persistentes (EBS), discos locales efímeros (instance store) y sistemas de ficheros compartidos (EFS). El diagrama resume dónde vive cada uno.
 
-#diagrama(pie: [Un volumen EBS pertenece a una AZ; para llevarlo a otra se pasa por una snapshot regional. El instance store vive en el host físico y EFS se comparte entre AZ mediante _mount targets_.])[
+#diagrama(pie: [Un volumen EBS pertenece a una AZ; para llevarlo a otra se pasa por un snapshot regional. El instance store vive en el host físico y EFS se comparte entre AZ mediante _mount targets_.])[
   #grid(columns: 5, column-gutter: 4pt, row-gutter: 2pt, align: center + horizon,
     zona("AZ a", color: col.neutro)[
       #columna(
@@ -294,7 +294,7 @@ Una instancia puede usar discos de red persistentes (EBS), discos locales efíme
       )
     ],
     flecha-v(etiqueta: "NFS", largo: 0.6cm), [], [], [], flecha-v(etiqueta: "NFS", largo: 0.6cm),
-    grid.cell(colspan: 5, zona("Amazon EFS · regional, multi-AZ", color: col.almacenamiento, ancho: 100%)[
+    grid.cell(colspan: 5, zona("Amazon EFS · regional, Multi-AZ", color: col.almacenamiento, ancho: 100%)[
       #grid(columns: (6.2cm, 1fr, 3.1cm), align: center + horizon,
         caja([Mount target · AZ a], color: col.almacenamiento),
         text(6.8pt, fill: gris.darken(20%))[Clases: Standard · Infrequent Access · Archive],
@@ -316,7 +316,7 @@ Una instancia puede usar discos de red persistentes (EBS), discos locales efíme
 )
 
 / Snapshots: copias incrementales que AWS guarda en S3 (no aparecen en tus _buckets_). Son regionales: con ellas creas volúmenes en cualquier AZ, las copias a otra región o las compartes. Automatízalas con AWS Backup o Data Lifecycle Manager; la _Recycle Bin_ protege de borrados accidentales.
-/ Cifrado: con KMS cifra los datos en reposo, en tránsito hacia la instancia y las snapshots. Activa el *cifrado por defecto* en cada región. Un volumen sin cifrar no se cifra «en el sitio»: snapshot, copia cifrada y volumen nuevo.
+/ Cifrado: con KMS cifra los datos en reposo, en tránsito hacia la instancia y los snapshots. Activa el *cifrado por defecto* en cada región. Un volumen sin cifrar no se cifra «en el sitio»: snapshot, copia cifrada y volumen nuevo.
 / Multi-Attach: solo io1/io2, hasta 16 instancias Nitro de la misma AZ, y con un sistema de ficheros de clúster (ext4 o XFS se corromperían).
 
 #consejo[gp3 es hasta un 20 % más barato por GB que gp2 y desacopla rendimiento y tamaño: migra con Elastic Volumes sin parar la instancia.]
@@ -337,9 +337,9 @@ El *instance store* son discos (normalmente NVMe) físicamente conectados al hos
 
 == Redes en EC2
 
-Toda instancia se conecta a la VPC con al menos una *Elastic Network Interface (ENI)*: una tarjeta de red virtual con IP privada principal, IPs secundarias opcionales, MAC y sus propios Security Groups (5 por ENI por defecto, ampliable). La principal (`eth0`) no se separa; las secundarias pueden moverse a otra instancia de la misma AZ. El máximo de ENI e IPs depende del tipo.
+Toda instancia se conecta a la VPC con al menos una *Elastic Network Interface (ENI)*: una tarjeta de red virtual con IP privada principal, IP secundarias opcionales, MAC y sus propios Security Groups (5 por ENI por defecto, ampliable). La principal (`eth0`) no se separa; las secundarias pueden moverse a otra instancia de la misma AZ. El máximo de ENI e IP depende del tipo.
 
-#diagrama(pie: [El sistema operativo solo ve IPs privadas: el Internet Gateway traduce 1:1 la IPv4 pública (automática o Elastic IP) a la privada de la ENI.])[
+#diagrama(pie: [El sistema operativo solo ve IP privadas: el Internet Gateway traduce 1:1 la IPv4 pública (automática o Elastic IP) a la privada de la ENI.])[
   #fila(
     internet(),
     flecha(etiqueta: "203.0.113.10", largo: 1.9cm),
@@ -410,7 +410,7 @@ Una aplicación en EC2 que llama a S3 o DynamoDB *nunca* debe llevar _access key
 
 === Metadatos de instancia: IMDSv2
 
-Cada instancia consulta datos sobre sí misma (ID, tipo, AZ, IPs, user data, credenciales de su rol) en el *Instance Metadata Service (IMDS)*, accesible solo desde dentro en `169.254.169.254`. Con *IMDSv2* primero se pide un _token_ con un `PUT` (válido de 1 segundo a 6 horas) y después se envía en cada consulta:
+Cada instancia consulta datos sobre sí misma (ID, tipo, AZ, IP, user data, credenciales de su rol) en el *Instance Metadata Service (IMDS)*, accesible solo desde dentro en `169.254.169.254`. Con *IMDSv2* primero se pide un _token_ con un `PUT` (válido de 1 segundo a 6 horas) y después se envía en cada consulta:
 
 ```bash
 TOKEN=$(curl -sX PUT "http://169.254.169.254/latest/api/token" \
@@ -511,7 +511,7 @@ Session Manager es solo una de las capacidades de *AWS Systems Manager*, la nava
 #ficha("AWS Systems Manager", "Operación centralizada de instancias y servidores",
   ("Requisitos", [SSM Agent, permisos IAM y conectividad con los endpoints de Systems Manager]),
   ("Ámbito", [Regional; gestiona EC2 y también servidores on-premises o de otras nubes (nodos híbridos)]),
-  ("Coste", [Muchas capacidades no tienen coste adicional en EC2; algunas avanzadas sí]))
+  ("Facturación", [Muchas capacidades no tienen coste adicional en EC2; algunas avanzadas sí]))
 
 / Run Command: ejecuta un documento (como `AWS-RunShellScript`) en cientos de instancias elegidas por etiquetas, con control de concurrencia y de errores.
 / Patch Manager: aplica parches del sistema operativo según _patch baselines_ y ventanas de mantenimiento, e informa del cumplimiento.
@@ -553,22 +553,22 @@ aws ec2 run-instances --launch-template LaunchTemplateName=web,Version='$Latest'
 
 - *Seguridad*: IMDSv2 obligatorio, roles de instancia, Session Manager y cifrado de EBS por defecto.
 - *Inmutabilidad*: instancias como ganado, no mascotas: golden AMI + launch templates, y reemplazar en vez de parchear a mano.
-- *Fiabilidad*: varias AZ con Auto Scaling y balanceadores; snapshots automáticas con AWS Backup.
-- *Coste*: Compute Optimizer, Graviton, Savings Plans + Spot, gp3; borra volúmenes sueltos, snapshots viejas y Elastic IP sin usar.
+- *Fiabilidad*: varias AZ con Auto Scaling y balanceadores; snapshots automáticos con AWS Backup.
+- *Coste*: Compute Optimizer, Graviton, Savings Plans + Spot, gp3; borra volúmenes sueltos, snapshots viejos y Elastic IP sin usar.
 - *Operación*: etiqueta todo, parchea con Patch Manager y envía métricas y logs a CloudWatch.
 
 #resumen[
   - EC2 da máquinas virtuales facturadas por segundo; tú gestionas el sistema operativo y lo de encima. Nacen de una *AMI* (regional); las *golden AMI* homogeneizan los despliegues.
   - `m7g.xlarge` = familia, generación, atributos y tamaño. Las T usan créditos de CPU; Graviton mejora el precio-rendimiento y Nitro sostiene todo.
   - Solo se factura el cómputo en `running`; parar conserva EBS, pero libera la IPv4 pública automática y borra el instance store.
-  - *EBS* es un disco de red persistente ligado a una AZ (gp3 por defecto); el *instance store* es local y efímero; *EFS* es NFS compartido y multi-AZ.
+  - *EBS* es un disco de red persistente ligado a una AZ (gp3 por defecto); el *instance store* es local y efímero; *EFS* es NFS compartido y Multi-AZ.
   - Las IPv4 públicas (también las Elastic IP) se pagan por hora; ENA y EFA aceleran la red y los placement groups controlan la colocación. *IMDSv2* y los *roles de instancia* dan credenciales sin claves en disco.
   - Savings Plans para la base, On-Demand para los picos, Spot (aviso de 2 minutos) para lo tolerante a interrupciones.
   - Accede con *Session Manager*, opera con Systems Manager y lanza siempre desde *launch templates* versionadas.
 ]
 
 #repaso(
-  ([Necesitas mover un volumen EBS de `eu-west-1a` a `eu-west-1b`. ¿Cómo lo haces?], [Creas una snapshot (regional) y, a partir de ella, un volumen nuevo en `eu-west-1b`. Un volumen EBS no se conecta a instancias de otra AZ.]),
+  ([Necesitas mover un volumen EBS de `eu-west-1a` a `eu-west-1b`. ¿Cómo lo haces?], [Creas un snapshot (regional) y, a partir de él, un volumen nuevo en `eu-west-1b`. Un volumen EBS no se conecta a instancias de otra AZ.]),
   ([¿Qué significa cada parte de `c7gn.2xlarge`?], [Familia C (cómputo), 7.ª generación, atributos `g` (Graviton) y `n` (red mejorada), tamaño `2xlarge`.]),
   ([Paras y vuelves a arrancar una instancia. ¿Qué cambia?], [Conserva EBS, IP privada y Elastic IP; cambia la IPv4 pública automática y se pierden la RAM y el instance store. Parada no paga cómputo, pero sí EBS.]),
   ([¿Por qué IMDSv2 es más seguro que IMDSv1?], [Exige un token obtenido con un `PUT` y enviado en una cabecera, difícil de provocar con un ataque SSRF, y la respuesta con el token no sale de la instancia (hop limit).]),

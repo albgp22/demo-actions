@@ -44,7 +44,7 @@
     [Streaming con Kinesis, Firehose, Flink y MSK],
     [Elegir servicio y aplicar patrones: saga, _outbox_, idempotencia],
   ),
-  servicios: ("Amazon SQS", "Amazon SNS", "Amazon EventBridge", "Kinesis Data Streams", "Amazon Data Firehose", "Amazon MSK", "Amazon MQ"))
+  servicios: ("Amazon SQS", "Amazon SNS", "Amazon EventBridge", "Amazon Kinesis Data Streams", "Amazon Data Firehose", "Amazon MSK", "Amazon MQ"))
 
 == Acoplamiento y desacoplamiento
 
@@ -112,7 +112,7 @@ Leer un mensaje no lo borra: así, si el consumidor falla a medias, el mensaje n
 / Tamaño: hasta 1 MiB por mensaje (256 KB hasta agosto de 2025). Para más, la *Extended Client Library* (Java y Python) guarda el cuerpo en S3 y envía solo una referencia, hasta 2 GB: el patrón *claim check*.
 / Delay queues: retrasan la entrega de los mensajes nuevos de 0 a 15 minutos; en colas Standard, también por mensaje (_message timers_).
 
-=== _Dead-letter queues_ y _redrive_
+=== Dead-letter queues y redrive
 
 Un mensaje que falla una y otra vez —un *poison pill*: datos corruptos, un bug— se reintentaría eternamente. La *redrive policy* fija un `maxReceiveCount`: cuando un mensaje se recibe más veces sin borrarse, SQS lo mueve a una *dead-letter queue (DLQ)*, una cola normal del mismo tipo, cuenta y región. Allí lo inspeccionas, alertas con una alarma de CloudWatch y, cuando corrijas el fallo, lo devuelves a la cola original con un *redrive* desde la consola o la API (`StartMessageMoveTask`).
 
@@ -204,7 +204,7 @@ SNS (_Simple Notification Service_) implementa *publicación-suscripción*: un p
 / Raw message delivery: hacia SQS o HTTP, entrega el mensaje tal cual, sin el sobre JSON de SNS.
 / Topics FIFO: orden estricto y deduplicación, normalmente con colas SQS FIFO como suscriptores; permiten además archivar mensajes y reproducirlos.
 
-== El patrón _fan-out_: SNS + SQS
+== El patrón fan-out: SNS + SQS
 
 El patrón más conocido de la integración en AWS combina ambos servicios: el productor publica *una vez* en un topic y cada sistema interesado tiene *su propia cola SQS* suscrita, con su propio filtro. Cada consumidor procesa a su ritmo, con sus reintentos y su DLQ, y un fallo en uno no afecta a los demás. Añadir un consumidor nuevo es crear otra cola y otra suscripción, sin tocar al productor.
 
@@ -284,7 +284,7 @@ aws scheduler create-schedule --name informe-diario \
              "RoleArn": "arn:aws:iam::123456789012:role/scheduler-invoca"}'
 ```
 
-== Amazon Kinesis Data Streams: _streaming_ en tiempo real
+== Amazon Kinesis Data Streams: streaming en tiempo real
 
 Una cola entrega cada mensaje a *un* consumidor y lo borra. Un *stream* es distinto: un registro ordenado e inmutable (un _log_) que *varios* consumidores leen a la vez, cada uno a su ritmo, y que se conserva aunque ya se haya leído. Es la base de la analítica en tiempo real: clics, telemetría IoT, logs, transacciones.
 

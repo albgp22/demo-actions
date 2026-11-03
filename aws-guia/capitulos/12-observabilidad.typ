@@ -98,7 +98,7 @@
     [Centralizar y consultar logs con CloudWatch Logs],
     [Seguir una petición entre servicios con X-Ray],
     [Auditar la cuenta con CloudTrail y AWS Config],
-    [Diseñar un logging centralizado multi-cuenta],
+    [Diseñar un logging centralizado multicuenta],
   ),
   servicios: ("Amazon CloudWatch", "AWS X-Ray", "AWS CloudTrail", "AWS Config", "Amazon EventBridge", "Amazon Managed Grafana"))
 
@@ -351,7 +351,7 @@ Muchos servicios emiten eventos a *Amazon EventBridge* (capítulo de Mensajería
 
 Otros servicios generan sus propios logs, que conviene activar y llevar a la cuenta central: los *VPC Flow Logs* (capítulo de Redes), los logs de acceso de los balanceadores y de CloudFront (en sus capítulos) y los _server access logs_ de S3. Estos últimos se entregan «best effort»: para auditar con garantías quién lee o escribe objetos, usa los eventos de datos de CloudTrail.
 
-== Logging centralizado multi-cuenta
+== Logging centralizado multicuenta
 
 En una organización con decenas de cuentas no quieres iniciar sesión en cada una para investigar un incidente. El patrón habitual —el que despliega AWS Control Tower— lleva cada tipo de dato a una cuenta especializada:
 
@@ -418,7 +418,7 @@ En una organización con decenas de cuentas no quieres iniciar sesión en cada u
 - CloudWatch Logs: retención indefinida por defecto (¡fíjala!), metric y subscription filters, Logs Insights y Live Tail.
 - Synthetics, RUM, Application Signals y los «Insights» cubren usuarios y aplicaciones; X-Ray (u OpenTelemetry con ADOT) traza cada petición.
 - CloudTrail registra las llamadas a la API (90 días de eventos de gestión gratis); AWS Config, la configuración en el tiempo, y es detectivo, no preventivo.
-- EventBridge convierte eventos en acciones, y el modelo multi-cuenta centraliza archivo, auditoría y monitorización.
+- EventBridge convierte eventos en acciones, y el modelo multicuenta centraliza archivo, auditoría y monitorización.
 ]
 
 #repaso(

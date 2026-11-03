@@ -85,7 +85,7 @@
 
 == ¿Qué problema resuelve Kubernetes?
 
-En el capítulo de Contenedores viste cómo ejecutar aplicaciones en contenedores con ECS y Fargate, y cuándo conviene EKS. Cuando tienes cientos de contenedores repartidos entre decenas de máquinas surgen preguntas difíciles: ¿dónde coloco cada uno?, ¿quién lo reinicia si se cae?, ¿cómo actualizo sin cortar el servicio?, ¿cómo se encuentran entre sí si sus IPs cambian? Responderlas es *orquestar*, y *Kubernetes* («timonel» en griego, abreviado *K8s*) es el orquestador de código abierto más extendido: nació en Google, es abierto desde 2014, lo custodia la Cloud Native Computing Foundation (CNCF) y funciona igual en tu portátil, en tu centro de datos o en cualquier nube. Se encarga de:
+En el capítulo de Contenedores viste cómo ejecutar aplicaciones en contenedores con ECS y Fargate, y cuándo conviene EKS. Cuando tienes cientos de contenedores repartidos entre decenas de máquinas surgen preguntas difíciles: ¿dónde coloco cada uno?, ¿quién lo reinicia si se cae?, ¿cómo actualizo sin cortar el servicio?, ¿cómo se encuentran entre sí si sus IP cambian? Responderlas es *orquestar*, y *Kubernetes* («timonel» en griego, abreviado *K8s*) es el orquestador de código abierto más extendido: nació en Google, es abierto desde 2014, lo custodia la Cloud Native Computing Foundation (CNCF) y funciona igual en tu portátil, en tu centro de datos o en cualquier nube. Se encarga de:
 
 - *Planificar*: decide en qué máquina (*nodo*) corre cada contenedor, según los recursos que pide.
 - *Autorreparar*: reinicia lo que falla y recrea en otro nodo lo que corría en un nodo caído.
@@ -380,11 +380,11 @@ kubectl get nodes                         # tres nodos en estado Ready
 
 === Amazon VPC CNI: cada pod, una IP de tu VPC
 
-En Kubernetes, un plugin de red (*CNI*, Container Network Interface) da una IP a cada pod. En EKS se usa *Amazon VPC CNI* (el DaemonSet `aws-node`): cada pod recibe una IP *real* de la subred de su nodo, tomada de las IPs secundarias de las ENI de la instancia. Sin redes superpuestas (_overlay_) ni encapsulación, los pods son ciudadanos de primera de la VPC: aparecen en los VPC Flow Logs y un ALB o una base de datos los alcanzan directamente.
+En Kubernetes, un plugin de red (*CNI*, Container Network Interface) da una IP a cada pod. En EKS se usa *Amazon VPC CNI* (el DaemonSet `aws-node`): cada pod recibe una IP *real* de la subred de su nodo, tomada de las IP secundarias de las ENI de la instancia. Sin redes superpuestas (_overlay_) ni encapsulación, los pods son ciudadanos de primera de la VPC: aparecen en los VPC Flow Logs y un ALB o una base de datos los alcanzan directamente.
 
-#cuidado(titulo: "El gran riesgo: quedarte sin IP")[Cada pod consume una IP de la subred, y cada nodo reserva algunas más por adelantado. Una subred /24 (251 IPs utilizables) se agota enseguida y los pods nuevos se atascan en `ContainerCreating`. Además, las ENI e IPs que admite cada tipo de instancia limitan los pods por nodo (29 en un `m5.large`). Planifica subredes grandes desde el principio.]
+#cuidado(titulo: "El gran riesgo: quedarte sin IP")[Cada pod consume una IP de la subred, y cada nodo reserva algunas más por adelantado. Una subred /24 (251 IP utilizables) se agota enseguida y los pods nuevos se atascan en `ContainerCreating`. Además, las ENI e IP que admite cada tipo de instancia limitan los pods por nodo (29 en un `m5.large`). Planifica subredes grandes desde el principio.]
 
-/ Prefix delegation: asigna prefijos /28 (16 IPs) en vez de IPs sueltas: muchos más pods por nodo en instancias Nitro, pero exige bloques /28 libres y contiguos en la subred.
+/ Prefix delegation: asigna prefijos /28 (16 IP) en vez de IP sueltas: muchos más pods por nodo en instancias Nitro, pero exige bloques /28 libres y contiguos en la subred.
 / Custom networking: los pods toman IP de otras subredes, normalmente de un CIDR secundario como `100.64.0.0/16`, sin gastar direcciones enrutables de tu red (se configura por AZ con `ENIConfig`).
 / IPv6: un clúster IPv6 elimina el problema de raíz, si todo tu entorno lo soporta.
 
@@ -536,7 +536,7 @@ No confundas estas dos direcciones con los dos roles de servicio que pide EKS: e
 *Versiones y actualizaciones.* Kubernetes publica unas tres versiones menores al año. EKS da a cada una algo más de un año de *soporte estándar* y, después, alrededor de otro año de *soporte extendido*, más caro; al agotarse, EKS actualiza automáticamente el control plane (con la *política de actualización* en `STANDARD`, lo hace al acabar el estándar). Mejor adelantarse:
 
 #pasos(
-  [*Prepara*: notas de la versión y *EKS Cluster Insights*, que detecta, entre otras cosas, el uso de APIs que desaparecen.],
+  [*Prepara*: notas de la versión y *EKS Cluster Insights*, que detecta, entre otras cosas, el uso de API que desaparecen.],
   [*Control plane*: una versión menor cada vez (de 1.34 a 1.35, nunca directamente a 1.36), sin vuelta atrás.],
   [*Add-ons*: a versiones compatibles con la nueva.],
   [*Nodos*: AMI nueva en los managed node groups; Karpenter reemplaza los desfasados (_drift_); en Fargate, reinicia los pods; Auto Mode lo hace solo. Los nodos pueden ir por detrás del control plane, nunca por delante.],
@@ -544,7 +544,7 @@ No confundas estas dos direcciones con los dos roles de servicio que pide EKS: e
 
 *Observabilidad* (capítulo de Observabilidad). *Container Insights* recoge métricas y logs de clúster, nodos y pods, y *Amazon Managed Service for Prometheus* y *Amazon Managed Grafana* cubren el ecosistema de Prometheus sin servidores que operar. Los *logs del control plane* (API server, auditoría, autenticador, scheduler, controller manager) van a CloudWatch Logs, pero vienen desactivados: activa al menos el de auditoría.
 
-*Cifrado de los Secrets con KMS.* Desde marzo de 2025, EKS cifra por defecto todos los datos de la API de Kubernetes, Secrets incluidos (clústeres 1.28 o posteriores), con cifrado de sobre y una clave de KMS propiedad de AWS, sin coste. Para controlar tú esa clave (política, rotación, auditoría), usa una *customer managed key*; KMS y el cifrado de sobre se explican en el capítulo de Seguridad.
+*Cifrado de los Secrets con KMS.* Desde marzo de 2025, EKS cifra por defecto todos los datos de la API de Kubernetes, Secrets incluidos (clústeres 1.28 o posteriores), con cifrado envolvente y una clave de KMS propiedad de AWS, sin coste. Para controlar tú esa clave (política, rotación, auditoría), usa una *customer managed key*; KMS y el cifrado envolvente se explican en el capítulo de Seguridad.
 
 == Buenas prácticas y errores comunes
 
@@ -554,7 +554,7 @@ No confundas estas dos direcciones con los dos roles de servicio que pide EKS: e
 
 #tabla(("Síntoma", "Causa habitual", "Por dónde empezar"), columnas: (1.05fr, 2.2fr, 1.45fr), tamano: 8.2pt,
   [`Pending`], [Ningún nodo tiene hueco para sus requests o cumple sus afinidades, o su volumen EBS está en otra AZ], [`kubectl describe pod` y el autoscaler de nodos],
-  [`ContainerCreating` atascado], [Subred sin IPs libres o volumen que no se monta], [Eventos del pod; logs de `aws-node`],
+  [`ContainerCreating` atascado], [Subred sin IP libres o volumen que no se monta], [Eventos del pod; logs de `aws-node`],
   [`ImagePullBackOff`], [Imagen inexistente, sin permiso en ECR o sin ruta a ECR (sin NAT ni VPC endpoints)], [`kubectl describe pod`],
   [`CrashLoopBackOff`], [La aplicación termina al arrancar o la liveness probe es demasiado agresiva], [`kubectl logs --previous`],
   [Service sin respuesta], [El selector no coincide con las labels o la readiness probe falla], [`kubectl get endpointslices`],
@@ -564,7 +564,7 @@ No confundas estas dos direcciones con los dos roles de servicio que pide EKS: e
 - Kubernetes es *declarativo*: describes el estado deseado y los controladores lo reconcilian.
 - El *control plane* (API server, etcd, scheduler, controller manager, cloud controller manager) decide; los *nodos* (kubelet, kube-proxy, runtime) ejecutan. Solo el API server habla con etcd.
 - *Pods* gestionados por Deployment, StatefulSet, DaemonSet o Job; *Services* con IP y DNS estables por selector; Ingress y Gateway API para HTTP; requests, limits y probes; PVC, PV y StorageClass para los datos. El HPA escala pods; Karpenter, nodos.
-- *EKS* opera un control plane multi-AZ por una tarifa por clúster y hora (más cara en soporte extendido); los pods corren en managed node groups, nodos propios, Fargate, Karpenter o *Auto Mode*.
+- *EKS* opera un control plane Multi-AZ por una tarifa por clúster y hora (más cara en soporte extendido); los pods corren en managed node groups, nodos propios, Fargate, Karpenter o *Auto Mode*.
 - La *VPC CNI* da a cada pod una IP de la VPC (vigila el agotamiento) y el *AWS Load Balancer Controller* crea ALB y NLB, mejor en modo IP.
 - IAM va en dos direcciones: *access entries* + RBAC para entrar al clúster; *Pod Identity* o IRSA para que los pods usen AWS, nunca el rol del nodo. Y actualiza una versión menor cada vez.
 ]

@@ -28,10 +28,10 @@
     [Los conceptos de S3: buckets, objetos, claves y durabilidad],
     [Elegir clase de almacenamiento y automatizar con _lifecycle_],
     [Proteger datos: versionado, Object Lock, replicación y cifrado],
-    [Controlar el acceso: _bucket policies_, URLs prefirmadas y endpoints],
+    [Controlar el acceso: _bucket policies_, URL prefirmadas y endpoints],
     [Conocer EFS, FSx, Storage Gateway, DataSync y AWS Backup],
   ),
-  servicios: ("Amazon S3", "S3 Glacier", "Amazon EFS", "Amazon FSx", "AWS DataSync", "AWS Backup"))
+  servicios: ("Amazon S3", "Amazon S3 Glacier", "Amazon EFS", "Amazon FSx", "AWS DataSync", "AWS Backup"))
 
 == Bloque, ficheros y objetos
 
@@ -100,7 +100,7 @@ Cada objeto tiene una *clase de almacenamiento* que fija su precio por GB, su di
 
 #examen[Las clases IA y Glacier Instant Retrieval facturan como mínimo 128 KB por objeto, y todas las que tienen duración mínima cobran los días restantes si borras o mueves antes el objeto. Glacier Flexible y Deep Archive añaden unos 40 KB de metadatos por objeto: archivar millones de ficheros diminutos sale caro, mejor agruparlos antes.]
 
-== _Lifecycle_: mover y borrar automáticamente
+== Lifecycle: mover y borrar automáticamente
 
 Las *reglas de lifecycle* aplican a los objetos que cumplen un filtro (prefijo, etiquetas o tamaño) dos tipos de acciones: *transiciones* a clases más baratas y *expiraciones* (borrado). Siguen una cascada: solo se baja de clase, nunca se sube.
 
@@ -152,13 +152,13 @@ aws s3api put-bucket-lifecycle-configuration --bucket logs-acme \
 
 == Versionado, MFA Delete y Object Lock
 
-Con el *versionado* activado, cada escritura crea una versión nueva y un borrado no elimina nada: añade un *delete marker* que oculta el objeto (y que puedes quitar para «resucitarlo»). Un bucket puede estar sin versionar, con versionado activado o suspendido; una vez activado, nunca vuelve al estado inicial. Cada versión se factura como un objeto completo: combínalo con `NoncurrentVersionExpiration`. *MFA Delete* exige además un código MFA para borrar versiones definitivamente o cambiar el estado del versionado; solo la cuenta root puede activarlo, y únicamente por CLI o API.
+Con el *versionado* activado, cada escritura crea una versión nueva y un borrado no elimina nada: añade un *delete marker* que oculta el objeto (y que puedes quitar para «resucitarlo»). Un bucket puede estar sin versionar, con versionado activado o suspendido; una vez activado, nunca vuelve al estado inicial. Cada versión se factura como un objeto completo: combínalo con `NoncurrentVersionExpiration`. *MFA Delete* exige además un código MFA para borrar versiones definitivamente o cambiar el estado del versionado; solo el usuario root puede activarlo, y únicamente por CLI o API.
 
 *Object Lock* aplica el modelo *WORM* (_write once, read many_): impide borrar o sobrescribir una versión durante un *periodo de retención* o mientras tenga una *retención legal* (_legal hold_, sin fecha de fin). Requiere versionado, puede fijar una retención por defecto en el bucket y tiene dos modos:
 
 #block(breakable: false)[#tarjetas(
   tarjeta("Governance", subtitulo: "Protección con válvula de escape")[Los usuarios con el permiso `s3:BypassGovernanceRetention` pueden saltarse la retención o acortarla. Útil contra errores humanos y para probar antes de pasar a Compliance.],
-  tarjeta("Compliance", color: col.iam, subtitulo: "Inmutable de verdad")[Nadie, ni siquiera la cuenta root, puede borrar la versión ni acortar la retención hasta que expire. Para normativas financieras o sanitarias y protección frente a _ransomware_.],
+  tarjeta("Compliance", color: col.iam, subtitulo: "Inmutable de verdad")[Nadie, ni siquiera el usuario root, puede borrar la versión ni acortar la retención hasta que expire. Para normativas financieras o sanitarias y protección frente a _ransomware_.],
 )]
 
 == Replicación entre buckets
@@ -201,7 +201,7 @@ En tránsito, S3 admite HTTPS, y puedes exigirlo con una bucket policy que denie
 
 Cómo funcionan las claves de KMS y qué permisos necesitas para leer un objeto cifrado se explica en el capítulo «Seguridad: cifrado con KMS, secretos y protección».
 
-=== URLs prefirmadas, Access Points y VPC endpoints
+=== URL prefirmadas, Access Points y VPC endpoints
 
 Una *URL prefirmada* concede acceso temporal a un objeto concreto con los permisos de quien la firma, sin abrir el bucket. Es el patrón estándar para que un navegador suba o descargue directamente de S3 sin pasar el fichero por tu servidor. Con credenciales de un usuario IAM puede durar hasta 7 días; firmada con credenciales temporales de un rol, caduca como muy tarde con ellas.
 
@@ -290,14 +290,14 @@ Para gestionar miles de millones de objetos, *S3 Inventory* genera listados diar
 
 === Amazon EFS: ficheros compartidos para Linux
 
-*Amazon EFS*, cuya ficha viste en el capítulo de EC2, es el sistema de ficheros NFS compartido de AWS: elástico (pagas por GB usado), replicado en varias AZ (o en una sola, más barato) y con clases Infrequent Access y Archive para lo que no se lee. Lo montan a la vez miles de instancias EC2, contenedores de ECS, EKS o Fargate y funciones Lambda, pero solo clientes Linux: para Windows está FSx. No lo confundas con *Mountpoint for Amazon S3*, un cliente que monta un bucket en Linux como si fuera un directorio: rinde muy bien leyendo ficheros grandes y escribiendo ficheros nuevos, pero no es un sistema de ficheros POSIX completo (no permite, por ejemplo, editar en el sitio un fichero existente).
+*Amazon EFS*, que ya presentamos en el capítulo de EC2, es el sistema de ficheros NFS compartido de AWS: elástico (pagas por GB usado), replicado en varias AZ (o en una sola, más barato) y con clases Infrequent Access y Archive para lo que no se lee. Lo montan a la vez miles de instancias EC2, contenedores de ECS, EKS o Fargate y funciones Lambda, pero solo clientes Linux: para Windows está FSx. No lo confundas con *Mountpoint for Amazon S3*, un cliente que monta un bucket en Linux como si fuera un directorio: rinde muy bien leyendo ficheros grandes y escribiendo ficheros nuevos, pero no es un sistema de ficheros POSIX completo (no permite, por ejemplo, editar en el sitio un fichero existente).
 
 === Amazon FSx: sistemas de ficheros conocidos, gestionados
 
 #block(breakable: false)[#tabla(("Servicio", "Protocolos", "Para qué"), columnas: (1.5fr, 0.9fr, 3fr), tamano: 8.2pt,
   [*FSx for Windows File Server*], [SMB], [Recursos compartidos de Windows integrados con Active Directory (permisos NTFS, DFS)],
   [*FSx for Lustre*], [Lustre (POSIX)], [HPC, ML y renderizado: _throughput_ muy alto y latencia inferior al milisegundo; se enlaza con un bucket S3],
-  [*FSx for NetApp ONTAP*], [NFS, SMB, iSCSI], [Migrar cabinas NetApp: multiprotocolo, _snapshots_, SnapMirror, deduplicación y compresión],
+  [*FSx for NetApp ONTAP*], [NFS, SMB, iSCSI], [Migrar cabinas NetApp: multiprotocolo, snapshots, SnapMirror, deduplicación y compresión],
   [*FSx for OpenZFS*], [NFS], [Migrar servidores ZFS o Linux: snapshots y clones instantáneos, baja latencia],
 )]
 
@@ -330,7 +330,7 @@ Para gestionar miles de millones de objetos, *S3 Inventory* genera listados diar
 - Las clases de almacenamiento equilibran precio por GB y coste de lectura; Intelligent-Tiering es la opción por defecto si no conoces el patrón.
 - Las reglas de lifecycle transicionan y expiran objetos automáticamente; vigila duraciones mínimas, el mínimo de 128 KB y las multipart incompletas.
 - Versionado, MFA Delete y Object Lock (Governance o Compliance) protegen contra borrados; la replicación CRR/SRR copia a otro bucket.
-- Seguridad por capas: Block Public Access, ACL deshabilitadas, bucket policies, cifrado por defecto (SSE-S3, SSE-KMS, DSSE-KMS, SSE-C) y URLs prefirmadas.
+- Seguridad por capas: Block Public Access, ACL deshabilitadas, bucket policies, cifrado por defecto (SSE-S3, SSE-KMS, DSSE-KMS, SSE-C) y URL prefirmadas.
 - Rendimiento: paraleliza por prefijos, usa multipart y byte-range; los eventos de S3 alimentan Lambda, SQS, SNS y EventBridge.
 - Para webs estáticas, CloudFront con OAC delante de un bucket privado.
 - EFS (NFS para Linux), FSx (Windows, Lustre, ONTAP, OpenZFS), Storage Gateway, DataSync y AWS Backup completan el catálogo.

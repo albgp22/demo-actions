@@ -38,7 +38,7 @@
     [CodePipeline, CodeBuild y CodeDeploy],
     [Rolling, blue/green, canary y feature flags],
   ),
-  servicios: ("CloudFormation", "AWS CDK", "AWS SAM", "Terraform", "CodePipeline", "CodeBuild", "CodeDeploy", "AppConfig"))
+  servicios: ("AWS CloudFormation", "AWS CDK", "AWS SAM", "Terraform", "AWS CodePipeline", "AWS CodeBuild", "AWS CodeDeploy", "AWS AppConfig"))
 
 == Por qué infraestructura como código
 
@@ -79,7 +79,7 @@ CloudFormation, el servicio de IaC nativo de AWS, convierte una *plantilla* YAML
 
 #ficha("AWS CloudFormation", "Infraestructura declarativa nativa de AWS",
   ("Unidad", [*Stack*: recursos con un ciclo de vida común, en una cuenta y una región]),
-  ("Coste", [Gratuito para los recursos de AWS: pagas lo que crea (las extensiones de terceros, por operación)]),
+  ("Facturación", [Gratuito para los recursos de AWS: pagas lo que crea (las extensiones de terceros, por operación)]),
   ("Extras", [Change sets, drift, StackSets e _IaC generator_ (plantillas a partir de lo ya desplegado)]))
 
 #diagrama(pie: [Secciones de una plantilla de CloudFormation. Solo `Resources` es obligatoria; existen también `Metadata`, `Rules` y `Transform` (macros, como la de SAM).])[
@@ -166,7 +166,7 @@ Si falla la creación de un stack, CloudFormation borra lo que había creado; si
 #tabla(("Valor", "Qué hace", "Úsalo en"), columnas: (1.65fr, 2.5fr, 1.6fr), tamano: 8pt,
   [`Delete`], [Borra el recurso. Es el valor por defecto en casi todos los tipos.], [Funciones, roles, Security Groups],
   [`Retain`], [Conserva el recurso, que deja de estar gestionado por el stack.], [Buckets, tablas DynamoDB, claves KMS],
-  [`Snapshot`], [Crea una instantánea final y después borra el recurso.], [RDS, Aurora, EBS, ElastiCache],
+  [`Snapshot`], [Crea un snapshot final y después borra el recurso.], [RDS, Aurora, EBS, ElastiCache],
   [`RetainExceptOnCreate`], [Como `Retain`, salvo si falla la creación inicial: entonces borra y no deja restos.], [Recursos con datos en stacks nuevos],
 )
 

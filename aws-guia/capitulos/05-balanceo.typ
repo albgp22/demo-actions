@@ -46,7 +46,7 @@
     [Elegir entre ALB, NLB y GWLB],
     [Listeners, reglas, target groups y health checks],
     [TLS con ACM, cross-zone, stickiness y drenaje de conexiones],
-    [Auto Scaling Groups: capacidad, políticas y health checks],
+    [Auto Scaling groups: capacidad, políticas y health checks],
     [Lifecycle hooks, instance refresh, warm pools y Spot],
   ),
   servicios: ("Elastic Load Balancing", "Application Load Balancer", "Network Load Balancer", "Gateway Load Balancer", "Amazon EC2 Auto Scaling", "AWS Certificate Manager"))
@@ -57,7 +57,7 @@ Una aplicación servida por un único servidor tiene tres problemas: si cae, la 
 
 #analogia[Piensa en el maître de un restaurante grande: los clientes solo ven la puerta (el nombre DNS); él los reparte entre las mesas de varios camareros, deja de asignar mesas al que se ha puesto enfermo y, si se forma cola, el gerente (Auto Scaling) llama a más camareros.]
 
-#ficha("Elastic Load Balancing", "Balanceadores de carga gestionados, elásticos y multi-AZ",
+#ficha("Elastic Load Balancing", "Balanceadores de carga gestionados, elásticos y Multi-AZ",
   ("Tipos", [Application (ALB), Network (NLB) y Gateway (GWLB); el Classic (CLB) es de la generación anterior]),
   ("Ámbito", [Regional: el balanceador tiene nodos en cada AZ que habilites y escala solo]),
   ("Facturación", [Por hora y por unidades de capacidad consumidas (LCU en ALB, NLCU en NLB, GLCU en GWLB)]),
@@ -69,11 +69,11 @@ Una aplicación servida por un único servidor tiene tres problemas: si cae, la 
   [*Capa OSI*], [7 (aplicación)], [4 (transporte)], [3 (red)],
   [*Protocolos*], [HTTP, HTTPS, HTTP/2, gRPC, WebSocket], [TCP, UDP, TLS, TCP_UDP], [Todo el tráfico IP, encapsulado en GENEVE (puerto 6081)],
   [*Enrutamiento*], [Por host, ruta, cabeceras, método, _query string_ o IP de origen], [Por listener (protocolo y puerto)], [Transparente hacia los appliances],
-  [*IP estática*], [#no Solo nombre DNS; sus IPs cambian], [#si Una por AZ (admite Elastic IP)], [No aplica: se usa a través de _GWLB endpoints_],
+  [*IP estática*], [#no Solo nombre DNS; sus IP cambian], [#si Una por AZ (admite Elastic IP)], [No aplica: se usa a través de _GWLB endpoints_],
   [*Security Groups*], si, [#si Desde 2023, solo si se asignan al crearlo], no,
-  [*Targets*], [Instancias, IPs y funciones Lambda], [Instancias, IPs y un ALB], [Instancias e IPs],
+  [*Targets*], [Instancias, IP y funciones Lambda], [Instancias, IP y un ALB], [Instancias e IP],
   [*IP del cliente*], [En la cabecera `X-Forwarded-For`], [Se conserva (o Proxy Protocol v2)], [Se conserva: el paquete llega intacto],
-  [*Casos de uso*], [Webs, APIs, microservicios y contenedores], [TCP/UDP de alto rendimiento, IP fija, PrivateLink, IoT, juegos], [Firewalls, IDS/IPS e inspección de tráfico de terceros],
+  [*Casos de uso*], [Webs, API, microservicios y contenedores], [TCP/UDP de alto rendimiento, IP fija, PrivateLink, IoT, juegos], [Firewalls, IDS/IPS e inspección de tráfico de terceros],
 )
 
 El *ALB* es la opción por defecto para el tráfico web: entiende HTTP, así que enruta por contenido, termina TLS, autentica usuarios o devuelve respuestas fijas. El *NLB* reenvía conexiones TCP/UDP sin mirar dentro, con latencia muy baja; es la base de *AWS PrivateLink*. El *GWLB* inserta de forma transparente una flota de appliances de seguridad en el camino del tráfico, que llega a él por rutas hacia un GWLB endpoint. El *Classic Load Balancer* (CLB), de la generación anterior, funciona en capa 4 y 7 pero sin reglas, target groups ni targets Lambda: úsalo solo en cargas heredadas y planifica su migración a ALB o NLB (la consola incluye un asistente).
@@ -109,7 +109,7 @@ aws elbv2 create-listener --load-balancer-arn "$ALB_ARN" --protocol HTTP \
     flecha(largo: 1.0cm),
     zona("Reglas del listener · por prioridad", color: col.balanceo)[
       #columna(espacio: 4pt,
-        fila(regla("1", "host-header", "api.ejemplo.com"), flecha(largo: 0.7cm), destino("forward", [→ TG #mono("api") (IPs de ECS)])),
+        fila(regla("1", "host-header", "api.ejemplo.com"), flecha(largo: 0.7cm), destino("forward", [→ TG #mono("api") (IP de ECS)])),
         fila(regla("2", "path-pattern", "/admin/*"), flecha(largo: 0.7cm), destino("authenticate-oidc", [→ TG #mono("admin")], color: col.iam)),
         fila(regla("3", "http-header", "X-Canary: 1"), flecha(largo: 0.7cm), destino("forward", [→ TG #mono("web-v2")])),
         fila(regla("4", "query-string", "lang=en"), flecha(largo: 0.7cm), destino("forward", [→ TG #mono("web-en")])),
@@ -167,17 +167,17 @@ En el *ALB* viene siempre activado en el balanceador (puedes desactivarlo por ta
 / Slow start: en el ALB, un target nuevo recibe una parte creciente del tráfico durante 30 a 900 s, para que caliente cachés.
 / Sticky sessions: el ALB fija un cliente a un target con una cookie propia (`AWSALB`, de 1 segundo a 7 días) o de tu aplicación; el NLB, por IP de origen. Desequilibran la carga: mejor una aplicación sin estado con la sesión en ElastiCache o DynamoDB.
 / X-Forwarded-For: el ALB sustituye la IP de origen por la suya y añade la del cliente en esa cabecera, junto a `X-Forwarded-Proto` y `X-Forwarded-Port`. Configura tus logs para leerlas.
-/ Internet-facing o interno: el primero tiene IPs públicas y vive en subredes públicas; el _internal_ solo tiene IPs privadas. Patrón típico: ALB público → capa web → ALB interno → capa de aplicación.
+/ Internet-facing o interno: el primero tiene IP públicas y vive en subredes públicas; el _internal_ solo tiene IP privadas. Patrón típico: ALB público → capa web → ALB interno → capa de aplicación.
 / Access logs: el ALB (y el NLB con listeners TLS) puede dejar en S3, cada 5 minutos, el detalle de cada petición: IP del cliente, latencias, ruta, códigos. Desactivados por defecto; analízalos con Athena.
 
 #practica[Vigila en CloudWatch `TargetResponseTime`, `HTTPCode_Target_5XX_Count` (errores de tu aplicación), `HTTPCode_ELB_5XX_Count` (del balanceador) y `UnHealthyHostCount` (capítulo de Observabilidad).]
 
-== Auto Scaling Groups
+== Auto Scaling groups
 
-Un *Auto Scaling Group (ASG)* mantiene una flota de instancias EC2 del tamaño adecuado: lanza instancias cuando falta capacidad o alguna falla, y las termina cuando sobra. Cada ASG combina tres cosas: *qué* lanzar (una launch template, que vimos en el capítulo de EC2), *dónde* (una lista de subredes, idealmente en varias AZ) y *cuántas* (capacidad mínima, deseada y máxima).
+Un *Auto Scaling group (ASG)* mantiene una flota de instancias EC2 del tamaño adecuado: lanza instancias cuando falta capacidad o alguna falla, y las termina cuando sobra. Cada ASG combina tres cosas: *qué* lanzar (una launch template, que vimos en el capítulo de EC2), *dónde* (una lista de subredes, idealmente en varias AZ) y *cuántas* (capacidad mínima, deseada y máxima).
 
 #ficha("Amazon EC2 Auto Scaling", "Flotas de EC2 que se escalan y se reparan solas",
-  ("Coste", [Sin coste adicional: pagas las instancias y las alarmas de CloudWatch que use]),
+  ("Facturación", [Sin coste adicional: pagas las instancias y las alarmas de CloudWatch que use]),
   ("Capacidad", [Mínimo ≤ deseada ≤ máximo; el ASG mantiene la deseada y las políticas la mueven entre los límites]),
   ("Reparación", [Sustituye las instancias que fallan los health checks y reparte la flota entre las AZ]))
 
@@ -200,7 +200,7 @@ Un *Auto Scaling Group (ASG)* mantiene una flota de instancias EC2 del tamaño a
             #fila(espacio: 3.4cm, caja([Nodo del ALB · AZ a], color: col.balanceo), caja([Nodo del ALB · AZ b], color: col.balanceo))
           ],
           flecha-v(etiqueta: "HTTP :8080 · target group web", largo: 0.75cm),
-          zona("Auto Scaling Group · mín 2 · deseada 4 · máx 8", color: col.computo)[
+          zona("Auto Scaling group · mín 2 · deseada 4 · máx 8", color: col.computo)[
             #fila(espacio: 8pt,
               zona("Privada · AZ a", color: col.datos)[#fila(espacio: 2pt, mini("EC2", [web-1], col.computo), mini("EC2", [web-2], col.computo))],
               zona("Privada · AZ b", color: col.datos)[#fila(espacio: 2pt, mini("EC2", [web-3], col.computo), mini("EC2", [web-4], col.computo))],
@@ -279,7 +279,7 @@ Las dos primeras instancias son On-Demand; por encima, una de cada cuatro es On-
 #resumen[
   - Un balanceador da un único punto de entrada, reparte el tráfico entre targets de varias AZ y aparta los que fallan sus health checks.
   - *ALB* (capa 7) para HTTP: reglas por host, ruta, cabeceras, método o query string, y acciones `forward`, `redirect`, `fixed-response` y `authenticate`. *NLB* (capa 4) para TCP/UDP, IP estática y PrivateLink. *GWLB* (capa 3) para appliances. El CLB es heredado.
-  - Listener → reglas → target groups → targets (instancias, IPs, Lambda o un ALB detrás de un NLB).
+  - Listener → reglas → target groups → targets (instancias, IP, Lambda o un ALB detrás de un NLB).
   - Health checks superficiales; si todos fallan, el ALB hace fail open.
   - TLS con certificados de ACM (en la región del balanceador) y SNI para varios dominios en un listener.
   - Cross-zone siempre activo en ALB; opcional y con coste entre AZ en NLB y GWLB. Deregistration delay (300 s por defecto), slow start, stickiness y `X-Forwarded-For`.
@@ -289,7 +289,7 @@ Las dos primeras instancias son On-Demand; por encima, una de cada cuatro es On-
 
 #repaso(
   ([Tu aplicación web necesita enrutar `/api/*` a un servicio y el resto a otro. ¿Qué balanceador usas?], [Un ALB, con una regla `path-pattern` para `/api/*` que reenvíe a un target group y la regla por defecto apuntando al otro.]),
-  ([Un cliente necesita incluir en su firewall las IPs fijas de tu servicio TCP. ¿Qué haces?], [Usar un NLB, que tiene una IP estática por AZ y admite Elastic IP (o poner Global Accelerator delante).]),
+  ([Un cliente necesita incluir en su firewall las IP fijas de tu servicio TCP. ¿Qué haces?], [Usar un NLB, que tiene una IP estática por AZ y admite Elastic IP (o poner Global Accelerator delante).]),
   ([Tras un despliegue, los usuarios ven errores al retirar instancias antiguas. ¿Qué ajuste revisas?], [El _deregistration delay_ del target group, para que las peticiones en curso terminen antes de retirar el target, además de los health checks.]),
   ([Tienes 2 targets en una AZ y 8 en otra detrás de un NLB, y los dos primeros están saturados. ¿Por qué?], [En NLB el cross-zone viene desactivado: cada AZ recibe la mitad del tráfico, así que cada target de la primera AZ recibe el 25 %. Activa cross-zone o equilibra los targets.]),
   ([Tu ASG no sustituye instancias cuyo nginx se ha caído. ¿Qué falta?], [Activar los health checks de ELB en el ASG; por defecto solo usa los de EC2, que solo comprueban que la máquina funciona.]),

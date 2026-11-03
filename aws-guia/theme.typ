@@ -154,6 +154,9 @@
       width: 100%, fill: c.lighten(92%), radius: 6pt,
       inset: (x: 10pt, y: 9pt), stroke: (top: 2.5pt + c),
       {
+        // Etiquetas cortas en columnas estrechas: sin justificar ni partir palabras
+        set par(justify: false)
+        set text(hyphenate: false)
         text(17pt, weight: "extrabold", fill: c.darken(5%), v)
         linebreak()
         text(7.8pt, fill: gris, l)
@@ -471,6 +474,9 @@
       })
     // Parte inferior
     block(width: 100%, inset: (x: 2.2cm, top: 1.4cm), spacing: 0pt, {
+      // Objetivos en dos columnas estrechas: sin justificar ni partir palabras
+      set par(justify: false)
+      set text(hyphenate: false)
       if objetivos.len() > 0 {
         text(8.5pt, weight: "bold", fill: color, tracking: 2pt, "EN ESTE CAPÍTULO APRENDERÁS")
         v(10pt)

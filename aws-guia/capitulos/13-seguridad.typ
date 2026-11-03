@@ -27,11 +27,11 @@
     [Cifrado en reposo y en tránsito; simétrico y asimétrico],
     [Tipos de clave de KMS y cómo funcionan las key policies],
     [Cifrado envolvente, paso a paso],
-    [Rotación, alias, claves multi-región y borrado],
+    [Rotación, alias, claves multirregión y borrado],
     [Secretos y certificados: Secrets Manager, Parameter Store y ACM],
     [WAF, Shield, GuardDuty, Security Hub y respuesta a incidentes],
   ),
-  servicios: ("AWS KMS", "AWS CloudHSM", "Secrets Manager", "Parameter Store", "ACM", "AWS WAF", "AWS Shield", "GuardDuty", "Security Hub", "Inspector", "Macie", "Detective"))
+  servicios: ("AWS KMS", "AWS CloudHSM", "AWS Secrets Manager", "Parameter Store", "AWS Certificate Manager", "AWS WAF", "AWS Shield", "Amazon GuardDuty", "AWS Security Hub", "Amazon Inspector", "Amazon Macie", "Amazon Detective"))
 
 == Por qué cifrar
 
@@ -108,7 +108,7 @@ El *uso* de una clave (cifrar, firmar, generar MAC…) se fija al crearla y no s
 
 #tarjetas(columnas: 3,
   tarjeta("Simétricas", subtitulo: "la opción por defecto")[
-    AES-256-GCM (`SYMMETRIC_DEFAULT`). La usan *todos* los servicios integrados; admite contexto de cifrado, rotación automática, material importado y multi-región.
+    AES-256-GCM (`SYMMETRIC_DEFAULT`). La usan *todos* los servicios integrados; admite contexto de cifrado, rotación automática, material importado y multirregión.
   ],
   tarjeta("Asimétricas", color: col.datos, subtitulo: "RSA y ECC")[
     La privada no sale de KMS; la pública se descarga (`GetPublicKey`). RSA cifra o firma; ECC firma o acuerda secretos. Para firmas digitales y terceros sin credenciales de AWS.
@@ -120,7 +120,7 @@ El *uso* de una clave (cifrar, firmar, generar MAC…) se fija al crearla y no s
 
 == Quién puede usar una clave: key policies, IAM y grants
 
-En casi todo AWS, una política IAM basta para acceder a un recurso de tu cuenta (capítulo «IAM (II): permisos — políticas y evaluación»). KMS es la excepción: *la key policy manda*. Nadie —ni siquiera el usuario raíz— puede usar ni administrar una clave si su key policy no lo permite, directamente o delegando en IAM. Hay tres mecanismos: la *key policy* (obligatoria: toda clave tiene *exactamente una*), las *políticas IAM* (solo cuentan si la key policy delega en la cuenta) y los *grants* (permisos puntuales que se crean y revocan por API).
+En casi todo AWS, una política IAM basta para acceder a un recurso de tu cuenta (capítulo «IAM (II): permisos — políticas y evaluación»). KMS es la excepción: *la key policy manda*. Nadie —ni siquiera el usuario root— puede usar ni administrar una clave si su key policy no lo permite, directamente o delegando en IAM. Hay tres mecanismos: la *key policy* (obligatoria: toda clave tiene *exactamente una*), las *políticas IAM* (solo cuentan si la key policy delega en la cuenta) y los *grants* (permisos puntuales que se crean y revocan por API).
 
 === Una key policy, comentada
 
@@ -152,7 +152,7 @@ Si creas una clave sin indicar política, KMS le asigna la *política por defect
 ```
 
 #pasos(
-  [*Delegar en IAM.* El principal `…:root` no es el usuario raíz, sino la *cuenta entera*: «la cuenta decide, con IAM, quién usa esta clave». Sin esta sentencia, las políticas IAM no tienen efecto sobre la clave. Aquí `"Resource": "*"` significa «esta clave».],
+  [*Delegar en IAM.* El principal `…:root` no es el usuario root, sino la *cuenta entera*: «la cuenta decide, con IAM, quién usa esta clave». Sin esta sentencia, las políticas IAM no tienen efecto sobre la clave. Aquí `"Resource": "*"` significa «esta clave».],
   [*Administradores.* `AdminClaves` gestiona la clave (política, activación, borrado), pero esta key policy no le deja cifrar ni descifrar: *separación de funciones*.],
   [*Uso.* `AppPagos` genera claves de datos y descifra, pero solo a través de S3 en eu-west-1 (`kms:ViaService`), no con llamadas directas a KMS.],
   [*Otra cuenta.* La cuenta 444455556666 puede descifrar… si, además, su administrador lo concede con IAM, como verás enseguida.],
@@ -162,16 +162,16 @@ Si creas una clave sin indicar política, KMS le asigna la *política por defect
 
 === Cómo se evalúa una petición
 
-KMS combina los tres mecanismos con la lógica que conoces de IAM (II): un _Deny_ explícito gana siempre y, para permitir, basta uno de los tres caminos. Por encima siguen aplicando las SCP y RCP de AWS Organizations y las políticas de los endpoints de VPC.
+KMS combina los tres mecanismos con la lógica que conoces de IAM (II): un Deny explícito gana siempre y, para permitir, basta uno de los tres caminos. Por encima siguen aplicando las SCP y RCP de AWS Organizations y las políticas de los endpoints de VPC.
 
-#diagrama(pie: [Cómo decide KMS una petición (por ejemplo, AppPagos llama a kms:Decrypt). Un _Deny_ explícito deniega; para permitir basta uno de los tres caminos.])[
+#diagrama(pie: [Cómo decide KMS una petición (por ejemplo, AppPagos llama a `kms:Decrypt`). Un Deny explícito deniega; para permitir basta uno de los tres caminos.])[
   #set text(hyphenate: false)
   #set par(justify: false)
   #let decision(t) = caja(box(width: 100%, height: 1.25cm, align(center + horizon, t)), color: col.seguridad, ancho: 2.75cm)
   #let permitido = caja([*PERMITIDO*], color: col.almacenamiento, relleno: col.almacenamiento.lighten(85%), ancho: 2.3cm)
   #let denegado(t) = caja(t, color: col.iam, relleno: col.iam.lighten(85%), ancho: 2.2cm)
   #grid(columns: (2.8cm, 0.5cm, 2.8cm, 0.5cm, 2.8cm, 0.5cm, 2.8cm, 0.5cm, 2.2cm), align: center + horizon, row-gutter: 1pt,
-    decision([¿Hay un _Deny_ explícito en alguna política?]), flecha(etiqueta: "no", largo: 0.5cm),
+    decision([¿Hay un Deny explícito en alguna política?]), flecha(etiqueta: "no", largo: 0.5cm),
     decision([#num(1) ¿La *key policy* lo permite a ese principal?]), flecha(etiqueta: "no", largo: 0.5cm),
     decision([#num(2) ¿La key policy delega en la cuenta *y* IAM lo permite?]), flecha(etiqueta: "no", largo: 0.5cm),
     decision([#num(3) ¿Algún *grant* lo permite?]), flecha(etiqueta: "no", largo: 0.5cm),
@@ -271,7 +271,7 @@ aws kms generate-data-key --key-id alias/app-pagos --key-spec AES_256
 
 Rotar es generar material criptográfico nuevo. Las claves *AWS managed* rotan solas cada año, de forma obligatoria. En las *customer managed* simétricas, la rotación automática es opcional y está desactivada por defecto; al activarla rota cada 365 días, o con el periodo que elijas entre 90 y 2560, y además puedes forzar una *rotación bajo demanda*. La clave conserva su *ID y su ARN*: aplicaciones, alias y políticas no cambian. KMS guarda todas las versiones anteriores del material para descifrar lo que se cifró con ellas y usa la más reciente para cifrar, así que los datos existentes no se recifran: no hace falta. La rotación automática solo existe en claves simétricas cuyo material genera KMS; las asimétricas y HMAC se rotan a mano, creando una clave nueva y reasignando el alias.
 
-*Claves multi-región.* Claves en varias regiones con el mismo ID (empieza por `mrk-`) y el mismo material: lo cifrado en una región se descifra con la réplica de otra sin llamadas entre regiones. Sirven para recuperación ante desastres, aplicaciones activo-activo o firmas verificables en varias regiones. Cada réplica tiene su propia key policy y se factura como una clave más; AWS recomienda claves de una sola región salvo que las necesites.
+*Claves multirregión.* Claves en varias regiones con el mismo ID (empieza por `mrk-`) y el mismo material: lo cifrado en una región se descifra con la réplica de otra sin llamadas entre regiones. Sirven para recuperación ante desastres, aplicaciones activo-activo o firmas verificables en varias regiones. Cada réplica tiene su propia key policy y se factura como una clave más; AWS recomienda claves de una sola región salvo que las necesites.
 
 *Deshabilitar o borrar* (las AWS managed y AWS owned no se pueden borrar):
 
@@ -319,7 +319,7 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
 
 *S3.* Con SSE-S3 (el cifrado por defecto) S3 gestiona las claves sin coste, pero no controlas ni auditas su uso; con SSE-KMS hay doble llave (permiso de S3 *y* de KMS) y cada uso queda en CloudTrail (los demás métodos, DSSE-KMS y SSE-C, están en el capítulo de Almacenamiento). El problema de SSE-KMS es el volumen: una petición a KMS por objeto escrito y otra por lectura. Con *S3 Bucket Keys*, S3 obtiene de KMS una clave de vida corta a nivel de bucket y deriva de ella las de muchos objetos: las llamadas a KMS caen en picado (AWS habla de hasta un 99 % menos de coste de peticiones).
 
-#cuidado[Con SSE-KMS, `s3:GetObject` no basta: quien lee necesita `kms:Decrypt` sobre la clave, y quien sube, `kms:GenerateDataKey` (y `kms:Decrypt` en las subidas multiparte). Es la causa número uno de _Access Denied_ «misteriosos» con objetos cifrados.]
+#cuidado[Con SSE-KMS, `s3:GetObject` no basta: quien lee necesita `kms:Decrypt` sobre la clave, y quien sube, `kms:GenerateDataKey` (y `kms:Decrypt` en las subidas multipart). Es la causa número uno de _Access Denied_ «misteriosos» con objetos cifrados.]
 
 *EBS y RDS.* Con el *cifrado por defecto de EBS* activado en la región, todo volumen nuevo y toda copia de snapshot se cifran sin que nadie tenga que acordarse; un volumen existente se cifra creando otro desde su snapshot. En RDS, el cifrado se decide al crear la instancia y *no se activa en caliente*: crea un snapshot manual, *cópialo activando el cifrado* con la clave KMS elegida, restaura desde la copia una instancia nueva y apunta a ella la aplicación (si la parada es inaceptable, replica antes los datos, por ejemplo con AWS DMS).
 
@@ -332,7 +332,7 @@ Con KMS, AWS genera y custodia el material de tus claves. Si una normativa exige
 / AWS CloudHSM: HSM dedicados (_single-tenant_) en tu VPC, que usas directamente. A diferencia de KMS, gestionas tú los usuarios y las claves del HSM: AWS opera el hardware, pero no tiene acceso a tus claves.
 
 #tabla(("", "AWS KMS", "AWS CloudHSM"), columnas: (1.05fr, 1.6fr, 1.75fr), tamano: 8.2pt,
-  [Modelo], [Servicio multi-tenant totalmente gestionado; alta disponibilidad incluida], [HSM dedicados en tu VPC; la alta disponibilidad la diseñas tú (varios HSM en varias AZ)],
+  [Modelo], [Servicio multiinquilino totalmente gestionado; alta disponibilidad incluida], [HSM dedicados en tu VPC; la alta disponibilidad la diseñas tú (varios HSM en varias AZ)],
   [Quién controla las claves], [Tú, con políticas; AWS opera los HSM], [Solo tú; AWS no tiene acceso],
   [Integración con servicios], [#si Nativa con la mayoría], [#parcial Indirecta, como custom key store de KMS],
   [Interfaces], [API de AWS (SDK, CLI) y permisos de IAM], [Estándares: PKCS\#11, JCE, OpenSSL, CNG/KSP],
@@ -343,8 +343,8 @@ Con KMS, AWS genera y custodia el material de tus claves. Si una normativa exige
 *Cifrado del lado del cliente.* Si quieres que AWS solo vea texto cifrado, cifra antes de enviar. El *AWS Encryption SDK* (para varios lenguajes y CLI) implementa el cifrado envolvente con buenas prácticas: claves de datos de KMS, la clave cifrada junto a los datos en un formato portable y caché de claves de datos. Hay clientes específicos para S3 y para bases de datos.
 
 #coste[Importes orientativos, que varían por región:
-- *Customer managed:* del orden de un dólar al mes por clave, prorrateado por horas; las primeras rotaciones lo incrementan, con un tope. Cada réplica multi-región cuenta como clave.
-- *Peticiones:* del orden de céntimos por cada 10 000 simétricas (más las asimétricas), con capa gratuita; las de claves AWS managed también pueden cobrarse.
+- *Customer managed:* del orden de un dólar al mes por clave, prorrateado por horas; las primeras rotaciones lo incrementan, con un tope. Cada réplica multirregión cuenta como clave.
+- *Peticiones:* del orden de céntimos por cada 10~000 simétricas (más las asimétricas), con capa gratuita; las de claves AWS managed también pueden cobrarse.
 - La factura grande suele venir de las peticiones, no de las claves.]
 
 Además de costar, las peticiones tienen cuota: KMS limita las que admite por segundo en cada cuenta y región. Las operaciones criptográficas con claves simétricas comparten una cuota (de miles a decenas de miles por segundo, según la región), mucho menor con asimétricas, y las peticiones de los servicios en tu nombre también cuentan. Si la superas recibes `ThrottlingException`: reintenta con backoff exponencial (los SDK ya lo hacen), usa S3 Bucket Keys o caché de claves de datos, o pide un aumento en Service Quotas.
@@ -374,7 +374,7 @@ Una contraseña escrita en el código, en un fichero de configuración o en una 
 #ficha("AWS Secrets Manager", "Almacén de secretos con rotación automática",
   ("Qué guarda", [Texto o JSON de hasta 64 KB (credenciales, claves de API, tokens), cifrado siempre con KMS]),
   ("Rotación", [Plantillas para RDS, Aurora, Redshift y DocumentDB, rotación gestionada por algunos servicios y funciones Lambda propias para el resto]),
-  ("Extras", [Versiones, réplicas en otras regiones y políticas de recursos para el acceso entre cuentas]))
+  ("Extras", [Versiones, réplicas en otras regiones y políticas de recurso para el acceso entre cuentas]))
 
 #tabla(("", "Secrets Manager", "Parameter Store"), columnas: (1.05fr, 1.55fr, 1.6fr), tamano: 8.2pt,
   [Pensado para], [Secretos con ciclo de vida: credenciales que rotan], [Configuración y secretos sencillos (`String`, `StringList` y `SecureString`, cifrado con KMS)],
@@ -382,8 +382,8 @@ Una contraseña escrita en el código, en un fichero de configuración o en una 
   [Tamaño máximo], [64 KB], [4 KB (Standard) · 8 KB (Advanced)],
   [Coste], [Por secreto (menos de un dólar al mes) + llamadas], [Standard: gratis · Advanced: céntimos por parámetro al mes],
   [Jerarquías], [#parcial Nombres con `/` y filtros por prefijo], [#si Rutas (`/prod/pagos/db-url`) y lectura por ruta (`GetParametersByPath`)],
-  [Entre cuentas y regiones], [#si Política de recursos + clave customer managed; réplicas en otras regiones], [#parcial Parámetros Advanced compartidos con AWS RAM; sin réplicas],
-  [Úsalo para], [Credenciales de bases de datos, claves de API que rotan, acceso entre cuentas o regiones], [URLs, _feature flags_, IDs de AMI, configuración por entorno, secretos que no rotan],
+  [Entre cuentas y regiones], [#si Política de recurso + clave customer managed; réplicas en otras regiones], [#parcial Parámetros Advanced compartidos con AWS RAM; sin réplicas],
+  [Úsalo para], [Credenciales de bases de datos, claves de API que rotan, acceso entre cuentas o regiones], [URL, _feature flags_, IDs de AMI, configuración por entorno, secretos que no rotan],
 )
 
 Leer un secreto desde Python es una sola llamada, y programar su rotación desde la CLI, otra:
@@ -460,7 +460,7 @@ Los Security Groups y las NACL (capítulo de Redes) filtran por IP, puerto y pro
   ("Web ACL", [Reglas por prioridad sobre IP, país, cabeceras, URI o cuerpo (inyección SQL, XSS, regex…), con acciones Allow, Block, Count (probar sin bloquear), CAPTCHA o Challenge]),
   ("Reglas gestionadas", [Grupos de AWS (riesgos como los del OWASP Top 10, reputación de IP…) o de Marketplace. Bot Control (de pago) identifica bots; hay grupos contra el robo de cuentas]),
   ("Rate-based", [Bloquean a quien supere N peticiones en una ventana de minutos, mientras la supere, agrupando por IP u otra clave: fuerza bruta y DDoS de capa 7]),
-  ("Coste", [Por web ACL y regla al mes + por millón de peticiones; Bot Control y similares, aparte]))
+  ("Facturación", [Por web ACL y regla al mes + por millón de peticiones; Bot Control y similares, aparte]))
 
 === AWS Shield
 
@@ -468,7 +468,7 @@ Shield protege frente a ataques de denegación de servicio distribuida (DDoS). T
 
 #tabla(("", "Shield Standard", "Shield Advanced"), columnas: (1.05fr, 1.45fr, 2fr), tamano: 8.2pt,
   [Precio], [Incluido, sin coste y automático], [Del orden de miles de dólares al mes por organización, con compromiso de un año, más transferencia de datos],
-  [Qué cubre], [Ataques comunes de capas 3 y 4 (SYN floods, reflexión UDP…) en toda la infraestructura de AWS], [Detección y mitigación avanzadas, también de capa 7 (con WAF), para CloudFront, Route 53, Global Accelerator, ELB e IP elásticas],
+  [Qué cubre], [Ataques comunes de capas 3 y 4 (SYN floods, reflexión UDP…) en toda la infraestructura de AWS], [Detección y mitigación avanzadas, también de capa 7 (con WAF), para CloudFront, Route 53, Global Accelerator, ELB y Elastic IP],
   [Equipo de respuesta y protección de costes], no, [#si Equipo de respuesta 24/7 (SRT, con soporte Business o superior) y créditos por el escalado que provoque un ataque],
   [AWS WAF], [Se paga aparte], [Incluido para los recursos protegidos (con excepciones)],
 )
@@ -601,7 +601,7 @@ Ante una alarma seria —una instancia hablando con un servidor de mando y contr
    [Porque usa cifrado envolvente: `Encrypt` admite como máximo 4 KB y enviar los datos sería lento y caro. KMS solo genera y descifra la clave de datos; los datos se cifran en local.]),
   ([Debes compartir con la cuenta de auditoría un snapshot de RDS cifrado con `aws/rds`. ¿Cómo?],
    [Las AWS managed no se comparten: copia el snapshot cifrándolo con una customer managed, permite a la otra cuenta en su key policy y comparte el snapshot (en destino, IAM debe conceder el uso de la clave).]),
-  ([En una key policy ves `"Principal": {"AWS": "arn:aws:iam::111122223333:root"}` con `kms:*`. ¿Da acceso total al usuario raíz?],
+  ([En una key policy ves `"Principal": {"AWS": "arn:aws:iam::111122223333:root"}` con `kms:*`. ¿Da acceso total al usuario root?],
    [No: ese principal es la cuenta entera. La sentencia delega en IAM, de modo que las políticas IAM de la cuenta deciden quién usa la clave; sin ella, esas políticas no tendrían ningún efecto sobre la clave.]),
   ([Activas la rotación automática de una clave. ¿Qué pasa con los datos ya cifrados?],
    [Nada: ID, ARN y alias no cambian, y KMS conserva el material antiguo para descifrarlos. Lo nuevo se cifra con el material actual.]),
