@@ -77,6 +77,7 @@
     radius: (right: 6pt),
     inset: (left: 11pt, right: 12pt, y: 9pt),
     above: 1.1em, below: 1.1em,
+    breakable: false,
     grid(
       columns: (auto, 1fr),
       column-gutter: 9pt,
@@ -167,7 +168,7 @@
 #let tarjeta(titulo, color: auto, subtitulo: none, body) = context {
   let c = if color == auto { chap-color.get() } else { color }
   block(
-    width: 100%, radius: 7pt,
+    width: 100%, radius: 7pt, breakable: false,
     stroke: 0.8pt + c.lighten(55%), fill: white, clip: true,
     {
       block(width: 100%, spacing: 0pt, fill: c.lighten(88%), inset: (x: 10pt, y: 7pt), {
@@ -374,7 +375,7 @@
     width: 100%, radius: 8pt, clip: true, breakable: true,
     stroke: 1pt + c.lighten(45%), above: 1.6em, below: 1.2em,
     {
-      block(width: 100%, spacing: 0pt, fill: c, inset: (x: 14pt, y: 8pt),
+      block(width: 100%, spacing: 0pt, fill: c, inset: (x: 14pt, y: 8pt), sticky: true,
         text(10pt, weight: "bold", fill: white, tracking: 0.5pt, "RESUMEN DEL CAPÍTULO"))
       block(width: 100%, spacing: 0pt, fill: c.lighten(94%), inset: (x: 14pt, y: 11pt), {
         set text(9.3pt)
@@ -388,8 +389,7 @@
 #let repaso(..qs) = context {
   let c = chap-color.get()
   block(above: 1.4em, below: 1em, {
-    text(11pt, weight: "bold", fill: c, "Preguntas de repaso")
-    v(4pt)
+    block(sticky: true, below: 8pt, text(11pt, weight: "bold", fill: c, "Preguntas de repaso"))
     for (i, (q, a)) in qs.pos().enumerate() {
       block(breakable: false, below: 8pt, grid(
         columns: (auto, 1fr), column-gutter: 8pt,
@@ -582,7 +582,7 @@
   show strong: set text(weight: "semibold", fill: marino)
 
   // Código
-  show raw: set text(font: ("JetBrains Mono", "DejaVu Sans Mono"))
+  show raw: set text(font: ("JetBrains Mono", "DejaVu Sans Mono"), features: (calt: 0), ligatures: false)
   show raw.where(block: false): it => box(
     fill: rgb("#EEF1F6"), inset: (x: 3pt, y: 0pt), outset: (y: 2.5pt), radius: 2.5pt,
     text(8.6pt, fill: rgb("#24324A"), it),
