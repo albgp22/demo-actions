@@ -244,7 +244,7 @@ Lambda, ECS (con el driver `awslogs`), API Gateway y muchos otros servicios env�
 
 === Logs Insights y Live Tail
 
-*Logs Insights* consulta uno o varios log groups con un lenguaje de tuberías (también admite SQL y PPL de OpenSearch) y se paga por GB analizado. Descubre automáticamente los campos de los logs JSON y los de servicios como Lambda (`@duration`, `@maxMemoryUsed`…):
+*Logs Insights* consulta uno o varios log groups con un lenguaje de tuberías (también admite SQL y PPL de OpenSearch) y se paga por GB analizado. Descubre automáticamente los campos de los logs JSON y los de servicios como Lambda (`@duration`, `@maxMemoryUsed`…) o los VPC Flow Logs (`srcAddr`, `action`…) del capítulo de Redes:
 
 ```logs
 # Los 20 errores más recientes
@@ -257,13 +257,14 @@ fields @timestamp, @logStream, @message
 filter @type = "REPORT"
 | stats avg(@duration), pct(@duration, 99), max(@maxMemoryUsed) by bin(5m)
 
-# Logs JSON: errores 5xx por ruta
-filter status >= 500
-| stats count(*) as errores by ruta
-| sort errores desc
+# VPC Flow Logs: quién acumula más conexiones rechazadas
+filter action = "REJECT"
+| stats count(*) as rechazos by srcAddr, dstPort
+| sort rechazos desc
+| limit 10
 ```
 
-*Live Tail* muestra en tiempo real, con filtros, los eventos que van llegando —el `tail -f` de la nube— y se factura por minuto de sesión.
+*Live Tail*, el `tail -f` de la nube, muestra en tiempo real y con filtros los eventos que van llegando; se factura por minuto de sesión.
 
 == Dashboards y monitorización de aplicaciones
 
@@ -271,10 +272,8 @@ filter status >= 500
   [*Dashboards*], [Paneles con gráficos de métricas, alarmas y consultas de logs, incluso de varias regiones y cuentas], [La vista de un servicio o del negocio],
   [*Synthetics*], [_Canaries_: scripts programados (Node.js o Python) que recorren tu web o API como un usuario, con capturas de pantalla], [Detectar caídas antes que los usuarios, aunque no haya tráfico],
   [*RUM*], [Un fragmento JavaScript mide la experiencia real en el navegador: tiempos de carga, errores, Core Web Vitals], [Saber cómo va la web para usuarios reales],
-  [*Application Signals*], [APM con instrumentación automática (OpenTelemetry): latencia, errores y disponibilidad por servicio y operación, SLO y mapa de servicios], [Salud de microservicios y objetivos de nivel de servicio],
-  [*Container Insights*], [Métricas y logs de ECS, EKS y Kubernetes por clúster, servicio, tarea o pod], [Contenedores (más en "Kubernetes y Amazon EKS")],
-  [*Lambda Insights*], [Extensión que añade métricas de sistema por función: memoria, CPU, red, arranques en frío], [Afinar funciones Lambda],
-  [*Database Insights*], [Carga de la base de datos por consulta SQL y evento de espera], [RDS y Aurora (capítulo de Bases de datos)],
+  [*Application Signals*], [Monitorización del rendimiento de aplicaciones (APM) con instrumentación automática (OpenTelemetry): latencia, errores y disponibilidad por servicio y operación, y mapa de servicios], [Salud de microservicios y objetivos de nivel de servicio (SLO)],
+  [*Container, Lambda y Database Insights*], [Métricas detalladas por clúster, servicio, tarea o pod (ECS, EKS); por función (memoria, CPU, arranques en frío); y carga de la base de datos por consulta SQL], [Contenedores, funciones Lambda, RDS y Aurora (capítulos de Kubernetes y de Bases de datos)],
 )
 
 == Trazas distribuidas con AWS X-Ray
@@ -309,9 +308,10 @@ En Lambda y API Gateway, activar el _tracing_ activo es una casilla; en tu códi
 
 Para conservar más de 90 días o registrar eventos de datos, crea un *trail*: entrega los eventos a un bucket de S3 —con unos minutos de retraso— y, si quieres, a CloudWatch Logs para crear alarmas. Hazlo *multirregión* (también registra las regiones que no usas) y, con Organizations, crea un *trail de organización*, que cubre todas las cuentas sin que estas puedan modificarlo. La *validación de integridad* entrega cada hora un _digest_ firmado con los hashes SHA-256 de los logs: `aws cloudtrail validate-logs` demuestra que nadie los ha alterado. *CloudTrail Lake* guarda los eventos en un almacén gestionado consultable con SQL, hasta 10 años.
 
+Así es un evento (resumido): quién (`userIdentity`), qué (`eventName`), cuándo, desde dónde y sobre qué recurso.
+
 ```json
 {
-  "eventVersion": "1.09",
   "userIdentity": {
     "type": "AssumedRole", "accountId": "123456789012",
     "arn": "arn:aws:sts::123456789012:assumed-role/Admin/ana"
@@ -319,13 +319,9 @@ Para conservar más de 90 días o registrar eventos de datos, crea un *trail*: e
   "eventTime": "2026-03-14T09:21:07Z",
   "eventSource": "s3.amazonaws.com", "eventName": "DeleteBucket",
   "awsRegion": "eu-west-1", "sourceIPAddress": "203.0.113.25",
-  "userAgent": "aws-cli/2.17.0",
-  "requestParameters": { "bucketName": "facturas-2025" },
-  "readOnly": false, "managementEvent": true
+  "requestParameters": { "bucketName": "facturas-2025" }
 }
 ```
-
-#examen[CloudTrail responde a *quién* hizo *qué* llamada a la API y *cuándo*; AWS Config, a *cómo estaba configurado* un recurso y si *cumple* tus reglas; CloudWatch, a *cómo está funcionando*. Event history guarda 90 días y solo eventos de gestión; los eventos de datos (`GetObject`, `Invoke`) están desactivados por defecto.]
 
 == AWS Config: configuración y cumplimiento
 
@@ -340,7 +336,7 @@ Para conservar más de 90 días o registrar eventos de datos, crea un *trail*: e
 
 == Reaccionar a eventos y otros logs
 
-Muchos servicios emiten eventos a *Amazon EventBridge*: cambios de estado de EC2, hallazgos de GuardDuty, avisos de AWS Health, cambios de cumplimiento de Config, llamadas a la API registradas por CloudTrail… Una *regla* con un patrón los filtra y los envía a un destino (Lambda, SNS, SQS, Step Functions, una automatización de Systems Manager). Así pasas de observar a *reaccionar* automáticamente. Este patrón avisa cada vez que alguien borra un bucket o cambia su política (EventBridge se trata a fondo en el capítulo de Mensajería):
+Muchos servicios emiten eventos a *Amazon EventBridge* (capítulo de Mensajería): cambios de estado de EC2, hallazgos de GuardDuty, avisos de AWS Health, llamadas a la API registradas por CloudTrail… Una *regla* con un patrón los filtra y los envía a un destino (Lambda, SNS, SQS, una automatización de Systems Manager): así pasas de observar a *reaccionar*. Este patrón avisa cada vez que alguien borra un bucket o cambia su política:
 
 ```json
 {
@@ -353,51 +349,47 @@ Muchos servicios emiten eventos a *Amazon EventBridge*: cambios de estado de EC2
 }
 ```
 
-Otros servicios generan sus propios logs, que conviene activar y centralizar:
-
-#tabla(("Fuente", "Qué registra", "Destino", "Capítulo"), columnas: (1.1fr, 2.3fr, 1.5fr, 0.85fr), tamano: 8pt,
-  [*VPC Flow Logs*], [Metadatos del tráfico IP por VPC, subred o ENI: IP, puertos, bytes, `ACCEPT`/`REJECT`. No el contenido], [CloudWatch Logs, S3 o Firehose], [Redes],
-  [*Logs de ELB*], [Cada petición al balanceador: cliente, latencias, códigos de estado], [S3], [Balanceo],
-  [*Logs de CloudFront*], [Logs estándar de cada petición y logs en tiempo real], [S3, CloudWatch Logs, Firehose o Kinesis], [CloudFront],
-  [*Logs de acceso de S3*], [Peticiones a un bucket, con entrega "best effort"; para auditoría fiable, eventos de datos de CloudTrail], [Otro bucket de S3], [Almacenamiento],
-)
+Otros servicios generan sus propios logs, que conviene activar y llevar a la cuenta central: los *VPC Flow Logs* (capítulo de Redes), los logs de acceso de los balanceadores y de CloudFront (en sus capítulos) y los _server access logs_ de S3. Estos últimos se entregan «best effort»: para auditar con garantías quién lee o escribe objetos, usa los eventos de datos de CloudTrail.
 
 == Logging centralizado multi-cuenta
 
 En una organización con decenas de cuentas no quieres iniciar sesión en cada una para investigar un incidente. El patrón habitual —el que despliega AWS Control Tower— lleva cada tipo de dato a una cuenta especializada:
 
+- El *trail de organización* deja los eventos de todas las cuentas en un bucket de *Log Archive* con acceso mínimo, Object Lock contra borrados y ciclo de vida hacia clases más baratas; se consulta con Athena.
+- En la cuenta de auditoría, el *agregador* de AWS Config, Security Hub y GuardDuty dan la vista de cumplimiento y de seguridad de la organización (capítulo de Seguridad).
+- La *observabilidad entre cuentas* de CloudWatch deja que la cuenta de monitorización vea métricas, logs y trazas de las demás sin copiarlos. Si tus equipos usan herramientas de código abierto, *Amazon Managed Grafana* crea paneles sobre CloudWatch, X-Ray o *Amazon Managed Service for Prometheus*, que guarda métricas de Prometheus (muy habitual en Kubernetes) y se consulta con PromQL.
+
 #diagrama(pie: [Logging centralizado en una organización: los datos de las cuentas de trabajo terminan en cuentas dedicadas a archivo, auditoría y monitorización.])[
-  #grid(columns: 3, column-gutter: 6pt, row-gutter: 8pt, align: center + horizon,
-    grid.cell(rowspan: 3, zona("Cargas de trabajo", color: col.neutro, ancho: 4cm)[
+  #set text(hyphenate: false)
+  #set par(justify: false)
+  #let pieza(t, d, c) = caja(ancho: 3cm, [*#t*\ #text(6.2pt, fill: gris)[#d]], color: c)
+  #grid(columns: 3, column-gutter: 6pt, row-gutter: 7pt, align: center + horizon,
+    grid.cell(rowspan: 3, zona("Cargas de trabajo", color: col.neutro, ancho: 3.8cm)[
       #columna(espacio: 6pt,
-        svc("PRD", "Producción", sub: "EC2, Lambda, ECS…", color: col.computo),
-        svc("DEV", "Desarrollo", color: col.computo),
-        svc("…", "Más cuentas", color: col.neutro))
+        pieza("Producción", "EC2, Lambda, ECS…", col.computo),
+        pieza("Desarrollo", "y preproducción", col.computo),
+        pieza("Más cuentas", "una por equipo", col.neutro))
     ]),
     flecha(etiqueta: "CloudTrail, Config, Flow Logs", largo: 3cm),
-    zona("Cuenta Log Archive", color: col.almacenamiento)[#fila(
-      svc("S3", "Bucket central", sub: "Object Lock y ciclo de vida", color: col.almacenamiento),
-      svc("ATH", "Athena", sub: "consultas SQL", color: col.datos))],
+    zona("Cuenta Log Archive", color: col.almacenamiento)[#fila(espacio: 6pt,
+      pieza("Bucket S3 central", "con Object Lock", col.almacenamiento),
+      pieza("Athena", "consultas SQL", col.datos))],
     flecha(etiqueta: "cumplimiento y hallazgos", largo: 3cm),
-    zona("Cuenta de auditoría y seguridad", color: col.seguridad)[#fila(
-      svc("CFG", "Config", sub: "agregador", color: col.observabilidad),
-      svc("SH", "Security Hub", sub: "y GuardDuty", color: col.seguridad))],
+    zona("Cuenta de auditoría y seguridad", color: col.seguridad)[#fila(espacio: 6pt,
+      pieza("AWS Config", "agregador", col.observabilidad),
+      pieza("Security Hub", "y GuardDuty", col.seguridad))],
     flecha(etiqueta: "métricas, logs y trazas", largo: 3cm),
-    zona("Cuenta de monitorización", color: col.observabilidad)[#fila(
-      svc("CW", "CloudWatch", sub: "entre cuentas", color: col.observabilidad),
-      svc("AMG", "Managed Grafana", color: col.observabilidad))],
+    zona("Cuenta de monitorización", color: col.observabilidad)[#fila(espacio: 6pt,
+      pieza("CloudWatch", "vista entre cuentas", col.observabilidad),
+      pieza("Managed Grafana", "paneles comunes", col.observabilidad))],
   )
 ]
 
-- Un *trail de organización* lleva los eventos de todas las cuentas a un bucket de la cuenta *Log Archive*, con acceso mínimo, Object Lock contra borrados y ciclo de vida hacia clases más baratas; se consulta con Athena.
-- Un *agregador* de AWS Config en la cuenta de auditoría da la vista de cumplimiento de la organización, junto a Security Hub y GuardDuty (capítulo de Seguridad).
-- La *observabilidad entre cuentas* de CloudWatch deja que una cuenta de monitorización vea métricas, logs y trazas de las demás sin copiarlos; para copiar logs, subscription filters hacia Firehose.
-
-#nota(titulo: "Amazon Managed Grafana y Managed Service for Prometheus")[Si tus equipos ya usan herramientas de código abierto, AWS las ofrece gestionadas. *Amazon Managed Service for Prometheus* almacena métricas compatibles con Prometheus —muy habitual en Kubernetes— y se consulta con PromQL. *Amazon Managed Grafana* crea paneles sobre CloudWatch, Prometheus, X-Ray, OpenSearch, Athena y otras fuentes, con inicio de sesión mediante IAM Identity Center o SAML.]
-
 == ¿Qué herramienta para qué pregunta?
 
-#block(breakable: false)[#tabla(("Pregunta", "Herramienta"), columnas: (2.3fr, 1fr), tamano: 8.4pt,
+#examen[CloudTrail responde a *quién* hizo *qué* llamada a la API y *cuándo*; AWS Config, a *cómo estaba configurado* un recurso y si *cumple* tus reglas; CloudWatch, a *cómo está funcionando*. Los eventos de datos de CloudTrail (`GetObject`, `Invoke`) están desactivados por defecto.]
+
+#tabla(("Pregunta", "Herramienta"), columnas: (2.3fr, 1fr), tamano: 8.4pt,
   [¿Quién borró este bucket o cambió este Security Group?], [CloudTrail],
   [¿Cómo estaba configurado este recurso el martes? ¿Están cifrados todos los volúmenes?], [AWS Config],
   [¿Por qué va lenta la API? ¿En qué servicio se va el tiempo?], [X-Ray, Application Signals],
@@ -408,39 +400,24 @@ En una organización con decenas de cuentas no quieres iniciar sesión en cada u
   [¿Cuánto tarda en cargar la web para los usuarios reales?], [CloudWatch RUM],
   [¿Qué consulta SQL satura la base de datos?], [Database Insights],
   [¿Hay un pico anómalo de llamadas a la API en la cuenta?], [CloudTrail Insights],
-)]
+)
 
 == Buenas prácticas
 
 - *Logs estructurados en JSON*: campos consultables (`nivel`, `servicio`, `ruta`, `latencia_ms`) en lugar de texto libre; Logs Insights los descubre solos.
 - *Correlación*: incluye en cada línea el _request id_ o el _trace id_ y propágalo entre servicios para reconstruir una petición completa.
-- *Alarmas sobre síntomas*: alerta por lo que nota el usuario (tasa de errores, latencia `p99`, disponibilidad), no por cada causa posible (CPU al 85 %); las causas, a los paneles. Y que cada alarma sea accionable, con un destinatario claro y un _runbook_.
-- *Retención en todos los log groups*, archivado en S3 para lo que deba conservarse años y nada de secretos ni datos personales en los logs (las _data protection policies_ de CloudWatch Logs pueden enmascararlos).
+- *Alarmas sobre síntomas*: alerta por lo que nota el usuario (tasa de errores, latencia `p99`, disponibilidad), no por cada causa posible (CPU al 85 %); las causas, a los paneles. Y que cada alarma sea accionable, con un destinatario claro y un _runbook_ (los pasos escritos para responder).
+- *Nada de secretos ni datos personales en los logs*: las _data protection policies_ de CloudWatch Logs pueden detectarlos y enmascararlos.
 - *Observabilidad como código*: alarmas, dashboards y retenciones en CloudFormation, CDK o Terraform (capítulo de Infraestructura como código).
-- En Lambda, *Powertools for AWS Lambda* genera por ti logs JSON con el _request id_, métricas EMF y trazas; a mano, sería algo así:
-
-```python
-import json, logging, time
-log = logging.getLogger()
-log.setLevel(logging.INFO)
-
-def handler(event, context):
-    inicio = time.time()
-    # ... lógica de negocio ...
-    log.info(json.dumps({
-        "nivel": "INFO", "servicio": "checkout", "ruta": event.get("rawPath"),
-        "request_id": context.aws_request_id,               # correlación
-        "latencia_ms": round((time.time() - inicio) * 1000)}))
-```
+- En Lambda, *Powertools for AWS Lambda* (capítulo de Serverless) genera por ti logs JSON con el _request id_, métricas EMF y trazas.
 
 #resumen[
 - Observar se apoya en *métricas* (¿va algo mal?), *logs* (¿qué pasó?) y *trazas* (¿dónde se va el tiempo?), más la *auditoría* de la cuenta.
-- CloudWatch Metrics organiza las series por namespace y dimensiones; EC2 no publica memoria ni disco sin el agente unificado. Publica métricas propias con `PutMetricData` o EMF y vigila percentiles.
-- Las alarmas (`OK`, `ALARM`, `INSUFFICIENT_DATA`) se evalúan con "M de N" y avisan por SNS o actúan; las compuestas reducen ruido y la detección de anomalías evita umbrales fijos.
-- CloudWatch Logs: retención indefinida por defecto (¡fíjala!), metric filters, subscription filters, exportación por lotes a S3, Logs Insights y Live Tail.
-- Synthetics, RUM, Application Signals y los "Insights" cubren usuarios y aplicaciones; X-Ray (u OpenTelemetry con ADOT) traza cada petición.
-- CloudTrail registra las llamadas a la API: 90 días de eventos de gestión gratis; trails multirregión y de organización, eventos de datos, Insights, Lake y validación de integridad.
-- AWS Config registra la configuración en el tiempo y evalúa reglas con remediación; es detectivo, no preventivo.
+- CloudWatch Metrics organiza las series por namespace y dimensiones; EC2 no publica memoria ni disco sin el agente unificado. Vigila percentiles, no medias.
+- Las alarmas se evalúan con «M de N» y avisan por SNS o actúan; las compuestas y la detección de anomalías reducen el ruido.
+- CloudWatch Logs: retención indefinida por defecto (¡fíjala!), metric y subscription filters, Logs Insights y Live Tail.
+- Synthetics, RUM, Application Signals y los «Insights» cubren usuarios y aplicaciones; X-Ray (u OpenTelemetry con ADOT) traza cada petición.
+- CloudTrail registra las llamadas a la API (90 días de eventos de gestión gratis); AWS Config, la configuración en el tiempo, y es detectivo, no preventivo.
 - EventBridge convierte eventos en acciones, y el modelo multi-cuenta centraliza archivo, auditoría y monitorización.
 ]
 
@@ -453,8 +430,6 @@ def handler(event, context):
    [Los log groups tienen retención indefinida por defecto y acumulan datos. Fija una retención en cada uno, archiva en S3 lo que deba conservarse y reduce la verbosidad (o usa la clase Infrequent Access donde encaje).]),
   ([Alguien eliminó una tabla de DynamoDB hace tres semanas. ¿Dónde averiguas quién fue?],
    [En CloudTrail: el Event history guarda 90 días de eventos de gestión, y `DeleteTable` lo es. Verás la identidad, la IP de origen, la hora y los parámetros.]),
-  ([¿Qué diferencia hay entre CloudTrail y AWS Config?],
-   [CloudTrail registra las llamadas a la API (quién hizo qué y cuándo); Config registra el estado de la configuración de cada recurso a lo largo del tiempo y evalúa si cumple tus reglas.]),
   ([¿Cómo llevarías en tiempo casi real los logs de aplicación de todas las cuentas a un bucket central?],
    [Con subscription filters en cada log group hacia un destino entre cuentas que alimente Amazon Data Firehose, que entrega en S3 de la cuenta Log Archive. Para CloudTrail, un trail de organización.]),
   ([Una API de microservicios tarda 3 segundos de vez en cuando. ¿Qué herramienta te dice en qué servicio se va el tiempo?],

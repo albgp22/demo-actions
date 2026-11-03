@@ -56,6 +56,18 @@
 )
 #let _bajada(t) = align(left, pad(left: 1.45cm, flecha-v(etiqueta: t, largo: 0.5cm)))
 
+// Flecha hacia la izquierda (el tema solo trae flechas hacia la derecha o dobles)
+#let _flecha-izq(etiqueta: none, largo: 1.4cm, color: rgb("#7A8699")) = box(width: largo, height: 2.6em, {
+  place(left + horizon, dx: 5pt, line(length: largo - 5pt, stroke: 1.2pt + color))
+  place(left + horizon, polygon(fill: color, (7pt, 0pt), (0pt, 3.5pt), (7pt, 7pt)))
+  if etiqueta != none {
+    place(center + top, dy: -1pt, box(width: largo + 0.8cm, align(center, {
+      set par(justify: false, leading: 0.3em)
+      text(6.4pt, fill: color.darken(25%), weight: "medium", etiqueta)
+    })))
+  }
+})
+
 // Diagrama de secuencia (líneas de vida y mensajes)
 #let _secuencia(ancho, alto, actores, mensajes, nota-ancho: 4.6cm) = box(width: ancho, height: alto, {
   let cab = 0.8cm
@@ -128,8 +140,8 @@
   objetivos: (
     [Un modelo mental de cómo encajan todas las piezas de IAM],
     [Qué es (y qué no es) un usuario, un grupo y un rol],
-    [Cómo funcionan AssumeRole y las credenciales temporales de STS],
-    [IAM Identity Center, permission sets y asignaciones],
+    [AssumeRole, STS y cómo reciben sus credenciales EC2, Lambda o un pipeline],
+    [IAM Identity Center, permission sets y qué pasa al entrar por el portal],
     [Federación: SAML, OIDC, GitHub Actions y Cognito],
     [Qué identidad usar en cada escenario real],
   ),
@@ -137,14 +149,14 @@
 
 == El mapa de IAM antes de los detalles
 
-Cada vez que alguien hace algo en AWS —un clic en la consola, un comando de la CLI, una llamada desde una aplicación— envía una *petición a una API*, que debe responder a dos preguntas: *¿quién eres?* (autenticación) y *¿puedes hacer esto?* (autorización). *AWS Identity and Access Management* (IAM) gestiona ambas. Tiene fama de difícil porque mezcla piezas con nombres parecidos —usuarios, grupos, roles, políticas, permission sets, STS—, así que empecemos por el mapa completo. Toda petición recorre los mismos cuatro pasos:
+Cada vez que alguien hace algo en AWS —un clic en la consola, un comando de la CLI, una llamada desde una aplicación— envía una *petición a una API*, y AWS debe responder a dos preguntas: *¿quién eres?* (autenticación) y *¿puedes hacer esto?* (autorización). *AWS Identity and Access Management* (IAM) gestiona ambas. Tiene fama de difícil porque mezcla piezas con nombres parecidos —usuarios, grupos, roles, políticas, permission sets, STS—, así que empecemos por el mapa completo. Toda petición recorre los mismos cuatro pasos:
 
 #diagrama(pie: [El recorrido de cualquier petición en AWS. Este capítulo trata los pasos 1 y 2 (quién eres y con qué credenciales); el siguiente, el paso 3 (qué puedes hacer).])[
   #_banda(1, "Identidad", "¿Quién eres?", col.iam, fila(espacio: 5pt,
     caja([*Usuario IAM* \ persona o app con credenciales propias], ancho: 2.8cm, color: col.iam),
     caja([*Rol IAM* \ identidad que se «asume»], ancho: 2.8cm, color: col.iam),
     caja([*Usuario de Identity Center* \ empleado de tu empresa], ancho: 2.8cm, color: col.iam),
-    caja([*Identidad externa* \ IdP, GitHub, Cognito…], ancho: 2.8cm, color: col.iam)))
+    caja([*Identidad externa* \ IdP corporativo, GitHub, Cognito…], ancho: 2.8cm, color: col.iam)))
   #_bajada[se autentica y obtiene…]
   #_banda(2, "Credenciales", "¿Con qué lo demuestras?", col.fundamentos, fila(espacio: 5pt,
     caja([*Contraseña + MFA* \ para la consola], ancho: 3.1cm, color: col.fundamentos),
@@ -154,7 +166,7 @@ Cada vez que alguien hace algo en AWS —un clic en la consola, un comando de la
   #_banda(3, "Políticas", "¿Qué puedes hacer?", col.datos, fila(espacio: 5pt,
     caja([*Políticas de identidad* \ en el usuario, grupo o rol], ancho: 3.5cm, color: col.datos),
     caja([*Políticas de recurso* \ en el bucket, la cola, la clave…], ancho: 3.5cm, color: col.datos),
-    caja([*Límites* \ SCP, RCP, boundary, sesión], ancho: 3.5cm, color: col.datos)))
+    caja([*Límites* \ techos que solo recortan], ancho: 3.5cm, color: col.datos)))
   #_bajada[AWS decide: Allow o Deny]
   #_banda(4, "Recurso", "¿Sobre qué?", col.almacenamiento, fila(espacio: 5pt,
     caja([Bucket S3], ancho: 2.5cm, color: col.almacenamiento),
@@ -163,50 +175,54 @@ Cada vez que alguien hace algo en AWS —un clic en la consola, un comando de la
     caja([Instancia EC2], ancho: 2.5cm, color: col.almacenamiento)))
 ]
 
-Fíjate en el color de las credenciales: la gran idea de IAM moderno es que *casi nadie debería tener credenciales permanentes*. Las personas entran con su identidad corporativa y reciben credenciales temporales; las aplicaciones usan roles, que también producen credenciales temporales. Las access keys de largo plazo son el último recurso.
+Fíjate en el color de las credenciales: la gran idea de IAM moderno es que *casi nadie debería tener credenciales permanentes*. Las personas entran con la identidad que ya tienen en su empresa, gestionada por un *proveedor de identidad* (IdP, _identity provider_, como Microsoft Entra ID u Okta), y reciben credenciales temporales; las aplicaciones usan roles, que también las producen. Quien fabrica esas credenciales temporales es *AWS STS* (_Security Token Service_). Las access keys de largo plazo son el último recurso.
+
+¿Y los grupos y los permission sets del título? No aparecen en el paso 1 porque *nunca hacen peticiones*: son formas de *repartir políticas*. Un grupo IAM las reparte entre los usuarios IAM de una cuenta; un permission set, entre las cuentas de una organización, donde se convierte en un rol.
 
 === La analogía que nos acompañará: un edificio de oficinas
 
-Imagina que tu cuenta AWS es un edificio de oficinas de una gran empresa con varias sedes. Usaremos esta imagen en los dos capítulos de IAM:
+Imagina una gran empresa con varias sedes: cada sede es una cuenta AWS, y la empresa entera, tu organización. Usaremos esta imagen en los dos capítulos de IAM:
 
-#tabla(("En nuestro edificio…", "…en AWS es"), columnas: (2.4fr, 1fr),
-  [El edificio, con sus salas y su propia contabilidad], [Una *cuenta AWS*],
-  [La llave maestra del propietario: abre todo y nadie puede restringirla], [El *usuario root*],
-  [Un empleado con su tarjeta de acceso personal y permanente], [Un *usuario IAM*],
-  [Un departamento, cuyos permisos heredan todos sus miembros], [Un *grupo IAM*],
-  [Una acreditación temporal (el chaleco de «Mantenimiento») que se pone quien esté autorizado y caduca], [Un *rol IAM*],
-  [La lista de quién puede recoger cada acreditación], [La *trust policy* del rol],
-  [El mostrador que comprueba quién eres y te entrega la acreditación con hora de caducidad], [*AWS STS*],
-  [El departamento central de RR. HH., que da de alta a cada persona una vez para todas las sedes], [*IAM Identity Center*],
-  [La plantilla de acreditación («Desarrollador», «Auditor») que RR. HH. reparte a varias sedes], [Un *permission set*],
-  [El cartel en la puerta de una sala: «solo personal de Contabilidad»], [Una *política de recurso*],
-  [Las normas del grupo empresarial que ningún edificio puede saltarse], [Las *SCP* de Organizations])
+#tabla(("En nuestro edificio…", "…en AWS es"), columnas: (2.8fr, 1fr),
+  [Una sede, con sus salas y su propia contabilidad], [Una *cuenta AWS*],
+  [La llave maestra de la sede: abre todo, sin restricciones internas], [El *usuario root*],
+  [Un empleado con tarjeta personal y permanente, válida en una sola sede], [Un *usuario IAM*],
+  [Un departamento: sus miembros reciben los accesos del departamento], [Un *grupo IAM*],
+  [Una acreditación de «Mantenimiento»: se recoge en el mostrador y caduca], [Un *rol IAM*],
+  [La lista, junto al mostrador, de quién puede recoger esa acreditación], [Su *trust policy*],
+  [Las puertas que abre esa acreditación], [Su *permissions policy*],
+  [El vigilante que comprueba la lista y entrega la acreditación], [*AWS STS*],
+  [El RR. HH. central: un alta por persona, válida para todas las sedes], [*IAM Identity Center*],
+  [El modelo de acreditación «Desarrollador» o «Auditor», definido una vez], [Un *permission set*],
+  [La orden «Ana recoge la acreditación Desarrollador en la sede dev»], [Una *asignación*])
+
+En el capítulo siguiente completaremos el edificio con los carteles de las puertas (políticas de recurso) y las normas de la empresa que ninguna sede puede saltarse (SCP).
 
 #cuidado(titulo: "Dónde deja de funcionar la analogía")[
 - En AWS no se enseña la tarjeta solo al entrar: *cada petición* se autentica y se autoriza por separado.
-- Las acreditaciones (roles) se las «ponen» sobre todo *programas*: instancias EC2, funciones Lambda, pipelines.
-- Un departamento (grupo) no es una persona: no entra en ningún sitio ni se pone acreditaciones.
-- Ponerte una acreditación no suma permisos a tu tarjeta: mientras la llevas, *solo vale ella*.
-- Una prohibición explícita gana siempre, aunque otra norma lo permita (capítulo siguiente).
+- Las acreditaciones (roles) las recogen sobre todo *programas*: instancias EC2, funciones Lambda, pipelines.
+- Un departamento (grupo) no es una persona: no entra en ningún sitio ni recoge acreditaciones.
+- Recoger una acreditación no suma permisos a tu tarjeta: mientras actúas con ella, *solo cuenta ella*.
+- En un edificio puedes pasear por los pasillos; en AWS, todo lo que no está permitido expresamente está prohibido.
 ]
 
 == Principals, autenticación y autorización
 
-Un *principal* es quien hace una petición a AWS: una persona o aplicación que actúa con una identidad. No confundas las *identidades* que creas en IAM y a las que adjuntas permisos (usuarios, grupos y roles) con el *principal* que firma cada petición: el usuario root, un usuario IAM, una *sesión* de un rol, una identidad federada o un servicio de AWS. Un grupo es una identidad, pero *nunca firma una petición*; y un rol tampoco: lo hace una *sesión del rol*, que nace cuando alguien lo asume.
+La *autenticación* demuestra quién eres: en la consola, con contraseña y MFA; en la CLI y los SDK, con una *firma criptográfica* (Signature Version 4) que se calcula con tu clave secreta sin que esta viaje nunca por la red. Puede hacerla el propio AWS o un IdP externo en el que AWS confía: eso es la *federación*, que verás más adelante. La *autorización* llega después: AWS reúne el *contexto de la petición* —quién la hace, la acción (`s3:GetObject`), el recurso (su ARN) y datos del entorno (IP, hora, región, etiquetas)— y lo evalúa contra las políticas que aplican.
 
-La *autenticación* demuestra la identidad: contraseña y MFA en la consola; en la CLI y los SDK, una *firma criptográfica* (Signature Version 4) calculada con la clave secreta, que nunca viaja. La *autorización* llega después: AWS reúne el *contexto de la petición* —principal, acción (`s3:GetObject`), recurso (su ARN) y datos del entorno (IP, hora, región, etiquetas)— y lo evalúa contra las políticas que aplican.
+Ese «quién» se llama *principal*: la entidad que firma una petición concreta. No lo confundas con las *identidades* que creas en IAM para adjuntarles permisos (usuarios, grupos y roles), porque no coinciden una a una:
 
-El *usuario root* es un principal especial: nace con la cuenta, tiene acceso total y las políticas de IAM no pueden limitarlo en su cuenta (solo las SCP, en cuentas miembro de Organizations). Como viste en el capítulo de Fundamentos, se protege con MFA y sin access keys, y se reserva para las pocas tareas que lo exigen: es la llave maestra que se guarda en la caja fuerte. Todo lo demás se hace con las identidades de este capítulo.
+#tabla(("Pieza", "¿Quién firma sus peticiones?", "ARN que verás en errores y en CloudTrail"), columnas: (0.85fr, 1.35fr, 2.4fr), tamano: 8.2pt,
+  [*Usuario root*], [Él mismo (evítalo en el día a día)], [`arn:aws:iam::111122223333:root`],
+  [*Usuario IAM*], [El propio usuario, con su contraseña o sus access keys], [`arn:aws:iam::111122223333:user/ana`],
+  [*Grupo IAM*], [*Nadie*: solo reparte políticas entre sus miembros], [Tiene ARN (`…:group/Auditores`), pero nunca firma],
+  [*Rol IAM*], [Nunca él: firma una *sesión del rol*, es decir, quien lo asumió], [El rol: `arn:aws:iam::111122223333:role/app-web`],
+  [*Sesión de un rol*], [Quien asumió el rol, con credenciales temporales], [`arn:aws:sts::…:assumed-role/app-web/i-0a1b…`],
+  [*Servicio de AWS*], [El servicio, cuando actúa en tu nombre], [Un nombre de servicio, como `ec2.amazonaws.com`])
 
-Cada principal tiene un ARN (los servicios de AWS se nombran como `ec2.amazonaws.com`); saber leerlos te ahorrará disgustos al revisar errores o registros de CloudTrail:
+El *usuario root* es un caso aparte: nace con la cuenta, tiene acceso total y las políticas de IAM no pueden limitarlo (solo las SCP, en las cuentas miembro de una organización). Es la llave maestra que se guarda en la caja fuerte; ya viste en el capítulo de Fundamentos cómo protegerlo.
 
-#tabla(("Principal", "ARN de ejemplo"), columnas: (1fr, 3.2fr),
-  [Usuario root], [`arn:aws:iam::111122223333:root`],
-  [Usuario IAM], [`arn:aws:iam::111122223333:user/ana`],
-  [Rol IAM], [`arn:aws:iam::111122223333:role/app-web`],
-  [Sesión de un rol], [`arn:aws:sts::111122223333:assumed-role/app-web/i-0a1b2c3d4e5f67890`])
-
-El comando más útil de toda la CLI es el que te dice con qué identidad estás trabajando. Fíjate en que, tras asumir un rol, el ARN es de tipo `assumed-role` y termina con el *nombre de sesión*, que permite saber quién o qué asumió el rol:
+El comando más útil de toda la CLI es el que te dice con qué identidad estás trabajando. Tras asumir un rol, el ARN es de tipo `assumed-role` y termina con el *nombre de sesión*, que permite saber quién o qué asumió el rol:
 
 ```bash
 $ aws sts get-caller-identity
@@ -221,16 +237,15 @@ $ aws sts get-caller-identity
 
 #_concepto("Usuario IAM", "una identidad permanente dentro de una cuenta",
   [Una identidad con *credenciales de largo plazo* en una sola cuenta: contraseña para la consola y/o hasta dos access keys para la API.],
-  [No es una persona de tu directorio corporativo ni sirve en otras cuentas: existe solo donde lo creas. Tampoco es el usuario root.],
+  [No es una persona de tu directorio corporativo: existe solo en la cuenta donde lo creas (para trabajar en otra, tendría que asumir un rol allí). Tampoco es el usuario root.],
   [Hoy, casos excepcionales: acceso de emergencia (_break-glass_), herramientas de terceros que no admiten roles ni federación, o cuentas aisladas sin Identity Center.],
-  [El usuario `emergencia-admin`, con MFA en una llave física guardada bajo llave, para cuando falla el proveedor de identidad corporativo.],
+  [El usuario `emergencia-admin`, con MFA en una llave física guardada en una caja fuerte, para cuando falla el proveedor de identidad corporativo.],
   [Un usuario compartido por varias personas, o access keys copiadas en el código, en un fichero `.env` o en un repositorio Git.])
 
 En nuestro edificio, es un empleado con tarjeta permanente para *una* sede: si trabaja en diez, necesita diez tarjetas, y al irse hay que anular las diez. Sus credenciales:
 
 #tabla(("Credencial", "Para qué sirve", "Lo que debes saber"), columnas: (1fr, 1.4fr, 2.3fr),
-  [*Contraseña*], [Entrar en la consola], [Aplica una política de contraseñas y combínala siempre con MFA.],
-  [*MFA*], [Segundo factor al iniciar sesión], [App TOTP, llave FIDO2 o _passkey_; hasta 8 dispositivos por usuario.],
+  [*Contraseña y MFA*], [Entrar en la consola], [Aplica una política de contraseñas y añade siempre MFA: app TOTP, llave FIDO2 o _passkey_ (hasta 8 dispositivos por usuario).],
   [*Access keys*], [Firmar peticiones desde la CLI, los SDK o la API], [Un ID (`AKIA…`) y una clave secreta. *No caducan*: si se filtran, cualquiera actúa como ese usuario hasta que las desactives. Máximo dos por usuario, para rotarlas.])
 
 #cuidado(titulo: "Por qué evitar las access keys")[Acaban donde no deben —el código, una imagen de contenedor, un repositorio público— y hay bots que las rastrean y las usan en minutos (típicamente, para minar criptomonedas). Al final del capítulo verás la alternativa sin claves para cada caso; si aun así necesitas una, rótala y vigila su último uso (`aws iam get-access-key-last-used`).]
@@ -244,7 +259,7 @@ En nuestro edificio, es un empleado con tarjeta permanente para *una* sede: si t
   [El grupo `Auditores` con la política gestionada `SecurityAudit`: cuando llega un auditor nuevo, basta con añadirlo.],
   [Adjuntar políticas a cada usuario por separado, o intentar nombrar un grupo en la política de un bucket (no funciona: no es un principal).])
 
-¿Y si un usuario está en varios grupos (hasta 10)? Sus permisos son la *unión* de lo que permiten sus políticas propias y las de todos sus grupos, salvo lo que prohíba explícitamente alguna: un `Deny` gana siempre.
+¿Y si un usuario está en varios grupos (hasta 10)? Sus permisos son la *unión* de lo que permiten sus políticas propias y las de todos sus grupos, salvo lo que prohíba explícitamente alguna: un `Deny` gana siempre. En el ejemplo, `ec2:*` significa «todas las acciones de EC2»:
 
 #diagrama(pie: [Ana hereda los permisos de sus dos grupos, pero el Deny de su política propia anula una parte de lo que le da el grupo Desarrolladores.])[
   #fila(espacio: 6pt,
@@ -258,7 +273,7 @@ En nuestro edificio, es un empleado con tarjeta permanente para *una* sede: si t
 
 == Roles IAM: identidades que se asumen
 
-Los roles son la pieza más importante de IAM y la que más cuesta entender al principio. La clave es esta: un rol *no es de nadie*. Es un conjunto de permisos con una lista de quién puede usarlo; quien está en la lista lo *asume* durante un tiempo y recibe credenciales temporales.
+Los roles son la pieza más importante de IAM y la que más cuesta entender al principio. Nacen de un problema: una instancia EC2, una función Lambda, un pipeline o una persona que entra en otra cuenta necesitan permisos, pero no deberían guardar credenciales permanentes. La solución es una identidad que *no es de nadie*: un conjunto de permisos con una lista de quién puede usarlo. *Asumir* un rol es pedirle a AWS credenciales temporales que actúan como ese rol; mientras las usas, tienes los permisos del rol, no los tuyos.
 
 #_concepto("Rol IAM", "una identidad sin credenciales propias que se «asume»",
   [Una identidad con permisos pero *sin contraseña ni access keys*; quien autorice su trust policy la asume y recibe credenciales temporales de STS.],
@@ -269,9 +284,9 @@ Los roles son la pieza más importante de IAM y la que más cuesta entender al p
 
 === Las dos caras de un rol
 
-Todo rol tiene dos políticas que responden a preguntas distintas. La *trust policy* (política de confianza) dice *quién puede asumirlo*: es una política de recurso adjunta al propio rol y su elemento clave es `Principal`. La *permissions policy* (una o varias políticas de identidad) dice *qué puede hacer* quien lo asume.
+Todo rol tiene dos políticas que responden a preguntas distintas. La *trust policy* (política de confianza) dice *quién puede asumirlo*: es una política de recurso —va pegada al propio rol, como la lista junto al mostrador— y por eso nombra a quién se aplica en su elemento `Principal`. La *permissions policy* (una o varias políticas de identidad) dice *qué puede hacer* quien lo asume.
 
-#place(auto, float: true, clearance: 1.2em, diagrama(pie: [La trust policy controla la entrada al rol; la permissions policy, lo que se puede hacer una vez dentro.])[
+#diagrama(pie: [La trust policy controla la entrada al rol; la permissions policy, lo que se puede hacer una vez dentro. A la izquierda, ejemplos de quién puede figurar en una trust policy.])[
   #fila(espacio: 5pt,
     zona("Trust policy", color: col.datos)[
       #text(7pt, fill: gris)[¿Quién puede asumirlo?]
@@ -293,7 +308,9 @@ Todo rol tiene dos políticas que responden a preguntas distintas. La *trust pol
         caja([Nada más \ (deny implícito)], ancho: 3.4cm, color: col.almacenamiento))
     ],
   )
-])
+]
+
+Aún no hace falta que domines la sintaxis JSON, que es el tema del capítulo siguiente. Fíjate solo en que la trust policy nombra un `Principal` y la acción `sts:AssumeRole`, y la permissions policy, acciones y recursos:
 
 #grid(columns: (1fr, 1fr), column-gutter: 10pt,
   [
@@ -327,21 +344,21 @@ Todo rol tiene dos políticas que responden a preguntas distintas. La *trust pol
   ],
 )
 
-#analogia(titulo: "En nuestro edificio")[El rol es el chaleco de «Mantenimiento» colgado en el mostrador de seguridad. La trust policy es la lista pegada al lado: «pueden recogerlo los técnicos de la contrata X». La permissions policy es lo que abre el chaleco: el cuarto de calderas, no la sala de dirección.]
+#analogia(titulo: "En nuestro edificio")[El rol es la acreditación de «Mantenimiento» que espera en el mostrador. La trust policy es la lista pegada al lado: «pueden recogerla los técnicos de la contrata X». La permissions policy, las puertas que abre: el cuarto de calderas, no la sala de dirección. Y STS es el vigilante que comprueba la lista, te entrega la acreditación y anota su hora de caducidad.]
 
 === AssumeRole paso a paso
 
-Asumir un rol es una conversación con *AWS STS* (_Security Token Service_), el servicio que emite credenciales temporales:
+Asumir un rol es una conversación con STS. Los números de la figura corresponden a estos pasos:
 
 #pasos(
-  [El principal llama a `sts:AssumeRole` con el ARN del rol y un *nombre de sesión*. Si la trust policy confía en una cuenta entera, o el rol está en otra cuenta, su política de identidad debe permitirle además `sts:AssumeRole` sobre ese rol.],
+  [El principal llama a `sts:AssumeRole` con el ARN del rol y un *nombre de sesión* que elige él.],
   [STS comprueba la *trust policy*: ¿confía en quien llama? ¿Se cumplen sus condiciones (MFA, External ID…)?],
   [Si todo encaja, STS devuelve *credenciales temporales*: `AccessKeyId` (empieza por `ASIA`), `SecretAccessKey`, `SessionToken` y `Expiration`.],
   [El principal firma sus peticiones con ellas. Para AWS ahora es la sesión `assumed-role/NombreDelRol/NombreDeSesion`.],
   [Cada petición se autoriza con la *permissions policy* del rol (y los límites que apliquen). Al caducar, se vuelve a asumir el rol; los SDK lo hacen solos.],
 )
 
-#place(auto, float: true, clearance: 1.2em, diagrama(pie: [AssumeRole visto como una secuencia de mensajes. Las credenciales temporales sustituyen a cualquier clave permanente.])[
+#diagrama(pie: [AssumeRole visto como una secuencia de mensajes. Las credenciales temporales sustituyen a cualquier clave permanente.])[
   #_secuencia(15cm, 6.05cm,
     ((1.7cm, "Principal (tu app)", col.computo), (7.3cm, "AWS STS", col.iam), (12.8cm, "Amazon S3", col.almacenamiento)),
     (
@@ -350,27 +367,46 @@ Asumir un rol es una conversación con *AWS STS* (_Security Token Service_), el 
       (7.3cm, 1.7cm, 3.4cm, [3 · AccessKeyId (ASIA…), SecretAccessKey, SessionToken, Expiration], true),
       (1.7cm, 12.8cm, 4.3cm, [4 · #_m("s3:GetObject") firmado con las credenciales temporales], false),
       (12.8cm, 12.8cm, 4.85cm, [5 · IAM evalúa la permissions policy del rol], false),
-      (12.8cm, 1.7cm, 5.7cm, [6 · El objeto… o #_m("AccessDenied")], true),
+      (12.8cm, 1.7cm, 5.7cm, [El objeto… o #_m("AccessDenied")], true),
     ))
-])
+]
 
-En la CLI rara vez llamarás a `assume-role` a mano: basta con describir el rol en un perfil de `~/.aws/config` y la CLI lo asume (y renueva) por ti.
+¿Necesita quien llama un permiso propio para pedir el rol? Si ambos están en la misma cuenta y la trust policy lo nombra directamente a él, basta con ella. Si la trust policy confía en una cuenta entera (`…:root`) o el rol está en otra cuenta, la política de identidad de quien llama debe permitirle además `sts:AssumeRole` sobre ese rol: hacen falta los dos permisos, como verás en el capítulo siguiente.
 
-```toml
-# ~/.aws/config: con --profile prod, la CLI asume el rol usando el perfil "dev"
+En la CLI rara vez llamarás a `assume-role` a mano: basta con describir el rol en un perfil de `~/.aws/config` y la CLI lo asume (y renueva) por ti. Sin Identity Center, este es el patrón menos malo para tu portátil: un usuario IAM con MFA que solo puede asumir roles, nunca access keys de administrador en `~/.aws/credentials`. Escribe los comentarios en su propia línea: al final de un valor se leerían como parte de él.
+
+```ini
+# Con --profile prod, la CLI asume el rol usando las credenciales del perfil dev
 [profile prod]
 role_arn       = arn:aws:iam::222222222222:role/Despliegue
 source_profile = dev
-mfa_serial     = arn:aws:iam::111111111111:mfa/ana   # pide el código MFA
+# Pide el código del dispositivo MFA de Ana
+mfa_serial     = arn:aws:iam::111111111111:mfa/ana
 ```
 
 === Cuánto duran las sesiones y el encadenamiento de roles
 
 Una sesión de `AssumeRole` dura *una hora* por defecto. Quien llama puede pedir entre 15 minutos y la duración máxima configurada en el rol (`MaxSessionDuration`), que puede llegar a 12 horas. Si con las credenciales de un rol asumes otro, haces *encadenamiento de roles* (_role chaining_): es legítimo —por ejemplo, desde una cuenta central de automatización—, pero esa segunda sesión dura como máximo una hora, se pida lo que se pida. *Error típico:* un proceso de varias horas basado en roles encadenados que falla al cabo de una hora con credenciales caducadas.
 
-=== Perfiles de instancia: cómo recibe EC2 su rol
+=== Roles para servicios: cómo llegan las credenciales a tu código
 
-Una instancia EC2 no puede «asumir» nada por sí misma: el rol se le entrega dentro de un *perfil de instancia* (_instance profile_), un contenedor que admite un único rol. Si creas el rol de EC2 desde la consola, el perfil se crea solo con el mismo nombre; con la CLI o con IaC son dos recursos distintos. Dentro de la instancia, el SDK obtiene las credenciales temporales del servicio de metadatos (IMDS, en `169.254.169.254`) y las renueva automáticamente antes de que caduquen. Usa siempre *IMDSv2*, que exige un token de sesión y protege frente a ataques de falsificación de peticiones del lado del servidor (SSRF). Con la CLI, los pasos son `aws iam create-instance-profile`, `aws iam add-role-to-instance-profile` y `aws ec2 associate-iam-instance-profile`.
+Cuando quien asume el rol es un servicio de AWS (EC2, Lambda, ECS…), el patrón es siempre el mismo:
+
+#pasos(
+  [*Creas el rol*: su trust policy confía en el servicio (`ec2.amazonaws.com`, `lambda.amazonaws.com`…) y su permissions policy da lo que necesita tu código.],
+  [*Se lo entregas* al configurar el recurso (lanzar la instancia, crear la función). Para eso necesitas el permiso `iam:PassRole` sobre ese rol: sin esa barrera, quien pudiera crear una Lambda podría darle un rol de administrador y escalar privilegios a través de ella.],
+  [*El servicio asume el rol por ti*, deja las credenciales temporales donde los SDK saben buscarlas y las renueva antes de que caduquen.],
+  [*Tu código no contiene claves*: el SDK recorre su _cadena de proveedores de credenciales_ (variables de entorno, perfiles de `~/.aws`, endpoint del contenedor, servicio de metadatos…) y usa las primeras que encuentra.],
+)
+
+#tabla(("Quién", "Cómo recibe el rol", "Dónde encuentra el SDK las credenciales"), columnas: (1.15fr, 1.6fr, 2.45fr), tamano: 8.2pt,
+  [*Instancia EC2*], [Un *perfil de instancia* (_instance profile_) con un único rol; la consola lo crea por ti], [En el servicio de metadatos (IMDS), siempre con IMDSv2 (capítulo de EC2)],
+  [*Función Lambda*], [Su *rol de ejecución*], [En variables de entorno de la función (`AWS_ACCESS_KEY_ID`, `AWS_SESSION_TOKEN`…)],
+  [*Tarea de ECS*], [Su _task role_ (el agente usa el _task execution role_)], [En un endpoint de credenciales de la tarea (capítulo de Contenedores)],
+  [*Pod de EKS*], [EKS Pod Identity o IRSA], [Del agente de Pod Identity o canjeando el token del pod (capítulo de Kubernetes y Amazon EKS)],
+  [*CodePipeline, CodeBuild*], [Su *rol de servicio*], [El servicio lo asume en cada ejecución; para desplegar en otra cuenta, asume allí un rol (capítulo de Infraestructura como código y DevOps)],
+  [*GitHub Actions u otro CI*], [Federación OIDC (escenario 5)], [Canjea el token OIDC del job con `AssumeRoleWithWebIdentity`],
+  [*Servidor fuera de AWS*], [IAM Roles Anywhere], [Canjea un certificado X.509 de tu PKI por credenciales temporales])
 
 === Roles de servicio y roles vinculados a servicios
 
@@ -380,19 +416,18 @@ Una instancia EC2 no puede «asumir» nada por sí misma: el rol se le entrega d
   [*Permisos*], [Los decides tú; su trust policy nombra al servicio (`lambda.amazonaws.com`)], [Los define AWS y no puedes editarlos; las SCP no lo restringen],
   [*Borrado*], [Cuando quieras], [Solo cuando el servicio ya no lo usa])
 
-Para entregar un rol a un servicio —lanzar una instancia con un perfil, crear una Lambda con su rol de ejecución— necesitas el permiso `iam:PassRole` sobre ese rol. Sin esa barrera, cualquiera que pudiera crear una Lambda podría darle un rol de administrador y escalar privilegios a través de ella. En el capítulo siguiente verás cómo acotarlo.
-
 === Terceros y el External ID: el problema del «confused deputy»
 
 Muchos proveedores (herramientas de costes, de seguridad, de monitorización) acceden a tu cuenta asumiendo un rol que tú creas y que confía en *su* cuenta. El riesgo se llama *confused deputy* (el «ayudante confundido»): un cliente malicioso del mismo proveedor le da *el ARN de tu rol* como si fuera el suyo, y el proveedor, que sí tiene permiso para asumirlo, acaba trabajando con tu cuenta en nombre del atacante.
 
-#diagrama(pie: [Sin External ID, el proveedor podría asumir tu rol por encargo de otro cliente. Con él, la trust policy solo acepta el identificador que el proveedor generó para ti.])[
+#diagrama(pie: [Sin External ID, el proveedor podría asumir tu rol por encargo de otro cliente. Con él, tu trust policy solo acepta el identificador que el proveedor generó para ti, y la petición hecha por encargo del atacante llega con el suyo.])[
   #fila(espacio: 5pt,
     zona("Atacante", color: _rojo, ancho: 3.3cm)[#actor(etiqueta: "Otro cliente", color: _rojo)],
-    flecha(etiqueta: "1 · le da tu ARN", largo: 2.2cm, color: _rojo),
+    flecha(etiqueta: "1 · le da tu ARN", largo: 2cm, color: _rojo),
     zona("Proveedor SaaS", color: col.neutro, ancho: 3.3cm)[#svc("SaaS", "Servicio de auditoría", sub: "cuenta 999999999999", color: col.neutro)],
-    flecha(etiqueta: "2 · AssumeRole", largo: 2.2cm),
-    zona("Tu cuenta", color: col.iam, ancho: 3.3cm)[#columna(svc("ROL", "Rol auditor-saas", sub: "exige su External ID", color: col.iam), text(8.5pt, weight: "bold", fill: _rojo)[#no denegado])],
+    columna(espacio: 0pt, flecha(etiqueta: "2 · AssumeRole", largo: 2.6cm),
+      box(width: 2.6cm, align(center, text(6.2pt, fill: gris)[con el External ID \ del atacante]))),
+    zona("Tu cuenta", color: col.iam, ancho: 3.3cm)[#columna(svc("ROL", "Rol auditor-saas", sub: "exige tu External ID", color: col.iam), text(8.5pt, weight: "bold", fill: _rojo)[#no denegado])],
   )
 ]
 
@@ -414,14 +449,14 @@ La defensa es el *External ID*: el proveedor genera un identificador único para
 
 == IAM Identity Center y los permission sets
 
-Las organizaciones bien gestionadas separan producción, desarrollo o cada equipo en *cuentas distintas*, la frontera de aislamiento más fuerte de AWS, agrupadas con *AWS Organizations* bajo una *cuenta de gestión* (capítulo siguiente). Con muchas cuentas, crear usuarios IAM en cada una se vuelve inmanejable.
+Las organizaciones bien gestionadas separan producción, desarrollo o cada equipo en *cuentas distintas*, la frontera de aislamiento más fuerte de AWS. Las agrupan con *AWS Organizations* bajo una *cuenta de administración* (_management account_), que paga la factura y fija normas comunes (lo verás en el capítulo siguiente). Con veinte cuentas, dar a cada persona un usuario IAM en cada una significa veinte contraseñas, veinte juegos de claves permanentes y veinte bajas cuando alguien se va.
 
-*IAM Identity Center* (antes AWS Single Sign-On) es la forma recomendada de dar acceso a las *personas* de tu organización a todas tus cuentas AWS (y a aplicaciones). Cada persona tiene una única identidad, con MFA, y desde un *portal de acceso* elige a qué cuenta entrar y con qué perfil, siempre con credenciales temporales. Se habilita normalmente en la cuenta de gestión de Organizations (o en una cuenta de administración delegada). Sus piezas:
+*IAM Identity Center* (antes AWS Single Sign-On) resuelve este problema: es la forma recomendada de dar acceso a las *personas* de tu organización a todas tus cuentas AWS (y a aplicaciones). Cada persona tiene una única identidad, con MFA, y desde un *portal de acceso* elige a qué cuenta entrar y con qué perfil, siempre con credenciales temporales. Se habilita en la cuenta de administración de la organización, y su gestión puede delegarse en una cuenta miembro. Sus piezas:
 
-/ Fuente de identidad: dónde viven las personas. Puede ser el directorio propio de Identity Center, un Active Directory (AWS Managed Microsoft AD o el tuyo a través de AD Connector) o un proveedor externo como Microsoft Entra ID, Okta o Google Workspace, conectado por SAML 2.0 y con *SCIM* para sincronizar automáticamente usuarios y grupos. Solo puede haber una a la vez.
+/ Fuente de identidad: dónde viven las personas: el directorio propio de Identity Center, un Active Directory o un IdP externo como Microsoft Entra ID, Okta o Google Workspace, conectado por SAML 2.0 y con *SCIM* para sincronizar usuarios y grupos automáticamente. Solo puede haber una a la vez.
 / Usuarios y grupos: las personas y sus agrupaciones (normalmente los mismos grupos que ya tienes en tu directorio corporativo).
 / Permission sets: plantillas de permisos que defines una vez.
-/ Asignaciones: la combinación *quién + qué + dónde*: un usuario o grupo, un permission set y una cuenta AWS.
+/ Asignaciones: la combinación *quién + qué + dónde*: un usuario o grupo, un permission set y una cuenta AWS. Sin asignación, un permission set no concede nada.
 / Portal de acceso: la web (`https://d-xxxxxxxxxx.awsapps.com/start` o un alias propio) donde cada persona ve las cuentas y perfiles que tiene asignados.
 
 #_concepto("Usuario / grupo de Identity Center", "las personas de tu organización",
@@ -431,6 +466,15 @@ Las organizaciones bien gestionadas separan producción, desarrollo o cada equip
   [Ana entra en el portal con su cuenta corporativa de Microsoft Entra ID y ve las cuentas `dev` y `prod`.],
   [Crear además un usuario IAM para la misma persona «por si acaso», o dar de alta personas a mano cuando tu IdP puede sincronizarlas por SCIM.])
 
+Como los nombres se parecen tanto, conviene poner frente a frente las dos familias de usuarios y grupos:
+
+#tabla(("", "Usuarios y grupos IAM", "Usuarios y grupos de Identity Center"), columnas: (1fr, 2fr, 2fr),
+  [*Dónde viven*], [Dentro de una cuenta AWS concreta], [En Identity Center (creados allí o sincronizados desde tu IdP por SCIM)],
+  [*Credenciales*], [Permanentes: contraseña y access keys], [Ninguna permanente en AWS: tras iniciar sesión, las temporales del rol de cada cuenta],
+  [*Cómo reciben permisos*], [Políticas de IAM adjuntas al usuario o a sus grupos], [Asignaciones: usuario o grupo + permission set + cuenta],
+  [*Alcance*], [Una sola cuenta], [Todas las cuentas de la organización que asignes],
+  [*Altas y bajas*], [Cuenta por cuenta], [Una vez, en tu directorio corporativo])
+
 #_concepto("Permission set", "una plantilla de permisos para muchas cuentas",
   [Una plantilla definida en Identity Center con políticas gestionadas (de AWS o tuyas), una política inline opcional, un permissions boundary opcional y la duración de la sesión (de 1 a 12 horas).],
   [No es un rol ni una política que se adjunte: por sí mismo no concede nada hasta que lo *asignas* a una cuenta. No es un principal.],
@@ -438,11 +482,11 @@ Las organizaciones bien gestionadas separan producción, desarrollo o cada equip
   [`PowerUser` = política gestionada `PowerUserAccess` + sesión de 8 horas, asignado al grupo `Developers` en las cuentas `dev` y `test`.],
   [Tocar a mano el rol que genera en cada cuenta (lo gestiona Identity Center), o usar una política propia que no existe con ese nombre en alguna cuenta asignada.])
 
-=== Qué ocurre por debajo
+=== Qué pasa por debajo cuando entras por el portal
 
-Aquí está la pieza que lo conecta todo: cuando asignas un permission set a una cuenta, Identity Center *crea en esa cuenta un rol IAM* llamado `AWSReservedSSO_<NombreDelPermissionSet>_<sufijo>`, con las políticas del permission set y una trust policy que solo confía en Identity Center. Cuando Ana elige «cuenta dev → PowerUser» en el portal, en realidad *asume ese rol*. Si cambias el permission set, Identity Center actualiza el rol en todas las cuentas asignadas. Un permission set asignado a veinte cuentas son veinte roles, uno por cuenta.
+Aquí está la pieza que lo conecta todo. Cuando asignas un permission set a una cuenta, Identity Center crea en esa cuenta un *rol IAM* llamado `AWSReservedSSO_<PermissionSet>_<sufijo>`, con las políticas del permission set, y un proveedor SAML (`AWSSSO_…_DO_NOT_DELETE`, uno por cuenta), que es el único en el que confía la trust policy del rol: ese rol solo puede asumirse a través de Identity Center. Hay *un rol por permission set y cuenta*, no por persona: si cincuenta personas tienen `PowerUser` en dev, todas asumen el mismo rol y CloudTrail las distingue por el nombre de sesión. Si cambias el permission set, Identity Center actualiza el rol en todas las cuentas asignadas.
 
-#place(auto, float: true, clearance: 1.2em, diagrama(pie: [De la persona al recurso: Ana pertenece al grupo Developers, que tiene asignado el permission set PowerUser en la cuenta dev. Identity Center ha creado allí el rol que Ana asume al entrar.])[
+#diagrama(pie: [De la persona al recurso. Ana pertenece al grupo Developers, que tiene asignado el permission set PowerUser en la cuenta dev. Al hacer la asignación, Identity Center creó en esa cuenta un proveedor SAML y el rol AWSReservedSSO\_PowerUser\_…, que solo confía en ese proveedor.])[
   #columna(espacio: 0pt, zona("IAM Identity Center", color: col.iam, punteada: false, relleno: white)[
     #fila(espacio: 4pt,
       actor(etiqueta: "Ana", color: col.iam),
@@ -452,32 +496,35 @@ Aquí está la pieza que lo conecta todo: cuando asignas un permission set a una
       caja([*Permission set* \ PowerUser en la cuenta dev], ancho: 3.9cm, color: col.iam),
     )
   ],
-  flecha-v(etiqueta: [crea el rol en la cuenta; Ana lo asume desde el portal], largo: 1cm),
+  flecha-v(etiqueta: [crea en la cuenta el proveedor y el rol; Ana asume el rol desde el portal], largo: 1cm),
   zona("Cuenta dev · 222222222222", color: col.fundamentos, punteada: false, relleno: white)[
     #fila(espacio: 4pt,
-      caja([*Rol IAM* \ AWSReservedSSO\_PowerUser\_1a2b…], ancho: 5.3cm, color: col.fundamentos),
-      flecha(etiqueta: "credenciales temporales", largo: 2.4cm),
+      caja([*Proveedor SAML* \ AWSSSO\_…\_DO\_NOT\_DELETE], ancho: 3.6cm, color: col.fundamentos),
+      flecha(etiqueta: "puede asumir", largo: 1.6cm),
+      caja([*Rol IAM* \ AWSReservedSSO\_PowerUser\_…], ancho: 4.8cm, color: col.fundamentos),
+      flecha(etiqueta: "credenciales", largo: 1.8cm),
       svc("S3", "Bucket de la cuenta dev", color: col.almacenamiento),
     )
   ])
-])
+]
 
 Así es una jornada de Ana:
 
 #pasos(
-  [Abre el portal de acceso y se autentica en el IdP corporativo, con MFA.],
-  [Ve las cuentas y permission sets que tiene asignados, directamente o a través de sus grupos.],
-  [Elige «dev → PowerUser»: Identity Center la federa en esa cuenta asumiendo el rol `AWSReservedSSO_PowerUser_…`.],
-  [Trabaja con credenciales temporales que caducan según la duración de sesión del permission set; en CloudTrail aparece como `assumed-role/AWSReservedSSO_PowerUser_…/ana`.],
+  [Abre el portal de acceso y se autentica en la fuente de identidad (su IdP corporativo), con MFA. Empieza su *sesión del portal*.],
+  [El portal le muestra las cuentas y permission sets que tiene asignados, directamente o a través de sus grupos.],
+  [Elige «dev → PowerUser». Mediante una federación SAML (`AssumeRoleWithSAML`) con el proveedor que creó en la cuenta dev, Identity Center le consigue credenciales temporales del rol `AWSReservedSSO_PowerUser_…`, y la consola se abre en esa cuenta.],
+  [Trabaja como la sesión `assumed-role/AWSReservedSSO_PowerUser_…/ana`, con los permisos del permission set. Esas credenciales caducan según la duración de sesión del permission set; mientras siga abierta su sesión del portal, obtiene otras sin volver a autenticarse.],
 )
 
-Desde la CLI, la configuración se hace una vez con `aws configure sso`, que crea un perfil como este; después, cada día basta con `aws sso login --profile dev-poweruser`, que abre el navegador para autenticarte, y los comandos usan credenciales temporales que se renuevan solas:
+En la CLI ocurre lo mismo. La configuración se hace una vez con `aws configure sso`, que crea un perfil como este; después, cada día, `aws sso login --profile dev-poweruser` abre el navegador para autenticarte y guarda un token en caché (`~/.aws/sso/cache`). Con él, la CLI pide al portal las credenciales temporales del rol de esa cuenta y las renueva sola:
 
-```toml
+```ini
 [profile dev-poweruser]
 sso_session    = empresa
 sso_account_id = 222222222222
-sso_role_name  = PowerUser          # el nombre del permission set
+# El nombre del permission set
+sso_role_name  = PowerUser
 
 [sso-session empresa]
 sso_start_url           = https://d-1234567890.awsapps.com/start
@@ -485,37 +532,47 @@ sso_region              = eu-west-1
 sso_registration_scopes = sso:account:access
 ```
 
-#tabla(("", "Grupo IAM", "Grupo de Identity Center"), columnas: (1fr, 2fr, 2fr),
-  [*Dónde vive*], [En una cuenta AWS concreta], [En el almacén de identidades de Identity Center (o sincronizado desde tu IdP)],
-  [*Miembros*], [Usuarios IAM de esa cuenta], [Usuarios de Identity Center],
-  [*Cómo da permisos*], [Políticas de IAM adjuntas al grupo], [Asignaciones: grupo + permission set + cuenta],
-  [*Alcance*], [Una sola cuenta], [Todas las cuentas de la organización que asignes])
-
-#analogia(titulo: "En nuestro edificio")[Identity Center es el RR. HH. central del grupo: da de alta a Ana una vez y decide en qué sedes trabaja. El permission set es la plantilla de acreditación «Desarrollador» que RR. HH. envía a cada sede, donde se convierte en un chaleco concreto colgado en su mostrador: el rol `AWSReservedSSO_…`.]
+#analogia(titulo: "En nuestro edificio")[Identity Center es el RR. HH. central de la empresa: da de alta a Ana una sola vez y decide en qué sedes trabaja. El permission set es el modelo de acreditación «Desarrollador»; la asignación, la orden «Ana puede recoger esa acreditación en la sede dev». Con esa orden, RR. HH. deja en el mostrador de la sede dev una acreditación concreta —el rol `AWSReservedSSO_…`—, y Ana la recoge cada mañana desde el portal.]
 
 == Otras formas de federación
 
-La *federación* consiste en que AWS confíe en un proveedor de identidad externo: las identidades viven fuera y, tras autenticarse allí, reciben credenciales temporales de AWS asumiendo un rol. Identity Center es la federación recomendada para empleados, pero hay otros casos:
+La *federación* consiste en que AWS confíe en un proveedor de identidad externo: las identidades viven fuera y, tras autenticarse allí, reciben credenciales temporales de AWS asumiendo un rol. El IdP se lo comunica a AWS con un protocolo estándar: *SAML 2.0* (aserciones en XML, típico de los directorios corporativos) u *OIDC* (_OpenID Connect_, tokens JSON firmados llamados JWT, típico de plataformas como GitHub o Kubernetes). Identity Center es la federación recomendada para empleados, pero hay otros casos:
 
 #tabla(("Mecanismo", "Para quién", "Cómo obtiene las credenciales"), columnas: (1.3fr, 1.5fr, 2.2fr),
   [*IAM Identity Center*], [Empleados, en muchas cuentas], [Portal o CLI → asume el rol `AWSReservedSSO_…` de cada cuenta],
-  [*SAML 2.0 directo con IAM*], [Empleados en una cuenta (heredado)], [Aserción SAML del IdP → `AssumeRoleWithSAML`],
+  [*SAML 2.0 directo con IAM*], [Empleados en una cuenta (opción heredada)], [Aserción SAML del IdP → `AssumeRoleWithSAML`],
   [*Proveedor OIDC en IAM*], [Cargas externas: GitHub Actions, GitLab, Kubernetes…], [Token OIDC (JWT) → `AssumeRoleWithWebIdentity`],
   [*Amazon Cognito*], [Usuarios finales de tus aplicaciones], [Un _user pool_ autentica; un _identity pool_ canjea el token por credenciales de un rol limitado],
   [*IAM Roles Anywhere*], [Servidores y cargas fuera de AWS], [Un certificado X.509 de tu PKI de confianza → credenciales temporales de un rol])
 
 == Todas las piezas de un vistazo
 
-#tabla(("Pieza", "¿Es principal?", "Credenciales", "¿Puede ir en «Principal»?", "Quién la usa", "Cuándo usarla"),
-  columnas: (1.15fr, 0.85fr, 1.35fr, 0.95fr, 1.35fr, 1.6fr), tamano: 7.8pt,
-  [*Usuario IAM*], [#si Sí], [Permanentes: contraseña, access keys], [#si Sí], [Una persona o app, en una cuenta], [Solo excepciones (emergencia, herramientas sin roles)],
-  [*Grupo IAM*], [#no No], [Ninguna], [#no No], [Reúne usuarios IAM], [Repartir políticas entre usuarios IAM],
-  [*Rol IAM*], [#si Sí (sus sesiones)], [Temporales, para quien lo asume], [#si Sí], [Servicios, otras cuentas, federados], [Siempre que puedas],
-  [*Usuario / grupo de Identity Center*], [#parcial Vía un rol], [Temporales, del rol de cada cuenta], [#no No (sale el rol)], [Las personas de la organización], [Acceso humano a todas las cuentas],
-  [*Permission set*], [#no No], [Ninguna: es una plantilla], [#no No], [Administradores de Identity Center], [Definir perfiles para muchas cuentas],
-  [*Política*], [#no No], [Ninguna], [#no No], [Se adjunta a identidades o recursos], [Siempre: concede o limita permisos])
+Qué es cada pieza, cuándo usarla y con qué se confunde más a menudo:
 
-== ¿Qué uso cuando…? Nueve escenarios resueltos
+#tabla(("Pieza", "Qué es", "Credenciales", "Úsala para…", "No la confundas con…"),
+  columnas: (1.05fr, 1.8fr, 1.3fr, 1.3fr, 1.75fr), tamano: 7.8pt,
+  [*Usuario IAM*], [Identidad permanente de una persona o app, en una sola cuenta], [Permanentes: contraseña y access keys (`AKIA…`)], [Solo excepciones: emergencia, herramientas sin roles], [Un usuario de Identity Center: fuera de las cuentas y sin claves permanentes],
+  [*Grupo IAM*], [Conjunto de usuarios IAM de una cuenta; no firma peticiones], [Ninguna], [Repartir políticas entre usuarios IAM], [Un grupo de Identity Center, que recibe asignaciones en muchas cuentas],
+  [*Rol IAM*], [Identidad sin credenciales propias que se asume; actúa mediante sesiones], [Temporales (`ASIA…`), para quien lo asume], [Servicios, otras cuentas, federación], [Un usuario: el rol no es de nadie y sus credenciales caducan],
+  [*Trust policy*], [La política de recurso de un rol: quién puede asumirlo], [—], [Todo rol tiene una], [La permissions policy: qué puede hacer quien lo asume],
+  [*Usuario de Identity Center*], [Una persona de tu organización, con una sola identidad para todo], [Ninguna propia: las temporales del rol de cada cuenta], [Acceso de personas a todas las cuentas], [Un usuario IAM (ver arriba)],
+  [*Grupo de Identity Center*], [Conjunto de usuarios de Identity Center, a menudo sincronizado desde tu IdP], [Ninguna], [Asignar permission sets por equipos], [Un grupo IAM (ver arriba)],
+  [*Permission set*], [Plantilla de permisos de Identity Center; no concede nada hasta que se asigna], [Ninguna], [Definir perfiles una vez para muchas cuentas], [El rol `AWSReservedSSO_…` que crea en cada cuenta asignada: el que se asume])
+
+== Preguntas frecuentes
+
+#grid(columns: (1fr, 1fr), column-gutter: 14pt,
+  [
+    #_faq([¿Un grupo puede asumir un rol o aparecer como `Principal`?], [No: no es un principal. Para que sus miembros asuman un rol, adjunta al grupo una política que permita `sts:AssumeRole` sobre él y haz que la trust policy confíe en la cuenta.])
+    #_faq([¿Necesito AWS Organizations para usar Identity Center?], [Para dar acceso a cuentas AWS, sí: se habilita en la cuenta de administración de la organización. Sin Organizations solo puede dar acceso a aplicaciones.])
+  ],
+  [
+    #_faq([¿Por qué el portal no me pide la contraseña cada hora?], [Hay dos relojes: la sesión del portal (por defecto, 8 horas) y las credenciales de cada rol (la duración del permission set). Mientras la primera siga abierta, obtienes credenciales nuevas sin volver a autenticarte.])
+    #_faq([¿Cómo nombro el rol de un permission set en una política de recurso?], [Su ARN lleva una ruta (`…/aws-reserved/sso.amazonaws.com/…`) y un sufijo aleatorio que cambia si se recrea: en vez de copiarlo, usa la condición `aws:PrincipalArn` con comodines (capítulo siguiente).])
+  ],
+)
+
+== ¿Qué uso cuando…? Ocho escenarios resueltos
 
 #_escenario(1, [Una persona de tu empresa entra en la consola], "IAM Identity Center")[
   #_mini(fila(espacio: 4pt,
@@ -546,30 +603,31 @@ La *federación* consiste en que AWS confíe en un proveedor de identidad extern
     svc("λ", "Función alta-pedido", color: col.serverless),
     flecha(etiqueta: "PutItem", largo: 1.6cm),
     svc("DDB", "Tabla pedidos", color: col.datos)))
-  El rol de ejecución lleva `dynamodb:PutItem` sobre la tabla y permisos para escribir logs. Quién puede *invocar* la función lo decide otra cosa: su política de recurso (capítulo de Serverless).
+  El rol de ejecución lleva `dynamodb:PutItem` sobre la tabla y permisos para escribir logs; Lambda lo asume y pasa las credenciales a tu código en variables de entorno. Quién puede *invocar* la función lo decide otra cosa: su política de recurso (capítulo de Serverless).
 ]
 
-#_escenario(4, [Un task de ECS lee un secreto de Secrets Manager], "Task role / execution role")[
-  #_mini(fila(espacio: 6pt,
-    columna(espacio: 3pt,
-      svc("ROL", "Task execution role", sub: "agente: ECR, logs, secretos", color: col.iam),
-      svc("ROL", "Task role", sub: "tu código (SDK)", color: col.iam)),
+#_escenario(4, [Una tarea de ECS lee un secreto de Secrets Manager], "Task role / execution role")[
+  #_mini(fila(espacio: 4pt,
+    svc("ROL", "Task execution role", sub: "agente: ECR, logs, secretos", color: col.iam),
+    text(12pt, weight: "bold", fill: gris)[+],
+    svc("ROL", "Task role", sub: "tu código (SDK)", color: col.iam),
     flecha(largo: 1.2cm),
     svc("ECS", "Tarea ECS", color: col.contenedores),
     flecha(etiqueta: "GetSecretValue", largo: 2cm),
     svc("SM", "Secrets Manager", color: col.seguridad)))
-  Una tarea tiene *dos* roles, ambos con trust en `ecs-tasks.amazonaws.com`. Si el secreto se inyecta como variable de entorno (sección `secrets` de la definición de tarea), lo lee el agente: el permiso va en el *execution role*. Si tu código lo pide con el SDK, va en el *task role*. Confundirlos es un error muy común.
+  Una tarea tiene *dos* roles: el _execution role_, con el que ECS la prepara (imagen, logs y secretos que se inyectan como variables de entorno), y el _task role_, el de tu código. Si tu código pide el secreto con el SDK, el permiso va en el task role; si se inyecta desde la definición de tarea, en el execution role. Los detalles, en el capítulo de Contenedores.
 ]
 
 #_escenario(5, [GitHub Actions despliega en AWS sin access keys], "Federación OIDC")[
   #_mini(fila(espacio: 4pt,
     svc("GH", "GitHub Actions", sub: "permiso id-token: write", color: col.neutro),
-    flecha(etiqueta: "token OIDC (JWT)", largo: 2cm),
+    columna(espacio: 0pt,
+      flecha(etiqueta: "1 · token OIDC (JWT)", largo: 2.5cm),
+      _flecha-izq(etiqueta: "3 · credenciales del rol", largo: 2.5cm)),
     svc("STS", "AWS STS", sub: "AssumeRoleWithWebIdentity", color: col.iam),
-    flecha(etiqueta: "credenciales temporales", largo: 2.3cm),
+    flecha(etiqueta: "2 · ¿lo admite su trust policy?", largo: 2.9cm, punteada: true),
     svc("ROL", "Rol github-deploy", sub: "solo tu repositorio y rama", color: col.iam)))
   Registra en IAM el proveedor OIDC `token.actions.githubusercontent.com` y crea un rol que acepte solo los tokens de *tu* repositorio y rama: sin la condición sobre `sub`, cualquier repositorio de GitHub podría asumirlo.
-]
 
 ```json
 {
@@ -589,6 +647,8 @@ La *federación* consiste en que AWS confíe en un proveedor de identidad extern
 }
 ```
 
+  En el workflow, el job declara el permiso para pedir el token y asume el rol:
+
 ```yaml
 permissions:
   id-token: write        # permite al job pedir el token OIDC
@@ -599,6 +659,7 @@ steps:
       aws-region: eu-west-1
   - run: aws s3 sync ./dist s3://mi-web-estatica
 ```
+]
 
 #_escenario(6, [La cuenta A lee un bucket de la cuenta B], "Política de recurso o rol en B")[
   #_mini(fila(espacio: 4pt,
@@ -612,7 +673,7 @@ steps:
 ]
 
 #_escenario(7, [Un proveedor SaaS externo audita tu cuenta], "Rol con External ID")[
-  *1)* El proveedor te da su número de cuenta y un *External ID* único para ti. *2)* Creas un rol cuya trust policy confía en esa cuenta *y* exige el External ID, como en la sección del _confused deputy_. *3)* Le adjuntas solo lo necesario, por ejemplo la política gestionada `SecurityAudit` o `ReadOnlyAccess`. *4)* Entregas al proveedor el ARN del rol, nunca access keys. Puedes revocar el acceso cuando quieras borrando el rol o cambiando su trust policy.
+  Un rol cuya trust policy confía en la cuenta del proveedor *y* exige el External ID que te ha dado (sección del _confused deputy_), con solo los permisos necesarios, como la política gestionada `SecurityAudit`. Entregas al proveedor el ARN del rol, nunca access keys, y revocas el acceso cuando quieras borrando el rol o cambiando su trust policy.
 ]
 
 #_escenario(8, [Los usuarios finales de tu app móvil], "Amazon Cognito")[
@@ -627,42 +688,22 @@ steps:
   Tus clientes no son empleados: ni IAM ni Identity Center. Un *user pool* de Cognito gestiona registro, inicio de sesión y MFA; si la app debe llamar directamente a AWS, un *identity pool* canjea el token por credenciales temporales de un rol muy limitado. A menudo basta con que tu API valide el token.
 ]
 
-#_escenario(9, [La AWS CLI en tu portátil], "aws configure sso")[
-  Un perfil de Identity Center (`aws configure sso`) y, cada día, `aws sso login`: credenciales temporales en caché que se renuevan solas. *Evita* `aws configure` con access keys permanentes en `~/.aws/credentials`. Sin Identity Center, lo menos malo es un usuario IAM que solo pueda asumir roles, con MFA, y perfiles con `role_arn` y `mfa_serial`.
-]
-
-== Preguntas frecuentes y confusiones típicas
-
-#grid(columns: (1fr, 1fr), column-gutter: 14pt,
-  [
-    #_faq([¿Un grupo puede asumir un rol o aparecer como `Principal`?], [No: no es un principal. Para que sus miembros asuman un rol, adjunta al grupo una política que permita `sts:AssumeRole` sobre él y haz que la trust policy confíe en la cuenta.])
-    #_faq([¿Un rol tiene contraseña o access keys?], [No. Solo produce credenciales temporales para quien lo asume.])
-    #_faq([¿Qué diferencia hay entre un rol y un permission set?], [El permission set es la plantilla que defines en Identity Center; el rol es lo que Identity Center crea a partir de ella en cada cuenta asignada (`AWSReservedSSO_…`).])
-    #_faq([¿Por qué no usar usuarios IAM para las personas?], [Tienen credenciales permanentes, se multiplican por cuenta y hay que darlos de baja uno a uno. Identity Center da una identidad por persona, MFA central y credenciales temporales.])
-  ],
-  [
-    #_faq([¿Qué es el usuario root y cuándo lo uso?], [La identidad con la que se creó la cuenta, con acceso total. Solo para las tareas que lo exigen (cambiar el correo de la cuenta, cerrarla…), con MFA y sin access keys.])
-    #_faq([¿Se pueden anidar grupos de IAM?], [No. Un usuario puede estar en hasta 10 grupos, pero un grupo no puede contener otros grupos.])
-    #_faq([¿Qué pasa si un usuario está en dos grupos?], [Recibe la unión de los permisos de ambos (y de sus políticas propias); si alguna política deniega explícitamente una acción, el Deny gana.])
-    #_faq([¿Qué es un ARN `assumed-role`?], [El de una sesión de rol (`arn:aws:sts::cuenta:assumed-role/rol/sesión`), el que verás en errores y en CloudTrail; la sesión identifica quién asumió el rol.])
-  ],
-)
-
 #resumen[
-- Toda petición recorre cuatro pasos: identidad → credenciales → políticas → recurso.
-- Un principal es quien firma una petición. Usuarios, grupos y roles son identidades; los grupos nunca firman nada (no son principals ni se anidan) y los roles actúan a través de sesiones.
+- Toda petición recorre cuatro pasos: identidad → credenciales → políticas → recurso. Los grupos y los permission sets no hacen peticiones: reparten políticas.
+- Un principal es quien firma una petición: un usuario, una sesión de rol, el root o un servicio. Los grupos nunca firman nada; los roles, a través de sus sesiones.
 - Los usuarios IAM tienen credenciales permanentes (contraseña, access keys `AKIA…`): resérvalos para casos excepcionales.
 - Un rol no tiene credenciales propias: su trust policy dice quién puede asumirlo y su permissions policy, qué puede hacer. STS entrega credenciales temporales (`ASIA…` + token + caducidad).
-- EC2 recibe su rol mediante un perfil de instancia; Lambda y ECS, mediante roles de ejecución y _task roles_; entregarlo exige `iam:PassRole`. El External ID protege los roles para terceros.
-- IAM Identity Center da a cada persona una identidad única; un permission set es una plantilla que se convierte en un rol `AWSReservedSSO_…` en cada cuenta asignada.
-- Cargas externas: federación OIDC (GitHub Actions) o IAM Roles Anywhere; clientes de tus apps: Amazon Cognito.
+- Los servicios asumen su rol por ti (perfil de instancia en EC2, rol de ejecución en Lambda, task role en ECS) y dejan las credenciales donde el SDK las busca; entregar un rol exige `iam:PassRole`. El External ID protege los roles para terceros.
+- IAM Identity Center da a cada persona una identidad única. Una asignación (usuario o grupo + permission set + cuenta) crea en esa cuenta un rol `AWSReservedSSO_…`, uno por permission set y cuenta, que la persona asume desde el portal o con `aws sso login`.
+- Federación: SAML con los IdP corporativos, OIDC con cargas externas como GitHub Actions, IAM Roles Anywhere para servidores fuera de AWS y Amazon Cognito para los clientes de tus apps.
 ]
 
 #repaso(
   ([¿Por qué un grupo IAM no puede aparecer como `Principal` en la política de un bucket?], [Porque no es un principal: no se autentica ni firma peticiones. Solo sirve para adjuntar políticas a sus usuarios.]),
   ([¿Qué dos políticas tiene un rol y qué pregunta responde cada una?], [La trust policy (¿quién puede asumirlo?) y la permissions policy (¿qué puede hacer quien lo asume?).]),
   ([Tu equipo copia access keys en un servidor EC2 para que la aplicación lea de S3. ¿Qué propones?], [Un rol con lectura sobre ese bucket, entregado con un perfil de instancia; el SDK toma credenciales temporales del IMDS y las claves desaparecen.]),
-  ([Ana tiene asignado el permission set `ReadOnly` en las cuentas `dev` y `prod`. ¿Cuántos roles ha creado Identity Center y cómo se llaman?], [Dos, uno en cada cuenta, con nombres del tipo `AWSReservedSSO_ReadOnly_<sufijo>`. Ana asume el de la cuenta que elige en el portal.]),
-  ([Un job de ECS falla al arrancar porque no puede leer el secreto que se inyecta como variable de entorno, aunque el _task role_ tiene permiso. ¿Qué pasa?], [Los secretos inyectados por la definición de tarea los lee el agente de ECS, que usa el _task execution role_: el permiso `secretsmanager:GetSecretValue` debe estar en ese rol.]),
-  ([¿Qué identidad deben usar los clientes de tu app móvil para subir fotos a S3?], [Ninguna de IAM ni de Identity Center: un user pool de Cognito y, si acceden directamente a S3, un identity pool con un rol limitado a su carpeta.]),
+  ([¿Cómo obtiene sus permisos una función Lambda y dónde los encuentra su código?], [Lambda asume el rol de ejecución de la función y le pasa las credenciales temporales en variables de entorno; el SDK las encuentra solo, sin claves en el código.]),
+  ([Ana tiene asignado el permission set `ReadOnly` en las cuentas `dev` y `prod`, y Luis, el mismo en `dev`. ¿Cuántos roles ha creado Identity Center?], [Dos, uno por cuenta (`AWSReservedSSO_ReadOnly_<sufijo>`): hay un rol por permission set y cuenta, no por persona. Ana y Luis asumen el mismo rol en `dev` y CloudTrail los distingue por el nombre de sesión.]),
+  ([¿Qué ocurre por debajo cuando Ana elige «dev → PowerUser» en el portal?], [Identity Center le obtiene credenciales temporales del rol `AWSReservedSSO_PowerUser_…` que creó en la cuenta dev, mediante una federación SAML con el proveedor que también creó allí. Ana trabaja como la sesión `assumed-role/AWSReservedSSO_PowerUser_…/ana`, con los permisos del permission set, hasta que caducan.]),
+  ([Un workflow de GitHub Actions debe desplegar en tu cuenta. ¿Cómo se autentica sin guardar access keys?], [Con federación OIDC: registras en IAM el proveedor `token.actions.githubusercontent.com` y creas un rol cuya trust policy solo acepta los tokens de tu repositorio y rama (condición sobre `sub`). El job lo asume con `AssumeRoleWithWebIdentity`.]),
 )

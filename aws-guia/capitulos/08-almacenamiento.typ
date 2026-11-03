@@ -6,7 +6,6 @@
 // ---------------------------------------------------------------------
 //  Utilidades locales
 // ---------------------------------------------------------------------
-#let _nj(cuerpo) = { set par(justify: false); cuerpo }
 
 // Caja de clase de almacenamiento para los diagramas
 #let _clase(nombre, sub, color, ancho: 2.6cm) = box(
@@ -270,55 +269,11 @@ S3 puede notificar cuando se crea, borra, restaura, replica o transiciona un obj
 
 == Alojamiento web estático
 
-S3 puede servir una web estática (HTML, CSS, JavaScript, imágenes) desde el *website endpoint* del bucket, con documentos de índice y error y reglas de redirección. Pero ese endpoint solo habla HTTP y exige un bucket público. La arquitectura recomendada pone *CloudFront* delante:
-
-#diagrama(pie: [Web estática con el bucket privado: solo CloudFront, firmando con OAC, puede leerlo.])[
-  #set text(hyphenate: false)
-  #fila(actor(etiqueta: "Visitante"), flecha(etiqueta: "HTTPS · www.acme.com", largo: 2.4cm),
-    svc("CF", "CloudFront", sub: "certificado ACM · caché · WAF", color: col.edge),
-    flecha(etiqueta: "OAC (SigV4)", largo: 2cm),
-    zona("Bucket privado", color: col.almacenamiento)[
-      #svc("S3", "web-acme", sub: "Block Public Access activo", color: col.almacenamiento)
-    ])
-]
-
-- HTTPS con tu dominio y un certificado gratuito de ACM, caché en cientos de ubicaciones, WAF y protección DDoS.
-- El bucket sigue *privado*: solo la distribución puede leerlo, firmando con *Origin Access Control (OAC)* y autorizada por la bucket policy que tienes a continuación.
-- La transferencia de S3 a CloudFront no se cobra; pagas la salida de CloudFront, en general más barata. Más detalles en el capítulo de CloudFront.
-
-#block(breakable: false)[
-Esta es la bucket policy de esa arquitectura: deja leer el bucket solo a una distribución de CloudFront concreta y rechaza cualquier acceso sin TLS.
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "SoloMiCloudFront",
-      "Effect": "Allow",
-      "Principal": { "Service": "cloudfront.amazonaws.com" },
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::web-acme/*",
-      "Condition": { "StringEquals": {
-        "AWS:SourceArn": "arn:aws:cloudfront::123456789012:distribution/E2ABC"
-      } }
-    },
-    {
-      "Sid": "SoloHTTPS",
-      "Effect": "Deny",
-      "Principal": "*",
-      "Action": "s3:*",
-      "Resource": ["arn:aws:s3:::web-acme", "arn:aws:s3:::web-acme/*"],
-      "Condition": { "Bool": { "aws:SecureTransport": "false" } }
-    }
-  ]
-}
-```
-]
+S3 puede servir una web estática (HTML, CSS, JavaScript, imágenes) desde el *website endpoint* del bucket, con documento de índice, página de error y reglas de redirección. Pero ese endpoint solo habla HTTP y exige un bucket público. En producción se pone *CloudFront* delante de un bucket *privado*: obtienes HTTPS con tu dominio y caché en el borde, y solo la distribución puede leer el bucket, gracias a *Origin Access Control* (OAC). Además, la transferencia de S3 a CloudFront no se cobra. La arquitectura completa, con su bucket policy, está en el capítulo «CloudFront, Route 53 y el borde de la red».
 
 == Consultar datos y controlar costes
 
-*S3 Select* filtraba con SQL el contenido de un objeto CSV o JSON, pero desde julio de 2024 no está disponible para clientes nuevos. La alternativa es *Amazon Athena*: SQL serverless sobre tus datos en S3, de pago por datos escaneados; para pagar menos, usa formatos columnares comprimidos (Parquet) y particiona por fecha (`logs/anio=2026/mes=03/`). La factura de S3 tiene cuatro componentes:
+*S3 Select*, que filtraba con SQL el contenido de un objeto CSV o JSON, no está disponible para clientes nuevos desde julio de 2024. Para consultar con SQL los datos de tus buckets se usa *Amazon Athena*, que verás en el capítulo de Bases de datos. La factura de S3 tiene cuatro componentes:
 
 #block(breakable: false)[#tarjetas(columnas: 4,
   tarjeta("Almacenamiento")[GB-mes según la clase: del orden de 2 céntimos de dólar por GB en Standard, mucho menos en Glacier.],
@@ -335,16 +290,16 @@ Para gestionar miles de millones de objetos, *S3 Inventory* genera listados diar
 
 === Amazon EFS: ficheros compartidos para Linux
 
-*Amazon EFS*, que ya asomó en el capítulo de EC2, es un sistema de ficheros NFS elástico —crece y decrece solo y pagas por GB usado— que pueden montar a la vez miles de instancias EC2, contenedores de ECS, EKS o Fargate y funciones Lambda. En modo regional replica los datos en varias AZ, con un *mount target* por AZ; el modo One Zone es más barato. Tiene clases Standard, Infrequent Access y Archive con lifecycle automático, y el modo de rendimiento *Elastic* ajusta el _throughput_ a la demanda. Solo sirve a clientes Linux: para Windows está FSx. No lo confundas con *Mountpoint for Amazon S3*, un cliente que monta un bucket en Linux como si fuera un directorio: rinde muy bien leyendo ficheros grandes y escribiendo ficheros nuevos, pero no es un sistema de ficheros POSIX completo (no permite, por ejemplo, modificar un fichero existente).
+*Amazon EFS*, cuya ficha viste en el capítulo de EC2, es el sistema de ficheros NFS compartido de AWS: elástico (pagas por GB usado), replicado en varias AZ (o en una sola, más barato) y con clases Infrequent Access y Archive para lo que no se lee. Lo montan a la vez miles de instancias EC2, contenedores de ECS, EKS o Fargate y funciones Lambda, pero solo clientes Linux: para Windows está FSx. No lo confundas con *Mountpoint for Amazon S3*, un cliente que monta un bucket en Linux como si fuera un directorio: rinde muy bien leyendo ficheros grandes y escribiendo ficheros nuevos, pero no es un sistema de ficheros POSIX completo (no permite, por ejemplo, editar en el sitio un fichero existente).
 
 === Amazon FSx: sistemas de ficheros conocidos, gestionados
 
-#tabla(("Servicio", "Protocolos", "Para qué"), columnas: (1.5fr, 0.9fr, 3fr), tamano: 8.2pt,
+#block(breakable: false)[#tabla(("Servicio", "Protocolos", "Para qué"), columnas: (1.5fr, 0.9fr, 3fr), tamano: 8.2pt,
   [*FSx for Windows File Server*], [SMB], [Recursos compartidos de Windows integrados con Active Directory (permisos NTFS, DFS)],
   [*FSx for Lustre*], [Lustre (POSIX)], [HPC, ML y renderizado: _throughput_ muy alto y latencia inferior al milisegundo; se enlaza con un bucket S3],
   [*FSx for NetApp ONTAP*], [NFS, SMB, iSCSI], [Migrar cabinas NetApp: multiprotocolo, _snapshots_, SnapMirror, deduplicación y compresión],
   [*FSx for OpenZFS*], [NFS], [Migrar servidores ZFS o Linux: _snapshots_ y clones instantáneos, baja latencia],
-)
+)]
 
 === Híbrido, migración y copias de seguridad
 

@@ -7,46 +7,6 @@
 #let naranja = rgb("#E8590C")
 #let rojo = rgb("#E03131")
 
-// Gráfico de demanda de 24 h con la parte cubierta por compromiso, On-Demand y Spot
-#let grafico-compra() = {
-  let demanda = (3, 3, 3, 3, 3, 3, 4, 6, 8, 9, 9, 8, 8, 9, 9, 8, 7, 6, 5, 4, 4, 3, 3, 3)
-  let lotes = (2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2)
-  let base = 3
-  let u = 0.27cm
-  let w = 0.42cm
-  let g = 0.14cm
-  let ancho = 24 * (w + g)
-  columna(espacio: 3pt,
-    box(width: ancho, height: 9.4 * u, {
-      for (i, v) in demanda.enumerate() {
-        let x = i * (w + g)
-        let b = calc.min(v, base)
-        place(bottom + left, dx: x, rect(width: w, height: b * u, fill: col.costes))
-        if v > base {
-          place(bottom + left, dx: x, dy: -b * u, rect(width: w, height: (v - base) * u, fill: col.costes.lighten(60%)))
-        }
-        let s = lotes.at(i)
-        if s > 0 {
-          place(bottom + left, dx: x, dy: -v * u, rect(width: w, height: s * u, fill: verde.lighten(25%)))
-        }
-      }
-      place(bottom + left, dy: -base * u, line(length: ancho, stroke: (paint: tinta, thickness: 0.8pt, dash: "dashed")))
-      place(top + right, dx: 0pt, dy: 0pt, text(6.5pt, fill: gris, [demanda (vCPU)]))
-    }),
-    box(width: ancho, height: 8pt, {
-      for (k, t) in ("0 h", "6 h", "12 h", "18 h", "24 h").enumerate() {
-        place(left + top, dx: k * 6 * (w + g) - 5pt, text(6.5pt, fill: gris, t))
-      }
-    }),
-  )
-}
-
-#let chip(c, t) = box(baseline: 1pt, {
-  box(width: 9pt, height: 7pt, radius: 1.5pt, fill: c)
-  h(3pt)
-  text(7.2pt, t)
-})
-
 #capitulo("Costes y optimización", color: col.costes,
   subtitulo: [Entiende cómo se factura AWS, dónde se va el dinero y qué palancas tienes para pagar solo por lo que aporta valor.],
   objetivos: (
@@ -54,14 +14,14 @@
     [Qué tráfico de datos se paga y cuál no],
     [Cost Explorer, Budgets y compañía],
     [Etiquetas de asignación de costes],
-    [Savings Plans, Reserved Instances y Spot],
+    [A qué servicios llega cada descuento por compromiso],
     [Optimizar y evitar las trampas típicas],
   ),
   servicios: ("Cost Explorer", "AWS Budgets", "Data Exports", "Cost Anomaly Detection", "Compute Optimizer", "Savings Plans"))
 
 == El modelo de pago por uso
 
-En AWS no compras servidores: pagas por segundo, por hora, por GB o por petición, sin inversión inicial, y dejas de pagar cuando apagas el recurso. Ojo con el matiz: pagas por lo que *aprovisionas*, no por lo que usas. Una instancia al 3 % de CPU o un volumen sin adjuntar se facturan entero. El precio por unidad baja con el volumen (tramos) y con el *compromiso* de uso a uno o tres años, y varía por región.
+En AWS no compras servidores: pagas por segundo, por hora, por GB o por petición, sin inversión inicial, y dejas de pagar cuando apagas el recurso. Ojo con el matiz: pagas por lo que *aprovisionas*, no por lo que usas. Una instancia al 3 % de CPU o un volumen sin adjuntar se facturan enteros. El precio por unidad baja con el volumen (tramos) y con el *compromiso* de uso a uno o tres años, y varía por región. La capa gratuita, que cambió en julio de 2025, se resume en el capítulo de Fundamentos.
 
 #datos(
   ("0", [coste de los datos que *entran* desde Internet]),
@@ -134,26 +94,15 @@ Las etiquetas (_tags_) responden a «¿cuánto cuesta este proyecto?». Define u
 
 == Modelos de compra
 
-Pagar todo bajo demanda es lo más flexible y lo más caro. AWS ofrece descuentos a cambio de compromiso o de aceptar interrupciones:
+Los modelos y la estrategia habitual —*compromisos* para la base que nunca baja, *On-Demand* para los picos y *Spot* para lo interrumpible— se explican en el capítulo «EC2: cómputo en la nube». Aquí importa a qué servicios llega cada descuento; los Savings Plans, un compromiso de gasto en \$/hora, se aplican solos a lo elegible:
 
-#tabla(("Modelo", "Descuento", "Compromiso", "Flexibilidad e ideal para"), columnas: (1.35fr, 0.8fr, 1.2fr, 3.1fr), tamano: 8pt,
-  [*On-Demand*], [—], [Ninguno], [Máxima flexibilidad: cargas nuevas, impredecibles o cortas.],
-  [*Compute Savings Plans*], [hasta 66 %], [1 o 3 años, en \$/hora], [Cualquier familia, tamaño, región o SO de EC2, además de Fargate y Lambda. Se aplican solos.],
-  [*EC2 Instance Savings Plans*], [hasta 72 %], [1 o 3 años, en \$/hora], [Una familia de instancias en una región (cualquier tamaño, SO o AZ).],
-  [*Database Savings Plans*], [hasta 35 %], [1 año, en \$/hora], [Bases de datos gestionadas (Aurora, RDS, DynamoDB, ElastiCache…); lanzados en diciembre de 2025.],
-  [*Reserved Instances*], [hasta 72 %], [1 o 3 años], [Standard o Convertible; las zonales reservan además capacidad. También para RDS, ElastiCache, OpenSearch o Redshift.],
-  [*Spot*], [hasta 90 %], [Ninguno], [Capacidad sobrante que AWS recupera con *2 minutos* de aviso: lotes, CI, análisis, contenedores sin estado.],
+#tabla(("Modelo", "Descuento", "Plazo", "A qué se aplica"), columnas: (1.35fr, 0.85fr, 0.8fr, 3.3fr), tamano: 8pt,
+  [*Compute Savings Plans*], [hasta 66 %], [1 o 3 años], [EC2 de cualquier familia, tamaño, región o SO, además de *Fargate* y *Lambda*. El más flexible.],
+  [*EC2 Instance Savings Plans*], [hasta 72 %], [1 o 3 años], [Una familia de instancias EC2 en una región (cualquier tamaño, SO o AZ).],
+  [*Database Savings Plans*], [hasta 35 %], [1 año], [Bases de datos gestionadas: Aurora, RDS, DynamoDB, ElastiCache… (desde diciembre de 2025).],
+  [*Reserved Instances*], [hasta 72 %], [1 o 3 años], [EC2 y también RDS, ElastiCache, OpenSearch y Redshift.],
+  [*Spot*], [hasta 90 %], [—], [Capacidad sobrante de EC2 (y Fargate Spot) que AWS recupera con 2 minutos de aviso.],
 )
-
-La estrategia habitual es cubrir con *compromisos* la base de uso que nunca baja, dejar los picos en *On-Demand* y llevar a *Spot* lo que tolera interrupciones:
-
-#diagrama(pie: [Un día de uso de cómputo: la línea discontinua marca el compromiso (Savings Plan); los picos van bajo demanda y los lotes nocturnos, a Spot.])[
-  #grafico-compra()
-  #v(4pt)
-  #fila(espacio: 14pt, chip(col.costes, "Savings Plan o RI (base estable)"), chip(col.costes.lighten(60%), "On-Demand (picos)"), chip(verde.lighten(25%), "Spot (lotes interrumpibles)"))
-]
-
-#examen[Savings Plans: compromiso en \$/hora que se aplica solo a lo elegible; Compute SP es el más flexible. Para garantizar capacidad sin descuento propio existen las *On-Demand Capacity Reservations*, combinables con Savings Plans.]
 
 == Estrategias de optimización
 
@@ -163,11 +112,10 @@ La estrategia habitual es cubrir con *compromisos* la base de uso que nunca baja
   tarjeta("Graviton", subtitulo: "procesadores Arm de AWS")[Más baratas por hora que sus equivalentes x86 y con mejor relación precio-rendimiento; también en Lambda, Fargate y RDS.],
   tarjeta("Clases de S3 y lifecycle", subtitulo: "datos fríos, precio frío")[Reglas que mueven a Standard-IA o Glacier, Intelligent-Tiering, y expirar versiones antiguas y multipart incompletos.],
   tarjeta("gp3 en lugar de gp2", subtitulo: "EBS")[Más barato por GB, con 3 000 IOPS y 125 MB/s de base sea cual sea el tamaño; se cambia en caliente.],
-  tarjeta("Retención de logs", subtitulo: "CloudWatch Logs")[Por defecto los logs no caducan nunca: fija la retención y archiva en S3 lo que debas conservar.],
-  tarjeta("Endpoints de VPC", subtitulo: "esquivar el NAT")[S3 y DynamoDB por endpoint de gateway: gratis. Por NAT: cada GB paga procesamiento.],
   tarjeta("Serverless si es intermitente", subtitulo: "pagar por actividad")[Lambda, DynamoDB on-demand o Aurora Serverless v2 (que puede bajar a 0 ACU) no cobran cómputo en reposo.],
-  tarjeta("Caché con CloudFront", subtitulo: "menos origen, menos salida")[Menos carga en el origen y salida más barata; del origen de AWS a CloudFront no se paga transferencia.],
 )
+
+Súmales las palancas de la transferencia (endpoints de VPC en lugar de NAT, caché en CloudFront) y la retención de logs, que verás entre las trampas.
 
 == Trampas comunes
 
@@ -197,14 +145,12 @@ La estrategia habitual es cubrir con *compromisos* la base de uso que nunca baja
 
 La métrica más útil es el *coste unitario* (por cliente, por pedido, por millón de peticiones): si la factura crece pero el coste unitario baja, el negocio escala bien.
 
-#nota(titulo: "Cambios recientes en la forma de pagar")[Desde el 15 de julio de 2025, las cuentas nuevas ya no reciben la antigua capa gratuita de 12 meses: obtienen créditos promocionales y pueden elegir un *plan gratuito* de hasta seis meses, y se mantienen las cuotas «siempre gratuitas» de servicios como Lambda o DynamoDB. Desde noviembre de 2025, CloudFront ofrece además *planes de tarifa plana* mensual, sin cargos por exceso, que agrupan CDN, WAF, protección DDoS y DNS de Route 53: interesantes para webs con tráfico previsible.]
-
 #resumen[
 - Pagas por lo que *aprovisionas*: un recurso ocioso cuesta lo mismo que uno ocupado.
 - Los grandes conductores son cómputo, almacenamiento y *transferencia*: entrar es gratis, salir y cruzar AZ o regiones cuesta, y el NAT Gateway cobra por GB procesado.
 - Cost Explorer analiza, Budgets avisa (y actúa), Data Exports da el detalle, Anomaly Detection vigila y Compute Optimizer recomienda tamaños.
 - Las etiquetas de asignación de costes solo cuentan una vez *activadas*; hazlas obligatorias desde la IaC y las políticas de Organizations.
-- Cubre la base con Savings Plans o RI, los picos con On-Demand y lo interrumpible con Spot.
+- Cubre la base con Savings Plans o RI, los picos con On-Demand y lo interrumpible con Spot (capítulo de EC2); Compute Savings Plans llega también a Fargate y Lambda, y Database Savings Plans a las bases de datos gestionadas.
 - Palancas rápidas: rightsizing, apagar dev de noche, Graviton, gp3, lifecycle de S3, retención de logs y endpoints de VPC.
 ]
 
@@ -212,7 +158,7 @@ La métrica más útil es el *coste unitario* (por cliente, por pedido, por mill
   ([¿Qué tráfico de datos no se cobra?], [La entrada desde Internet, el tráfico dentro de la misma AZ con IPs privadas, el acceso a S3 o DynamoDB por un endpoint de gateway en la misma región y la transferencia de un origen de AWS a CloudFront.]),
   ([¿Qué diferencia hay entre Compute Savings Plans y EC2 Instance Savings Plans?], [Compute SP (hasta 66 %) vale para cualquier familia, región o SO de EC2 y para Fargate y Lambda; EC2 Instance SP (hasta 72 %) se limita a una familia en una región.]),
   ([Has etiquetado todo, pero las etiquetas no salen en Cost Explorer. ¿Por qué?], [Hay que activarlas como etiquetas de asignación de costes en la consola de facturación; hasta entonces no aparecen en los informes.]),
-  ([Un proceso por lotes nocturno tolera interrupciones. ¿Cómo lo abaratas?], [Con instancias Spot (hasta un 90 % de descuento), diversificando tipos de instancia y preparando el trabajo para el aviso de 2 minutos.]),
+  ([Una instancia de desarrollo funciona 24/7 al 3 % de CPU. ¿Por qué cuesta lo mismo que si fuera al 90 % y qué haces?], [Porque se paga lo aprovisionado, no lo usado. Baja de talla con las recomendaciones de Compute Optimizer y apágala fuera de horario (EventBridge Scheduler o Instance Scheduler); si la carga es intermitente, valora un servicio serverless.]),
   ([La partida de NAT Gateway se ha disparado. ¿Qué revisas?], [Qué tráfico pasa por él (VPC Flow Logs); llevar S3 y DynamoDB a endpoints de gateway y valorar endpoints de interfaz para servicios como ECR o CloudWatch.]),
   ([¿En qué se diferencian AWS Budgets y Cost Anomaly Detection?], [Budgets avisa (o actúa) cuando el gasto real o previsto supera umbrales que tú defines; Anomaly Detection usa aprendizaje automático para detectar gastos inusuales sin umbrales fijos.]),
 )

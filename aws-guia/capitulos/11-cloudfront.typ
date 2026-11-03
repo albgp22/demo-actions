@@ -66,7 +66,8 @@ La red de CloudFront tiene más de 700 puntos de presencia en más de 50 países
   ("Contenido", [Estático (imágenes, JS, vídeo) y dinámico (APIs, HTML personalizado)]),
   ("Coste", [Por GB servido a los usuarios (varía por zona geográfica) y por peticiones; la transferencia desde orígenes de AWS hasta CloudFront es gratuita]))
 
-La unidad de configuración es la *distribución*: recibe un dominio como `d111111abcdef8.cloudfront.net`, al que puedes añadir tus propios nombres (_alternate domain names_, como `www.ejemplo.com`) con su certificado TLS. Cada distribución tiene uno o varios *orígenes*, de donde CloudFront obtiene el contenido:
+#block[#set par(justify: false)
+La unidad de configuración es la *distribución*. Cada una recibe un nombre de CloudFront, como `d111111abcdef8.cloudfront.net`, y admite tus propios dominios (_alternate domain names_, como `www.ejemplo.com`) con su certificado TLS. Una distribución tiene uno o varios *orígenes*, de donde CloudFront obtiene el contenido:]
 
 - Un *bucket S3* (endpoint REST), protegido con Origin Access Control; o el endpoint de *sitio web estático* de S3, que se trata como origen HTTP personalizado.
 - Un *Application Load Balancer*, instancias EC2 o cualquier servidor HTTP (_custom origin_). Con los *VPC origins* (2024), el ALB, el NLB o las instancias pueden estar en subredes privadas, accesibles solo desde CloudFront.
@@ -74,7 +75,7 @@ La unidad de configuración es la *distribución*: recibe un dominio como `d1111
 
 Un *origin group* combina un origen primario y uno secundario: si el primario devuelve ciertos códigos de error (por ejemplo, 500, 502, 503 o 504) o no responde, CloudFront reintenta la petición en el secundario. Funciona con peticiones GET, HEAD y OPTIONS.
 
-Los *cache behaviors* deciden qué hacer con cada petición. Cada uno asocia un patrón de ruta (_path pattern_) con un origen y sus ajustes: protocolos y métodos HTTP permitidos, políticas de caché, compresión, funciones de borde o la obligación de usar URLs firmadas. CloudFront los evalúa en orden y aplica el primero que coincide; el comportamiento por defecto (`*`) recoge el resto.
+Los *cache behaviors* deciden qué hacer con cada petición. Cada uno asocia un patrón de ruta (_path pattern_, como `/api/*` o `*.jpg`) con un origen y sus ajustes: protocolos y métodos HTTP permitidos, políticas de caché, compresión, funciones de borde o la obligación de usar URLs firmadas. CloudFront los evalúa en orden y aplica el primero que coincide, así que los patrones más específicos van primero; el comportamiento por defecto (`*`) recoge el resto. En la figura, la API no se cachea y las imágenes y el sitio sí: _CachingDisabled_ y _CachingOptimized_ son políticas de caché gestionadas, que verás a continuación.
 
 #diagrama(pie: [Una distribución con tres cache behaviors: cada patrón de ruta va a su origen, con su propia política de caché.])[
   #fila(espacio: 4pt,
@@ -94,19 +95,21 @@ Los *cache behaviors* deciden qué hacer con cada petición. Cada uno asocia un 
 
 == La caché: cache key, políticas y TTL
 
-Cuando llega una petición, CloudFront calcula su *cache key* (clave de caché) y busca ese objeto. Por defecto, la clave es el dominio más la ruta; puedes añadir cadenas de consulta (_query strings_), cabeceras y cookies. La regla de oro: incluye solo lo que cambia la respuesta. Cada valor extra fragmenta la caché —una cookie de sesión en la clave significa una copia por usuario— y hunde la tasa de aciertos (_cache hit ratio_). La configuración se reparte en tres políticas reutilizables:
+Cuando llega una petición, CloudFront calcula su *cache key* (clave de caché), el nombre con el que guarda y busca cada respuesta. Por defecto, la clave es el dominio más la ruta; puedes añadir cadenas de consulta (_query strings_), cabeceras y cookies. La regla de oro: incluye solo lo que cambia la respuesta.
+
+Por ejemplo, `/producto?id=42&utm_source=correo` y `/producto?id=42&utm_source=web` devuelven la misma página. Si la clave incluye todas las query strings, CloudFront guarda dos copias y va dos veces al origen; si solo incluye `id`, la segunda petición es un acierto. Cada valor de más fragmenta la caché —una cookie de sesión en la clave significa una copia por usuario— y hunde la tasa de aciertos (_cache hit ratio_). La configuración se reparte en tres políticas reutilizables:
 
 #tarjetas(columnas: 3,
-  tarjeta("Cache policy", subtitulo: "Qué se cachea y cuánto tiempo")[Los valores que forman la cache key y los TTL mínimo, máximo y por defecto. Gestionadas: _CachingOptimized_, _CachingDisabled_...],
-  tarjeta("Origin request policy", subtitulo: "Qué llega al origen")[Valores que se *reenvían* al origen sin entrar en la clave: cabeceras como _User-Agent_ o _CloudFront-Viewer-Country_, cookies o _query strings_.],
-  tarjeta("Response headers policy", subtitulo: "Qué cabeceras añadir")[Cabeceras que CloudFront añade o quita en la respuesta: de seguridad (HSTS, _X-Frame-Options_, CSP...), CORS o propias.],
+  tarjeta("Cache policy", subtitulo: "Qué se cachea y cuánto tiempo")[Los valores que forman la cache key y los TTL mínimo, máximo y por defecto. Gestionadas: _CachingOptimized_, _CachingDisabled_…],
+  tarjeta("Origin request policy", subtitulo: "Qué llega al origen")[Lo que está en la clave llega siempre al origen; esta política *reenvía* además valores que no deben fragmentar la caché: cabeceras como _CloudFront-Viewer-Country_, cookies o _query strings_.],
+  tarjeta("Response headers policy", subtitulo: "Qué cabeceras añadir")[Cabeceras que CloudFront añade o quita en la respuesta: de seguridad (HSTS, _X-Frame-Options_, CSP…), CORS o propias.],
 )
 
 El tiempo que un objeto pasa en la caché (*TTL*) lo propone el origen con sus cabeceras y lo acota la cache policy:
 
 - Si el origen envía `Cache-Control: max-age=N` (o `s-maxage=N`, que tiene prioridad en cachés compartidas como CloudFront), el objeto se guarda _N_ segundos, siempre dentro de los TTL mínimo y máximo de la política.
 - Si no envía cabeceras de caché, se aplica el TTL por defecto (24 horas en _CachingOptimized_).
-- Con `no-cache`, `no-store` o `private`, CloudFront no cachea... siempre que el TTL mínimo sea 0. Si es mayor, cachea durante ese mínimo igualmente: es una sorpresa habitual.
+- Con `no-cache`, `no-store` o `private`, CloudFront no cachea… siempre que el TTL mínimo sea 0. Si es mayor, cachea durante ese mínimo igualmente: es una sorpresa habitual.
 
 Las cabeceras de la respuesta a `GET /assets/app.3f9a2c.js` te dicen qué ha pasado:
 
@@ -134,7 +137,7 @@ aws cloudfront create-invalidation --distribution-id E1A2B3C4D5E6F7 \
   --paths "/index.html" "/css/*"
 ```
 
-#coste[Pagas por GB servido a los usuarios (más caro en zonas como Sudamérica u Oceanía), por cada 10 000 peticiones y por extras (invalidaciones por encima de las gratuitas, funciones, logs en tiempo real, Origin Shield...). La *price class* (100, 200 o todas las ubicaciones) excluye las zonas más caras a cambio de algo más de latencia allí. Desde noviembre de 2025 existen además planes de *tarifa plana* mensual que agrupan CloudFront, WAF, protección DDoS, DNS de Route 53 y otros servicios, sin cargos por exceso.]
+#coste[Pagas por GB servido a los usuarios (más caro en zonas como Sudamérica u Oceanía), por cada 10~000 peticiones y por extras (invalidaciones por encima de las gratuitas, funciones, logs en tiempo real, Origin Shield…). La *price class* (100, 200 o todas las ubicaciones) excluye las zonas más caras a cambio de algo más de latencia allí. Desde noviembre de 2025 existen además planes de *tarifa plana* mensual que agrupan CloudFront, WAF, protección DDoS, DNS de Route 53 y otros servicios, sin cargos por exceso.]
 
 == Seguridad en el borde
 
@@ -204,7 +207,7 @@ Una signed URL es la URL normal con tres parámetros añadidos: `Expires` (o `Po
 
 === Geo-restricción, WAF y Shield
 
-Con la *geo-restricción* defines una lista de países permitidos o bloqueados para toda la distribución, según la geolocalización de la IP del usuario; los bloqueados reciben un 403. Para reglas más finas (por ruta o combinadas con otras condiciones) usa *AWS WAF*: se asocia a la distribución mediante una _web ACL_ de ámbito CloudFront (gestionada desde `us-east-1`), con reglas gestionadas frente al OWASP Top 10 y a bots, límites de peticiones por IP, listas de IP o coincidencias geográficas. *AWS Shield Standard* protege gratis y automáticamente a todas las distribuciones frente a ataques DDoS de capas 3 y 4; *Shield Advanced*, de pago, añade protección ampliada, un equipo de respuesta y protección de costes. Lo verás con detalle en el capítulo de Seguridad.
+Con la *geo-restricción* defines una lista de países permitidos o bloqueados para toda la distribución, según la geolocalización de la IP del usuario; los bloqueados reciben un 403. Para reglas más finas (por ruta, por IP, contra bots o contra el OWASP Top 10), asocia a la distribución una _web ACL_ de *AWS WAF* de ámbito CloudFront, creada en `us-east-1`. Además, todas las distribuciones tienen gratis *AWS Shield Standard* frente a ataques DDoS de capas 3 y 4 (*Shield Advanced*, de pago, añade más). Ambos servicios se explican en el capítulo de Seguridad.
 
 #practica(titulo: "Cierra la puerta trasera del origen")[Si tu origen es un ALB público, impide que se pueda saltar CloudFront: en su Security Group permite solo la _managed prefix list_ `com.amazonaws.global.cloudfront.origin-facing` y haz que CloudFront añada una cabecera secreta que el ALB compruebe en sus reglas. Mejor aún: usa VPC origins y deja el ALB en subredes privadas.]
 
@@ -258,33 +261,7 @@ function handler(event) {
 
 == Logs y métricas
 
-CloudFront publica en CloudWatch (región `us-east-1`) métricas como peticiones, bytes y tasas de error 4xx y 5xx; otras, como la tasa de aciertos de caché, tienen coste adicional. Para el detalle de cada petición están los *standard logs* (IP, ruta, código de estado, edge location, resultado de caché...), que se entregan en S3, CloudWatch Logs o Data Firehose, y los *real-time logs*, que llegan en segundos a Kinesis Data Streams. Más en el capítulo de Observabilidad.
-
-== Patrón: sitio web estático con S3, CloudFront, Route 53 y ACM
-
-Es la arquitectura más rentable para publicar una web estática o una SPA con dominio propio y HTTPS: sin servidores que mantener y con coste casi nulo cuando hay poco tráfico.
-
-#diagrama(pie: [Sitio estático con dominio propio: Route 53 resuelve el nombre, CloudFront sirve por HTTPS con un certificado de ACM y lee el bucket privado mediante OAC.])[
-  #grid(columns: 5, column-gutter: 4pt, align: center + horizon,
-    [], [], actor(etiqueta: "Navegador"), flecha(etiqueta: "1 · consulta DNS", largo: 2.4cm),
-    svc("R53", "Route 53", sub: "alias A y AAAA", color: col.edge),
-    [], [], flecha-v(etiqueta: "2 · HTTPS", largo: 0.9cm), [], [],
-    svc("ACM", "Certificado", sub: "en us-east-1", color: col.seguridad),
-    flecha(etiqueta: "TLS", largo: 1.4cm, punteada: true),
-    svc("CF", "CloudFront", sub: "www.ejemplo.com", color: col.edge),
-    flecha(etiqueta: "3 · OAC (SigV4)", largo: 2.4cm),
-    svc("S3", "Bucket privado", color: col.almacenamiento),
-  )
-]
-
-#pasos(
-  [Crea un bucket privado y sube el sitio: `aws s3 sync ./dist s3://mi-sitio-web --delete`.],
-  [Solicita en ACM, en `us-east-1`, un certificado para `www.ejemplo.com` con validación DNS (con Route 53, el registro de validación se crea con un clic).],
-  [Crea la distribución: origen S3 con OAC, _default root object_ `index.html`, redirección de HTTP a HTTPS, nombre alternativo y certificado. Añade al bucket la política que te propone CloudFront.],
-  [En Route 53, crea registros alias A y AAAA de `www.ejemplo.com` hacia la distribución.],
-)
-
-#cuidado[El _default root object_ solo se aplica a la raíz (`/`): `/blog/` no se traduce a `/blog/index.html`. Resuélvelo con una CloudFront Function como la anterior. En aplicaciones de una sola página (SPA), configura respuestas de error personalizadas que devuelvan `/index.html` con código 200 ante un 403 o un 404.]
+CloudFront publica en CloudWatch (región `us-east-1`) métricas como peticiones, bytes y tasas de error 4xx y 5xx; otras, como la tasa de aciertos de caché, tienen coste adicional. Para el detalle de cada petición están los *standard logs* (IP, ruta, código de estado, edge location, resultado de caché…), que se entregan en S3, CloudWatch Logs o Data Firehose, y los *real-time logs*, que llegan en segundos a Kinesis Data Streams. Más en el capítulo de Observabilidad.
 
 == Route 53: el DNS gestionado de AWS
 
@@ -306,7 +283,7 @@ Una *hosted zone* contiene los registros de un dominio (`ejemplo.com`) y sus sub
   [*CNAME*], [Nombre → otro nombre (nunca en el apex)], _m("blog.ejemplo.com → mi-blog.example.net"),
   [*Alias*], [Extensión de Route 53: nombre → recurso de AWS, también en el apex], _m("ejemplo.com → d111111abcdef8.cloudfront.net"),
   [*MX*], [Servidores de correo, con prioridad], _m("10 mail.ejemplo.com"),
-  [*TXT*], [Texto libre: SPF, verificación de dominio...], _m("\"v=spf1 include:amazonses.com ~all\""),
+  [*TXT*], [Texto libre: SPF, verificación de dominio…], _m("\"v=spf1 include:amazonses.com ~all\""),
   [*NS*], [Servidores de nombres de la zona o de un subdominio delegado], _m("ns-123.awsdns-15.com"),
 )
 
@@ -354,6 +331,19 @@ Los *health checks* comprueban un endpoint por HTTP, HTTPS o TCP desde ubicacion
 === Registro de dominios
 
 Route 53 también es *registrador*: compra o transfiere dominios, con renovación automática y protección de los datos de contacto; al registrarlo, crea automáticamente su zona pública. Si el dominio está en otro registrador, basta con apuntar sus servidores de nombres (NS) a los de tu zona. Para más seguridad, activa *DNSSEC*.
+
+== Patrón: sitio web estático con S3, CloudFront, Route 53 y ACM
+
+Con todo lo visto ya puedes montar la arquitectura más rentable para publicar una web estática o una SPA (aplicación de una sola página) con dominio propio y HTTPS: sin servidores que mantener y con un coste casi nulo cuando hay poco tráfico. Route 53 resuelve tu dominio hacia la distribución, CloudFront sirve por HTTPS con un certificado de ACM y lee el bucket privado mediante OAC (el diagrama de referencia completo, con un origen de API añadido, está en el capítulo de Arquitecturas de referencia):
+
+#pasos(
+  [Crea un bucket privado y sube el sitio: `aws s3 sync ./dist s3://mi-sitio-web --delete`.],
+  [Solicita en ACM, en `us-east-1`, un certificado para `www.ejemplo.com` con validación DNS (con Route 53, el registro de validación se crea con un clic).],
+  [Crea la distribución: origen S3 con OAC, _default root object_ `index.html`, redirección de HTTP a HTTPS, nombre alternativo y certificado. Añade al bucket la política que te propone CloudFront (la del apartado de OAC).],
+  [En Route 53, crea registros alias A y AAAA de `www.ejemplo.com` hacia la distribución.],
+)
+
+#cuidado[El _default root object_ solo se aplica a la raíz (`/`): `/blog/` no se traduce a `/blog/index.html`. Resuélvelo con una CloudFront Function como la del apartado de código en el borde. En una SPA, configura respuestas de error personalizadas que devuelvan `/index.html` con código 200 ante un 403 o un 404.]
 
 == Global Accelerator frente a CloudFront
 

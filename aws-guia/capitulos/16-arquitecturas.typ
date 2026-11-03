@@ -99,14 +99,15 @@ El clásico: presentación, lógica y datos separados en capas, cada una reparti
           zona("Privada · AZ a", color: col.neutro)[#svc("EC2", "Instancia", color: col.computo)],
           zona("Privada · AZ b", color: col.neutro)[#svc("EC2", "Instancia", color: col.computo)])],
         flecha(etiqueta: n(6), largo: 0.9cm),
-        columna(espacio: 0pt,
-          zona("Datos · AZ a", color: col.datos)[#fila(
-            svc("RDS", "RDS primaria", color: col.datos),
-            svc("CACHE", "ElastiCache", color: col.datos))],
-          flecha-v(etiqueta: "réplica síncrona", doble: true, largo: 0.6cm),
-          zona("Datos · AZ b", color: col.datos)[#fila(
-            svc("RDS", "RDS standby", color: col.datos),
-            svc("CACHE", "Réplica", color: col.datos))]),
+        zona("Datos · privadas · 2 AZ", color: col.datos)[
+          #grid(columns: 2, column-gutter: 4pt, row-gutter: 2pt, align: center + horizon,
+            svc("RDS", "RDS primaria", sub: "AZ a", color: col.datos),
+            svc("CACHE", "ElastiCache", sub: "primario · AZ a", color: col.datos),
+            flecha-v(etiqueta: "síncrona", largo: 0.6cm),
+            flecha-v(etiqueta: "asíncrona", largo: 0.6cm),
+            svc("RDS", "RDS standby", sub: "AZ b", color: col.datos),
+            svc("CACHE", "Réplica", sub: "AZ b", color: col.datos))
+        ],
       )
     ]),
   )
@@ -118,7 +119,7 @@ El clásico: presentación, lógica y datos separados en capas, cada una reparti
   [Las rutas estáticas van a un *bucket S3 privado* al que solo accede CloudFront mediante OAC.],
   [El resto se reenvía al *ALB*, único punto de entrada a la VPC, cuyos nodos viven en las subredes públicas de ambas AZ.],
   [El ALB reparte entre las instancias sanas del *Auto Scaling group*, que mantiene capacidad en dos AZ y escala según la carga; las instancias, sin estado, salen a Internet por el NAT de su AZ.],
-  [La aplicación lee de *ElastiCache* (sesiones y consultas frecuentes) y escribe en *RDS Multi-AZ*: si cae la primaria, la réplica síncrona de la otra AZ toma el relevo en uno o dos minutos.],
+  [La aplicación lee de *ElastiCache* (sesiones y consultas frecuentes) y escribe en *RDS Multi-AZ*, cuya standby síncrona toma el relevo en uno o dos minutos si cae la primaria.],
 )
 
 #consejo(titulo: "Variantes")[Con *CloudFront VPC Origins* el ALB puede ser interno, sin exposición directa a Internet. Cambia EC2 por contenedores (siguiente arquitectura) o RDS por *Aurora*, con réplicas de lectura y conmutación más rápida.]
@@ -250,7 +251,7 @@ Cuando un trabajo tarda (procesar un fichero, generar un informe), no lo hagas d
 
 == Sitio estático o SPA
 
-Una web corporativa, una documentación o el front-end de una aplicación de una sola página (React, Vue, Angular): ficheros estáticos servidos desde el borde, sin servidores.
+Una web corporativa, una documentación o el front-end de una aplicación de una sola página (React, Vue, Angular): ficheros estáticos servidos desde el borde, sin servidores. El patrón base —bucket privado con OAC, certificado y DNS— se construye paso a paso en el capítulo «CloudFront, Route 53 y el borde de la red»; aquí lo completamos con la API y el despliegue continuo.
 
 #diagrama(pie: [Sitio estático: CloudFront sirve el contenido desde la caché del borde y lee de un bucket privado mediante OAC; las llamadas a la API van a otro origen.])[
   #grid(columns: 5, align: center + horizon,
@@ -273,60 +274,53 @@ Una web corporativa, una documentación o el front-end de una aplicación de una
 #pasos(
   [*Route 53* responde con registros alias (A y AAAA) que apuntan a la distribución.],
   [*CloudFront* termina HTTPS con un certificado de *ACM*, que para CloudFront debe estar en *#box[us-east-1]*; WAF filtra el tráfico y una *CloudFront Function* reescribe las rutas de la SPA (`/perfil` → `/index.html`) o añade cabeceras de seguridad.],
-  [Si el objeto no está en caché, CloudFront lo pide al *bucket privado* firmando con *OAC*: Block Public Access sigue activo y la política del bucket solo admite a esa distribución.],
-  [Las peticiones `/api/*` usan otro _behavior_ con otro origen (API Gateway o un ALB) y sin caché.],
+  [Si el objeto no está en caché, CloudFront lo lee del *bucket privado* mediante *OAC*; el bucket sigue sin ningún acceso público.],
+  [Las peticiones `/api/*` usan otro _behavior_ con otro origen (API Gateway o un ALB) y sin caché: una sola distribución y un solo dominio para el front-end y la API, sin problemas de CORS.],
   [El pipeline publica con `aws s3 sync` y crea una invalidación (o, mejor, usa nombres de fichero con _hash_ para no tener que invalidar).],
 )
 
-```json
-{ "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Principal": { "Service": "cloudfront.amazonaws.com" },
-    "Action": "s3:GetObject",
-    "Resource": "arn:aws:s3:::mi-web/*",
-    "Condition": { "StringEquals": { "AWS:SourceArn":
-      "arn:aws:cloudfront::111111111111:distribution/E1A2B3C4D5" } } }] }
-```
-
-#consejo(titulo: "Variantes")[Con OAC usa el endpoint REST del bucket, no el de _website_ de S3 (solo HTTP y exige bucket público). Si necesitas renderizado en servidor, *AWS Amplify Hosting*; con tráfico previsible, los planes de tarifa plana de CloudFront.]
+#consejo(titulo: "Variantes")[Si necesitas renderizado en servidor, *AWS Amplify Hosting*; con tráfico previsible, los planes de tarifa plana de CloudFront.]
 
 == Pipeline de datos y analítica
 
 Recoger eventos de aplicaciones, dispositivos o logs, guardarlos en un _data lake_ barato y consultarlos con SQL y paneles, sin gestionar clústeres.
 
-#diagrama(pie: [Pipeline de analítica: ingesta en streaming, data lake en S3 por zonas, catálogo y transformación con Glue, consultas con Athena y paneles con Quick Sight.])[
-  #grid(columns: 7, align: center + horizon,
-    caja(ancho: 2.4cm, [*Productores*\ #text(6.3pt, fill: gris)[apps, IoT, logs, clics]], color: col.neutro),
-    flecha(etiqueta: n(1), largo: 1.3cm),
-    svc("KDS", "Kinesis Data Streams", sub: "orden y relectura", color: col.integracion),
-    flecha(etiqueta: n(2), largo: 1.3cm),
+#diagrama(pie: [Pipeline de analítica: ingesta en streaming, data lake en S3 por zonas (bronce, plata y oro), catálogo y transformación con Glue, consultas con Athena y paneles con Quick Sight.])[
+  // Columnas fijas para que el lago y la fila inferior queden alineados
+  #let ce = 2.6cm
+  #let cf = 1.45cm
+  #let lago = (ce, cf, ce, cf, ce)
+  #grid(columns: (ce, 1.05cm, auto), align: center + horizon,
+    caja(ancho: 2.5cm, [*Productores*\ #text(6.3pt, fill: gris)[apps, IoT, logs]], color: col.neutro), [], [],
+    flecha-v(etiqueta: n(1), largo: 0.45cm), [], [],
+    svc("KDS", "Kinesis Data Streams", sub: "orden y relectura", color: col.integracion), [], [],
+    flecha-v(etiqueta: n(2), largo: 0.45cm), [], [],
     svc("FH", "Data Firehose", sub: "búfer · Parquet", color: col.integracion),
+    flecha(etiqueta: n(3), largo: 1.05cm),
+    zona("Data lake en Amazon S3", color: col.almacenamiento)[
+      #grid(columns: lago, align: center + horizon,
+        svc("S3", "Bronce · raw", sub: "JSON tal cual", color: col.almacenamiento),
+        flecha(etiqueta: [#n(4) Glue ETL], largo: cf),
+        svc("S3", "Plata · procesado", sub: "Parquet particionado", color: col.almacenamiento),
+        flecha(etiqueta: "Glue ETL", largo: cf),
+        svc("S3", "Oro · curado", sub: "agregados de negocio", color: col.almacenamiento))
+    ],
     [], [],
-    [], [], [], [], flecha-v(etiqueta: [#n(3) escribe por lotes], largo: 0.6cm), [], [],
-    grid.cell(colspan: 7, zona("Data lake en Amazon S3", color: col.almacenamiento)[
-      #fila(espacio: 4pt,
-        zona("Bronce", color: col.almacenamiento)[#svc("S3", "Raw", sub: "JSON tal cual", color: col.almacenamiento)],
-        flecha(etiqueta: [#n(4) Glue ETL], largo: 1.6cm),
-        zona("Plata", color: col.almacenamiento)[#svc("S3", "Procesado", sub: "Parquet particionado", color: col.almacenamiento)],
-        flecha(etiqueta: "Glue ETL", largo: 1.6cm),
-        zona("Oro", color: col.almacenamiento)[#svc("S3", "Curado", sub: "agregados de negocio", color: col.almacenamiento)])
-    ]),
-    flecha-v(etiqueta: [#n(5) crawler], largo: 0.6cm), [], flecha-v(etiqueta: [#n(6) SQL sobre S3], largo: 0.6cm), [], [], [], [],
-    svc("GLUE", "Glue Data Catalog", sub: "+ Lake Formation", color: col.datos),
-    flecha(etiqueta: "esquemas", largo: 1.3cm),
-    svc("ATH", "Athena", sub: "SQL serverless", color: col.datos),
-    flecha(etiqueta: n(7), largo: 1.3cm),
-    svc("QS", "Quick Sight", sub: "paneles de BI", color: col.datos),
-    [], [],
+    box(inset: (x: 9pt), grid(columns: lago, align: center + horizon,
+      flecha-v(etiqueta: [#n(5) crawler], largo: 0.55cm), [], flecha-v(etiqueta: [#n(6) SQL sobre S3], largo: 0.55cm), [], [],
+      svc("GLUE", "Glue Data Catalog", sub: "+ Lake Formation", color: col.datos),
+      flecha(etiqueta: "esquemas", largo: cf),
+      svc("ATH", "Athena", sub: "SQL serverless", color: col.datos),
+      flecha(etiqueta: n(7), largo: cf),
+      svc("QS", "Quick Sight", sub: "paneles de BI", color: col.datos))),
   )
 ]
 
 #pasos(
   [Aplicaciones y dispositivos envían eventos a *Kinesis Data Streams*, que los ordena por clave de partición, admite varios consumidores y permite releer (24 h por defecto, hasta 365 días).],
   [*Amazon Data Firehose* consume el stream, acumula por tamaño o tiempo, puede transformar con Lambda y convierte a *Parquet*.],
-  [Firehose escribe en la zona *raw* del data lake: almacenamiento barato, duradero y separado del cómputo.],
-  [Trabajos de *AWS Glue* (Spark serverless) limpian, deduplican y escriben las zonas *procesada* y *curada* en formato columnar y particionado.],
+  [Firehose escribe por lotes en la zona *bronce* (_raw_) del data lake: almacenamiento barato, duradero y separado del cómputo.],
+  [Trabajos de *AWS Glue* (Spark serverless) limpian, deduplican y escriben las zonas *plata* (procesada) y *oro* (curada) en formato columnar y particionado.],
   [Un _crawler_ registra esquemas y particiones en el *Glue Data Catalog*; *Lake Formation* da permisos por tabla, columna o fila.],
   [*Athena* consulta con SQL directamente sobre S3 (pagas por datos escaneados: Parquet y particiones lo abaratan mucho).],
   [*Amazon Quick Sight* (antes QuickSight) publica los paneles para negocio.],
@@ -378,52 +372,53 @@ Una sola cuenta para todo mezcla permisos, costes y riesgos. La práctica recome
 
 == Recuperación ante desastres multirregión
 
-Multi-AZ te protege de la caída de un centro de datos; para sobrevivir a la de una región entera necesitas una segunda región. Dos cifras guían el diseño: el *RPO* (_Recovery Point Objective_, cuántos datos puedes perder) y el *RTO* (_Recovery Time Objective_, cuánto tiempo puedes estar sin servicio).
+Multi-AZ te protege de la caída de un centro de datos; para sobrevivir a la de una región entera necesitas una segunda región. El RPO, el RTO y las cuatro estrategias de recuperación (_backup & restore_, _pilot light_, _warm standby_ y _multi-site_ activo-activo) se presentaron en el capítulo de Fundamentos. Esta figura aplica _warm standby_ a la web de tres capas:
 
-#let estrategia(t, rpo, sec, coste, c) = block(width: 100%, height: 2.9cm, fill: c, radius: 6pt, inset: 7pt, align(left, {
-  set par(justify: false, leading: 0.4em)
-  set text(hyphenate: false)
-  text(8.4pt, weight: "bold", fill: white, t)
-  v(1pt)
-  grid(columns: (1fr, auto), column-gutter: 4pt,
-    text(6.8pt, weight: "bold", fill: white, [RPO/RTO: #rpo]),
-    text(7.6pt, weight: "bold", fill: white.transparentize(10%), coste))
-  v(2pt)
-  text(6.7pt, fill: white.transparentize(5%), sec)
-}))
+// Horquilla: el tráfico sale de Route 53 hacia la región activa (arriba)
+// y, tras el failover, hacia la secundaria (abajo, punteada)
+#let horquilla(alto, ancho: 1.9cm, arriba: none, abajo: none, color: gris-flecha) = box(width: ancho, height: alto, {
+  let xm = 0.45cm
+  let st = 1.2pt + color
+  let sp = (paint: color, thickness: 1.2pt, dash: "dashed")
+  let punta(dy) = place(left + top, dx: ancho - 7pt, dy: dy - 3.5pt, polygon(fill: color, (0pt, 0pt), (7pt, 3.5pt), (0pt, 7pt)))
+  let rotulo(dy, t) = place(left + top, dx: xm + 4pt, dy: dy - 12pt, text(6.4pt, fill: color.darken(25%), weight: "medium", t))
+  place(left + top, dy: alto / 2, line(length: xm, stroke: st))
+  place(left + top, dx: xm, line(angle: 90deg, length: alto / 2, stroke: st))
+  place(left + top, dx: xm, dy: alto / 2, line(angle: 90deg, length: alto / 2, stroke: sp))
+  place(left + top, dx: xm, line(length: ancho - xm - 5pt, stroke: st))
+  place(left + top, dx: xm, dy: alto, line(length: ancho - xm - 5pt, stroke: sp))
+  punta(0pt)
+  punta(alto)
+  rotulo(0pt, arriba)
+  rotulo(alto, abajo)
+})
 
-#diagrama(pie: [Arriba, las cuatro estrategias de recuperación: cuanto menor es el RPO/RTO, mayor es el coste. Abajo, un _warm standby_: Route 53 envía el tráfico a la primaria, los datos se replican de forma continua y, ante un desastre, la secundaria se promueve y escala.])[
-  #grid(columns: (1fr, 1fr, 1fr, 1fr), column-gutter: 6pt,
-    estrategia("Copia y restauración", "horas", [Solo copias (AWS Backup, snapshots); todo se recrea con IaC al activarla.], "$", col.arquitectura.lighten(35%)),
-    estrategia("Pilot light", "decenas de min", [Datos replicados e infraestructura básica; sin servidores de aplicación.], "$$", col.arquitectura.lighten(15%)),
-    estrategia("Warm standby", "minutos", [Copia completa funcionando a escala reducida, lista para crecer.], "$$$", col.arquitectura),
-    estrategia("Activo-activo", "casi cero", [Ambas regiones sirven tráfico; datos replicados en ambos sentidos.], "$$$$", col.arquitectura.darken(30%)),
-  )
-  #v(4pt)
-  #fila(text(7pt, fill: gris)[menos coste], flecha(largo: 8cm, doble: true), text(7pt, fill: gris)[menor RPO y RTO])
-  #v(10pt)
-  #line(length: 100%, stroke: 0.6pt + gris-claro)
-  #v(6pt)
+#diagrama(pie: [_Warm standby_ entre dos regiones: Route 53 envía el tráfico a la primaria, los datos se replican de forma continua y, ante un desastre, la secundaria se promueve, escala y recibe el tráfico.])[
   #let region(titulo, color, asg, aurora, relleno: white) = zona(titulo, color: color, punteada: false, relleno: relleno)[
     #fila(
       svc("ALB", "ALB", color: col.balanceo), flecha(largo: 0.9cm),
       svc("EC2", "Auto Scaling", sub: asg, color: col.computo), flecha(largo: 0.9cm),
       svc("AUR", "Aurora", sub: aurora, color: col.datos))
   ]
-  #grid(columns: 3, align: center + horizon, row-gutter: 0pt,
-    grid.cell(rowspan: 3, columna(espacio: 2pt,
-      actor(etiqueta: "Usuarios"),
-      flecha-v(largo: 0.6cm),
-      svc("R53", "Route 53", sub: "failover + health checks", color: col.edge))),
-    flecha(etiqueta: [#n(1) activo], largo: 1.6cm),
-    region("Región primaria · eu-west-1", col.fundamentos, "capacidad completa", "clúster de escritura"),
-    [],
-    grid(columns: (0.32cm, 2.54cm, 0.9cm, 2.54cm, 0.9cm, 2.54cm, 0.32cm), align: center + horizon,
-      [], [], [], flecha-v(etiqueta: [#n(3) misma IaC], largo: 0.75cm, punteada: true), [],
-      flecha-v(etiqueta: [#n(2) global database], doble: true, largo: 0.75cm), []),
-    flecha(etiqueta: [#n(5) failover], largo: 1.6cm, punteada: true),
-    region("Región secundaria · eu-central-1", col.neutro, [mínima · #n(4) escala], [secundaria · #n(4) se promueve], relleno: fondo-suave),
-  )
+  #let r1 = region("Región primaria · eu-west-1", col.fundamentos, "capacidad completa", "clúster de escritura")
+  #let r2 = region("Región secundaria · eu-central-1", col.neutro, [mínima · #n(4) escala], [secundaria · #n(4) se promueve], relleno: fondo-suave)
+  #let medio = grid(columns: (0.32cm, 2.54cm, 0.9cm, 2.54cm, 0.9cm, 2.54cm, 0.32cm), align: center + horizon,
+    [], [], [], flecha-v(etiqueta: [#n(3) misma IaC], largo: 0.75cm, punteada: true), [],
+    flecha-v(etiqueta: [#n(2) global database], largo: 0.75cm), [])
+  // Route 53 queda centrado entre las dos regiones (los elementos ocultos equilibran la columna)
+  #let dns = columna(espacio: 2pt,
+    actor(etiqueta: "Usuarios"),
+    flecha-v(etiqueta: "DNS", doble: true, largo: 0.5cm),
+    svc("R53", "Route 53", sub: "failover + health checks", color: col.edge),
+    hide(flecha-v(largo: 0.5cm)),
+    hide(actor(etiqueta: "Usuarios")))
+  #context {
+    let alto = measure(r1).height / 2 + measure(medio).height + measure(r2).height / 2
+    grid(columns: 3, align: center + horizon, row-gutter: 0pt,
+      grid.cell(rowspan: 3, dns),
+      grid.cell(rowspan: 3, horquilla(alto, arriba: [#n(1) activo], abajo: [#n(5) failover])),
+      r1, medio, r2)
+  }
 ]
 
 #pasos(
@@ -434,36 +429,42 @@ Multi-AZ te protege de la caída de un centro de datos; para sobrevivir a la de 
   [Route 53 conmuta el DNS, automáticamente por health check o de forma controlada con *Application Recovery Controller*, y el tráfico pasa a la secundaria.],
 )
 
+Con otra estrategia, la arquitectura es la misma; cambia lo que vive en la región secundaria:
+
+- *Backup & restore*: solo copias de AWS Backup y la IaC; todo se crea al activar el plan.
+- *Pilot light*: Aurora sigue replicando, pero el Auto Scaling group está a capacidad 0.
+- *Multi-site*: las dos regiones sirven tráfico (Route 53 por latencia) y aceptan escrituras (DynamoDB global tables, Aurora DSQL).
+
 Un plan de DR que no se ensaya no existe: programa simulacros y mide el RTO real. Y recuerda que la replicación también copia los errores; conserva además copias inmutables (AWS Backup Vault Lock).
 
 == Checklist de revisión Well-Architected
 
-Antes de dar por buena una arquitectura, repásala con los seis pilares del *AWS Well-Architected Framework*; la *Well-Architected Tool* de la consola (gratuita) guía la revisión y ofrece _lenses_ específicas.
+Antes de dar por buena una arquitectura, repásala con los seis pilares del *AWS Well-Architected Framework* (capítulo de Fundamentos), a mano o con la Well-Architected Tool:
 
-#tabla(("Pilar", "Comprueba que…"), columnas: (1.4fr, 4.4fr), tamano: 8pt,
+#block(breakable: false, tabla(("Pilar", "Comprueba que…"), columnas: (1.12fr, 4.68fr), tamano: 8pt,
   [#text(hyphenate: false)[*Excelencia operativa*]], [#chk[Todo se despliega con IaC y pipelines] #h(5pt) #chk[Despliegues pequeños, frecuentes y reversibles] #h(5pt) #chk[Alarmas accionables con _runbooks_] #h(5pt) #chk[Revisiones post-incidente sin culpables]],
   [#text(hyphenate: false)[*Seguridad*]], [#chk[Multi-cuenta y acceso con Identity Center, sin claves de larga duración] #h(5pt) #chk[Mínimo privilegio y SCP] #h(5pt) #chk[Cifrado en reposo (KMS) y en tránsito (TLS)] #h(5pt) #chk[CloudTrail, GuardDuty y Security Hub activos; WAF en lo público]],
   [#text(hyphenate: false)[*Fiabilidad*]], [#chk[Multi-AZ en todas las capas] #h(5pt) #chk[Auto Scaling y health checks] #h(5pt) #chk[Backups probados restaurándolos] #h(5pt) #chk[RPO y RTO definidos y DR ensayado] #h(5pt) #chk[Cuotas vigiladas]],
   [#text(hyphenate: false)[*Eficiencia del rendimiento*]], [#chk[Servicios gestionados o serverless donde encajen] #h(5pt) #chk[Cachés (CloudFront, ElastiCache, DAX)] #h(5pt) #chk[Pruebas de carga] #h(5pt) #chk[Tipos de instancia y Graviton elegidos con datos]],
   [#text(hyphenate: false)[*Optimización de costes*]], [#chk[Etiquetas, presupuestos y alertas] #h(5pt) #chk[Rightsizing y apagado de no-prod] #h(5pt) #chk[Savings Plans para la base] #h(5pt) #chk[Lifecycle en S3, retención de logs y endpoints en lugar de NAT]],
   [#text(hyphenate: false)[*Sostenibilidad*]], [#chk[Capacidad ajustada a la demanda real] #h(5pt) #chk[Graviton y serverless] #h(5pt) #chk[Borrado de datos y recursos sin uso] #h(5pt) #chk[Regiones y horarios con menor impacto]],
-)
+))
 
 #resumen[
 - *Web de tres capas*: cada capa en dos AZ, con CloudFront y WAF en el borde, ALB, Auto Scaling y RDS Multi-AZ.
 - *Microservicios*: ECS Fargate tras un ALB, Service Connect entre servicios y datos propios; EKS si ya usas Kubernetes.
 - *API serverless*: Cognito, API Gateway, Lambda y DynamoDB, con pago por uso y escalado automático.
 - *Asíncrono*: EventBridge, SQS con DLQ y SNS para el fan-out, con workers idempotentes.
-- *Sitio estático*: CloudFront con un bucket privado vía OAC y certificado de ACM en #box[us-east-1].
-- *Datos*: Kinesis y Firehose hacia un data lake en S3, catalogado con Glue y consultado con Athena y Quick Sight.
+- *Sitio estático*: CloudFront con un bucket privado vía OAC, certificado de ACM en #box[us-east-1] y un _behavior_ `/api/*` hacia la API.
+- *Datos*: Kinesis y Firehose hacia un data lake en S3 por zonas, catalogado con Glue y consultado con Athena y Quick Sight.
 - *Multi-cuenta*: landing zone con OU, SCP, Log Archive, Audit e Identity Center.
-- *DR*: de backup y restauración a activo-activo según RPO, RTO y presupuesto; y siempre ensayada.
+- *DR*: la estrategia de Fundamentos que pidan el RPO, el RTO y el presupuesto —aquí, _warm standby_ con Aurora Global Database y failover de Route 53—, siempre ensayada.
 ]
 
 #repaso(
   ([¿Qué hace que la web de tres capas sobreviva a la caída de una AZ?], [Cada capa está en dos AZ: el ALB tiene nodos en ambas, el Auto Scaling group repone instancias y RDS Multi-AZ conmuta a su réplica síncrona.]),
   ([¿Para qué sirve ECS Service Connect?], [Para que los servicios se llamen por nombre dentro del clúster, con descubrimiento, reintentos, balanceo y métricas, sin cambiar el código.]),
   ([En la arquitectura asíncrona, ¿qué pasa con un mensaje que falla una y otra vez?], [Reaparece en la cola al vencer el visibility timeout y, al superar `maxReceiveCount`, SQS lo mueve a la DLQ, donde una alarma avisa para revisarlo.]),
-  ([¿Por qué el bucket del sitio estático puede ser privado?], [Porque CloudFront accede con Origin Access Control (OAC), firmando las peticiones, y la política del bucket solo permite a esa distribución; Block Public Access sigue activo.]),
-  ([¿Qué diferencia hay entre pilot light y warm standby?], [En pilot light la secundaria tiene los datos y la infraestructura básica, pero ningún servidor de aplicación en marcha; en warm standby hay una copia completa funcionando a escala reducida (menor RTO).]),
+  ([¿Cómo sirve una sola distribución de CloudFront el front-end estático y la API?], [Con dos _behaviors_: el de por defecto lleva al bucket privado (con caché) y `/api/*`, a API Gateway o a un ALB, sin caché. Front-end y API comparten dominio, así que no hace falta CORS.]),
+  ([¿Qué cambiarías en el _warm standby_ para convertirlo en _pilot light_, y qué ganas y pierdes?], [Dejar a capacidad 0 el Auto Scaling group de la región secundaria y mantener la réplica de Aurora. Pagas menos, pero el RTO crece: hay que arrancar y escalar las instancias antes de conmutar el tráfico.]),
 )

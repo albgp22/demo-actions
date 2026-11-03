@@ -60,7 +60,7 @@
 Antes de la nube, conseguir un servidor implicaba pedirlo, esperar semanas, instalarlo en un rack y amortizarlo durante años. *Amazon Elastic Compute Cloud (EC2)* lo convierte en una llamada a una API: en uno o dos minutos tienes una *instancia* —una máquina virtual, o un servidor físico completo en los tipos _bare metal_— con el sistema operativo, la CPU, la memoria, el disco y la red que elijas, y dejas de pagar el cómputo cuando la paras o la eliminas. A cambio de esa flexibilidad, y según el modelo de responsabilidad compartida que vimos en el capítulo de Fundamentos, tú gestionas el sistema operativo invitado (parches incluidos), el software, los datos y las reglas de acceso; AWS, el hardware, la virtualización y la red física.
 
 #ficha("Amazon EC2", "Capacidad de cómputo redimensionable en la nube",
-  ("Tipo", [IaaS: máquinas virtuales y servidores _bare metal_ bajo demanda]),
+  ("Tipo", [IaaS: máquinas virtuales y servidores bare metal bajo demanda]),
   ("Ámbito", [Cada instancia vive en una subred y, por tanto, en una única zona de disponibilidad]),
   ("Facturación", [Por segundo (mínimo 60 s) en Linux y Windows; por hora en algunas AMI comerciales. Aparte: EBS, IPv4 públicas y transferencia de datos]),
   ("Límites clave", [Cuotas de vCPU por región y grupo de familias (ajustables en Service Quotas)]))
@@ -119,7 +119,7 @@ aws ec2 copy-image --source-region eu-west-1 --region eu-central-1 \
   --source-image-id ami-0123456789abcdef0 --name web-v42
 ```
 
-#coste[`create-image` reinicia la instancia por defecto para obtener un sistema de ficheros consistente (`--no-reboot` lo evita, con riesgo). Y *dar de baja* (_deregister_) una AMI no borra sus snapshots, que se siguen facturando hasta que las eliminas.]
+Dos detalles que sorprenden: `create-image` reinicia la instancia por defecto para obtener un sistema de ficheros consistente (`--no-reboot` lo evita, con riesgo), y *dar de baja* (_deregister_) una AMI no borra sus snapshots, que se siguen facturando hasta que las eliminas.
 
 == Tipos de instancia: familias y nomenclatura
 
@@ -135,8 +135,7 @@ El *tipo de instancia* fija la combinación de CPU, memoria, almacenamiento loca
   [*D*], [HDD local denso], [`d3`, `d3en`], [HDFS, almacenamiento distribuido],
   [*P*], [GPU para entrenamiento y HPC], [`p4d`, `p5`], [Entrenamiento de IA a gran escala],
   [*G*], [GPU para gráficos e inferencia], [`g5`, `g6`, `g6e`], [Renderizado, _streaming_, inferencia],
-  [*Inf*], [Chips AWS Inferentia], [`inf2`], [Inferencia al menor coste],
-  [*Trn*], [Chips AWS Trainium], [`trn1`, `trn2`], [Entrenamiento de modelos de IA],
+  [*Inf*, *Trn*], [Chips de IA de AWS (Inferentia, Trainium)], [`inf2`, `trn2`], [Inferencia y entrenamiento de IA a menor coste],
   [*Hpc*], [HPC con red EFA], [`hpc7g`, `hpc7a`], [Simulación (CFD), meteorología],
 )
 
@@ -212,7 +211,7 @@ Por debajo de las instancias modernas está el *AWS Nitro System*: AWS sacó las
 
 Una instancia pasa por estados bien definidos. Conocerlos evita sustos, tanto en la factura como en los datos.
 
-#diagrama(pie: [Estados de una instancia EC2. Solo se factura el cómputo en _running_ (y en _stopping_ cuando hibernas). En _stopped_ sigues pagando los volúmenes EBS y las IPv4 públicas asignadas.])[
+#diagrama(pie: [Estados de una instancia EC2. Solo se factura el cómputo en `running` (y en `stopping` cuando hibernas). En `stopped` sigues pagando los volúmenes EBS y las IPv4 públicas asignadas.])[
   #box(width: 15cm, height: 4.75cm, {
     let ambar = col.balanceo
     let verde = rgb("#2F9E44")
@@ -264,7 +263,7 @@ Una instancia pasa por estados bien definidos. Conocerlos evita sustos, tanto en
 
 #tabla(("Acción", "Qué se conserva", "IPv4 pública automática", "Instance store", "RAM"), columnas: (0.9fr, 2fr, 1.3fr, 1fr, 1fr), tamano: 8pt,
   [*Reboot*], [Todo: mismo host, IPs y volúmenes], [Se mantiene], [Se conserva], [Se pierde],
-  [*Stop / start*], [Volúmenes EBS, ID, IP privada e IP elástica], [Cambia], [Se pierde], [Se pierde],
+  [*Stop / start*], [Volúmenes EBS, ID, IP privada y Elastic IP], [Cambia], [Se pierde], [Se pierde],
   [*Hibernate*], [Lo mismo que _stop_ más la RAM], [Cambia], [Se pierde], [Se restaura],
   [*Terminate*], [Nada, salvo volúmenes con `DeleteOnTermination=false`], [Se libera], [Se pierde], [Se pierde],
 )
@@ -312,7 +311,7 @@ Una instancia puede usar discos de red persistentes (EBS), discos locales efíme
   [*gp3*], [SSD], [3000 IOPS y 125 MiB/s incluidos con cualquier tamaño; más IOPS y _throughput_ aprovisionables sin agrandar el volumen], si, [Por defecto: discos raíz, aplicaciones, bases de datos medianas],
   [*gp2*], [SSD], [3 IOPS por GiB (de 100 a 16~000), ráfagas de 3000 en volúmenes pequeños], si, [Heredado: migra a gp3],
   [*io2 Block Express*], [SSD], [Hasta 256~000 IOPS y 4000 MiB/s, latencia submilisegundo, durabilidad del 99,999~%], si, [Bases de datos críticas],
-  [*st1*], [HDD], [_Throughput_ secuencial de hasta 500 MiB/s], no, [Big data, logs],
+  [*st1*], [HDD], [Throughput secuencial de hasta 500 MiB/s], no, [Big data, logs],
   [*sc1*], [HDD], [Hasta 250 MiB/s; el menor coste por GB], no, [Datos fríos],
 )
 
@@ -326,18 +325,13 @@ Una instancia puede usar discos de red persistentes (EBS), discos locales efíme
 
 El *instance store* son discos (normalmente NVMe) físicamente conectados al host: rapidísimos e incluidos en el precio de los tipos que los tienen (letra `d`, familias I y D), pero *efímeros*. Sus datos sobreviven a un reinicio y se pierden al parar, hibernar o terminar la instancia, o si falla el hardware. Úsalos para cachés, temporales o datos replicados en otros nodos (Cassandra, Kafka), nunca para algo que no puedas regenerar.
 
-#ficha("Amazon EFS", "Sistema de ficheros NFS elástico y totalmente gestionado",
-  ("Protocolo", [NFS v4.0 y v4.1 para clientes Linux; miles de instancias, contenedores o funciones Lambda a la vez]),
-  ("Ámbito", [Regional (datos en varias AZ) u One Zone; un _mount target_ por AZ con Security Group (puerto 2049)]),
-  ("Capacidad", [Crece y decrece sola; pagas por GB almacenado. Las clases IA y Archive abaratan lo que no se lee; el modo de _throughput_ Elastic se ajusta solo]))
-
-Para otros protocolos o rendimiento extremo existe *Amazon FSx*: para Windows File Server (SMB y Active Directory), Lustre (HPC y ML, integrado con S3), NetApp ONTAP (NFS, SMB e iSCSI) y OpenZFS. Lo veremos junto a S3 en el capítulo de Almacenamiento.
+*Amazon EFS*, en cambio, es un sistema de ficheros NFS totalmente gestionado que montan a la vez miles de instancias Linux, contenedores o funciones Lambda: crece y decrece solo, se paga por GB almacenado y, en modo regional, guarda los datos en varias AZ, con un _mount target_ por AZ protegido por un Security Group (puerto 2049). Para Windows (SMB), HPC u otros protocolos existe *Amazon FSx*; ambos se tratan en el capítulo de Almacenamiento.
 
 #tabla(("Característica", "EBS", "Instance store", "EFS"), columnas: (1.1fr, 1.3fr, 1.3fr, 1.3fr), tamano: 8pt,
   [Tipo y ámbito], [Bloque, en una AZ], [Bloque, en el host físico], [Ficheros (NFS), regional],
   [Persistencia], [Independiente de la instancia], [Se pierde al parar o terminar], [Independiente],
   [Acceso simultáneo], [Una instancia (Multi-Attach en io1/io2)], [Solo su instancia], [Miles de clientes],
-  [Se paga por], [GB aprovisionado (+ IOPS y _throughput_)], [Incluido en la instancia], [GB usado (+ accesos IA/Archive)],
+  [Se paga por], [GB aprovisionado (+ IOPS y throughput)], [Incluido en la instancia], [GB usado (+ accesos IA/Archive)],
   [Caso típico], [Disco raíz, bases de datos], [Cachés, temporales], [Contenido compartido, _home_],
 )
 
@@ -345,7 +339,7 @@ Para otros protocolos o rendimiento extremo existe *Amazon FSx*: para Windows Fi
 
 Toda instancia se conecta a la VPC con al menos una *Elastic Network Interface (ENI)*: una tarjeta de red virtual con IP privada principal, IPs secundarias opcionales, MAC y sus propios Security Groups (5 por ENI por defecto, ampliable). La principal (`eth0`) no se separa; las secundarias pueden moverse a otra instancia de la misma AZ. El máximo de ENI e IPs depende del tipo.
 
-#diagrama(pie: [El sistema operativo solo ve IPs privadas: el Internet Gateway traduce 1:1 la IPv4 pública (o elástica) a la privada de la ENI.])[
+#diagrama(pie: [El sistema operativo solo ve IPs privadas: el Internet Gateway traduce 1:1 la IPv4 pública (automática o Elastic IP) a la privada de la ENI.])[
   #fila(
     internet(),
     flecha(etiqueta: "203.0.113.10", largo: 1.9cm),
@@ -354,7 +348,7 @@ Toda instancia se conecta a la VPC con al menos una *Elastic Network Interface (
     zona("VPC 10.0.0.0/16", color: col.redes)[
       #zona("Instancia EC2", color: col.computo)[
         #columna(espacio: 6pt,
-          caja([*eth0* · ENI principal \ 10.0.1.25 + IP elástica \ SG: _web_], color: col.redes, ancho: 4.6cm),
+          caja([*eth0* · ENI principal \ 10.0.1.25 + Elastic IP \ SG: _web_], color: col.redes, ancho: 4.6cm),
           caja([*eth1* · ENI secundaria \ 10.0.2.40 · subred de gestión \ SG: _admin_], color: col.redes, ancho: 4.6cm),
         )
       ]
@@ -362,12 +356,7 @@ Toda instancia se conecta a la VPC con al menos una *Elastic Network Interface (
   )
 ]
 
-/ IP privada: sale del rango de la subred y se mantiene toda la vida de la instancia, aunque la pares.
-/ IPv4 pública automática: la asigna AWS al lanzar si la subred o la ENI lo piden; cambia en cada _stop/start_.
-/ IP elástica (EIP): IPv4 pública estática y regional que reservas en tu cuenta y mueves entre instancias en segundos.
-/ IPv6: direcciones globales sin NAT; para permitir solo salida se usa un _egress-only internet gateway_ (capítulo de Redes).
-
-#coste[Desde febrero de 2024 AWS factura por hora *todas* las IPv4 públicas, incluidas las automáticas y las IP elásticas, asociadas o no. Libera las EIP que no uses y no expongas cada instancia: pon un balanceador delante.]
+Cada instancia conserva su IP privada aunque la pares; además puede tener una IPv4 pública automática (cambia en cada _stop/start_), una Elastic IP estática o direcciones IPv6. El capítulo de Redes explica cuándo usar cada una y por qué toda IPv4 pública se factura por hora; en la práctica, no expongas cada instancia: pon un balanceador delante.
 
 Los *Security Groups* filtran el tráfico de cada ENI con estado (los estudiamos en el capítulo de Redes). Todas las instancias actuales usan *enhanced networking* con el *Elastic Network Adapter (ENA)*, que mediante SR-IOV ofrece decenas o cientos de Gbps según el tipo. Para HPC y entrenamiento distribuido, el *Elastic Fabric Adapter (EFA)* añade a ENA un modo _OS-bypass_ con el que MPI o NCCL hablan con el hardware de red sin pasar por el kernel; ese tráfico solo funciona dentro de una misma subred.
 
@@ -397,7 +386,7 @@ Por defecto, EC2 reparte tus instancias por el hardware como mejor le parece. Un
   )
 ]
 
-#examen[¿Mínima latencia entre nodos HPC? Placement group _cluster_ + EFA. ¿IP pública fija? IP elástica. ¿Conmutar una IP a un servidor de respaldo? ENI secundaria movida a otra instancia de la misma AZ. ¿Instancias críticas sin hardware compartido? Placement group _spread_.]
+#examen[¿Mínima latencia entre nodos HPC? Placement group _cluster_ + EFA. ¿IP pública fija? Elastic IP. ¿Conmutar una IP a un servidor de respaldo? ENI secundaria movida a otra instancia de la misma AZ. ¿Instancias críticas sin hardware compartido? Placement group _spread_.]
 
 == Arranque, metadatos e identidad
 
@@ -417,23 +406,7 @@ systemctl enable --now nginx
 
 === Roles de instancia (instance profile)
 
-Una aplicación en EC2 que llama a S3 o DynamoDB *nunca* debe llevar _access keys_ en un fichero: asocia a la instancia un *rol IAM* mediante un *instance profile* (un contenedor con exactamente un rol). EC2 asume el rol y publica en el servicio de metadatos (IMDS, que vemos a continuación) credenciales temporales que se renuevan solas y que los SDK y la CLI encuentran automáticamente. La consola crea el instance profile por ti (con la CLI: `create-instance-profile` y `add-role-to-instance-profile`), y el rol se puede cambiar en caliente.
-
-#diagrama(pie: [Cómo llegan las credenciales de un rol a tu código sin guardar ninguna clave en la instancia.])[
-  #fila(
-    svc("IAM", "Rol IAM", sub: "en un instance profile", color: col.iam),
-    flecha(etiqueta: "asociado a", largo: 1.3cm),
-    zona("Instancia EC2", color: col.computo)[
-      #fila(
-        svc("IMDS", "Metadatos", sub: "credenciales del rol", color: col.computo),
-        flecha(etiqueta: "token + GET", doble: true, largo: 1.5cm),
-        svc("APP", "Tu aplicación", sub: "SDK o CLI", color: col.neutro),
-      )
-    ],
-    flecha(etiqueta: "API firmada", largo: 1.5cm),
-    svc("S3", "Amazon S3", color: col.almacenamiento),
-  )
-]
+Una aplicación en EC2 que llama a S3 o DynamoDB *nunca* debe llevar _access keys_ en un fichero. En su lugar, asocias a la instancia un *rol IAM* mediante un *instance profile*, un contenedor con exactamente un rol (los roles y su trust policy se explican en el capítulo «IAM (I)»). EC2 publica en el servicio de metadatos (IMDS, a continuación) credenciales temporales de ese rol, que se renuevan solas y que los SDK y la CLI encuentran automáticamente: tu código no guarda ninguna clave. La consola crea el instance profile por ti (con la CLI: `create-instance-profile` y `add-role-to-instance-profile`), y el rol se puede cambiar en caliente.
 
 === Metadatos de instancia: IMDSv2
 
@@ -448,7 +421,7 @@ curl -sH "X-aws-ec2-metadata-token: $TOKEN" \
 
 ¿Por qué? Con IMDSv1 bastaba un `GET`: una vulnerabilidad SSRF (_Server-Side Request Forgery_) o un proxy mal configurado permitían robar las credenciales del rol. El `PUT` con cabecera propia es mucho más difícil de provocar, y la respuesta no pasa de un salto de red (_hop limit_).
 
-#practica[Exige IMDSv2 (`HttpTokens=required`) en las launch templates y por defecto en la cuenta (`modify-instance-metadata-defaults`); Amazon Linux 2023 ya lo exige. Sube el _hop limit_ a 2 solo si hay contenedores que usen el IMDS.]
+#practica[Exige IMDSv2 (`HttpTokens=required`) en las launch templates y por defecto en la cuenta (`modify-instance-metadata-defaults`); Amazon Linux 2023 ya lo exige. Sube el hop limit a 2 solo si hay contenedores que usen el IMDS.]
 
 == Modelos de compra
 
@@ -529,7 +502,7 @@ aws ssm start-session --target i-0abc1234def567890 \
                  "localPortNumber":["5432"]}'        # túnel a una BD privada
 ```
 
-#practica[Usa *Session Manager* por defecto: sin puertos entrantes ni claves, con acceso por IAM y sesiones auditadas. Necesita el SSM Agent (preinstalado en las AMI de Amazon Linux, Ubuntu y Windows de AWS), un rol con la política `AmazonSSMManagedInstanceCore` y salida hacia los endpoints `ssm`, `ssmmessages` y `ec2messages`, por NAT o con VPC endpoints.]
+#practica[Usa *Session Manager* por defecto: sin puertos entrantes ni claves, con acceso por IAM y sesiones auditadas. Necesita el SSM Agent (preinstalado en las AMI de Amazon Linux, Ubuntu y Windows de AWS), un rol con la política `AmazonSSMManagedInstanceCore` y salida hacia los endpoints de Systems Manager (`ssm`, `ssmmessages` y, según la versión del agente, `ec2messages`), por NAT o con VPC endpoints.]
 
 == AWS Systems Manager
 
@@ -581,15 +554,15 @@ aws ec2 run-instances --launch-template LaunchTemplateName=web,Version='$Latest'
 - *Seguridad*: IMDSv2 obligatorio, roles de instancia, Session Manager y cifrado de EBS por defecto.
 - *Inmutabilidad*: instancias como ganado, no mascotas: golden AMI + launch templates, y reemplazar en vez de parchear a mano.
 - *Fiabilidad*: varias AZ con Auto Scaling y balanceadores; snapshots automáticas con AWS Backup.
-- *Coste*: Compute Optimizer, Graviton, Savings Plans + Spot, gp3; borra volúmenes sueltos, snapshots viejas y EIP libres.
+- *Coste*: Compute Optimizer, Graviton, Savings Plans + Spot, gp3; borra volúmenes sueltos, snapshots viejas y Elastic IP sin usar.
 - *Operación*: etiqueta todo, parchea con Patch Manager y envía métricas y logs a CloudWatch.
 
 #resumen[
   - EC2 da máquinas virtuales facturadas por segundo; tú gestionas el sistema operativo y lo de encima. Nacen de una *AMI* (regional); las *golden AMI* homogeneizan los despliegues.
   - `m7g.xlarge` = familia, generación, atributos y tamaño. Las T usan créditos de CPU; Graviton mejora el precio-rendimiento y Nitro sostiene todo.
-  - Solo se factura el cómputo en _running_; parar conserva EBS, pero libera la IPv4 pública automática y borra el instance store.
+  - Solo se factura el cómputo en `running`; parar conserva EBS, pero libera la IPv4 pública automática y borra el instance store.
   - *EBS* es un disco de red persistente ligado a una AZ (gp3 por defecto); el *instance store* es local y efímero; *EFS* es NFS compartido y multi-AZ.
-  - Las IPv4 públicas y elásticas se pagan por hora; ENA y EFA aceleran la red y los _placement groups_ controlan la colocación. *IMDSv2* y los *roles de instancia* dan credenciales sin claves en disco.
+  - Las IPv4 públicas (también las Elastic IP) se pagan por hora; ENA y EFA aceleran la red y los placement groups controlan la colocación. *IMDSv2* y los *roles de instancia* dan credenciales sin claves en disco.
   - Savings Plans para la base, On-Demand para los picos, Spot (aviso de 2 minutos) para lo tolerante a interrupciones.
   - Accede con *Session Manager*, opera con Systems Manager y lanza siempre desde *launch templates* versionadas.
 ]
@@ -597,8 +570,8 @@ aws ec2 run-instances --launch-template LaunchTemplateName=web,Version='$Latest'
 #repaso(
   ([Necesitas mover un volumen EBS de `eu-west-1a` a `eu-west-1b`. ¿Cómo lo haces?], [Creas una snapshot (regional) y, a partir de ella, un volumen nuevo en `eu-west-1b`. Un volumen EBS no se conecta a instancias de otra AZ.]),
   ([¿Qué significa cada parte de `c7gn.2xlarge`?], [Familia C (cómputo), 7.ª generación, atributos `g` (Graviton) y `n` (red mejorada), tamaño `2xlarge`.]),
-  ([Paras y vuelves a arrancar una instancia. ¿Qué cambia?], [Conserva EBS, IP privada e IP elástica; cambia la IPv4 pública automática y se pierden la RAM y el instance store. Parada no paga cómputo, pero sí EBS.]),
-  ([¿Por qué IMDSv2 es más seguro que IMDSv1?], [Exige un token obtenido con un `PUT` y enviado en una cabecera, difícil de provocar con un ataque SSRF, y la respuesta con el token no sale de la instancia (_hop limit_).]),
-  ([Un clúster HPC necesita la mínima latencia entre nodos. ¿Qué configuras?], [Un placement group _cluster_ en una sola AZ, con tipos de instancia que admitan EFA.]),
+  ([Paras y vuelves a arrancar una instancia. ¿Qué cambia?], [Conserva EBS, IP privada y Elastic IP; cambia la IPv4 pública automática y se pierden la RAM y el instance store. Parada no paga cómputo, pero sí EBS.]),
+  ([¿Por qué IMDSv2 es más seguro que IMDSv1?], [Exige un token obtenido con un `PUT` y enviado en una cabecera, difícil de provocar con un ataque SSRF, y la respuesta con el token no sale de la instancia (hop limit).]),
+  ([Un clúster HPC necesita la mínima latencia entre nodos. ¿Qué configuras?], [Un placement group cluster en una sola AZ, con tipos de instancia que admitan EFA.]),
   ([¿Qué modelo de compra eliges para un proceso nocturno que puede reintentarse?], [Spot (hasta un 90 % de descuento), diversificando tipos y AZ, porque tolera interrupciones con 2 minutos de aviso.]),
 )

@@ -6,7 +6,6 @@
 // ---------------------------------------------------------------------
 //  Utilidades locales para los diagramas de este capítulo
 // ---------------------------------------------------------------------
-#let _nj(cuerpo) = { set par(justify: false); cuerpo }
 
 #let _fase(color, titulo, sub: none, letra: white) = box(
   width: 100%, height: 1.2cm, fill: color, radius: 3pt, inset: (x: 2pt, y: 3pt),
@@ -55,7 +54,7 @@
     [Publicar APIs con API Gateway: tipos, autorización y límites],
     [Orquestar flujos con Step Functions y desplegar con SAM],
   ),
-  servicios: ("AWS Lambda", "Amazon API Gateway", "AWS Step Functions", "EventBridge Scheduler", "AWS SAM"))
+  servicios: ("AWS Lambda", "Amazon API Gateway", "AWS Step Functions", "AWS SAM"))
 
 == ¿Qué significa _serverless_?
 
@@ -82,8 +81,6 @@ Lambda ejecuta tu código en respuesta a eventos —una petición HTTP, un fiche
   ("Ideal para", [APIs, procesamiento de eventos y ficheros, tareas programadas, «pegamento» entre servicios]),
   ("Límites clave", [15 min por invocación; de 128 MB a 10~240 MB de memoria; _payload_ síncrono de 6 MB; 1000 ejecuciones concurrentes por región por defecto (ampliable)]))
 
-#datos(("15 min", _nj[Duración máxima de una invocación]), ("10 GB", _nj[Memoria máxima (10~240 MB)]), ("10 GB", _nj[Almacenamiento `/tmp` máximo]), ("1000", _nj[Concurrencia regional por defecto]))
-
 === El modelo de ejecución: eventos y _handler_
 
 Toda función tiene un *handler*, el punto de entrada que Lambda llama en cada invocación con dos argumentos: el *evento* (un JSON cuya forma depende del origen) y el *contexto* (metadatos como el identificador de la petición o el tiempo restante). Lo que devuelve el handler es la respuesta.
@@ -105,7 +102,7 @@ def lambda_handler(event, context):
             "body": json.dumps({"id": pedido["id"]})}
 ```
 
-El cliente de DynamoDB se crea *fuera* del handler: ese código se ejecuta una vez por entorno y se reutiliza en las invocaciones siguientes, la optimización más sencilla y rentable de Lambda.
+El cliente de DynamoDB se crea *fuera* del handler: ese código se ejecuta una sola vez, al preparar el entorno de ejecución (lo verás enseguida), y se reutiliza en las invocaciones siguientes. Es la optimización más sencilla y rentable de Lambda.
 
 === _Runtimes_, paquetes y recursos
 
@@ -166,18 +163,16 @@ Un *cold start* es la latencia extra de una invocación que necesita un entorno 
 
 La *concurrencia* es el número de invocaciones simultáneas, es decir, de entornos ocupados: aproximadamente peticiones por segundo × duración media. Así, 200 peticiones/s de 0,5 s necesitan unos 100 entornos.
 
-/ Cuota regional: 1000 ejecuciones concurrentes por cuenta y región, compartidas por *todas* las funciones; es ampliable (y algunas cuentas nuevas empiezan con menos). Al agotarse hay _throttling_: error 429 en las síncronas; las asíncronas y los event source mappings reintentan. Cada función puede sumar hasta 1000 entornos cada 10 segundos.
+/ Cuota regional: 1000 ejecuciones concurrentes por cuenta y región, compartidas por *todas* las funciones; es ampliable (y algunas cuentas nuevas empiezan con menos). Al agotarse hay _throttling_ (Lambda rechaza las invocaciones que no caben): error 429 en las síncronas; las asíncronas y los event source mappings reintentan. Cada función puede sumar hasta 1000 entornos cada 10 segundos.
 / Concurrencia reservada: aparta parte de la cuota para una función. Le *garantiza* capacidad y a la vez la *limita* (útil para proteger una base de datos). Sin coste. Reservar 0 detiene la función: un interruptor de emergencia.
-
-#examen[«Una función crítica sufre _throttling_ porque otra consume la concurrencia de la cuenta» → *concurrencia reservada*. «Latencia inaceptable por cold starts en una API» → *concurrencia aprovisionada* (o SnapStart si el runtime lo admite).]
 
 == Cómo se invoca una función
 
 Hay tres formas de llegar a una función, y en cada una cambia quién espera la respuesta y quién reintenta si algo falla.
 
 / Síncrona: el llamante espera (`aws lambda invoke` lo hace por defecto); los errores le llegan a él y es él quien reintenta.
-/ Asíncrona: Lambda reintenta dos veces más con esperas crecientes (configurable) y descarta el evento cuando supera su antigüedad máxima (hasta 6 h). Lo que no se procesa puede ir a *destinos* —SQS, SNS, EventBridge u otra función (y, para fallos, también S3)—, que cubren éxito y fallo e incluyen el error, o a una *DLQ* clásica (SQS o SNS; solo el evento original y solo en fallos). Como la entrega es «al menos una vez», haz tus funciones *idempotentes*.
-/ Event source mapping: con SQS, Kinesis, DynamoDB Streams, Kafka o Amazon MQ, Lambda lee lotes y llama a tu función de forma síncrona. Tu rol necesita permisos para leer del origen, y puedes *filtrar* eventos para no pagar invocaciones inútiles.
+/ Asíncrona: Lambda encola el evento, responde al instante y lo procesa después; así invocan S3, SNS, EventBridge o EventBridge Scheduler, que lanza funciones a horas fijas (capítulo de Mensajería e integración). Si la función falla, Lambda reintenta dos veces más con esperas crecientes (configurable) y descarta el evento cuando supera su antigüedad máxima (hasta 6 h). Para no perderlo, configura un *destino* de fallo —SQS, SNS, EventBridge, S3 u otra función—, que recibe el evento y el error, o una *dead-letter queue* (DLQ) clásica: una cola SQS o un topic SNS que aparta los eventos fallidos, sin el error. Como la entrega es «al menos una vez», haz tus funciones *idempotentes*: que procesar dos veces el mismo evento no cambie el resultado.
+/ Event source mapping: con SQS, Kinesis, DynamoDB Streams, Kafka o Amazon MQ, Lambda lee lotes y llama a tu función de forma síncrona. La función necesita permiso para leer del origen, y puedes *filtrar* eventos para no pagar invocaciones inútiles.
 
 #diagrama(pie: [Los tres modos de invocación de Lambda.])[
   #set text(hyphenate: false)
@@ -203,25 +198,24 @@ Hay tres formas de llegar a una función, y en cada una cambia quién espera la 
   ]
 ]
 
-#tabla(("Event source mapping", "SQS", "Kinesis y DynamoDB Streams"), columnas: (1fr, 1.6fr, 1.8fr), tamano: 8.2pt,
-  [Paralelismo], [Lambda añade sondeadores según la profundidad de la cola], [Un lote por _shard_ a la vez (hasta 10 con el _parallelization factor_)],
-  [Orden], [No (Standard); por _message group_ (FIFO)], [Sí, dentro de cada _shard_],
-  [Tamaño de lote], [Hasta 10~000 (Standard, con ventana de agrupación); 10 en FIFO], [Hasta 10~000],
-  [Si el lote falla], [Los mensajes reaparecen tras el _visibility timeout_; después, DLQ de la cola], [Se reintenta y *bloquea el shard* hasta que tiene éxito o caduca; se puede partir el lote y fijar un destino de fallo],
-)
+El comportamiento depende del origen. Las colas SQS y los _streams_, divididos en _shards_ (particiones ordenadas), se explican a fondo en el capítulo de Mensajería e integración:
 
-La integración con SQS, con un ejemplo de respuesta parcial de lote, la verás en el capítulo de Mensajería e integración.
+#tabla(("Event source mapping", "SQS", "Kinesis y DynamoDB Streams"), columnas: (1fr, 1.6fr, 1.8fr), tamano: 8.2pt,
+  [Paralelismo y lotes], [Lambda añade sondeadores según la profundidad de la cola; lotes de hasta 10~000 mensajes (10 en FIFO)], [Un lote por _shard_ a la vez (hasta 10 con el _parallelization factor_); hasta 10~000 registros],
+  [Orden], [No (Standard); por _message group_ (FIFO)], [Sí, dentro de cada _shard_],
+  [Si el lote falla], [Los mensajes vuelven a la cola y se reintentan; tras varios fallos, van a la DLQ de la cola], [Se reintenta y *bloquea el shard* hasta que tiene éxito o caduca; se puede partir el lote y fijar un destino de fallo],
+)
 
 == Permisos, red y configuración
 
-Los permisos de una función van en dos direcciones, y confundirlas es un error clásico (el capítulo «IAM (II): permisos — políticas y evaluación» explica cómo se combinan):
+Los permisos de una función van en dos direcciones, y confundirlas es un error clásico:
 
 #tarjetas(
   tarjeta("Execution role", color: col.iam, subtitulo: "¿Qué puede hacer la función?")[
-    Rol IAM que Lambda asume al ejecutar tu código: escribir logs (`AWSLambdaBasicExecutionRole`) más lo que necesite tu código, como leer de DynamoDB o, en un event source mapping, leer del origen.
+    Rol IAM que Lambda asume al ejecutar tu código: escribir logs (`AWSLambdaBasicExecutionRole`) y lo que haga tu código, como leer de DynamoDB o de una cola.
   ],
   tarjeta("Resource-based policy", color: col.iam, subtitulo: "¿Quién puede invocarla?")[
-    Política de la función que autoriza a servicios (S3, SNS, EventBridge, API Gateway) o a otras cuentas a invocarla. La consola la crea al añadir un disparador.
+    Política de la función que permite invocarla a servicios (S3, SNS, API Gateway…) o a otras cuentas. La consola la crea al añadir un disparador.
   ],
 )
 
@@ -232,11 +226,15 @@ aws lambda add-permission --function-name procesar-foto \
   --source-account 123456789012   # restringe el origen: evita el confused deputy
 ```
 
+Cómo se combinan estas políticas con las de identidad lo explica el capítulo «IAM (II): permisos — políticas y evaluación».
+
 *Lambda en una VPC.* Por defecto, una función llega a Internet y a los endpoints públicos de AWS, pero no a recursos privados como una base de datos RDS. Para alcanzarlos la asocias a subredes y Security Groups; Lambda crea *Hyperplane ENIs* compartidas por las funciones con la misma combinación, así que ya no añade cold starts apreciables.
 
 #cuidado[Una función conectada a una VPC *pierde el acceso a Internet*, incluso en una subred pública: sus ENI nunca tienen IP pública. Necesitas subredes privadas con ruta a un NAT Gateway o, para S3, DynamoDB o Secrets Manager, VPC endpoints (capítulo de Redes).]
 
-*Configuración y secretos.* Las *variables de entorno* (hasta 4 KB) separan configuración y código; se cifran con KMS, pero quien lea la configuración las ve en claro, así que *no son sitio para secretos*: usa Secrets Manager o Parameter Store (capítulo «Seguridad: cifrado con KMS, secretos y protección») con la extensión *AWS Parameters and Secrets Lambda Extension*, que los cachea. Un *layer* es un .zip con bibliotecas, un runtime o datos que se monta en `/opt` y se comparte entre funciones; admite hasta 5 por función, dentro de los 250 MB descomprimidos (con imágenes de contenedor todo va en la imagen).
+*Configuración y secretos.* Las *variables de entorno* (hasta 4 KB) separan configuración y código; se cifran con KMS, pero quien lea la configuración las ve en claro, así que *no son sitio para secretos*: usa Secrets Manager o Parameter Store (capítulo «Seguridad: cifrado con KMS, secretos y protección») con la extensión *AWS Parameters and Secrets Lambda Extension*, que los cachea.
+
+*Layers.* Un _layer_ es un .zip con bibliotecas, un runtime o datos que se monta en `/opt` y se comparte entre funciones; cada función admite hasta 5, dentro de los 250 MB descomprimidos (con imágenes de contenedor todo va en la imagen).
 
 == Versiones, _aliases_ y _function URLs_
 
@@ -270,8 +268,7 @@ Para exponer una función por HTTPS sin más, una *function URL* da un endpoint 
 - *Evita bucles recursivos* (escribir en el bucket o la cola que te dispara); Lambda detecta y corta algunos, no todos.
 - *No orquestes desde el código* encadenando funciones que se esperan: para eso está Step Functions.
 - *Observa*: Lambda envía la salida estándar a CloudWatch Logs, con formato JSON y niveles nativos (capítulo de Observabilidad).
-
-#practica(titulo: "Powertools for AWS Lambda")[Biblioteca de código abierto de AWS (Python, TypeScript, Java y .NET) que aplica estas prácticas en pocas líneas: _Logger_ (logs JSON), _Tracer_ (X-Ray), _Metrics_ (EMF), _Idempotency_ (sobre DynamoDB), _Batch_ (respuestas parciales), _Parameters_ (secretos con caché) y _Event Handler_ (enrutado de APIs).]
+- *Apóyate en Powertools for AWS Lambda*, biblioteca de código abierto de AWS (Python, TypeScript, Java y .NET) que aplica estas prácticas en pocas líneas: logs JSON, trazas de X-Ray, métricas, idempotencia sobre DynamoDB, respuestas parciales de lote y secretos con caché.
 
 #coste[Pagas por petición (del orden de 0,20 USD por millón) y por GB-segundo, más la concurrencia aprovisionada, el `/tmp` extra y la transferencia de datos; la capa gratuita incluye un millón de peticiones al mes. Lambda es imbatible con tráfico bajo o irregular; con carga alta y constante, compara con Fargate o EC2 (los Compute Savings Plans también cubren Lambda).]
 
@@ -284,44 +281,27 @@ API Gateway es la puerta de entrada gestionada de tus APIs: recibe peticiones HT
 #ficha("Amazon API Gateway", "APIs REST, HTTP y WebSocket totalmente gestionadas",
   ("Tipo", [Serverless; pago por millón de peticiones (mensajes y minutos de conexión en WebSocket)]),
   ("Ámbito", [Regional; las REST API también pueden ser _edge-optimized_ (vía CloudFront) o privadas]),
-  ("Límites clave", [_Payload_ de 10 MB; integración de 29 s (REST, ampliable en regionales y privadas) o 30 s (HTTP); 10~000 peticiones/s por cuenta y región (ampliable)]))
+  ("Límites clave", [_Payload_ de 10 MB; integración de unos 30 s (ampliable en REST); 10~000 peticiones/s por cuenta y región (ampliable)]))
 
 #tabla(("Característica", "REST API", "HTTP API", "WebSocket API"), columnas: (1.35fr, 1.25fr, 1.25fr, 1.15fr), tamano: 8.2pt,
   [Modelo y precio], [Petición-respuesta; la más cara], [Petición-respuesta; más barata y rápida], [Conexión persistente bidireccional],
   [Endpoints], [_Edge-optimized_, regional, privado], [Regional], [Regional],
   [Autorización], [IAM, Cognito, Lambda, políticas de recurso], [IAM, JWT (OIDC/OAuth 2.0), Lambda], [IAM, Lambda en `$connect`],
-  [API keys y _usage plans_], si, no, no,
+  [API keys], si, no, si,
   [Caché y AWS WAF], si, no, no,
+  [*Elígela si…*], [Necesitas API keys, caché, WAF, validación, endpoints privados o transformar peticiones], [Te basta con enrutar a Lambda o a HTTP con JWT o IAM: es la opción por defecto], [Haces chats, notificaciones o paneles en tiempo real],
 )
-
-#consejo[Empieza por *HTTP API* si te basta con enrutar a Lambda o a un servicio HTTP con JWT o IAM. Elige *REST API* si necesitas API keys, caché, WAF, validación, endpoints privados o transformar peticiones, y *WebSocket* para chats, notificaciones o paneles en tiempo real.]
 
 *Stages.* Una API se compone de *rutas* (`POST /pedidos`), cada una con su integración, y se despliega en *stages* (`dev`, `prod`) con su propia URL, límites, logs y *stage variables* (por ejemplo, a qué alias de Lambda apuntar). En REST cada cambio exige un despliegue explícito y los stages admiten canary; las HTTP API pueden desplegarse solas. Un *dominio personalizado* con certificado de ACM publica `api.miempresa.com`.
 
 / Integraciones: *Lambda proxy* (pasa la petición completa como evento y la función devuelve `statusCode`, `headers` y `body`; la más común), *HTTP* (cualquier endpoint, y servicios privados de tu VPC a través de un *VPC Link*), *servicios AWS* (llama directamente a `SendMessage` de SQS, `PutItem` de DynamoDB o `StartExecution` de Step Functions, sin Lambda intermedia) y *mock*.
-/ Autorización: *IAM* (peticiones firmadas con SigV4, ideal entre servicios); *Cognito* (REST) o *JWT authorizer* (HTTP API), que valida tokens de cualquier proveedor OIDC (Cognito, Auth0, Okta, Entra ID…); *Lambda authorizer*, tu función decide y su resultado se cachea (300 s por defecto, hasta 1 h); y *políticas de recurso* (REST) por cuenta, IP o VPC endpoint.
+/ Autorización: *IAM* (peticiones firmadas con SigV4, ideal entre servicios); *Cognito* (REST), cuyos _user pools_ registran e identifican a los usuarios de tu aplicación (capítulo «IAM (I): identidades — usuarios, grupos, roles y permission sets»), o *JWT authorizer* (HTTP API), que valida los _JSON Web Tokens_ de cualquier proveedor OIDC (Cognito, Auth0, Okta, Entra ID…); *Lambda authorizer*, tu función decide y su resultado se cachea (300 s por defecto, hasta 1 h); y *políticas de recurso* (REST) por cuenta, IP o VPC endpoint. La combinación típica (Cognito, JWT, Lambda y DynamoDB) se monta paso a paso en el capítulo de Arquitecturas de referencia.
 / Throttling: _token bucket_ de 10~000 peticiones/s con ráfagas de 5000 por cuenta y región, más límites por stage y método; el exceso recibe *429 Too Many Requests*. En REST, los *usage plans* asocian *API keys* a límites y cuotas por cliente (por ejemplo, 1000 peticiones al día en el plan gratuito).
 / Caché (REST): por stage, de 0,5 GB a 237 GB, TTL de 300 s por defecto (máx. 3600 s); se paga por hora, se use o no.
 / CORS: si `app.ejemplo.com` llama a una API de otro dominio, el navegador exige cabeceras `Access-Control-Allow-*` y a menudo un `OPTIONS` previo. Las HTTP API traen CORS integrado; en REST con proxy, *tu función* debe devolver las cabeceras.
-/ Timeouts: 29 s de integración en REST (desde 2024, ampliable en APIs regionales y privadas a costa de cuota de _throttling_) y 30 s en HTTP API. Para trabajos largos, responde un 202 y procesa de forma asíncrona.
+/ Timeouts: la integración tiene 29 s en REST (desde 2024, ampliables en APIs regionales y privadas a costa de cuota de _throttling_) y 30 s en HTTP API. Para trabajos largos, responde un 202 y procesa de forma asíncrona.
 
 #cuidado[Las API keys *identifican* a un cliente para aplicarle un plan, pero *no autentican*: cualquiera que vea la clave puede usarla. Combínalas con IAM, Cognito o un Lambda authorizer.]
-
-#diagrama(pie: [Una API serverless típica: el cliente se autentica en Cognito y llama a la API con su JWT.])[
-  #set text(hyphenate: false)
-  #grid(columns: 7, align: center + horizon, column-gutter: 3pt, row-gutter: 2pt,
-    svc("COG", "Amazon Cognito", sub: "user pool", color: col.iam), [], [], [],
-    svc("CW", "CloudWatch", sub: "logs, métricas, X-Ray", color: col.observabilidad), [], [],
-    flecha-v(etiqueta: "1 · login → JWT", doble: true), [], [], [],
-    flecha-v(etiqueta: "telemetría", arriba: true, punteada: true), [], [],
-    actor(etiqueta: "App web o móvil"), flecha(etiqueta: "2 · HTTPS + JWT", largo: 2cm),
-    svc("API", "API Gateway", sub: "HTTP API · JWT authorizer", color: col.serverless),
-    flecha(etiqueta: "evento proxy", largo: 1.6cm),
-    svc("λ", "Lambda", sub: "lógica de negocio", color: col.serverless),
-    flecha(etiqueta: "PutItem", largo: 1.4cm),
-    svc("DDB", "DynamoDB", sub: "tabla Pedidos", color: col.datos),
-  )
-]
 
 == AWS Step Functions
 
@@ -345,7 +325,7 @@ Encadenar funciones que se llaman entre sí produce código frágil: ¿quién re
 
 Cada Task, Parallel o Map puede declarar *Retry* (qué errores reintentar, cuántas veces y con qué _backoff_) y *Catch* (a qué estado saltar al agotar los reintentos). Los errores se identifican por nombre: los tuyos o predefinidos como `States.Timeout`, `States.TaskFailed` o el comodín `States.ALL`.
 
-#grid(columns: (1.12fr, 1fr), column-gutter: 10pt,
+#place(auto, float: true, clearance: 1.2em, grid(columns: (1.12fr, 1fr), column-gutter: 10pt,
   [
     #show raw.line: set text(size: 7.2pt)
     ```json
@@ -383,20 +363,26 @@ Cada Task, Parallel o Map puede declarar *Retry* (qué errores reintentar, cuán
       _estado("Fail", "Sin stock", color: col.iam, ancho: 1.9cm),
       flecha-v(etiqueta: "sí", largo: 0.45cm), [], [],
       _estado("Task · Lambda", "Cobrar (Retry ×3)"), flecha(etiqueta: "Catch", largo: 0.75cm),
-      _estado("Task · SNS", "Notificar", ancho: 1.9cm),
+      _estado("Task · SNS", "Notificar fallo", ancho: 1.9cm),
       flecha-v(largo: 0.45cm), [], flecha-v(largo: 0.45cm),
       _estado("Task · SQS", "Enviar pedido"), [], _estado("Fail", "Pago fallido", color: col.iam, ancho: 1.9cm),
       flecha-v(largo: 0.45cm), [], [],
       _terminal("Fin", color: col.almacenamiento), [], [],
     )
   ],
-)
+))
 
-Step Functions no necesita Lambda para todo: las *integraciones optimizadas* (DynamoDB, SQS, SNS, ECS/Fargate, Batch, Glue, EventBridge, Bedrock…) y las del *AWS SDK* (`arn:aws:states:::aws-sdk:servicio:acción`, más de 200 servicios) llaman a las APIs directamente con tres patrones: *Request Response* (sigue en cuanto responde), *Run a Job* (`.sync`, espera a que termine una tarea ECS o un _job_) y *Wait for Callback* (`.waitForTaskToken`, se pausa hasta que alguien devuelve un _token_, por ejemplo tras una aprobación humana). Incluye además tareas HTTP para APIs de terceros, expresiones JSONata y _redrive_ de ejecuciones fallidas desde el paso que falló.
+Step Functions no necesita Lambda para todo: con las *integraciones optimizadas* (DynamoDB, SQS, SNS, ECS/Fargate, Batch, Glue, EventBridge, Bedrock…) y las del *AWS SDK* (`arn:aws:states:::aws-sdk:servicio:acción`, más de 200 servicios) llama a las APIs directamente, de tres maneras:
 
-== EventBridge Scheduler y AWS SAM
+/ Request Response: lanza la petición y sigue en cuanto el servicio responde.
+/ Run a Job (`.sync`): espera a que termine el trabajo, como una tarea de ECS o un _job_ de Glue.
+/ Wait for Callback (`.waitForTaskToken`): se pausa hasta que alguien devuelve un _token_, por ejemplo tras una aprobación humana.
 
-*EventBridge Scheduler* es el «cron» serverless: programaciones puntuales (`at(...)`), periódicas (`rate(5 minutes)`) o `cron(...)` con zona horaria que invocan Lambda, Step Functions, SQS o casi cualquier API de AWS, con reintentos y DLQ, y que escalan a millones (un recordatorio por usuario, por ejemplo). *AWS SAM* (_Serverless Application Model_) es una extensión de CloudFormation con recursos abreviados y una CLI para construir, probar en local y desplegar (`sam build`, `sam local invoke`, `sam deploy --guided`); alternativas habituales son AWS CDK (capítulo de Infraestructura como código) y Terraform. Estas líneas crean función, rol, HTTP API, tabla, alias y despliegue canary:
+Además llama a APIs HTTPS de terceros, transforma datos con JSONata y permite relanzar (_redrive_) una ejecución desde el paso que falló.
+
+== Desplegar con AWS SAM
+
+*AWS SAM* (_Serverless Application Model_) es una extensión de AWS CloudFormation, el servicio de infraestructura como código de AWS, que verás junto a CDK y Terraform en el capítulo de Infraestructura como código. Con recursos abreviados describes funciones, APIs y eventos, y su CLI construye, prueba en local y despliega (`sam build`, `sam local invoke`, `sam deploy --guided`). Estas líneas crean función, rol, HTTP API, tabla, alias y despliegue canary:
 
 ```yaml
 Transform: AWS::Serverless-2016-10-31
@@ -419,23 +405,23 @@ Resources:
 ```
 
 
-#block(breakable: false)[#resumen[
+#resumen[
 - _Serverless_: sin servidores que gestionar, escalado automático (incluso a cero), pago por uso y alta disponibilidad de serie.
-- Lambda ejecuta un *handler* por evento, hasta 15 minutos y con 128 MB–10~240 MB de memoria; la CPU crece con la memoria.
+- Lambda ejecuta un *handler* por evento: hasta 15 min y de 128 MB a 10~240 MB de memoria (y CPU proporcional).
 - El entorno pasa por *Init → Invoke (reutilizable) → Shutdown*; los *cold starts* se mitigan con SnapStart o concurrencia aprovisionada.
 - La concurrencia regional (1000 por defecto) es compartida; la *reservada* garantiza y limita, la *aprovisionada* pre-inicializa.
 - Invocación *síncrona* (reintenta el cliente), *asíncrona* (reintenta Lambda; destinos y DLQ) y *event source mapping* (Lambda sondea SQS, Kinesis o DynamoDB Streams).
 - El *execution role* define qué hace la función; la *resource-based policy*, quién puede invocarla.
 - Versiones inmutables y *aliases* ponderados permiten despliegues canary con _rollback_ automático.
 - API Gateway: REST (más funciones), HTTP (más barata) y WebSocket; autorización IAM, JWT/Cognito o Lambda; _throttling_ con 429.
-- Step Functions orquesta pasos con Retry y Catch: Standard para flujos largos, Express para alto volumen.
-]]
+- Step Functions orquesta pasos con Retry y Catch: Standard (flujos largos) o Express (alto volumen).
+]
 
 #repaso(
   ([¿Por qué conviene crear los clientes del SDK fuera del handler?], [Porque ese código se ejecuta una vez, en la fase Init, y se reutiliza en todas las invocaciones del mismo entorno.]),
   ([Una API en Java sufre _cold starts_ en horas punta. ¿Qué opciones tienes?], [SnapStart (sin coste extra en Java) o concurrencia aprovisionada sobre un alias, escalada con una programación.]),
   ([¿Qué ocurre si una invocación asíncrona falla repetidamente?], [Lambda la reintenta (2 veces por defecto) y, si sigue fallando o caduca, la envía al destino de fallo o a la DLQ; sin ellos, se pierde.]),
   ([Una función en una VPC no puede llamar a una API externa. ¿Por qué?], [Sus ENI no tienen IP pública: necesita una subred privada con ruta a un NAT Gateway.]),
-  ([Necesitas API keys con cuotas por cliente y caché. ¿REST o HTTP API?], [REST API: _usage plans_, API keys y caché solo existen en ese tipo.]),
+  ([Necesitas API keys con cuotas por cliente y caché. ¿REST o HTTP API?], [REST API: las HTTP API no tienen _usage plans_, API keys ni caché.]),
   ([¿Cuándo elegirías Express en lugar de Standard?], [Para ejecuciones cortas (menos de 5 minutos) y de muy alto volumen, donde «al menos una vez» es aceptable.]),
 )

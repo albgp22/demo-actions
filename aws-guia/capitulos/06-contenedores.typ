@@ -90,7 +90,7 @@ EXPOSE 8080
 ENTRYPOINT ["/app"]
 ```
 
-#consejo[Las construcciones en varias etapas (_multi-stage builds_) como esta producen imágenes pequeñas: menos superficie de ataque, menos vulnerabilidades que parchear y descargas más rápidas al escalar.]
+#consejo[Las construcciones en varias etapas (_multi-stage builds_) como esta producen imágenes pequeñas: menos superficie de ataque, menos vulnerabilidades que parchear y descargas más rápidas al escalar. Y con `USER nonroot` el proceso no se ejecuta como `root` dentro del contenedor.]
 
 == Amazon ECR: el registro de imágenes
 
@@ -102,7 +102,7 @@ ENTRYPOINT ["/app"]
 
 / Etiquetas inmutables: con `IMMUTABLE`, nadie puede sobrescribir `web-api:1.4.2` con otro contenido. Despliega siempre etiquetas concretas, nunca `latest`.
 / Escaneo de vulnerabilidades: el básico analiza paquetes del sistema operativo al subir la imagen; el mejorado, con Amazon Inspector, escanea de forma continua también las dependencias de los lenguajes.
-/ Lifecycle policies: borran automáticamente imágenes antiguas o sin etiqueta, para no pagar almacenamiento de más.
+/ Lifecycle policies: borran automáticamente imágenes antiguas o sin etiqueta (por ejemplo, «las no etiquetadas a los 14 días; de las demás, conserva las 50 más recientes»), para no pagar almacenamiento de más.
 / Replicación y _pull through cache_: copian imágenes a otras regiones o cuentas, y cachean en tu registro imágenes de registros públicos (Docker Hub, Quay, GitHub, ECR Public...).
 
 ```bash
@@ -113,18 +113,6 @@ aws ecr create-repository --repository-name web-api \
 aws ecr get-login-password --region eu-west-1 \
   | docker login --username AWS --password-stdin "$REG"
 docker build -t "$REG/web-api:1.4.2" . && docker push "$REG/web-api:1.4.2"
-```
-
-```json
-{ "rules": [
-  { "rulePriority": 1, "description": "Sin etiqueta: borrar a los 14 días",
-    "selection": { "tagStatus": "untagged", "countType": "sinceImagePushed",
-                   "countUnit": "days", "countNumber": 14 },
-    "action": { "type": "expire" } },
-  { "rulePriority": 2, "description": "Conservar las 50 más recientes",
-    "selection": { "tagStatus": "any", "countType": "imageCountMoreThan",
-                   "countNumber": 50 },
-    "action": { "type": "expire" } } ] }
 ```
 
 == Amazon ECS: conceptos clave
@@ -187,7 +175,7 @@ Así se ve una task definition para Fargate con un contenedor, un secreto y logs
 
 == Capacidad: EC2, Fargate y Fargate Spot
 
-Las tareas necesitan CPU y memoria de algún sitio. Con *ECS sobre EC2* las pones tú: un grupo de Auto Scaling con la AMI optimizada para ECS, que también debes parchear y dimensionar. Con *AWS Fargate* no hay servidores a la vista: declaras la CPU y la memoria de cada tarea y AWS la ejecuta en un entorno aislado, facturando por segundo. *Fargate Spot* usa capacidad sobrante con descuento, a cambio de poder interrumpir la tarea.
+Las tareas necesitan CPU y memoria de algún sitio. Con *ECS sobre EC2* las pones tú: un grupo de Auto Scaling con la AMI optimizada para ECS, que también debes parchear y dimensionar. Con *AWS Fargate* no hay servidores a la vista: declaras la CPU y la memoria de cada tarea y AWS la ejecuta en un entorno aislado, facturando por segundo. *Fargate Spot* usa capacidad sobrante con descuento, a cambio de poder interrumpir la tarea. Fargate admite también Graviton (`ARM64`, como la task definition anterior), más barato, y los Compute Savings Plans cubren su uso. Desde 2025 existe además un punto intermedio, *ECS Managed Instances*: ECS lanza y mantiene por ti instancias EC2 en tu cuenta (elección del tipo, parches, sustitución) y conservas toda la gama de EC2, GPU incluidas.
 
 #datos(("0,25–16", [vCPU por tarea en Fargate]), ("120 GB", [memoria máxima por tarea]), ("200 GiB", [almacenamiento efímero máximo (20 por defecto)]), ("70 %", [descuento máximo de Fargate Spot]))
 
@@ -203,11 +191,9 @@ Las tareas necesitan CPU y memoria de algún sitio. Con *ECS sobre EC2* las pone
 
 Los *capacity providers* deciden dónde va cada tarea. Un servicio puede usar una estrategia que combine varios: con `FARGATE` (base 2, peso 1) y `FARGATE_SPOT` (peso 3), las dos primeras tareas van a Fargate normal y, de las siguientes, una de cada cuatro va a Fargate y tres a Spot. Con EC2, un capacity provider asociado a un ASG escala las instancias según las tareas pendientes (_managed scaling_) y evita terminar instancias que aún ejecutan tareas.
 
-#nota[Desde 2025 existe además *ECS Managed Instances*, un punto intermedio: ECS lanza y mantiene por ti instancias EC2 en tu cuenta (selección del tipo, parches, sustitución) y conservas el acceso a toda la gama de EC2, GPU incluidas.]
-
 == Redes de las tareas
 
-El *modo de red* de la task definition decide cómo se conectan los contenedores:
+El *modo de red* de la task definition decide cómo se conectan los contenedores (@fig-ecs-red). *awsvpc* es el modo recomendado (y el único en Fargate): cada tarea recibe su propia ENI con IP privada de la subred, así que aplicas Security Groups por tarea y ves su tráfico en los VPC Flow Logs. En *bridge*, los contenedores usan una red virtual dentro de la instancia y se publican en puertos del host; si dejas el puerto del host vacío (o a 0), Docker asigna uno alto aleatorio: es el _dynamic port mapping_, que permite varias copias de la misma tarea en una instancia. *host* elimina esa capa y da el máximo rendimiento de red, pero dos tareas no pueden usar el mismo puerto en la misma instancia.
 
 #diagrama(pie: [Modos de red de ECS. En `awsvpc` cada tarea es un ciudadano más de la VPC; en `bridge` las tareas comparten la red del host mediante puertos dinámicos; en `host` usan directamente los puertos del host.])[
   #grid(columns: 3, column-gutter: 8pt, align: center + top,
@@ -231,15 +217,13 @@ El *modo de red* de la task definition decide cómo se conectan los contenedores
         nota-dg[Una sola tarea por puerto y host])
     ],
   )
-]
-
-*awsvpc* es el modo recomendado (y el único en Fargate): cada tarea recibe su propia ENI con IP privada de la subred, así que aplicas Security Groups por tarea y ves su tráfico en los VPC Flow Logs. En *bridge*, los contenedores usan una red virtual dentro de la instancia y se publican en puertos del host; si dejas el puerto del host vacío (o a 0), Docker asigna uno alto aleatorio: es el _dynamic port mapping_, que permite varias copias de la misma tarea en una instancia. *host* elimina esa capa y da el máximo rendimiento de red, pero dos tareas no pueden usar el mismo puerto en la misma instancia.
+] <fig-ecs-red>
 
 #consejo[En EC2 con `awsvpc`, el número de tareas por instancia está limitado por las ENI que admite el tipo de instancia. Activa el *ENI trunking* (ajuste de cuenta `awsvpcTrunking`) para multiplicarlo en los tipos compatibles.]
 
 == IAM en ECS: execution role y task role
 
-Una tarea puede llevar dos roles IAM distintos, y confundirlos es uno de los errores más habituales en ECS:
+Una tarea puede llevar dos roles IAM distintos (qué es un rol y cómo se asume se explica en el capítulo «IAM (I)»), y confundirlos es uno de los errores más habituales en ECS:
 
 #diagrama(pie: [El _task execution role_ lo usa ECS para preparar la tarea; el _task role_ lo usa tu código. Ambos confían en el principal `ecs-tasks.amazonaws.com`.])[
   #grid(columns: 3, column-gutter: 6pt, row-gutter: 10pt, align: center + horizon,
@@ -268,7 +252,7 @@ Un servicio mantiene el número deseado de tareas repartidas entre AZ. La estrat
   tarjeta("Alarmas", color: col.observabilidad, subtitulo: "Vuelta atrás por métricas")[Asocia alarmas de CloudWatch al despliegue (errores 5XX, latencia): si saltan durante el despliegue, ECS revierte automáticamente.],
 )
 
-Para recibir tráfico, el servicio se registra en un *target group* del balanceador (vimos ALB y NLB en el capítulo anterior). En `awsvpc`, el target group es de tipo `ip` y registra la IP de cada tarea (obligatorio en Fargate); en `bridge`, de tipo `instance`, y el ALB registra cada instancia con el puerto dinámico de cada tarea. El Security Group de las tareas debe permitir el puerto del contenedor *solo desde el Security Group del ALB*, y el _health check grace period_ evita que ECS mate tareas que aún están arrancando.
+Para recibir tráfico, el servicio se registra en un *target group* del balanceador (capítulo de Balanceo de carga y Auto Scaling). En `awsvpc`, el target group es de tipo `ip` y registra la IP de cada tarea (obligatorio en Fargate); en `bridge`, de tipo `instance`, y el ALB registra cada instancia con el puerto dinámico de cada tarea. El Security Group de las tareas debe permitir el puerto del contenedor *solo desde el Security Group del ALB*, y el _health check grace period_ evita que ECS mate tareas que aún están arrancando.
 
 ```bash
 NET='awsvpcConfiguration={subnets=[subnet-0a1b,subnet-0c2d],securityGroups=[sg-0e3f]}'
@@ -281,19 +265,13 @@ aws ecs create-service --cluster prod --service-name web-api \
   --deployment-configuration 'deploymentCircuitBreaker={enable=true,rollback=true}'
 ```
 
-El número de tareas se escala con *Application Auto Scaling* (presentado en el capítulo anterior): registras el servicio como recurso escalable y le asocias una política, normalmente de target tracking sobre la CPU media (`ECSServiceAverageCPUUtilization`), la memoria o las peticiones por target del ALB.
+El número de tareas se escala con *Application Auto Scaling* (también en el capítulo de Balanceo de carga y Auto Scaling): registras el servicio como recurso escalable y le asocias una política, normalmente de target tracking sobre la CPU media (`ECSServiceAverageCPUUtilization`), la memoria o las peticiones por target del ALB.
 
 ```bash
 aws application-autoscaling register-scalable-target --service-namespace ecs \
   --scalable-dimension ecs:service:DesiredCount \
   --resource-id service/prod/web-api --min-capacity 2 --max-capacity 20
-aws application-autoscaling put-scaling-policy --service-namespace ecs \
-  --scalable-dimension ecs:service:DesiredCount \
-  --resource-id service/prod/web-api --policy-name cpu-60 \
-  --policy-type TargetTrackingScaling \
-  --target-tracking-scaling-policy-configuration '{"TargetValue": 60.0,
-    "PredefinedMetricSpecification":
-      {"PredefinedMetricType": "ECSServiceAverageCPUUtilization"}}'
+# Después, put-scaling-policy con una política de target tracking (CPU al 60 %)
 ```
 
 == Comunicación entre servicios
@@ -312,7 +290,7 @@ Cuando un servicio llama a otro (la web a la API de pagos, por ejemplo), necesit
 
 *Secretos y configuración.* Nunca metas contraseñas en la imagen ni en variables `environment` en claro. En la sección `secrets` de la task definition referencias un secreto de *Secrets Manager* (por ARN, incluso una clave concreta de un secreto JSON) o un parámetro de *SSM Parameter Store*: ECS lo lee con el execution role y lo inyecta como variable de entorno al arrancar el contenedor. Si cambias el secreto, las tareas en marcha no se enteran: fuerza un nuevo despliegue. Para mucha configuración no sensible puedes usar `environmentFiles` (un fichero `.env` en S3).
 
-*Logs.* El driver `awslogs` envía la salida estándar de cada contenedor a CloudWatch Logs (grupo, región y prefijo del _stream_ en `logConfiguration`). Para enviarlos a varios destinos (S3, Amazon Data Firehose, OpenSearch o herramientas de terceros), *FireLens* añade a la tarea un contenedor con Fluent Bit que enruta los logs (driver `awsfirelens`). Activa también *Container Insights* para tener métricas de CPU, memoria y red por servicio y tarea; lo ampliaremos en el capítulo de Observabilidad.
+*Logs.* El driver `awslogs` envía la salida estándar de cada contenedor a CloudWatch Logs (grupo, región y prefijo del _stream_ en `logConfiguration`). Para enviarlos a varios destinos (S3, Amazon Data Firehose, OpenSearch o herramientas de terceros), *FireLens* añade a la tarea un contenedor con Fluent Bit que enruta los logs (driver `awsfirelens`). Fija una retención en cada grupo de logs (por defecto se guardan para siempre) y activa *Container Insights* para tener métricas de CPU, memoria y red por servicio y tarea; lo ampliaremos en el capítulo de Observabilidad.
 
 *ECS Exec.* Para entrar en un contenedor en ejecución sin SSH ni puertos abiertos, ECS Exec usa por debajo el canal de Session Manager. Requiere activar `enableExecuteCommand` en el servicio, permisos `ssmmessages` en el task role y el plugin de Session Manager en tu equipo; cada sesión queda registrada en CloudTrail.
 
@@ -361,7 +339,7 @@ Juntando todas las piezas, este es el despliegue típico de una API en contenedo
 
 == ¿ECS, EKS o App Runner?
 
-*Amazon Elastic Kubernetes Service (EKS)* es la otra gran opción para orquestar contenedores en AWS: Kubernetes gestionado. AWS opera el plano de control de Kubernetes (servidor de API y base de datos etcd, replicados en varias AZ, con parches y actualizaciones) y tú decides cómo ejecutar los nodos de trabajo, en EC2 o en Fargate. Es Kubernetes estándar y certificado, así que funcionan `kubectl`, Helm y todo el ecosistema de la CNCF; a cambio, se paga una tarifa por clúster y hora y exige dominar Kubernetes y actualizar su versión periódicamente. Lo estudiaremos a fondo en el capítulo siguiente, «Kubernetes y Amazon EKS».
+*Amazon Elastic Kubernetes Service (EKS)* es la otra gran opción para orquestar contenedores en AWS: Kubernetes gestionado. AWS opera el plano de control de Kubernetes, el orquestador de código abierto más extendido, y tú eliges dónde corren los contenedores (EC2, Fargate o EKS Auto Mode). Lo estudiaremos a fondo en el capítulo «Kubernetes y Amazon EKS»; aquí basta con saber cuándo conviene cada uno:
 
 #tabla(("Criterio", "Amazon ECS", "Amazon EKS"), columnas: (1fr, 2fr, 2fr), tamano: 8pt,
   [*Modelo*], [Orquestador propio de AWS, con una API sencilla], [Kubernetes estándar y certificado],
@@ -375,24 +353,16 @@ Juntando todas las piezas, este es el despliegue típico de una API en contenedo
 
 En el otro extremo está *AWS App Runner*, aún más sencillo: le das una imagen de contenedor (o el código fuente) y se encarga de construir, desplegar, servir con HTTPS, escalar según las peticiones y conectarse a tu VPC. Es cómodo para webs y APIs sin equipo de plataforma, a cambio de mucho menos control sobre la red y el despliegue; antes de elegirlo para un proyecto nuevo, revisa su estado y sus límites en la documentación.
 
-== Buenas prácticas
-
-- *Imágenes*: pequeñas (_multi-stage_, _distroless_), etiquetas inmutables y versionadas, escaneo continuo con Inspector y _lifecycle policies_ en ECR.
-- *Seguridad*: un task role por servicio con mínimo privilegio, secretos en Secrets Manager, contenedores sin `root` y Security Groups por tarea en `awsvpc`.
-- *Fiabilidad*: tareas en al menos dos AZ, health checks en contenedor y balanceador, circuit breaker con vuelta atrás y despliegues blue/green para lo crítico.
-- *Coste*: Fargate por defecto, Graviton (`ARM64`) e imágenes multiarquitectura, Fargate Spot para lo tolerante a interrupciones, Savings Plans de cómputo y VPC endpoints en lugar de NAT para ECR.
-- *Operación*: logs con retención definida, Container Insights, ECS Exec para depurar e infraestructura como código para clúster, servicios y task definitions.
-
 #resumen[
-  - Un contenedor empaqueta la aplicación y sus dependencias y comparte el kernel del host; se construye a partir de una imagen OCI inmutable.
-  - *ECR* almacena las imágenes con etiquetas inmutables, escaneo de vulnerabilidades (básico o con Inspector), _lifecycle policies_ y replicación.
+  - Un contenedor empaqueta la aplicación y sus dependencias y comparte el kernel del host; nace de una imagen OCI inmutable.
+  - *ECR* guarda las imágenes con etiquetas inmutables, escaneo de vulnerabilidades, lifecycle policies y replicación.
   - En *ECS*, una *task definition* versionada describe los contenedores; una *tarea* es una ejecución y un *servicio* mantiene N tareas detrás de un balanceador.
   - La capacidad la ponen instancias EC2 propias o *Fargate* (sin servidores, por segundo); *Fargate Spot* abarata hasta un 70 % con aviso de 2 minutos.
-  - `awsvpc` da a cada tarea su ENI y sus Security Groups (único modo en Fargate); `bridge` usa puertos dinámicos y `host` los puertos del host.
+  - `awsvpc` da a cada tarea su ENI y sus Security Groups (único modo en Fargate); `bridge` usa puertos dinámicos y `host`, los del host.
   - El *execution role* prepara la tarea (ECR, logs, secretos); el *task role* da permisos a tu código. Confundirlos es el error más común.
-  - Despliegues _rolling_ con circuit breaker, _blue/green_ y vuelta atrás por alarmas; target groups de tipo `ip`; escalado con Application Auto Scaling.
-  - *Service Connect* comunica servicios entre sí; los secretos se inyectan desde Secrets Manager o Parameter Store; los logs van a CloudWatch con `awslogs` o FireLens.
-  - *EKS* ofrece Kubernetes gestionado (capítulo siguiente) y *App Runner*, la máxima sencillez para webs y APIs.
+  - Despliegues rolling con circuit breaker, blue/green y vuelta atrás por alarmas; target groups de tipo `ip`; escalado con Application Auto Scaling; *Service Connect* entre servicios.
+  - Secretos inyectados desde Secrets Manager o Parameter Store; logs a CloudWatch con `awslogs` o FireLens.
+  - *ECS* es lo más sencillo y no cobra el plano de control; *EKS* ofrece Kubernetes estándar y portable; *App Runner*, la máxima sencillez para webs y APIs.
 ]
 
 #repaso(

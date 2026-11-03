@@ -6,7 +6,6 @@
 // ---------------------------------------------------------------------
 //  Utilidades locales
 // ---------------------------------------------------------------------
-#let _nj(cuerpo) = { set par(justify: false); cuerpo }
 
 // Mensaje en una cola (cuadradito)
 #let _msg(color: col.integracion) = box(width: 0.55cm, height: 0.42cm, radius: 2pt,
@@ -82,14 +81,12 @@ Amazon SQS (_Simple Queue Service_) ofrece colas totalmente gestionadas: los *pr
   ("Ideal para", [Desacoplar productores y consumidores, colas de trabajo, absorber picos]),
   ("Límites clave", [Mensaje de hasta 1 MiB; retención de 1 minuto a 14 días (4 por defecto); _visibility timeout_ de hasta 12 horas]))
 
-#datos(("1 MiB", _nj[Tamaño máximo de mensaje (desde 2025)]), ("14 días", _nj[Retención máxima]), ("12 h", _nj[Visibility timeout máximo]), ("20 s", _nj[Espera máxima del long polling]))
-
 === Standard frente a FIFO
 
 #block(breakable: false)[#tarjetas(
   tarjeta("Standard", subtitulo: "Rendimiento prácticamente ilimitado")[
     - Entrega *al menos una vez*: un mensaje puede llegar duplicado.
-    - Orden *aproximado* (_best effort_).
+    - Orden *aproximado* (_best effort_): «pedido pagado» podría llegar antes que «pedido creado».
     - Casi sin límite de mensajes por segundo.
   ],
   tarjeta("FIFO", color: col.datos, subtitulo: "Orden estricto y sin duplicados")[
@@ -99,9 +96,7 @@ Amazon SQS (_Simple Queue Service_) ofrece colas totalmente gestionadas: los *pr
   ],
 )]
 
-En una cola FIFO, cada mensaje lleva un *MessageGroupId*: los mensajes de un mismo grupo (un pedido, un cliente) se entregan en orden y de uno en uno, mientras que grupos distintos se procesan en paralelo. La *deduplicación* descarta repetidos durante 5 minutos, según un *MessageDeduplicationId* explícito o un hash del cuerpo (_content-based deduplication_).
-
-#examen[«Orden estricto» o «sin duplicados» → FIFO. «Máximo rendimiento» y el orden da igual → Standard. Con FIFO, el paralelismo lo marca el número de _message groups_.]
+En una cola FIFO, cada mensaje lleva un *MessageGroupId*: los mensajes de un mismo grupo (un pedido, un cliente) se entregan en orden y de uno en uno, mientras que grupos distintos se procesan en paralelo; por eso el paralelismo lo marca el número de grupos. La *deduplicación* descarta repetidos durante 5 minutos, según un *MessageDeduplicationId* explícito o un hash del cuerpo (_content-based deduplication_).
 
 === Ciclo de vida de un mensaje
 
@@ -126,7 +121,7 @@ En una cola FIFO, cada mensaje lleva un *MessageGroupId*: los mensajes de un mis
       _seg(col.almacenamiento.darken(10%), "Expira sin Delete", "vuelve a ser visible (+1 recepción)", ancho: 3.8cm)))
 ]
 
-/ Visibility timeout: tiempo durante el que un mensaje recibido queda oculto al resto de consumidores (30 s por defecto, hasta 12 h). Si no se borra a tiempo, reaparece y otro consumidor lo procesará: ajústalo por encima del tiempo de proceso y amplíalo sobre la marcha con `ChangeMessageVisibility` si una tarea se alarga.
+/ Visibility timeout: SQS no borra un mensaje al entregarlo: lo oculta al resto de consumidores durante este tiempo (30 s por defecto, hasta 12 h) y espera a que el consumidor lo borre con `DeleteMessage` al terminar. Si no lo hace a tiempo —porque falló o tardó demasiado—, el mensaje reaparece y otro consumidor lo procesará. Ajústalo por encima del tiempo de proceso y amplíalo sobre la marcha con `ChangeMessageVisibility` si una tarea se alarga.
 / Long polling: con `WaitTimeSeconds` de 1 a 20 s, `ReceiveMessage` espera a que lleguen mensajes antes de responder. El *short polling* responde al instante consultando solo parte de los servidores, así que puede devolver vacío aunque haya mensajes. Usa siempre long polling (o fíjalo en la cola con `ReceiveMessageWaitTimeSeconds`): menos respuestas vacías y menos coste.
 / Retención: de 1 minuto a 14 días (4 días por defecto); después, el mensaje se borra aunque nadie lo haya procesado.
 / Tamaño: hasta 1 MiB por mensaje (256 KB hasta agosto de 2025). Para más, la *Extended Client Library* (Java y Python) guarda el cuerpo en S3 y envía solo una referencia, hasta 2 GB: el patrón *claim check*.
@@ -257,7 +252,7 @@ Mientras SNS difunde mensajes a suscriptores, *EventBridge* enruta *eventos* —
         caja([Lambda · inventario], color: col.serverless, ancho: 2.7cm))))
 ]
 
-Un evento tiene campos fijos (`source`, `detail-type`, `account`, `region`, `time`…) y un `detail` libre. Este patrón selecciona pedidos de España o México de más de 1000 euros que no sean de clientes internos, y debajo tienes cómo publicar un evento que lo cumple:
+Un evento tiene campos fijos (`source`, `detail-type`, `account`, `region`, `time`…) y un `detail` libre. Este patrón selecciona pedidos de España o México de más de 1000 euros que no sean de clientes internos (tus aplicaciones publican los eventos con `PutEvents`):
 
 ```json
 {
@@ -271,16 +266,10 @@ Un evento tiene campos fijos (`source`, `detail-type`, `account`, `region`, `tim
 }
 ```
 
-```bash
-aws events put-events --entries '[{"EventBusName": "comercio",
-  "Source": "com.acme.pedidos", "DetailType": "PedidoCreado",
-  "Detail": "{\"pais\":\"ES\",\"importe\":1500,\"cliente\":{\"tipo\":\"web\"}}"}]'
-```
-
 / Schema registry: EventBridge puede *descubrir* la estructura de los eventos de un bus, guardarla como esquema y generar tipos para tu código (Java, Python, TypeScript, Go).
 / Archivo y replay: archiva los eventos de un bus (todos o los que cumplen un patrón) y los reproduce más tarde, para recuperarte de un fallo o probar un consumidor nuevo.
-/ Pipes: integraciones *punto a punto* de un origen (SQS, Kinesis, DynamoDB Streams, MSK, Amazon MQ) a un destino, con filtrado, enriquecimiento opcional (Lambda, Step Functions, API Gateway o una API destination) y transformación, sin código de «pegamento».
-/ Scheduler: programaciones puntuales, periódicas o _cron_ con zona horaria que invocan casi cualquier API de AWS, con reintentos y DLQ; escala a millones y sustituye a las antiguas reglas programadas (lo viste en el capítulo de Serverless).
+/ Pipes: integraciones *punto a punto* de un origen (SQS, Kinesis, DynamoDB Streams, MSK, Amazon MQ) a un destino, con filtrado, enriquecimiento opcional (con una Lambda, por ejemplo) y transformación, sin código de «pegamento».
+/ Scheduler: el «cron» serverless: programaciones puntuales (`at(...)`), periódicas (`rate(5 minutes)`) o `cron(...)` con zona horaria que invocan Lambda, Step Functions, SQS o casi cualquier API de AWS, con reintentos y DLQ. Escala a millones (un recordatorio por usuario, por ejemplo) y sustituye a las antiguas reglas programadas. Esta lanza a diario, a las 7:00 de Madrid, una función de informes:
 
 ```bash
 aws scheduler create-schedule --name informe-diario \
@@ -296,8 +285,7 @@ aws scheduler create-schedule --name informe-diario \
 Una cola entrega cada mensaje a *un* consumidor y lo borra. Un *stream* es distinto: un registro ordenado e inmutable (un _log_) que *varios* consumidores leen a la vez, cada uno a su ritmo, y que se conserva aunque ya se haya leído. Es la base de la analítica en tiempo real: clics, telemetría IoT, logs, transacciones.
 
 #ficha("Amazon Kinesis Data Streams", "Streaming de datos en tiempo real, escalable y duradero",
-  ("Tipo", [Gestionado; modo _on-demand_ (pago por GB y por hora de stream) o provisionado (pago por shard y hora)]),
-  ("Ámbito", [Regional; los datos se replican en tres AZ]),
+  ("Tipo", [Gestionado y regional (datos en tres AZ); _on-demand_ (por GB y hora de stream) o provisionado (por shard y hora)]),
   ("Límites clave", [Por shard: escritura de 1 MB/s o 1000 registros/s y lectura de 2 MB/s; retención de 24 h (por defecto) a 365 días]))
 
 #diagrama(pie: [La partition key decide el shard; dentro de cada shard los registros están ordenados y varios consumidores los leen.])[
@@ -316,22 +304,20 @@ Una cola entrega cada mensaje a *un* consumidor y lo borra. Un *stream* es disti
       caja([*Flink* · analítica con estado], color: col.observabilidad, ancho: 3.7cm)))
 ]
 
-/ Shard: la unidad de capacidad y de orden. Cada uno admite 1 MB/s o 1000 registros/s de escritura y 2 MB/s de lectura.
-/ Partition key: la elige el productor (un ID de usuario o de dispositivo) y su hash decide el shard. Los registros con la misma clave van al mismo shard y se leen *en orden*; una clave muy repetida crea un *shard caliente*.
+/ Shard: la unidad de capacidad y de orden. La capacidad del stream es la suma de la de sus shards (los límites de cada uno están en la ficha).
+/ Partition key: la elige el productor (un ID de usuario o de dispositivo) y su hash decide el shard. Los registros con la misma clave van al mismo shard y se leen *en orden*; una clave muy repetida crea un *shard caliente* (los errores `ProvisionedThroughputExceeded` delatan ese reparto o shards insuficientes).
 / Retención: 24 h por defecto, ampliable hasta 365 días; puedes *releer* el pasado para reprocesar tras un bug o alimentar un consumidor nuevo.
 / Consumidores: Lambda, aplicaciones con la *Kinesis Client Library* (KCL, que reparte shards entre instancias y guarda el progreso en DynamoDB), Firehose o Flink. Por defecto comparten los 2 MB/s de lectura de cada shard; con *enhanced fan-out*, cada consumidor registrado recibe sus propios 2 MB/s por shard, empujados por HTTP/2 y con menor latencia.
 / Capacidad: en modo *on-demand* escala solo y pagas por GB escrito y leído, más una tarifa por hora de stream (ideal si el tráfico es impredecible); en modo *provisionado* fijas los shards (y los divides o fusionas para reajustar) y pagas por shard y hora.
 
-#examen[Varios consumidores deben leer *los mismos* datos, necesitas orden por clave o reprocesar el pasado → Kinesis. Cada mensaje es una tarea para un único trabajador y luego se borra → SQS. Los errores `ProvisionedThroughputExceeded` delatan shards insuficientes o una partition key mal repartida.]
-
 == Firehose, Flink, MSK y Amazon MQ
 
-#block(breakable: false)[#tarjetas(columnas: 2,
+#tarjetas(columnas: 2,
   tarjeta("Amazon Data Firehose", subtitulo: "Antes Kinesis Data Firehose")[Entrega datos en streaming *sin gestionar capacidad* a S3, Redshift, OpenSearch, Splunk, Snowflake, tablas Apache Iceberg o endpoints HTTP. Agrupa por tamaño o tiempo (casi tiempo real), transforma con Lambda, convierte a Parquet y comprime; se paga por GB. La forma más sencilla de llevar logs y eventos a un _data lake_.],
   tarjeta("Managed Service for Apache Flink", color: col.observabilidad, subtitulo: "Antes Kinesis Data Analytics")[Ejecuta aplicaciones Apache Flink (Java, Python o SQL) que procesan streams *con estado*: ventanas temporales, agregaciones, _joins_ y detección de anomalías sobre datos de Kinesis o MSK.],
   tarjeta("Amazon MSK", color: col.datos, subtitulo: "Apache Kafka gestionado")[Clústeres Kafka provisionados (con _brokers_ Standard o Express) o MSK Serverless, y MSK Connect para conectores. Elígelo si ya usas Kafka o necesitas su ecosistema, retenciones largas y relectura por _offset_.],
   tarjeta("Amazon MQ", color: col.neutro, subtitulo: "ActiveMQ y RabbitMQ gestionados")[_Brokers_ con protocolos estándar (JMS, AMQP, MQTT, STOMP, OpenWire) para *migrar* aplicaciones que ya los usan sin reescribirlas. Para desarrollos nuevos, SQS y SNS escalan mejor y no hay _brokers_ que dimensionar.],
-)]
+)
 
 == ¿Qué servicio elijo?
 
@@ -342,13 +328,11 @@ Una cola entrega cada mensaje a *un* consumidor y lo borra. Un *stream* es disti
   [*EventBridge*], [Bus con reglas (_push_)], [Los destinos de cada regla que coincide], [No], [Archivo y _replay_ opcionales], [Integrar servicios, SaaS y eventos de AWS],
   [*Kinesis Data Streams*], [Stream (_pull_)], [Todos, cada uno a su ritmo], [Por shard], [De 24 h a 365 días; relectura], [Telemetría, clics, analítica en tiempo real],
   [*Amazon MSK*], [Stream Kafka], [Todos los grupos de consumidores], [Por partición], [Configurable; relectura por _offset_], [Plataformas y ecosistema Kafka],
-  [*Amazon MQ*], [Broker JMS/AMQP], [Según cola o topic], [Por cola], [Hasta que se consume], [Migrar aplicaciones con brokers existentes],
 )
 
 == Patrones de integración
 
-/ Cola de trabajo: varios consumidores idénticos leen de la misma cola (_competing consumers_); cada mensaje lo procesa uno solo y escalas añadiendo consumidores.
-/ Fan-out: un evento, muchos consumidores independientes (SNS + SQS, o EventBridge con varias reglas).
+Ya conoces dos patrones básicos: la *cola de trabajo*, en la que varios consumidores idénticos compiten por los mensajes de una cola (_competing consumers_) y escalas añadiendo consumidores, y el _fan-out_. Sobre ellos se construyen los demás. El primer dilema es quién dirige el flujo:
 
 #block(breakable: false)[#tarjetas(
   tarjeta("Coreografía", subtitulo: "EventBridge, SNS")[Cada servicio reacciona a eventos y publica los suyos; nadie dirige. Muy desacoplado y fácil de ampliar, pero el flujo completo es difícil de ver y depurar.],
@@ -359,7 +343,7 @@ En la práctica se combinan: orquestación *dentro* de un dominio (el proceso de
 
 / Saga: una transacción de negocio repartida entre servicios sin transacción distribuida: cada paso tiene una *acción compensatoria* (reembolsar el cobro, liberar el stock) que se ejecuta si un paso posterior falla. Step Functions, con `Catch`, es la forma natural de orquestarla.
 / Transactional outbox: si un servicio guarda en su base de datos *y* publica un evento, un fallo entre ambas operaciones pierde o inventa eventos. La solución: escribir el evento en una tabla _outbox_ en la *misma transacción* y que otro proceso lo publique. En AWS es habitual usar DynamoDB Streams (o la captura de cambios de la base de datos) con EventBridge Pipes como relé.
-/ Idempotencia: casi toda la mensajería de AWS entrega *al menos una vez*, así que los consumidores deben tolerar duplicados: registra una *clave de idempotencia* (el ID del mensaje o del pedido) con una escritura condicional y descarta lo ya procesado. La deduplicación de SQS FIFO solo cubre 5 minutos; la utilidad _Idempotency_ de Powertools for AWS Lambda lo resuelve con DynamoDB.
+/ Idempotencia: casi toda la mensajería de AWS entrega *al menos una vez*, así que los consumidores deben tolerar duplicados: registra una *clave de idempotencia* (el ID del mensaje o del pedido) con una escritura condicional y descarta lo ya procesado. La deduplicación de SQS FIFO solo cubre 5 minutos; Powertools for AWS Lambda lo resuelve con DynamoDB.
 
 #diagrama(pie: [Outbox con DynamoDB: el pedido y su evento se guardan juntos; el stream de la tabla y Pipes publican el evento.])[
   #set text(hyphenate: false)
@@ -383,12 +367,11 @@ En la práctica se combinan: orquestación *dentro* de un dominio (el proceso de
 - Usa long polling, lotes y, con Lambda, respuestas parciales de lote; el tamaño máximo de mensaje es 1 MiB.
 - *SNS* empuja cada publicación a todos sus suscriptores, con filtros por suscripción; *SNS + SQS* es el patrón _fan-out_.
 - *EventBridge* enruta eventos por contenido con reglas y patrones JSON; añade schema registry, archivo y _replay_, Pipes y Scheduler.
-- *Kinesis Data Streams* es un log ordenado por shard que leen varios consumidores, con relectura de hasta 365 días; Firehose entrega a destinos y Flink procesa con estado.
-- MSK (Kafka) y Amazon MQ (ActiveMQ, RabbitMQ) cubren ecosistemas y migraciones existentes.
+- *Kinesis Data Streams* es un log ordenado por shard que leen varios consumidores, con relectura de hasta 365 días; Firehose entrega a destinos, Flink procesa con estado, y MSK (Kafka) y Amazon MQ (ActiveMQ, RabbitMQ) cubren ecosistemas y migraciones existentes.
 - Patrones clave: cola de trabajo, _fan-out_, coreografía frente a orquestación, saga, _outbox_ e idempotencia.
 ]]
 
-#block(breakable: false)[#repaso(
+#repaso(
   ([Un consumidor tarda unos 2 minutos por mensaje y los mensajes se procesan dos veces. ¿Qué ajustas?], [El visibility timeout, por encima de 2 minutos (o ampliado con `ChangeMessageVisibility` durante el proceso); además, consumidor idempotente.]),
   ([Necesitas procesar en orden los eventos de cada cliente, pero en paralelo entre clientes. ¿Cómo?], [Cola SQS FIFO con el ID de cliente como `MessageGroupId`.]),
   ([¿Qué ventaja tiene SNS + SQS frente a suscribir varias Lambda directamente al topic?], [Cada consumidor tiene su cola: absorbe picos, procesa a su ritmo, reintenta y tiene su DLQ sin afectar a los demás.]),
@@ -396,4 +379,4 @@ En la práctica se combinan: orquestación *dentro* de un dominio (el proceso de
   ([Una función que lee de SQS falla con un mensaje de cada lote de 10 y se reprocesan los 10. ¿Solución?], [Activar `ReportBatchItemFailures` y devolver en `batchItemFailures` solo los mensajes fallidos.]),
   ([Tres equipos deben leer el mismo flujo de clics y poder reprocesar la última semana. ¿SQS o Kinesis?], [Kinesis Data Streams con retención de al menos 7 días: varios consumidores leen los mismos datos y pueden releerlos.]),
   ([¿Qué problema resuelve el patrón _transactional outbox_?], [La inconsistencia entre guardar en la base de datos y publicar el evento: ambos se escriben en la misma transacción y un relé publica después.]),
-)]
+)

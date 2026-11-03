@@ -80,7 +80,7 @@
   align(center, text(6.3pt, fill: gris, nombre)))
 
 // Icono compacto (como `svc`, pero más estrecho) para diagramas densos
-#let _mini(abbr, titulo, color, sub: none) = box(width: 1.75cm, align(center + top, stack(dir: ttb, spacing: 3pt,
+#let _mini(abbr, titulo, color, sub: none, ancho: 1.75cm) = box(width: ancho, align(center + top, stack(dir: ttb, spacing: 3pt,
   align(center, box(width: 0.85cm, height: 0.85cm, radius: 4pt,
     fill: gradient.linear(color.lighten(8%), color.darken(18%), angle: 90deg),
     align(center + horizon, text(7.4pt, weight: "bold", fill: white, abbr)))),
@@ -94,12 +94,12 @@
 // Una AZ del diseño de referencia: nodo del ALB y NAT en la pública, app y datos en las privadas
 #let _az(letra, pub, app, dat, rds) = zona("AZ " + letra, color: col.neutro)[
   #columna(espacio: 2pt,
-    zona("Pública " + pub, color: col.almacenamiento, ancho: 4.3cm)[#fila(espacio: 2pt,
-      _mini("ALB", [Nodo del ALB], col.balanceo), _mini("NAT", [NAT Gateway], col.redes))],
+    zona("Pública " + pub, color: col.almacenamiento, ancho: 4.1cm)[#fila(espacio: 2pt,
+      _mini("ALB", [Nodo del ALB], col.balanceo, ancho: 1.65cm), _mini("NAT", [NAT Gateway], col.redes, ancho: 1.65cm))],
     flecha-v(largo: 0.5cm, doble: true),
-    zona("App " + app, color: col.computo, ancho: 4.3cm)[#_mini("ECS", [Tareas o EC2], col.computo)],
+    zona("App " + app, color: col.computo, ancho: 4.1cm)[#_mini("ECS", [Tareas o EC2], col.computo)],
     flecha-v(largo: 0.5cm),
-    zona("Datos " + dat, color: col.datos, ancho: 4.3cm)[#_mini("RDS", rds, col.datos)],
+    zona("Datos " + dat, color: col.datos, ancho: 4.1cm)[#_mini("RDS", rds, col.datos)],
   )
 ]
 
@@ -182,18 +182,7 @@ Una *VPC* (_Virtual Private Cloud_) es una red virtual aislada lógicamente del 
 
 === VPC por defecto frente a VPC personalizada
 
-#tarjetas(
-  tarjeta("VPC por defecto", subtitulo: "Lista para usar en cada región")[
-    - CIDR `172.31.0.0/16` y una subred /20 en cada AZ.
-    - Internet Gateway con ruta `0.0.0.0/0`: todas las subredes son públicas y las instancias reciben IPv4 pública.
-    - Perfecta para pruebas, no para producción.
-  ],
-  tarjeta("VPC personalizada", color: col.arquitectura, subtitulo: "La que diseñas tú")[
-    - CIDR coordinado con el resto de tus redes.
-    - Subredes públicas y privadas con tablas de rutas explícitas.
-    - Salida a Internet controlada (NAT, endpoints): la opción para cualquier entorno serio.
-  ],
-)
+Cada región trae una *VPC por defecto* lista para usar: CIDR `172.31.0.0/16`, una subred /20 en cada AZ y un Internet Gateway con ruta `0.0.0.0/0`, así que todas sus subredes son públicas y las instancias reciben IPv4 pública. Es perfecta para pruebas, no para producción. Para cualquier entorno serio diseñas una *VPC personalizada*: CIDR coordinado con el resto de tus redes, subredes públicas y privadas con tablas de rutas explícitas y salida a Internet controlada (NAT, endpoints).
 
 === Elegir el CIDR sin solapamientos
 
@@ -201,7 +190,7 @@ El CIDR principal de una VPC no se puede cambiar. Elígelo pensando en todas las
 
 Lo habitual es un *plan de direccionamiento* central: por ejemplo, `10.0.0.0/16` para producción, `10.1.0.0/16` para preproducción y `10.2.0.0/16` para desarrollo, evitando el `192.168.0.0/16` de las oficinas. En organizaciones grandes, *Amazon VPC IP Address Manager* (IPAM) automatiza el reparto entre cuentas y regiones.
 
-#consejo[Renumerar una red en producción es un proyecto doloroso. Ante la duda, sé generoso: las direcciones privadas no cuestan nada, y un /16 por VPC es una elección habitual. Si borras la VPC por defecto de una región, puedes recrearla con `aws ec2 create-default-vpc`.]
+#consejo[Renumerar una red en producción es un proyecto doloroso. Ante la duda, sé generoso: las direcciones privadas no cuestan nada, y un /16 por VPC es una elección habitual.]
 
 === Bloques secundarios e IPv6
 
@@ -256,7 +245,7 @@ Cuando varias rutas coinciden con un destino, gana la *más específica*, la de 
 
 - `10.0.3.7` coincide con `10.0.0.0/16` y con `0.0.0.0/0`; gana el /16: tráfico local.
 - `10.20.5.9` coincide con `10.20.0.0/16` y con `0.0.0.0/0`; viaja por el peering.
-- Una IP de S3 figura en la _prefix list_, cuyos bloques son más específicos que `/0`: va por el endpoint.
+- Una IP de S3 figura en la prefix list, cuyos bloques son más específicos que `/0`: va por el endpoint.
 - `8.8.8.8` solo coincide con `0.0.0.0/0`: sale por el NAT Gateway.
 
 Otros targets habituales: Internet Gateway (`igw-`), Egress-only IGW (`eigw-`), _virtual private gateway_ de una VPN (`vgw-`) o una interfaz de red (`eni-`), como la de un _appliance_ de seguridad.
@@ -317,13 +306,13 @@ Las instancias de una subred privada no tienen IP pública, pero a menudo necesi
   ]
 ]
 
-Con estas piezas, cada subred encaja en uno de tres tipos según adónde envía su ruta por defecto (`0.0.0.0/0`, «todo lo demás»):
+#block(breakable: false)[Con estas piezas, cada subred encaja en uno de tres tipos según adónde envía su ruta por defecto (`0.0.0.0/0`, «todo lo demás»):
 
 #tabla(("Tipo de subred", "Ruta por defecto hacia", "¿Entrada desde Internet?", "¿Salida a Internet?", "Qué suele alojar"), columnas: (0.9fr, 1.05fr, 1.35fr, 1.2fr, 1.5fr), tamano: 8pt,
   [*Pública*], [Internet Gateway], [Sí, si el recurso tiene IP pública y los cortafuegos lo permiten], [Sí], [Balanceadores, NAT Gateways],
   [*Privada*], [NAT Gateway], [No], [Solo las conexiones que inicia ella], [Aplicaciones, contenedores, Lambda en la VPC],
   [*Aislada*], [Ninguna: solo la ruta local], [No], [No], [Bases de datos, cachés],
-)
+)]
 
 Antes del NAT Gateway se usaban *NAT instances*: instancias EC2 configuradas para hacer NAT (con el _source/destination check_ desactivado) que tú administras, parcheas y haces redundantes. Su ancho de banda es el del tipo de instancia y admiten Security Groups; el NAT Gateway, en cambio, está gestionado, es redundante dentro de su AZ, escala solo de 5 a 100 Gbps y no admite Security Groups (solo lo filtra la NACL de su subred). Hoy las NAT instances solo tienen sentido en laboratorios o con presupuestos mínimos.
 
@@ -340,17 +329,22 @@ Con IPv6 no hace falta NAT para salir a Internet, porque las direcciones que asi
 AWS te da dos cortafuegos complementarios que actúan en puntos distintos del camino. La *Network ACL* (NACL) vigila la frontera de una subred: filtra todo lo que entra en ella o sale de ella. El *Security Group* (SG) va pegado a cada interfaz de red (ENI): la de una instancia, un balanceador, una base de datos RDS... Una petición que llega de Internet a una instancia supera los dos controles, y la diferencia decisiva aparece en la respuesta:
 
 #diagrama(pie: [Recorrido de una petición HTTPS y de su respuesta. La NACL, en la frontera de la subred, revisa cada sentido por separado; el Security Group recuerda la conexión y deja salir la respuesta sin necesidad de regla de salida.])[
-  #let cab(c, t) = box(width: 4.05cm, align(center, text(7.2pt, weight: "bold", fill: c.darken(20%), t)))
+  #let cab(c, t, d) = box(width: 4.05cm, align(center, {
+    set par(justify: false, leading: 0.35em)
+    text(7.6pt, weight: "bold", fill: c.darken(20%), t)
+    linebreak()
+    text(6.4pt, fill: gris.darken(15%), d)
+  }))
   #grid(columns: 7, column-gutter: 2pt, row-gutter: 4pt, align: center + horizon,
-    [], [], cab(col.redes)[NACL · frontera de la subred], [], cab(col.seguridad)[Security Group · ENI de la instancia], [], [],
+    [], [], cab(col.redes, "NACL", [en la frontera de la subred]), [], cab(col.seguridad, "Security Group", [en la ENI de la instancia]), [], [],
     grid.cell(rowspan: 2, actor(etiqueta: "Cliente")),
-    flecha(etiqueta: "petición a :443", largo: 1.55cm),
+    flecha(etiqueta: "petición :443", largo: 1.9cm),
     _chk(col.redes)[*Entrada*: ¿alguna regla permite TCP 443? #si],
     flecha(largo: 0.7cm),
     _chk(col.seguridad)[*Entrada*: ¿alguna regla permite TCP 443? #si],
     flecha(largo: 0.7cm),
     grid.cell(rowspan: 2, svc("EC2", "Servidor web", color: col.computo)),
-    _flecha-izq(etiqueta: "respuesta a :51234", largo: 1.55cm),
+    _flecha-izq(etiqueta: "respuesta :51234", largo: 1.9cm),
     _chk(col.redes)[*Salida*: necesita su propia regla para los puertos efímeros (1024–65535); sin ella, la respuesta se descarta],
     _flecha-izq(largo: 0.7cm),
     _chk(col.seguridad)[*Salida*: sin regla; recuerda la conexión y deja pasar la respuesta #si],
@@ -363,7 +357,7 @@ AWS te da dos cortafuegos complementarios que actúan en puntos distintos del ca
   [Estado], [*Stateful*: la respuesta se permite sola], [*Stateless*: hay que permitir ida y vuelta],
   [Reglas], [Solo _allow_], [_Allow_ y _deny_],
   [Evaluación], [Todas las reglas a la vez], [Por número, de menor a mayor; decide la primera que coincide],
-  [Origen o destino], [CIDR, _prefix list_ u otro Security Group], [Solo CIDR],
+  [Origen o destino], [CIDR, prefix list u otro Security Group], [Solo CIDR],
   [Por defecto], [Uno nuevo: sin entrada, toda la salida], [La NACL por defecto lo permite todo; una nueva lo deniega todo],
   [Asociación], [Hasta 5 por ENI (ajustable)], [Exactamente una por subred],
   [Bloquear una IP concreta], no, si,
@@ -420,6 +414,15 @@ Al ser stateless, una NACL evalúa por separado el paquete de ida y el de vuelta
 
 Una instancia de una subred privada que llama a S3, SQS o Secrets Manager habla con endpoints públicos de AWS: sin más, necesita un NAT Gateway y paga su procesamiento. Los *VPC Endpoints* permiten llegar a esos servicios por la red privada de AWS, sin Internet Gateway, sin NAT y sin IP pública. Hay dos tipos principales:
 
+#tabla(("", "Gateway endpoint", "Interface endpoint (PrivateLink)"), columnas: (1.15fr, 1.5fr, 1.75fr),
+  [Servicios], [Solo S3 y DynamoDB], [La mayoría de servicios de AWS, de terceros y los tuyos propios],
+  [Funcionamiento], [Una ruta en la tabla de rutas (prefix list → `vpce-`)], [Una ENI con IP privada en cada subred elegida],
+  [DNS], [Sin cambios: se usan los nombres públicos], [DNS privado: el nombre del servicio resuelve a IPs privadas],
+  [Accesible desde on-premises u otras VPC], no, si,
+  [Security Groups], no, si,
+  [Coste], [*Gratis*], [Por hora y AZ + por GB procesado],
+)
+
 #diagrama(pie: [Dos formas de llegar a servicios de AWS sin NAT: el gateway endpoint es una ruta en la tabla de rutas; el interface endpoint es una interfaz de red con IP privada.])[
   #columna(espacio: 10pt,
     fila(espacio: 4pt,
@@ -438,15 +441,6 @@ Una instancia de una subred privada que llama a S3, SQS o Secrets Manager habla 
       svc("SQS", "Amazon SQS", color: col.integracion)),
   )
 ]
-
-#tabla(("", "Gateway endpoint", "Interface endpoint (PrivateLink)"), columnas: (1.15fr, 1.5fr, 1.75fr),
-  [Servicios], [Solo S3 y DynamoDB], [La mayoría de servicios de AWS, de terceros y los tuyos propios],
-  [Funcionamiento], [Una ruta en la tabla de rutas (_prefix list_ → `vpce-`)], [Una ENI con IP privada en cada subred elegida],
-  [DNS], [Sin cambios: se usan los nombres públicos], [DNS privado: el nombre del servicio resuelve a IPs privadas],
-  [Accesible desde on-premises u otras VPC], no, si,
-  [Security Groups], no, si,
-  [Coste], [*Gratis*], [Por hora y AZ + por GB procesado],
-)
 
 S3 y, desde 2024, DynamoDB admiten también interface endpoints, útiles para llegar a ellos desde tu red local. El DNS privado de los interface endpoints requiere los atributos `enableDnsSupport` y `enableDnsHostnames` (sección de DNS).
 
@@ -483,6 +477,7 @@ Un *VPC Peering* une dos VPC de forma privada, como si fueran una sola red, aunq
 - *No es transitivo*: si A está emparejada con B, y B con C, A no llega a C a través de B.
 - Tampoco hay _edge-to-edge routing_: A no puede usar el IGW, el NAT, la VPN ni el gateway endpoint de B.
 - La malla crece deprisa: _n_ VPC necesitan _n_(_n_ − 1)/2 peerings (10 VPC, 45 conexiones).
+- No tiene coste por hora: pagas la transferencia de datos, gratuita dentro de la misma AZ y con la tarifa habitual entre AZ o entre regiones.
 
 #diagrama(pie: [El peering no es transitivo: cada pareja de VPC que deba comunicarse necesita su propia conexión.])[
   #fila(
@@ -496,21 +491,19 @@ Un *VPC Peering* une dos VPC de forma privada, como si fueran una sola red, aunq
   #caja([#no #h(3pt) A no puede llegar a C *a través de* B: crea un peering A–C o usa un Transit Gateway], color: rgb("#E03131"))
 ]
 
-#coste[El peering no tiene coste por hora: pagas la transferencia de datos, gratuita dentro de la misma AZ y con la tarifa habitual entre AZ o entre regiones.]
-
 === Transit Gateway
 
 Con decenas de VPC más conexiones a tu centro de datos, la malla de peerings se vuelve inmanejable. *AWS Transit Gateway* (TGW) es un router regional gestionado con topología _hub-and-spoke_: cada VPC, VPN o Direct Connect se conecta una sola vez al TGW (un *attachment*) y este enruta entre todos de forma transitiva.
 
 #diagrama(pie: [Transit Gateway como hub: cada red se conecta una sola vez y las tablas de rutas del TGW deciden quién llega a quién.])[
-  #let red(t, cidr) = zona(t, color: col.redes)[#caja(_m(cidr), color: col.redes)]
+  #let red(t, cidr) = caja([*#t* \ #_m(cidr)], color: col.redes, ancho: 3.4cm)
   #grid(columns: (1fr, 1fr, 1fr), row-gutter: 3pt, align: center + horizon,
     red("VPC producción", "10.0.0.0/16"), red("VPC desarrollo", "10.1.0.0/16"), red("Servicios compartidos", "10.100.0.0/16"),
-    flecha-v(doble: true, largo: 0.8cm), flecha-v(doble: true, largo: 0.8cm), flecha-v(doble: true, largo: 0.8cm),
-    grid.cell(colspan: 3, box(width: 94%, radius: 6pt, inset: (y: 9pt),
+    flecha-v(doble: true, largo: 0.6cm), flecha-v(doble: true, largo: 0.6cm), flecha-v(doble: true, largo: 0.6cm),
+    grid.cell(colspan: 3, box(width: 94%, radius: 6pt, inset: (y: 8pt),
       fill: gradient.linear(col.redes.lighten(8%), col.redes.darken(25%)),
       align(center, text(9.5pt, weight: "bold", fill: white)[Transit Gateway #h(8pt) #text(7.3pt, weight: "regular")[tablas de rutas: producción · desarrollo · compartida]]))),
-    flecha-v(doble: true, largo: 0.8cm), flecha-v(doble: true, largo: 0.8cm), flecha-v(doble: true, largo: 0.8cm),
+    flecha-v(doble: true, largo: 0.6cm), flecha-v(doble: true, largo: 0.6cm), flecha-v(doble: true, largo: 0.6cm),
     caja([*Oficina* \ Site-to-Site VPN], color: col.neutro),
     caja([*Centro de datos* \ Direct Connect Gateway], color: col.neutro),
     caja([*TGW en us-east-1* \ peering entre regiones], color: col.redes),
@@ -537,7 +530,7 @@ Conectar AWS con tu centro de datos u oficinas es el escenario *híbrido*. Dispo
 
 / Site-to-Site VPN: túneles IPsec cifrados sobre Internet entre tu router (*customer gateway*) y, en el lado de AWS, un *virtual private gateway* (VGW, asociado a una VPC) o un Transit Gateway. Cada conexión incluye dos túneles hacia endpoints distintos de AWS y admite rutas estáticas o BGP.
 / Client VPN: acceso remoto para personas, compatible con OpenVPN, con autenticación mediante Active Directory, SAML (tu proveedor de identidad) o certificados.
-/ Direct Connect: un enlace físico privado entre tu red y AWS a través de una ubicación de Direct Connect, dedicado (1, 10, 100 o 400 Gbps) o alojado (_hosted_) mediante un socio. No va cifrado por defecto: usa MACsec en las conexiones dedicadas compatibles o una VPN por encima. Llega a tus VPC mediante _virtual interfaces_ y un *Direct Connect Gateway*.
+/ Direct Connect: un enlace físico privado entre tu red y AWS a través de una ubicación de Direct Connect, dedicado o alojado (_hosted_) mediante un socio. No va cifrado por defecto: usa MACsec en las conexiones dedicadas compatibles o una VPN por encima. Llega a tus VPC mediante _virtual interfaces_ y un *Direct Connect Gateway*.
 
 #diagrama(pie: [Conectividad híbrida: dos túneles VPN sobre Internet, un enlace de Direct Connect y acceso de usuarios remotos con Client VPN.])[
   #fila(espacio: 4pt,
@@ -559,9 +552,9 @@ Conectar AWS con tu centro de datos u oficinas es el escenario *híbrido*. Dispo
 ]
 
 #tabla(("", "Site-to-Site VPN", "Client VPN", "Direct Connect"), columnas: (1fr, 1.35fr, 1.2fr, 1.35fr), tamano: 8pt,
-  [Para quién], [Redes: CPD, oficinas], [Personas: portátiles], [Redes con mucho tráfico],
+  [Para quién], [Redes: centros de datos, oficinas], [Personas: portátiles], [Redes con mucho tráfico],
   [Medio], [IPsec sobre Internet], [TLS (OpenVPN) sobre Internet], [Enlace físico privado (sin cifrar por defecto)],
-  [Ancho de banda], [Hasta 1,25 Gbps por túnel (5 Gbps en túneles grandes)], [Por usuario], [Dedicado: de 1 a 400 Gbps; alojado: de 50 Mbps a 25 Gbps],
+  [Ancho de banda], [Hasta 1,25 Gbps por túnel (5 Gbps en los túneles grandes de TGW y Cloud WAN)], [Por usuario], [Dedicado: de 1 a 400 Gbps; alojado: de 50 Mbps a 25 Gbps],
   [Puesta en marcha], [Minutos], [Minutos], [Semanas],
   [Facturación], [Por hora de conexión + datos], [Por hora de asociación y de conexión], [Por hora de puerto + GB salientes],
 )
@@ -570,14 +563,7 @@ Conectar AWS con tu centro de datos u oficinas es el escenario *híbrido*. Dispo
 
 == DNS dentro de la VPC
 
-Cada VPC incluye un servidor DNS gestionado, el *Route 53 Resolver* (también llamado _Amazon DNS server_), en la dirección base del CIDR más dos (en `10.0.0.0/16`, la `10.0.0.2`) y en `169.254.169.253`. Resuelve nombres públicos de Internet, los nombres internos de EC2 (`ip-10-0-1-25.eu-west-1.compute.internal`) y tus *zonas privadas* de Route 53. Su comportamiento depende de dos atributos de la VPC:
-
-#tabla(("Atributo", "Qué controla", "VPC por defecto", "VPC nueva"), columnas: (1.45fr, 2.6fr, 0.95fr, 0.85fr),
-  [`enableDnsSupport`], [Que el Resolver de Amazon responda a las instancias], [`true`], [`true`],
-  [`enableDnsHostnames`], [Que las instancias con IP pública reciban un nombre DNS público], [`true`], [`false`],
-)
-
-Ambos deben estar en `true` para usar zonas privadas de Route 53 y el DNS privado de los interface endpoints; es un olvido clásico en VPC creadas por CLI o con infraestructura como código (se corrige con `aws ec2 modify-vpc-attribute`).
+Cada VPC incluye un servidor DNS gestionado, el *Route 53 Resolver* (también llamado _Amazon DNS server_), en la dirección base del CIDR más dos (en `10.0.0.0/16`, la `10.0.0.2`) y en `169.254.169.253`. Resuelve nombres públicos de Internet, los nombres internos de EC2 (`ip-10-0-1-25.eu-west-1.compute.internal`) y tus *zonas privadas* de Route 53. Su comportamiento depende de dos atributos de la VPC: `enableDnsSupport` decide si el Resolver responde a las instancias (activado por defecto) y `enableDnsHostnames`, si las instancias con IP pública reciben un nombre DNS público (activado en la VPC por defecto, pero no en las que creas por CLI o con infraestructura como código). Ambos deben estar en `true` para usar zonas privadas de Route 53 y el DNS privado de los interface endpoints: es un olvido clásico, que se corrige con `aws ec2 modify-vpc-attribute`.
 
 Para el *DNS híbrido*, el Resolver ofrece endpoints: uno *de entrada* (_inbound_), para que tus servidores DNS locales resuelvan nombres privados de AWS, y uno *de salida* (_outbound_) con *reglas de reenvío*, para que la VPC resuelva dominios corporativos como `corp.ejemplo.com` contra tus DNS internos. *Route 53 Resolver DNS Firewall* permite además bloquear consultas a dominios maliciosos. Las zonas, los tipos de registro y las políticas de enrutamiento de Route 53 se tratan en el capítulo «CloudFront, Route 53 y el borde de la red».
 
@@ -619,7 +605,7 @@ Un diagnóstico clásico: para el mismo intento de conexión SSH aparecen estos 
 ... 10.0.1.25 198.51.100.7 22 51234 6 4 240 ... REJECT OK
 ```
 
-La entrada se aceptó, pero la respuesta se rechazó. Un Security Group nunca bloquearía una respuesta, porque es _stateful_: el culpable es la NACL, que no permite la salida hacia los puertos efímeros del cliente. En el capítulo de Observabilidad verás cómo consultar estos registros con CloudWatch Logs Insights o Athena.
+La entrada se aceptó, pero la respuesta se rechazó. Un Security Group nunca bloquearía una respuesta, porque es stateful: el culpable es la NACL, que no permite la salida hacia los puertos efímeros del cliente. En el capítulo de Observabilidad verás cómo consultar estos registros con CloudWatch Logs Insights o Athena.
 
 *Reachability Analyzer* responde a «¿puede A hablar con B?» analizando la *configuración* (rutas, SG, NACL, endpoints, peerings, Transit Gateway...) entre un origen y un destino, por ejemplo del Internet Gateway a una instancia por el puerto 443, y señala el componente que bloquea el camino. No envía paquetes reales, así que funciona antes incluso de desplegar la aplicación; se paga por análisis. Su hermano, *Network Access Analyzer*, busca accesos no deseados a gran escala («¿qué es accesible desde Internet?»).
 
@@ -628,53 +614,38 @@ La entrada se aceptó, pero la respuesta se rechazó. Un Security Group nunca bl
 Juntemos todas las piezas. La @fig-redes-referencia muestra la VPC que encontrarás, con variaciones, en la mayoría de aplicaciones web en producción; usa el plan de direcciones de la @fig-redes-plan. Las decisiones de diseño, una a una:
 
 - *Tres AZ y tres capas* (pública, aplicación y datos), replicadas en todas las AZ.
-- *Tablas de rutas*: una pública (`0.0.0.0/0 → igw`), una privada por AZ (`0.0.0.0/0 → NAT de su AZ`) y una de datos sin salida a Internet.
+- *Tablas de rutas*: una pública (`0.0.0.0/0 → igw`), una privada por AZ (`0.0.0.0/0 → NAT de su AZ`) y una de datos sin salida a Internet (subredes aisladas).
 - *Nada con IP pública salvo el balanceador y los NAT*; la administración, con Session Manager (AWS Systems Manager), sin bastiones ni SSH abierto.
 - *Security Groups encadenados* (`sg-alb → sg-app → sg-db`), NACL casi abiertas, endpoints para no pagar NAT de más y Flow Logs desde el primer día.
 
-#consejo[El asistente _VPC and more_ de la consola crea en un minuto la VPC, subredes públicas y privadas en varias AZ, tablas de rutas, IGW, NAT Gateways y un gateway endpoint de S3. Úsalo para aprender; en producción, define la red con infraestructura como código (lo verás en el capítulo dedicado a IaC).]
+#consejo[El asistente _VPC and more_ de la consola crea en un minuto la VPC con subredes públicas y privadas en varias AZ, tablas de rutas, IGW, NAT Gateways y un gateway endpoint de S3. Úsalo para aprender; en producción, define la red como código (capítulo de Infraestructura como código y DevOps).]
 
-#diagrama(pie: [Diseño de referencia: VPC de tres capas en tres AZ. El ALB tiene nodos en las tres subredes públicas, hay un NAT Gateway por AZ, la base de datos es Multi-AZ y los endpoints evitan el NAT.])[
-  #fila(actor(etiqueta: "Usuarios"), flecha(etiqueta: "HTTPS"), internet(), flecha(), svc("IGW", "Internet Gateway", color: col.redes))
+#diagrama(pie: [Diseño de referencia: VPC de tres capas en tres AZ. El ALB tiene un nodo en cada subred pública y envía las peticiones a la capa de aplicación, que sale a Internet por el NAT Gateway de su propia AZ (de ahí la flecha doble) y consulta una base de datos Multi-AZ. Los endpoints evitan pasar por el NAT.])[
+  #let izq = fila(actor(etiqueta: "Usuarios"), flecha(etiqueta: "HTTPS"), internet(), flecha(doble: true))
+  #fila(espacio: 0pt, izq, svc("IGW", "Internet Gateway", color: col.redes), hide(izq))
   #v(-4pt)
-  #flecha-v(largo: 0.6cm)
-  #v(-4pt)
-  #zona("Región eu-west-1", color: col.fundamentos, punteada: false, relleno: white)[
-    #zona("VPC 10.0.0.0/16", color: col.redes)[
-      #columna(espacio: 4pt,
-        svc("ALB", "Application Load Balancer", color: col.balanceo),
-        flecha-v(largo: 0.5cm),
-        fila(espacio: 6pt,
-          _az("a", "10.0.0.0/24", "10.0.16.0/20", "10.0.64.0/24", "Primaria"),
-          _az("b", "10.0.1.0/24", "10.0.32.0/20", "10.0.65.0/24", "Standby"),
-          _az("c", "10.0.2.0/24", "10.0.48.0/20", "10.0.66.0/24", "Réplica de lectura")),
-        v(2pt),
-        fila(espacio: 8pt,
-          caja([*Gateway endpoints* \ S3 · DynamoDB], color: col.redes),
-          caja([*Interface endpoints* \ ECR · CloudWatch Logs · SSM · Secrets Manager], color: col.redes),
-          caja([*Flow Logs* \ hacia S3], color: col.observabilidad)),
-      )
-    ]
+  #flecha-v(largo: 0.6cm, doble: true)
+  #v(-2pt)
+  #zona("VPC 10.0.0.0/16 · eu-west-1", color: col.redes)[
+    #columna(espacio: 6pt,
+      fila(espacio: 6pt,
+        _az("a", "10.0.0.0/24", "10.0.16.0/20", "10.0.64.0/24", [Primaria \ #text(fill: gris, weight: "regular")[escritura]]),
+        _az("b", "10.0.1.0/24", "10.0.32.0/20", "10.0.65.0/24", [Standby \ #text(fill: gris, weight: "regular")[síncrona]]),
+        _az("c", "10.0.2.0/24", "10.0.48.0/20", "10.0.66.0/24", [Réplica \ #text(fill: gris, weight: "regular")[de lectura]])),
+      fila(espacio: 8pt,
+        caja([*Gateway endpoints* \ S3 · DynamoDB], color: col.redes),
+        caja([*Interface endpoints* \ ECR · CloudWatch Logs · SSM · Secrets Manager], color: col.redes),
+        caja([*Flow Logs* \ hacia S3], color: col.observabilidad)),
+    )
   ]
 ] <fig-redes-referencia>
-
-== Errores comunes
-
-#tabla(("Síntoma", "Causa probable", "Solución"), columnas: (1.5fr, 1.7fr, 1.7fr), tamano: 8pt,
-  [La instancia de la subred «pública» no responde desde Internet], [Falta la ruta al IGW, no tiene IP pública o el SG o la NACL lo impiden], [Revisa las cuatro condiciones; lanza Reachability Analyzer],
-  [Las instancias privadas no salen a Internet], [El NAT está en una subred privada o falta la ruta `0.0.0.0/0`], [NAT siempre en subred pública; ruta en la tabla privada],
-  [Factura de NAT disparada], [El tráfico hacia S3, DynamoDB o ECR cruza el NAT], [Gateway endpoints e interface endpoints],
-  [No puedes crear el peering, o el tráfico hacia la oficina se pierde], [CIDR solapados], [Plan de direccionamiento (IPAM) antes de crear VPC],
-  [El DNS privado del endpoint no resuelve], [`enableDnsHostnames` o `enableDnsSupport` desactivados], [Activa ambos atributos],
-  [La caída de una AZ deja sin Internet a todas], [Un único NAT Gateway zonal compartido], [Un NAT por AZ (o un NAT regional)],
-)
 
 #resumen[
 - Una *VPC* es una red privada regional; cada subred vive en una sola AZ y pierde *5 IPs* reservadas. Elige un CIDR (de /16 a /28) que no se solape con tus otras redes: no se puede cambiar, solo ampliar con bloques secundarios.
 - Las *tablas de rutas* deciden el camino: gana la ruta más específica y la ruta local no se puede borrar.
-- Una subred es *pública* porque su tabla de rutas envía `0.0.0.0/0` a un Internet Gateway; la instancia necesita además IP pública y reglas que la dejen pasar.
-- Las subredes privadas salen a Internet con un *NAT Gateway* (uno por AZ, o en modo regional), que se paga por hora y por GB; en IPv6 se usa el Egress-only IGW. Todas las IPv4 públicas se cobran por hora desde 2024.
-- *Security Groups*: _stateful_, solo _allow_, a nivel de ENI y referenciables entre sí. *NACL*: _stateless_, _allow_ y _deny_ ordenados, a nivel de subred; cuidado con los puertos efímeros.
+- La ruta por defecto (`0.0.0.0/0`) define el tipo de subred: *pública* si va a un Internet Gateway (la instancia necesita además IP pública y cortafuegos que la dejen pasar), *privada* si sale por un *NAT Gateway* y *aislada* si no tiene salida.
+- El NAT Gateway se paga por hora y por GB, y conviene uno por AZ (o el modo regional); en IPv6 se usa el Egress-only IGW. Todas las IPv4 públicas se cobran por hora desde 2024.
+- La *NACL* filtra en la frontera de la subred, sin estado (reglas allow y deny numeradas: no olvides los puertos efímeros); el *Security Group* filtra en cada ENI, con estado, solo con reglas allow y puede referenciar a otros SG.
 - Los *gateway endpoints* (S3, DynamoDB) son gratuitos; los *interface endpoints* (PrivateLink) cubren el resto y se pagan por hora y GB. *Peering* une dos VPC sin transitividad; *Transit Gateway* es el hub transitivo; *VPC Lattice* conecta servicios.
 - Para el entorno híbrido: *Site-to-Site VPN* (IPsec sobre Internet, lista en minutos), *Client VPN* (para personas) y *Direct Connect* (enlace dedicado, tarda semanas).
 - El *Route 53 Resolver* da DNS en cada VPC; *Flow Logs* y *Reachability Analyzer* son tus herramientas de diagnóstico.

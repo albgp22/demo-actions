@@ -120,7 +120,7 @@ El *uso* de una clave (cifrar, firmar, generar MAC…) se fija al crearla y no s
 
 == Quién puede usar una clave: key policies, IAM y grants
 
-En casi todo AWS, una política IAM basta para acceder a un recurso de tu cuenta (capítulo de IAM (II)). KMS es la excepción: *la key policy manda*. Nadie —ni siquiera el usuario raíz— puede usar ni administrar una clave si su key policy no lo permite, directamente o delegando en IAM. Hay tres mecanismos: la *key policy* (obligatoria: toda clave tiene *exactamente una*), las *políticas IAM* (solo cuentan si la key policy delega en la cuenta) y los *grants* (permisos puntuales que se crean y revocan por API).
+En casi todo AWS, una política IAM basta para acceder a un recurso de tu cuenta (capítulo «IAM (II): permisos — políticas y evaluación»). KMS es la excepción: *la key policy manda*. Nadie —ni siquiera el usuario raíz— puede usar ni administrar una clave si su key policy no lo permite, directamente o delegando en IAM. Hay tres mecanismos: la *key policy* (obligatoria: toda clave tiene *exactamente una*), las *políticas IAM* (solo cuentan si la key policy delega en la cuenta) y los *grants* (permisos puntuales que se crean y revocan por API).
 
 === Una key policy, comentada
 
@@ -280,13 +280,6 @@ Rotar es generar material criptográfico nuevo. Las claves *AWS managed* rotan s
   tarjeta("Programar el borrado", color: col.iam, subtitulo: "irreversible al acabar la espera")[`ScheduleKeyDeletion` con una espera de *7 a 30 días* (30 por defecto), durante la que puedes cancelar. Después, la clave se destruye y lo cifrado con ella es *irrecuperable*.],
 )
 
-=== Material importado, custom key stores y cuotas
-
-/ Material importado (BYOK): creas una clave sin material e importas el tuyo, envuelto con una clave pública que te da KMS. Puedes fijarle caducidad o borrarlo al instante (la clave queda inutilizable hasta reimportarlo), pero conservar una copia es cosa tuya.
-/ Custom key stores: el material vive en tu propio clúster de *CloudHSM* o, con un *external key store*, en un gestor de claves fuera de AWS al que KMS llama mediante un proxy (si cortas el acceso, AWS no puede descifrar). Solo admiten claves simétricas y añaden coste y complejidad: úsalos si una normativa lo exige.
-
-KMS limita las peticiones por segundo por cuenta y región. Las operaciones criptográficas con claves simétricas comparten una cuota (de miles a decenas de miles por segundo, según la región), mucho menor con asimétricas, y las peticiones de los servicios en tu nombre también cuentan. Si la superas recibes `ThrottlingException`: reintenta con backoff exponencial (los SDK ya lo hacen), usa S3 Bucket Keys o caché de claves de datos, o pide un aumento en Service Quotas. Y cada llamada a KMS, también las de los servicios en tu nombre, queda en CloudTrail: quién descifró qué, cuándo y con qué contexto (capítulo de Observabilidad).
-
 == KMS en los servicios de AWS
 
 Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la clave y la key policy decide si el servicio puede usarla en tu nombre.
@@ -324,20 +317,19 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
   [*Lambda*], [Variables de entorno], [Clave AWS managed (`aws/lambda`)], [Customer managed si quieres decidir quién puede descifrarlas],
 )
 
-*S3.* Con SSE-S3 (el cifrado por defecto) S3 gestiona las claves sin coste, pero no controlas ni auditas su uso; con SSE-KMS hay doble llave (permiso de S3 *y* de KMS) y cada uso queda en CloudTrail. Existen también DSSE-KMS (doble capa) y SSE-C (tu clave en cada petición). El problema de SSE-KMS es el volumen: una petición a KMS por objeto escrito y otra por lectura. Con *S3 Bucket Keys*, S3 obtiene de KMS una clave de vida corta a nivel de bucket y deriva de ella las de muchos objetos: las llamadas a KMS caen en picado (AWS habla de hasta un 99 % menos de coste de peticiones).
+*S3.* Con SSE-S3 (el cifrado por defecto) S3 gestiona las claves sin coste, pero no controlas ni auditas su uso; con SSE-KMS hay doble llave (permiso de S3 *y* de KMS) y cada uso queda en CloudTrail (los demás métodos, DSSE-KMS y SSE-C, están en el capítulo de Almacenamiento). El problema de SSE-KMS es el volumen: una petición a KMS por objeto escrito y otra por lectura. Con *S3 Bucket Keys*, S3 obtiene de KMS una clave de vida corta a nivel de bucket y deriva de ella las de muchos objetos: las llamadas a KMS caen en picado (AWS habla de hasta un 99 % menos de coste de peticiones).
 
 #cuidado[Con SSE-KMS, `s3:GetObject` no basta: quien lee necesita `kms:Decrypt` sobre la clave, y quien sube, `kms:GenerateDataKey` (y `kms:Decrypt` en las subidas multiparte). Es la causa número uno de _Access Denied_ «misteriosos» con objetos cifrados.]
 
-*EBS y RDS.* Con el *cifrado por defecto de EBS* activado en la región, todo volumen nuevo y toda copia de snapshot se cifran sin que nadie tenga que acordarse; un volumen existente se cifra creando otro desde su snapshot. En RDS, el cifrado se decide al crear la instancia y *no se activa en caliente* (capítulo de Bases de datos):
-
-#pasos(
-  [Crea un snapshot manual de la instancia sin cifrar y *cópialo activando el cifrado* con la clave KMS elegida.],
-  [*Restaura* una instancia nueva desde la copia cifrada y apunta la aplicación a su endpoint (si la parada es inaceptable, replica antes los datos, por ejemplo con AWS DMS).],
-)
+*EBS y RDS.* Con el *cifrado por defecto de EBS* activado en la región, todo volumen nuevo y toda copia de snapshot se cifran sin que nadie tenga que acordarse; un volumen existente se cifra creando otro desde su snapshot. En RDS, el cifrado se decide al crear la instancia y *no se activa en caliente*: crea un snapshot manual, *cópialo activando el cifrado* con la clave KMS elegida, restaura desde la copia una instancia nueva y apunta a ella la aplicación (si la parada es inaceptable, replica antes los datos, por ejemplo con AWS DMS).
 
 == KMS frente a CloudHSM, cifrado en cliente y costes
 
-*AWS CloudHSM* te da HSM dedicados (_single-tenant_) en tu VPC. A diferencia de KMS, gestionas tú los usuarios y las claves del HSM: AWS opera el hardware, pero no tiene acceso a tus claves.
+Con KMS, AWS genera y custodia el material de tus claves. Si una normativa exige más control, hay tres escalones:
+
+/ Material importado (BYOK, _bring your own key_): creas una clave sin material e importas el tuyo, envuelto con una clave pública que te da KMS. Puedes fijarle caducidad o borrarlo al instante (la clave queda inutilizable hasta reimportarlo), pero conservar una copia es cosa tuya.
+/ Custom key stores: el material vive en tu propio clúster de *CloudHSM* o, con un *external key store*, en un gestor de claves fuera de AWS al que KMS llama mediante un proxy (si cortas el acceso, AWS no puede descifrar). Solo admiten claves simétricas y añaden coste y complejidad: úsalos si una normativa lo exige.
+/ AWS CloudHSM: HSM dedicados (_single-tenant_) en tu VPC, que usas directamente. A diferencia de KMS, gestionas tú los usuarios y las claves del HSM: AWS opera el hardware, pero no tiene acceso a tus claves.
 
 #tabla(("", "AWS KMS", "AWS CloudHSM"), columnas: (1.05fr, 1.6fr, 1.75fr), tamano: 8.2pt,
   [Modelo], [Servicio multi-tenant totalmente gestionado; alta disponibilidad incluida], [HSM dedicados en tu VPC; la alta disponibilidad la diseñas tú (varios HSM en varias AZ)],
@@ -354,6 +346,8 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
 - *Customer managed:* del orden de un dólar al mes por clave, prorrateado por horas; las primeras rotaciones lo incrementan, con un tope. Cada réplica multi-región cuenta como clave.
 - *Peticiones:* del orden de céntimos por cada 10 000 simétricas (más las asimétricas), con capa gratuita; las de claves AWS managed también pueden cobrarse.
 - La factura grande suele venir de las peticiones, no de las claves.]
+
+Además de costar, las peticiones tienen cuota: KMS limita las que admite por segundo en cada cuenta y región. Las operaciones criptográficas con claves simétricas comparten una cuota (de miles a decenas de miles por segundo, según la región), mucho menor con asimétricas, y las peticiones de los servicios en tu nombre también cuentan. Si la superas recibes `ThrottlingException`: reintenta con backoff exponencial (los SDK ya lo hacen), usa S3 Bucket Keys o caché de claves de datos, o pide un aumento en Service Quotas.
 
 === KMS desde la línea de comandos
 
@@ -387,9 +381,8 @@ Una contraseña escrita en el código, en un fichero de configuración o en una 
   [Rotación automática], [#si Integrada], [#no Tendrías que montarla (EventBridge + Lambda)],
   [Tamaño máximo], [64 KB], [4 KB (Standard) · 8 KB (Advanced)],
   [Coste], [Por secreto (menos de un dólar al mes) + llamadas], [Standard: gratis · Advanced: céntimos por parámetro al mes],
-  [Réplica entre regiones], [#si Réplicas de secretos], [#no],
   [Jerarquías], [#parcial Nombres con `/` y filtros por prefijo], [#si Rutas (`/prod/pagos/db-url`) y lectura por ruta (`GetParametersByPath`)],
-  [Entre cuentas], [#si Política de recursos + clave customer managed], [#parcial Parámetros Advanced compartidos con AWS RAM],
+  [Entre cuentas y regiones], [#si Política de recursos + clave customer managed; réplicas en otras regiones], [#parcial Parámetros Advanced compartidos con AWS RAM; sin réplicas],
   [Úsalo para], [Credenciales de bases de datos, claves de API que rotan, acceso entre cuentas o regiones], [URLs, _feature flags_, IDs de AMI, configuración por entorno, secretos que no rotan],
 )
 
@@ -456,7 +449,7 @@ Los Security Groups y las NACL (capítulo de Redes) filtran por IP, puerto y pro
     desc[Capas 3 a 7: IPS con firmas, filtrado por dominio], [],
     desc[Capa 7 a nivel regional, junto a la aplicación], [],
     desc[Capas 3 y 4: puertos y orígenes permitidos],
-    grid.cell(colspan: 9, banda([*AWS Shield* · Standard (gratis, siempre activo): DDoS de capas 3 y 4 en todo AWS · Advanced (de pago): capa 7, equipo de respuesta y protección de costes], col.edge)),
+    grid.cell(colspan: 9, banda([*AWS Shield* · protección frente a DDoS en todo el recorrido: Standard, gratis y automático; Advanced, de pago], col.edge)),
   )
 ]
 
@@ -476,8 +469,7 @@ Shield protege frente a ataques de denegación de servicio distribuida (DDoS). T
 #tabla(("", "Shield Standard", "Shield Advanced"), columnas: (1.05fr, 1.45fr, 2fr), tamano: 8.2pt,
   [Precio], [Incluido, sin coste y automático], [Del orden de miles de dólares al mes por organización, con compromiso de un año, más transferencia de datos],
   [Qué cubre], [Ataques comunes de capas 3 y 4 (SYN floods, reflexión UDP…) en toda la infraestructura de AWS], [Detección y mitigación avanzadas, también de capa 7 (con WAF), para CloudFront, Route 53, Global Accelerator, ELB e IP elásticas],
-  [Equipo de respuesta 24/7 (SRT)], no, [#si Con un plan de soporte Business o superior],
-  [Protección de costes], no, [#si Créditos por el escalado que provoque un ataque],
+  [Equipo de respuesta y protección de costes], no, [#si Equipo de respuesta 24/7 (SRT, con soporte Business o superior) y créditos por el escalado que provoque un ataque],
   [AWS WAF], [Se paga aparte], [Incluido para los recursos protegidos (con excepciones)],
 )
 
@@ -497,17 +489,7 @@ Prevenir no basta: algo acabará escapándose. Estos servicios vigilan cuentas, 
   [*Detective*], [Ayuda a investigar el origen y el alcance], [CloudTrail, Flow Logs, hallazgos de GuardDuty, logs de EKS → grafo de comportamiento], [Todas las llamadas e IP de un rol sospechoso en las últimas horas],
 )
 
-En 2025 AWS renombró las comprobaciones de postura de Security Hub como *Security Hub CSPM* y amplió Security Hub para correlacionar hallazgos y priorizar riesgos, pero el patrón no cambia: los detectores envían hallazgos a un punto central, de ahí pasan a *EventBridge* (capítulo de Mensajería) y una regla dispara la respuesta automática, como resume la figura de más abajo.
-
-Por ejemplo, este patrón de EventBridge captura los hallazgos de GuardDuty de severidad alta o crítica para enviarlos a una función que aísle la instancia:
-
-```json
-{
-  "source": ["aws.guardduty"],
-  "detail-type": ["GuardDuty Finding"],
-  "detail": { "severity": [{ "numeric": [">=", 7] }] }
-}
-```
+En 2025 AWS renombró las comprobaciones de postura de Security Hub como *Security Hub CSPM* y amplió Security Hub para correlacionar hallazgos y priorizar riesgos, pero el patrón no cambia: los detectores envían hallazgos a un punto central, de ahí pasan a *EventBridge* (capítulo de Mensajería) y una regla dispara la respuesta automática, como resume la figura de más abajo. Por ejemplo, una regla cuyo patrón seleccione los eventos `GuardDuty Finding` con `severity` de 7 o más (alta o crítica) puede invocar una función que aísle la instancia.
 
 #practica[Activa GuardDuty y Security Hub en *todas* las cuentas y regiones, también las que no usas: con credenciales robadas, un atacante suele lanzar instancias justo donde nadie mira. Con un administrador delegado en AWS Organizations, las cuentas nuevas quedan cubiertas solas.]
 
@@ -549,7 +531,7 @@ Ningún control es perfecto, así que se apilan: si una capa falla, la siguiente
 #diagrama(pie: [Defensa en profundidad: cada capa frena lo que la anterior dejó pasar; la identidad es transversal y la detección vigila todas las capas.])[
   #set text(hyphenate: false)
   #set par(justify: false)
-  #let alto = 0.95cm
+  #let alto = 0.88cm
   #let capas-dd = (
     ("Borde", "primer contacto", col.edge, ("CloudFront", "AWS WAF", "AWS Shield", "Route 53")),
     ("Red", "qué habla con qué", col.redes, ("Subredes privadas", "Security Groups", "NACL", "Network Firewall")),
@@ -623,12 +605,12 @@ Ante una alarma seria —una instancia hablando con un servidor de mando y contr
    [Porque usa cifrado envolvente: `Encrypt` admite como máximo 4 KB y enviar los datos sería lento y caro. KMS solo genera y descifra la clave de datos; los datos se cifran en local.]),
   ([Debes compartir con la cuenta de auditoría un snapshot de RDS cifrado con `aws/rds`. ¿Cómo?],
    [Las AWS managed no se comparten: copia el snapshot cifrándolo con una customer managed, permite a la otra cuenta en su key policy y comparte el snapshot (en destino, IAM debe conceder el uso de la clave).]),
-  ([Hay que cifrar una base de datos RDS de producción creada sin cifrado. ¿Qué haces?],
-   [Snapshot → copia cifrada con la clave elegida → restaurar una instancia nueva → cambiar el endpoint de la aplicación (o replicar antes con DMS para reducir la parada).]),
+  ([En una key policy ves `"Principal": {"AWS": "arn:aws:iam::111122223333:root"}` con `kms:*`. ¿Da acceso total al usuario raíz?],
+   [No: ese principal es la cuenta entera. La sentencia delega en IAM, de modo que las políticas IAM de la cuenta deciden quién usa la clave; sin ella, esas políticas no tendrían ningún efecto sobre la clave.]),
   ([Activas la rotación automática de una clave. ¿Qué pasa con los datos ya cifrados?],
    [Nada: ID, ARN y alias no cambian, y KMS conserva el material antiguo para descifrarlos. Lo nuevo se cifra con el material actual.]),
-  ([Tu certificado de ACM no aparece al configurar HTTPS en CloudFront. ¿Por qué?],
-   [CloudFront solo usa certificados de ACM de us-east-1: hay que solicitarlo o importarlo en esa región.]),
+  ([Tu web recibe intentos de inyección SQL por el puerto 443. ¿Por qué no basta un Security Group y qué usas?],
+   [El Security Group filtra por IP, puerto y protocolo, y el ataque llega por el 443 como cualquier petición legítima. Hace falta AWS WAF (capa 7) en CloudFront o en el ALB, con reglas gestionadas frente a inyecciones y límites de tasa.]),
   ([GuardDuty detecta una instancia que consulta dominios de minería de criptomonedas. ¿Qué automatizas y qué evitas?],
    [Una regla de EventBridge que invoque una Lambda para aislar la instancia, hacer snapshots y avisar al equipo; luego rotar credenciales e investigar con CloudTrail y Detective. No la termines antes de preservar las evidencias.]),
 )

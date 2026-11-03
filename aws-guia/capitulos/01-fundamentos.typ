@@ -258,8 +258,8 @@ La *computación en la nube* (_cloud computing_) es la entrega bajo demanda de r
 
 Los servicios se clasifican según cuántas capas de la pila gestiona el proveedor por ti. Cuanto más subes, menos control tienes, pero también menos trabajo operativo:
 
-- *IaaS* (_Infrastructure as a Service_): recibes máquinas virtuales, discos y redes, y gestionas todo lo demás desde el sistema operativo. Ejemplos: Amazon EC2, EBS, VPC.
-- *PaaS* (_Platform as a Service_): aportas código y datos; el proveedor se ocupa del sistema operativo, el runtime, los parches y el escalado. Ejemplo: AWS Elastic Beanstalk; servicios gestionados como Amazon RDS o AWS Lambda siguen la misma filosofía.
+- *IaaS* (_Infrastructure as a Service_): recibes máquinas virtuales, discos y redes, y gestionas todo lo demás desde el sistema operativo. Ejemplos: Amazon EC2 (servidores virtuales), EBS (discos) y VPC (redes privadas).
+- *PaaS* (_Platform as a Service_): aportas código y datos; el proveedor se ocupa del sistema operativo, el runtime, los parches y el escalado. Ejemplo: AWS Elastic Beanstalk; servicios gestionados como Amazon RDS (bases de datos) o AWS Lambda (funciones sin servidores que administrar) siguen la misma filosofía.
 - *SaaS* (_Software as a Service_): consumes una aplicación terminada, como un correo web o un CRM; en AWS, Amazon Connect (centro de contacto).
 
 #diagrama(pie: [Quién gestiona cada capa en cada modelo de servicio.])[
@@ -272,11 +272,11 @@ Los servicios se clasifican según cuántas capas de la pila gestiona el proveed
 
 Un centro de datos propio es un *gasto de capital* (CapEx): compras por adelantado servidores que amortizarás durante años y tienes que adivinar cuánta capacidad necesitarás. La nube lo convierte en *gasto operativo* (OpEx): pagas cada mes lo que consumes. Además aprovechas las economías de escala de AWS, ganas agilidad (un servidor tarda minutos, no semanas) y puedes desplegar en otros continentes en minutos.
 
-La *escalabilidad* es la capacidad de crecer para atender más carga: en vertical (_scale up_, una máquina mayor) o en horizontal (_scale out_, más máquinas). La *elasticidad* va más allá: añadir y quitar capacidad *automáticamente* según la demanda, de modo que pagas solo lo que usas en cada momento. En AWS la consigues con EC2 Auto Scaling (capítulo de EC2) o con servicios _serverless_, que escalan solos.
+La *escalabilidad* es la capacidad de crecer para atender más carga: en vertical (_scale up_, una máquina mayor) o en horizontal (_scale out_, más máquinas). La *elasticidad* va más allá: añadir y quitar capacidad *automáticamente* según la demanda, de modo que pagas solo lo que usas en cada momento. En AWS la consigues con EC2 Auto Scaling (capítulo de Balanceo de carga y Auto Scaling) o con servicios _serverless_, que escalan solos.
 
-#place(auto, float: true, clearance: 1.2em, diagrama(pie: [Capacidad propia frente a capacidad elástica a lo largo del tiempo.])[
+#diagrama(pie: [Capacidad propia frente a capacidad elástica a lo largo del tiempo.])[
   #fila(espacio: 18pt, _grafico-capacidad, _leyenda-capacidad)
-])
+]
 
 == La infraestructura global de AWS
 
@@ -286,7 +286,9 @@ Una *región* es un área geográfica concreta con varios centros de datos, iden
 
 Cada región se divide en al menos tres *zonas de disponibilidad* (_Availability Zones_, AZ). Una AZ es uno o más centros de datos con energía, refrigeración y red redundantes, separada de las demás por muchos kilómetros (pero a menos de 100 km) para que un incendio o un corte eléctrico no afecte a dos a la vez. Las AZ se conectan con fibra dedicada y latencias de un solo dígito de milisegundos, lo que permite repartir una aplicación entre varias sin sacrificar rendimiento.
 
-#place(auto, float: true, clearance: 1.2em, diagrama(pie: [Una región agrupa varias AZ aisladas, cada una con uno o más centros de datos. Fuera de las regiones, AWS acerca su infraestructura a los usuarios.])[
+Las *Local Zones* acercan un subconjunto de servicios (EC2, EBS, subredes…) a grandes ciudades, con latencias de milisegundos de un dígito; se nombran a partir de su región (`us-west-2-lax-1a`) y hay que habilitarlas. Las *Wavelength Zones* viven dentro de redes 5G de operadores. Con *AWS Outposts*, AWS instala y gestiona su hardware en tu centro de datos. Las *ubicaciones de borde* ejecutan CloudFront, Route 53, Global Accelerator, WAF y Shield; no lanzas instancias en ellas.
+
+#diagrama(pie: [Una región agrupa varias AZ aisladas, cada una con uno o más centros de datos. Fuera de las regiones, AWS acerca su infraestructura a los usuarios.])[
   #zona("Región eu-west-1 (Irlanda)", color: col.fundamentos, punteada: false, relleno: white)[
     #fila(espacio: 4pt,
       zona("AZ eu-west-1a", color: col.redes)[#columna(_cpd, _cpd)],
@@ -303,9 +305,7 @@ Cada región se divide en al menos tres *zonas de disponibilidad* (_Availability
     zona("AWS Outposts", color: col.neutro)[#svc("OUT", "Hardware de AWS", sub: "en tu centro de datos", color: col.neutro)],
     zona("Edge locations", color: col.edge)[#svc("PoP", "CDN y DNS", sub: "CloudFront, Route 53", color: col.edge)],
   )
-])
-
-Las *Local Zones* acercan un subconjunto de servicios (EC2, EBS, subredes…) a grandes ciudades, con latencias de milisegundos de un dígito; se nombran a partir de su región (`us-west-2-lax-1a`) y hay que habilitarlas. Las *Wavelength Zones* viven dentro de redes 5G de operadores. Con *AWS Outposts*, AWS instala y gestiona su hardware en tu centro de datos. Las *ubicaciones de borde* ejecutan CloudFront, Route 53, Global Accelerator, WAF y Shield; no lanzas instancias en ellas.
+]
 
 #examen[Los nombres de AZ (`eu-west-1a`) se asignan de forma independiente en cada cuenta: tu `eu-west-1a` puede ser otra ubicación física que la de otra cuenta. Para coordinarte entre cuentas usa el *AZ ID* (`euw1-az1`).]
 
@@ -376,9 +376,7 @@ El *Well-Architected Framework* reúne las buenas prácticas y preguntas que AWS
 
 == Formas de trabajar con AWS
 
-En AWS *todo es una API*. Cada clic en la consola, cada comando y cada llamada de un SDK se convierten en una petición HTTPS a un _endpoint_ del servicio (como `ec2.eu-west-1.amazonaws.com`), firmada con tus credenciales (Signature Version 4) y registrada por AWS CloudTrail (capítulo de Observabilidad). Lo que cambia es la herramienta:
-
-la *consola* web, para explorar y tareas puntuales; la *AWS CLI v2* (`aws <servicio> <acción>`), para consultas rápidas y scripts; *AWS CloudShell*, una terminal en el navegador ya autenticada con tu identidad de la consola, con la CLI instalada y 1 GB persistente por región; los *SDK* (boto3 para Python, JavaScript, Java, Go…), para integrar AWS en tus aplicaciones; y la *infraestructura como código* (CloudFormation, CDK, Terraform), la forma recomendada de gestionar entornos (capítulo de Infraestructura como código).
+En AWS *todo es una API*. Cada clic en la consola, cada comando y cada llamada de un SDK se convierten en una petición HTTPS a un _endpoint_ del servicio (como `ec2.eu-west-1.amazonaws.com`), firmada con tus credenciales (Signature Version 4) y registrada por AWS CloudTrail (capítulo de Observabilidad). Lo que cambia es la herramienta: la *consola* web, para explorar y tareas puntuales; la *AWS CLI v2* (`aws <servicio> <acción>`), para consultas rápidas y scripts; *AWS CloudShell*, una terminal en el navegador ya autenticada con tu identidad de la consola, con la CLI instalada y 1 GB persistente por región; los *SDK* (boto3 para Python, JavaScript, Java, Go…), para integrar AWS en tus aplicaciones; y la *infraestructura como código* (CloudFormation, CDK, Terraform), la forma recomendada de gestionar entornos (capítulo de Infraestructura como código).
 
 ```bash
 aws sts get-caller-identity     # ¿con qué identidad y en qué cuenta estoy?
@@ -387,15 +385,15 @@ aws s3 ls --profile prod --region eu-south-2    # perfil y región explícitos
 
 == Cuentas, usuario root e identificadores
 
-Una *cuenta AWS* es el contenedor de tus recursos y, a la vez, un *límite de seguridad* y de *facturación*. Se identifica con 12 dígitos (`123456789012`); lo habitual es usar varias, agrupadas con AWS Organizations (capítulos de IAM).
+Una *cuenta AWS* es el contenedor de tus recursos y, a la vez, un *límite de seguridad* y de *facturación*. Se identifica con 12 dígitos (`123456789012`); lo habitual es usar varias, agrupadas con AWS Organizations, que verás en el capítulo IAM (II).
 
 === El usuario root
 
 Al crear la cuenta nace su *usuario root*, que entra con el correo y la contraseña del registro y tiene *acceso total e irrestricto*, facturación incluida. Las políticas de IAM no pueden limitarlo en su propia cuenta, así que es tu credencial más valiosa. Úsalo solo para las pocas tareas que lo exigen —cambiar el correo o la contraseña root, cerrar la cuenta, restaurar permisos si el único administrador se ha bloqueado, activar _MFA Delete_ en S3…— y protégelo así:
 
 #pasos(
-  [*Activa MFA*, mejor con una llave FIDO2 o una _passkey_, y registra más de un dispositivo. AWS la exige de forma progresiva al root desde 2024.],
-  [*No crees access keys* de root y elimina las que existan.],
+  [*Activa MFA* (autenticación multifactor: un segundo factor además de la contraseña), mejor con una llave FIDO2 o una _passkey_, y registra más de un dispositivo. AWS la exige de forma progresiva al root desde 2024.],
+  [*No crees access keys* de root (las claves para usar la CLI o la API) y elimina las que existan.],
   [Usa un *correo corporativo* compartido (una lista de distribución) y una contraseña larga guardada en un gestor.],
   [Trabaja a diario con otra identidad (idealmente de IAM Identity Center) y *vigila* con una alerta cada inicio de sesión del root. Con Organizations puedes incluso eliminar las credenciales root de las cuentas miembro (gestión centralizada del acceso root, 2024).],
 )
@@ -416,7 +414,7 @@ arn:aws:s3:::mis-fotos/*                             # comodín: todos los objet
 
 == Etiquetas y cuotas de servicio
 
-Una *etiqueta* (_tag_) es un par clave-valor que adjuntas a un recurso, como `Entorno=prod` o `Proyecto=tienda`. Sirven para *repartir costes* (las _cost allocation tags_ se activan en la consola de facturación), *automatizar* (apagar de noche todo lo que tenga `Horario=oficina`), *controlar el acceso* por atributos (ABAC, capítulo de permisos de IAM) y *organizar* (Resource Groups, Tag Editor). La mayoría de servicios admiten hasta 50 etiquetas por recurso, que distinguen mayúsculas y minúsculas; el prefijo `aws:` está reservado. Define unas pocas obligatorias y aplícalas desde tu código de infraestructura.
+Una *etiqueta* (_tag_) es un par clave-valor que adjuntas a un recurso, como `Entorno=prod` o `Proyecto=tienda`. Sirven para *repartir costes* (las _cost allocation tags_ se activan en la consola de facturación), *automatizar* (apagar de noche todo lo que tenga `Horario=oficina`), *controlar el acceso* por atributos (ABAC, capítulo IAM (II)) y *organizar* (Resource Groups, Tag Editor). La mayoría de servicios admiten hasta 50 etiquetas por recurso, que distinguen mayúsculas y minúsculas; el prefijo `aws:` está reservado. Define unas pocas obligatorias y aplícalas desde tu código de infraestructura.
 
 Cada cuenta tiene además *cuotas* por servicio y, casi siempre, por región: protegen a AWS de abusos y a ti de errores caros. Unas son *ajustables* y se amplían pidiéndolo en la consola de *Service Quotas* (o con `aws service-quotas`); otras son *fijas*, parte del diseño del servicio. Revísalas antes de un lanzamiento, porque un aumento puede tardar desde minutos hasta días.
 
@@ -428,7 +426,7 @@ Cada cuenta tiene además *cuotas* por servicio y, casi siempre, por región: pr
 
 == Facturación básica y capa gratuita
 
-AWS factura *por uso*: tiempo de cómputo, GB-mes almacenados, peticiones y GB transferidos. La entrada de datos desde Internet suele ser gratuita; la salida a Internet, entre regiones y entre AZ se paga. Hay descuentos por compromiso (Savings Plans) y capacidad sobrante barata pero interrumpible (Spot); para controlar el gasto, *Cost Explorer*, *AWS Budgets* y la *Pricing Calculator* (capítulo de Costes).
+AWS factura *por uso*: tiempo de cómputo, GB-mes almacenados, peticiones y GB transferidos. La entrada de datos desde Internet suele ser gratuita; la salida a Internet, entre regiones y entre AZ se paga. Hay descuentos por compromiso (Savings Plans) y capacidad sobrante barata pero interrumpible (Spot), que verás en el capítulo de EC2; para controlar el gasto, *Cost Explorer*, *AWS Budgets* y la *Pricing Calculator* (capítulo de Costes).
 
 La *capa gratuita* (_Free Tier_) cambió el 15 de julio de 2025: las cuentas nuevas reciben *créditos promocionales* y eligen entre un plan gratuito, limitado en tiempo y servicios, y un plan de pago; algunos servicios mantienen ofertas «siempre gratuitas». Las cuentas anteriores conservan sus ofertas de 12 meses hasta que vencen. Consulta las condiciones vigentes.
 
