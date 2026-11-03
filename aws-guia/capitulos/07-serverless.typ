@@ -146,9 +146,7 @@ Cada invocación se ejecuta en un *entorno de ejecución*: una microVM Firecrack
 / Invoke: ejecuta el handler; al terminar, el entorno se *congela* y queda listo para otra invocación (_warm start_).
 / Shutdown: tras un tiempo sin uso, o periódicamente para aplicar actualizaciones, Lambda destruye el entorno.
 
-Un *cold start* es la latencia extra de una invocación que necesita un entorno nuevo: la primera, cada invocación *concurrente* adicional al escalar y las que llegan tras un periodo de inactividad. Va de decenas de milisegundos en funciones pequeñas de Python o Node.js a varios segundos en Java o imágenes grandes; según AWS, en cargas reales afecta a menos del 1 % de las invocaciones.
-
-#coste[Desde agosto de 2025, AWS factura la fase Init en todas las configuraciones (antes era gratuita para funciones .zip con runtimes gestionados): una inicialización pesada añade latencia y también coste.]
+Un *cold start* es la latencia extra de una invocación que necesita un entorno nuevo: la primera, cada invocación *concurrente* adicional al escalar y las que llegan tras un periodo de inactividad. Va de decenas de milisegundos en funciones pequeñas de Python o Node.js a varios segundos en Java o imágenes grandes; según AWS, en cargas reales afecta a menos del 1 % de las invocaciones. Y no solo cuesta tiempo: desde agosto de 2025, AWS factura la fase Init en todas las configuraciones (antes era gratuita en las funciones .zip con runtimes gestionados).
 
 #tarjetas(
   tarjeta("SnapStart", subtitulo: "Java, Python y .NET")[
@@ -198,13 +196,7 @@ Hay tres formas de llegar a una función, y en cada una cambia quién espera la 
   ]
 ]
 
-El comportamiento depende del origen. Las colas SQS y los _streams_, divididos en _shards_ (particiones ordenadas), se explican a fondo en el capítulo de Mensajería e integración:
-
-#tabla(("Event source mapping", "SQS", "Kinesis y DynamoDB Streams"), columnas: (1fr, 1.6fr, 1.8fr), tamano: 8.2pt,
-  [Paralelismo y lotes], [Lambda añade sondeadores según la profundidad de la cola; lotes de hasta 10~000 mensajes (10 en FIFO)], [Un lote por _shard_ a la vez (hasta 10 con el _parallelization factor_); hasta 10~000 registros],
-  [Orden], [No (Standard); por _message group_ (FIFO)], [Sí, dentro de cada _shard_],
-  [Si el lote falla], [Los mensajes vuelven a la cola y se reintentan; tras varios fallos, van a la DLQ de la cola], [Se reintenta y *bloquea el shard* hasta que tiene éxito o caduca; se puede partir el lote y fijar un destino de fallo],
-)
+El comportamiento depende del origen (colas y _streams_ se explican a fondo en el capítulo de Mensajería e integración). Con *SQS*, Lambda añade sondeadores a medida que crece la cola y, si un lote falla, sus mensajes vuelven a la cola para reintentarse hasta acabar en su DLQ. Un _stream_ de *Kinesis* o de *DynamoDB Streams* se divide en _shards_ (particiones ordenadas): Lambda procesa un lote por shard a la vez (hasta 10 con el _parallelization factor_) y respeta el orden, así que un lote que falla *bloquea el shard* hasta que tiene éxito o caduca. Para evitarlo, puedes partir en dos el lote que falla y enviar los registros fallidos a un destino.
 
 == Permisos, red y configuración
 
@@ -228,7 +220,7 @@ aws lambda add-permission --function-name procesar-foto \
 
 Cómo se combinan estas políticas con las de identidad lo explica el capítulo «IAM (II): permisos — políticas y evaluación».
 
-*Lambda en una VPC.* Por defecto, una función llega a Internet y a los endpoints públicos de AWS, pero no a recursos privados como una base de datos RDS. Para alcanzarlos la asocias a subredes y Security Groups; Lambda crea *Hyperplane ENIs* compartidas por las funciones con la misma combinación, así que ya no añade cold starts apreciables.
+*Lambda en una VPC.* Por defecto, una función llega a Internet y a los endpoints públicos de AWS, pero no a recursos privados como una base de datos RDS. Para alcanzarlos la asocias a subredes y Security Groups; Lambda crea interfaces de red (*Hyperplane ENIs*) compartidas por las funciones con la misma combinación, de modo que conectarla a una VPC ya no alarga apreciablemente los cold starts.
 
 #cuidado[Una función conectada a una VPC *pierde el acceso a Internet*, incluso en una subred pública: sus ENI nunca tienen IP pública. Necesitas subredes privadas con ruta a un NAT Gateway o, para S3, DynamoDB o Secrets Manager, VPC endpoints (capítulo de Redes).]
 
@@ -251,9 +243,9 @@ En la práctica, SAM o CodeDeploy desplazan el tráfico gradualmente (`Canary10P
   #set text(hyphenate: false)
   #fila(svc("API", "API Gateway", sub: "invoca …:prod", color: col.serverless), flecha(largo: 1.1cm),
     caja([*Alias* `prod`], color: col.serverless, ancho: 2cm),
-    columna(espacio: 2pt,
-      fila(flecha(etiqueta: "90 %", largo: 1.5cm), svc("v5", "Versión 5", sub: "estable", color: col.neutro)),
-      fila(flecha(etiqueta: "10 %", largo: 1.5cm), svc("v6", "Versión 6", sub: "canary", color: col.serverless))),
+    columna(espacio: 0pt,
+      fila(flecha(etiqueta: "90 %", largo: 1.5cm), caja([*Versión 5* · estable], color: col.neutro, ancho: 3cm)),
+      fila(flecha(etiqueta: "10 %", largo: 1.5cm), caja([*Versión 6* · canary], color: col.serverless, ancho: 3cm))),
     flecha(etiqueta: "errores", largo: 1.3cm, punteada: true),
     svc("CW", "Alarma", sub: "CloudWatch · rollback", color: col.observabilidad))
 ]
@@ -266,13 +258,11 @@ Para exponer una función por HTTPS sin más, una *function URL* da un endpoint 
 - *Hazla idempotente*: un identificador por operación y una escritura condicional (por ejemplo, en DynamoDB) evitan cobrar dos veces un pedido.
 - *Una función, una responsabilidad*, con pocas dependencias: paquetes pequeños, cold starts cortos.
 - *Evita bucles recursivos* (escribir en el bucket o la cola que te dispara); Lambda detecta y corta algunos, no todos.
-- *No orquestes desde el código* encadenando funciones que se esperan: para eso está Step Functions.
+- *No orquestes desde el código* encadenando funciones que se esperan: para eso está Step Functions (o, desde finales de 2025, las *durable functions* de Lambda, que guardan su progreso en _checkpoints_ y esperan sin consumir cómputo).
 - *Observa*: Lambda envía la salida estándar a CloudWatch Logs, con formato JSON y niveles nativos (capítulo de Observabilidad).
 - *Apóyate en Powertools for AWS Lambda*, biblioteca de código abierto de AWS (Python, TypeScript, Java y .NET) que aplica estas prácticas en pocas líneas: logs JSON, trazas de X-Ray, métricas, idempotencia sobre DynamoDB, respuestas parciales de lote y secretos con caché.
 
-#coste[Pagas por petición (del orden de 0,20 USD por millón) y por GB-segundo, más la concurrencia aprovisionada, el `/tmp` extra y la transferencia de datos; la capa gratuita incluye un millón de peticiones al mes. Lambda es imbatible con tráfico bajo o irregular; con carga alta y constante, compara con Fargate o EC2 (los Compute Savings Plans también cubren Lambda).]
-
-#nota(titulo: "Novedades de finales de 2025")[*Lambda Managed Instances* ejecuta funciones sobre instancias EC2 gestionadas por Lambda, para cargas estables, y las *durable functions* permiten funciones de varios pasos que guardan su progreso en _checkpoints_ y esperan sin consumir cómputo.]
+#coste[Pagas por petición (del orden de 0,20 USD por millón) y por GB-segundo, más la concurrencia aprovisionada, el `/tmp` extra y la transferencia de datos; la capa gratuita incluye un millón de peticiones al mes. Lambda es imbatible con tráfico bajo o irregular; con carga alta y constante, compara con Fargate o EC2 (los Compute Savings Plans también cubren Lambda) o con *Lambda Managed Instances* (finales de 2025), que ejecuta tus funciones sobre instancias EC2 gestionadas por Lambda.]
 
 == Amazon API Gateway
 
