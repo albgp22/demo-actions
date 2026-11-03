@@ -317,11 +317,11 @@ Sigue este orden: *1) cumplimiento* —si una ley, un contrato o tu política ex
 
 Saber en qué nivel vive cada recurso te dice qué fallos puede sufrir y desde dónde puedes usarlo:
 
-#block(breakable: false, tarjetas(
+#tarjetas(
   tarjeta("Globales", color: col.iam, subtitulo: "No dependen de una región")[IAM, Route 53, CloudFront, Organizations. En la consola, el selector de región muestra «Global».],
   tarjeta("Regionales", color: col.redes, subtitulo: "Resisten la caída de una AZ")[S3, DynamoDB, SQS, Lambda, VPC, KMS. S3 es regional, aunque los nombres de bucket son únicos en todo el mundo.],
   tarjeta("Zonales", color: col.computo, subtitulo: "Caen si cae su AZ")[Instancias EC2, volúmenes EBS, subredes. Un volumen EBS solo se conecta a instancias de su AZ; para moverlo, usa un _snapshot_ (regional).],
-))
+)
 
 == El modelo de responsabilidad compartida
 
@@ -345,7 +345,7 @@ Cuanto más gestionado es el servicio, más capas asume AWS (el hardware y las i
 
 El *Well-Architected Framework* reúne las buenas prácticas y preguntas que AWS ha destilado de miles de arquitecturas reales para evaluar un diseño y detectar riesgos a tiempo. Tiene seis pilares:
 
-#block(breakable: false, tarjetas(columnas: 3,
+#tarjetas(columnas: 3,
   tarjeta("Excelencia operativa", color: col.observabilidad, subtitulo: "Operar, observar y mejorar")[
     - Operaciones como código.
     - Cambios pequeños y reversibles; aprender de cada fallo.
@@ -358,8 +358,6 @@ El *Well-Architected Framework* reúne las buenas prácticas y preguntas que AWS
     - Recuperación automática y probada.
     - Escalar en horizontal; no adivinar capacidad.
   ],
-))
-#block(breakable: false, tarjetas(columnas: 3,
   tarjeta("Eficiencia del rendimiento", color: col.computo, subtitulo: "Los recursos adecuados")[
     - Tecnologías avanzadas como servicio.
     - Serverless, alcance global y experimentación.
@@ -372,7 +370,7 @@ El *Well-Architected Framework* reúne las buenas prácticas y preguntas que AWS
     - Medir el impacto y maximizar la utilización.
     - Hardware y servicios más eficientes.
   ],
-))
+)
 
 #consejo[La *AWS Well-Architected Tool* de la consola guía gratis la revisión de una carga pilar a pilar, con *lentes* especializadas (Serverless, SaaS, IA generativa…). Recuerda que los pilares compiten: más fiabilidad suele costar más.]
 
@@ -438,11 +436,11 @@ La *capa gratuita* (_Free Tier_) cambió el 15 de julio de 2025: las cuentas nue
 
 == Disponibilidad, tolerancia a fallos y recuperación ante desastres
 
-#block(breakable: false, tarjetas(columnas: 3,
+#tarjetas(columnas: 3,
   tarjeta("Alta disponibilidad", color: col.datos, subtitulo: "Minimizar la caída")[Ante un fallo puede haber un corte breve mientras conmuta. *Ej.:* RDS Multi-AZ conmuta a su réplica en uno o dos minutos.],
   tarjeta("Tolerancia a fallos", color: col.computo, subtitulo: "Ninguna interrupción visible")[Redundancia activa: sigue funcionando aunque falle un componente. *Ej.:* instancias en tres AZ con margen para perder una.],
   tarjeta("Recuperación (DR)", color: col.seguridad, subtitulo: "Volver tras un evento grave")[_Disaster recovery_: restaurar el servicio tras perder una región, un borrado masivo o un _ransomware_. Se mide con RTO y RPO.],
-))
+)
 
 La disponibilidad se expresa en «nueves»; cada nueve más divide por diez la caída permitida. La redundancia es la palanca: dos instancias independientes del 99~% solo fallan a la vez con probabilidad 0,01 × 0,01, así que juntas llegan al 99,99~%.
 

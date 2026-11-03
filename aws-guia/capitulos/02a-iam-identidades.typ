@@ -192,10 +192,10 @@ Imagina que tu cuenta AWS es un edificio de oficinas de una gran empresa con var
 
 Un *principal* es quien hace una petición a AWS: una persona o una aplicación que actúa con una identidad. Conviene distinguir dos cosas que se confunden a menudo: las *identidades* que creas en IAM y a las que adjuntas permisos (usuarios, grupos y roles) y el *principal* que firma cada petición: el usuario root, un usuario IAM, una *sesión* de un rol, una identidad federada o un servicio de AWS que actúa en tu nombre. La sutileza importa: un grupo es una identidad (le adjuntas políticas), pero *nunca firma una petición*; y un rol tampoco firma nada por sí mismo: lo hace una *sesión del rol*, que nace cuando alguien lo asume.
 
-#block(breakable: false, tarjetas(
+#tarjetas(
   tarjeta("Autenticación", color: col.iam, subtitulo: "¿Quién eres?")[Demostrar la identidad: contraseña y MFA en la consola; en la CLI y los SDK, una *firma criptográfica* (Signature Version 4) que se calcula con la clave secreta y acompaña a cada petición. La clave secreta nunca viaja.],
   tarjeta("Autorización", color: col.datos, subtitulo: "¿Puedes hacer esto?")[AWS reúne el *contexto de la petición* —principal, acción (`s3:GetObject`), recurso (su ARN) y datos del entorno (IP, hora, región, etiquetas)— y lo evalúa contra las políticas que aplican.],
-))
+)
 
 Cada principal tiene un ARN, y aprender a leerlos te ahorrará muchos quebraderos de cabeza al revisar errores o registros de CloudTrail:
 
