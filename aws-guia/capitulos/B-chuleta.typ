@@ -4,10 +4,6 @@
 //  Utilidades locales del apéndice
 // ---------------------------------------------------------------------
 
-// El tema dibuja los títulos de nivel 1 en blanco (para la portada de capítulo):
-// en el apéndice, sobre fondo blanco, lo mostramos en el color de texto principal.
-#show heading.where(level: 1): it => block(above: 12pt, below: 8pt,
-  text(32pt, weight: "extrabold", fill: marino, hyphenate: false, it.body))
 
 // Título de sección del apéndice (sin numerar y fuera del índice)
 #let seccion(t) = heading(level: 2, numbering: none, outlined: false, t)

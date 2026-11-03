@@ -279,12 +279,14 @@ Una web corporativa, una documentación o el front-end de una aplicación de una
 )
 
 ```json
-{ "Effect": "Allow",
-  "Principal": { "Service": "cloudfront.amazonaws.com" },
-  "Action": "s3:GetObject",
-  "Resource": "arn:aws:s3:::mi-web/*",
-  "Condition": { "StringEquals": {
-    "AWS:SourceArn": "arn:aws:cloudfront::111111111111:distribution/E1A2B3C4D5" } } }
+{ "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": { "Service": "cloudfront.amazonaws.com" },
+    "Action": "s3:GetObject",
+    "Resource": "arn:aws:s3:::mi-web/*",
+    "Condition": { "StringEquals": { "AWS:SourceArn":
+      "arn:aws:cloudfront::111111111111:distribution/E1A2B3C4D5" } } }] }
 ```
 
 #consejo(titulo: "Variantes")[Con OAC usa el endpoint REST del bucket, no el de _website_ de S3 (solo HTTP y exige bucket público). Si necesitas renderizado en servidor, *AWS Amplify Hosting*; con tráfico previsible, los planes de tarifa plana de CloudFront.]

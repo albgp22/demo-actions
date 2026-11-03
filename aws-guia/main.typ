@@ -66,9 +66,9 @@
     text(30pt, weight: "extrabold", fill: marino, "Cómo leer esta guía")
   })
 
-  Esta guía recorre los servicios y conceptos de AWS que aparecen una y otra vez en cualquier proyecto real: identidad y permisos, redes, cómputo, contenedores y Kubernetes, *serverless*, almacenamiento, bases de datos, mensajería, entrega de contenido, observabilidad, seguridad y cifrado, infraestructura como código y costes. Cada capítulo empieza por el *porqué* de cada servicio, construye los conceptos paso a paso y termina con un resumen y preguntas de repaso.
+  Esta guía recorre los servicios y conceptos de AWS que aparecen una y otra vez en cualquier proyecto real: identidad y permisos, redes, cómputo, contenedores y Kubernetes, _serverless_, almacenamiento, bases de datos, mensajería, entrega de contenido, observabilidad, seguridad y cifrado, infraestructura como código y costes. Cada capítulo empieza por el _porqué_ de cada servicio, construye los conceptos paso a paso y termina con un resumen y preguntas de repaso.
 
-  Puedes leerla de principio a fin —el orden está pensado para que cada capítulo se apoye en los anteriores— o saltar directamente al servicio que necesites. Los capítulos de *Fundamentos*, *IAM* y *Redes* son la base de todo lo demás: si eres nuevo en AWS, empieza por ellos. IAM ocupa dos capítulos a propósito: el primero responde a *quién* (usuarios, grupos, roles y *permission sets*) y el segundo a *qué puede hacer* (políticas y evaluación de permisos). Es el tema que más dudas genera y el que más conviene dominar.
+  Puedes leerla de principio a fin —el orden está pensado para que cada capítulo se apoye en los anteriores— o saltar directamente al servicio que necesites. Los capítulos de _Fundamentos_, _IAM_ y _Redes_ son la base de todo lo demás: si eres nuevo en AWS, empieza por ellos. IAM ocupa dos capítulos a propósito: el primero responde a _quién_ (usuarios, grupos, roles y _permission sets_) y el segundo a _qué puede hacer_ (políticas y evaluación de permisos). Es el tema que más dudas genera y el que más conviene dominar.
 
   #v(4pt)
   #text(11pt, weight: "bold", fill: marino, "Cajas que encontrarás a lo largo del texto")
@@ -88,7 +88,7 @@
   )
 
   #text(11pt, weight: "bold", fill: marino, "Convenciones")
-  - Los nombres de servicios y la terminología técnica se mantienen en inglés, como los verás en la consola y la documentación (*bucket*, *Security Group*, *listener*…), explicados la primera vez que aparecen.
+  - Los nombres de servicios y la terminología técnica se mantienen en inglés, como los verás en la consola y la documentación (_bucket_, _Security Group_, _listener_…), explicados la primera vez que aparecen.
   - Los comandos usan la AWS CLI v2 (`aws ...`). Los identificadores como `123456789012` o `mi-bucket` son ejemplos.
   - Los precios y límites cambian con frecuencia y dependen de la región: tómalos como orientación y consulta siempre la documentación oficial y la calculadora de precios de AWS.
 ]

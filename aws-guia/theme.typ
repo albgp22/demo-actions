@@ -504,6 +504,9 @@
     paper: "a4",
     margin: (x: 2.1cm, top: 2.4cm, bottom: 2.2cm),
     header: context {
+      // Sin cabecera en las páginas donde empieza un capítulo o apéndice
+      let pg = here().page()
+      if query(heading.where(level: 1)).any(h => h.location().page() == pg) { return }
       let previos = query(heading.where(level: 1).before(here()))
       if previos.len() == 0 { return }
       let h1 = previos.last()
@@ -538,7 +541,13 @@
   set heading(numbering: "1.1")
   show heading.where(level: 1): it => {
     set par(justify: false, leading: 0.35em)
-    text(32pt, weight: "extrabold", fill: white, hyphenate: false, it.body)
+    if it.numbering == none {
+      // Apéndices: título oscuro sobre fondo blanco
+      block(above: 8pt, below: 8pt, text(30pt, weight: "extrabold", fill: marino, hyphenate: false, it.body))
+    } else {
+      // Capítulos: título blanco sobre la banda de color de la apertura
+      block(text(32pt, weight: "extrabold", fill: white, hyphenate: false, it.body))
+    }
   }
   show heading.where(level: 2): it => {
     v(1.5em, weak: true)

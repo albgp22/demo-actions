@@ -24,10 +24,6 @@
   definicion
 })
 
-// El tema dibuja los títulos de nivel 1 en blanco (para la portada de capítulo):
-// en el apéndice, sobre fondo blanco, lo mostramos en el color de texto principal.
-#show heading.where(level: 1): it => block(above: 12pt, below: 8pt,
-  text(32pt, weight: "extrabold", fill: marino, hyphenate: false, it.body))
 
 #apendice("A", "Glosario", color: col.fundamentos,
   subtitulo: [Los términos y siglas que aparecen a lo largo de la guía, con una definición breve. Las palabras en _cursiva_ dentro de una definición tienen su propia entrada.])
