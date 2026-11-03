@@ -339,20 +339,26 @@
 }
 
 // Zona / agrupación (Región, VPC, subred, AZ, cuenta...)
-#let zona(titulo, color: col.redes, punteada: true, relleno: auto, ancho: auto, body) = box(
-  width: ancho,
-  stroke: (paint: color, thickness: 1pt, dash: if punteada { "dashed" } else { none }),
-  radius: 6pt,
-  fill: if relleno == auto { color.lighten(95%) } else { relleno },
-  inset: (top: 17pt, x: 9pt, bottom: 9pt),
-  {
-    place(top + left, dx: -3pt, dy: -13pt, box(
-      fill: color, inset: (x: 5pt, y: 2.5pt), radius: 3pt,
-      text(6.3pt, weight: "bold", fill: white, tracking: 0.4pt, upper(titulo)),
-    ))
-    align(center, body)
-  },
-)
+#let zona(titulo, color: col.redes, punteada: true, relleno: auto, ancho: auto, body) = context {
+  // La etiqueta del título nunca se parte: se mide a su ancho natural y la zona
+  // se ensancha si hace falta para que la etiqueta quepa dentro del borde.
+  let etiqueta = box(
+    fill: color, inset: (x: 5pt, y: 2.5pt), radius: 3pt,
+    text(6.3pt, weight: "bold", fill: white, tracking: 0.4pt, hyphenate: false, upper(titulo)),
+  )
+  let w = measure(etiqueta).width
+  box(
+    width: ancho,
+    stroke: (paint: color, thickness: 1pt, dash: if punteada { "dashed" } else { none }),
+    radius: 6pt,
+    fill: if relleno == auto { color.lighten(95%) } else { relleno },
+    inset: (top: 17pt, x: 9pt, bottom: 9pt),
+    {
+      place(top + left, dx: -3pt, dy: -13pt, box(width: w, etiqueta))
+      align(center, stack(dir: ttb, spacing: 0pt, align(center, body), box(width: w - 12pt, height: 0pt)))
+    },
+  )
+}
 
 // Marco de figura para diagramas
 #let diagrama(pie: none, body) = figure(
