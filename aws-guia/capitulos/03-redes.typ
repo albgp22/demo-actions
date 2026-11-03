@@ -3,18 +3,7 @@
 // ---------------------------------------------------------------------
 //  Utilidades locales de este capítulo (diagramas a medida)
 // ---------------------------------------------------------------------
-#let _m(s, size: 7.4pt) = text(font: "JetBrains Mono", size: size, s)
-
-// En este capítulo las cajas destacadas no se parten entre páginas
-#let _entera(caja-tema) = (titulo: none, body) => block(breakable: false,
-  above: 1.1em, below: 1.1em, caja-tema(titulo: titulo, body))
-#let nota = _entera(nota)
-#let consejo = _entera(consejo)
-#let cuidado = _entera(cuidado)
-#let examen = _entera(examen)
-#let coste = _entera(coste)
-#let practica = _entera(practica)
-#let analogia = _entera(analogia)
+#let _m(s, size: 7.4pt) = text(font: "JetBrains Mono", ligatures: false, features: (calt: 0), size: size, s)
 
 // Un octeto en binario: los bits de red van en color y los de host en blanco
 #let _octeto(valor, inicio, prefijo, c) = {
@@ -24,7 +13,7 @@
     box(width: 0.3cm, height: 0.42cm, radius: 1.5pt,
       fill: if red { c } else { white },
       stroke: if red { none } else { 0.6pt + c.lighten(45%) },
-      align(center + horizon, text(6.5pt, weight: "bold", font: "JetBrains Mono",
+      align(center + horizon, text(6.5pt, weight: "bold", font: "JetBrains Mono", ligatures: false, features: (calt: 0),
         fill: if red { white } else { c.darken(10%) }, str(bit))))
   })
   stack(dir: ttb, spacing: 3pt,
@@ -58,7 +47,7 @@
 #let _celda(cidr, nota, c) = block(width: 100%, fill: c.lighten(90%),
   stroke: 0.6pt + c.lighten(35%), radius: 4pt, inset: (x: 4pt, y: 5pt),
   align(center, {
-    text(8pt, weight: "bold", font: "JetBrains Mono", fill: c.darken(30%), cidr)
+    text(8pt, weight: "bold", font: "JetBrains Mono", ligatures: false, features: (calt: 0), fill: c.darken(30%), cidr)
     linebreak()
     text(6.5pt, fill: gris, nota)
   }))
@@ -79,15 +68,15 @@
     fill: (x, y) => if y == 0 { color.lighten(85%) },
     table.cell(colspan: 2, text(6.4pt, weight: "bold", fill: color.darken(30%), titulo)),
     ..rutas.pos().map(((d, t)) => (
-      text(6.6pt, font: "JetBrains Mono", fill: tinta, d),
-      text(6.6pt, font: "JetBrains Mono", weight: "bold", fill: color.darken(25%), "→ " + t),
+      text(6.6pt, font: "JetBrains Mono", ligatures: false, features: (calt: 0), fill: tinta, d),
+      text(6.6pt, font: "JetBrains Mono", ligatures: false, features: (calt: 0), weight: "bold", fill: color.darken(25%), "→ " + t),
     )).flatten()))
 
 // Campo de un registro de Flow Logs
 #let _campo(valor, nombre, c) = stack(dir: ttb, spacing: 3pt,
   align(center, box(fill: c.lighten(86%), stroke: 0.6pt + c.lighten(30%), radius: 3pt,
     inset: (x: 4pt, y: 4pt),
-    text(7.5pt, weight: "bold", font: "JetBrains Mono", fill: c.darken(30%), valor))),
+    text(7.5pt, weight: "bold", font: "JetBrains Mono", ligatures: false, features: (calt: 0), fill: c.darken(30%), valor))),
   align(center, text(6.3pt, fill: gris, nombre)))
 
 // Una AZ del diseño de referencia

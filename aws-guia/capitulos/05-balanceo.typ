@@ -3,15 +3,6 @@
 // ---------------------------------------------------------------------
 //  Ayudas locales
 // ---------------------------------------------------------------------
-// Las cajas destacadas de este capítulo son cortas: que no se partan entre páginas
-#let _entera(f) = (titulo: none, body) => block(breakable: false, f(titulo: titulo, body))
-#let nota = _entera(nota)
-#let consejo = _entera(consejo)
-#let cuidado = _entera(cuidado)
-#let examen = _entera(examen)
-#let coste = _entera(coste)
-#let practica = _entera(practica)
-#let analogia = _entera(analogia)
 
 // Icono compacto para filas con muchos elementos
 #let mini(abbr, titulo, color) = box(width: 1.7cm, align(center + top, stack(dir: ttb, spacing: 3pt,

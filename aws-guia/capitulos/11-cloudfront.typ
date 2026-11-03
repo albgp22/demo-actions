@@ -3,18 +3,7 @@
 // ---------------------------------------------------------------------
 //  Utilidades locales de este capítulo
 // ---------------------------------------------------------------------
-#let _m(s, size: 7.4pt) = text(font: "JetBrains Mono", size: size, s)
-
-// En este capítulo las cajas destacadas no se parten entre páginas
-#let _entera(caja-tema) = (titulo: none, body) => block(breakable: false,
-  above: 1.1em, below: 1.1em, caja-tema(titulo: titulo, body))
-#let nota = _entera(nota)
-#let consejo = _entera(consejo)
-#let cuidado = _entera(cuidado)
-#let examen = _entera(examen)
-#let coste = _entera(coste)
-#let practica = _entera(practica)
-#let analogia = _entera(analogia)
+#let _m(s, size: 7.4pt) = text(font: "JetBrains Mono", ligatures: false, features: (calt: 0), size: size, s)
 
 // Flecha horizontal hacia la izquierda (etiqueta debajo), para flujos de vuelta
 #let _izq(etiqueta: none, largo: 1.4cm, color: rgb("#7A8699")) = box(width: largo, height: 2.6em, {
@@ -381,7 +370,7 @@ Route 53 también es *registrador*: compra o transfiere dominios, con renovació
 
 #examen[IPs fijas, UDP o failover regional en segundos, sin caché → Global Accelerator. Contenido HTTP cacheable, funciones en el borde o WAF → CloudFront.]
 
-#block(breakable: false, resumen[
+#resumen[
 - *CloudFront* es la CDN de AWS: más de 700 puntos de presencia y una capa de Regional Edge Caches para reducir la latencia, descargar el origen y proteger la aplicación.
 - Una *distribución* combina orígenes (S3, ALB, servidores propios, API Gateway, Lambda function URLs, VPC origins) y *cache behaviors* por patrón de ruta; los *origin groups* aportan failover.
 - La *cache key* debe incluir solo lo que cambia la respuesta: *cache policy* (clave y TTL), *origin request policy* (qué se reenvía) y *response headers policy* (cabeceras añadidas).
@@ -391,7 +380,7 @@ Route 53 también es *registrador*: compra o transfiere dominios, con renovació
 - *CloudFront Functions* (eventos viewer, submilisegundo, baratas) frente a *Lambda\@Edge* (cuatro eventos, acceso a red, más potente).
 - *Route 53*: zonas públicas y privadas, registros *alias* en el apex, TTL, ocho políticas de enrutamiento y health checks para el failover.
 - *Global Accelerator*: dos IPs anycast estáticas, TCP y UDP y failover rápido, pero sin caché.
-])
+]
 
 #repaso(
   ([Tu certificado de ACM no aparece al configurar la distribución. ¿Por qué?], [Porque no está en `us-east-1`: CloudFront solo usa certificados de ACM de esa región.]),

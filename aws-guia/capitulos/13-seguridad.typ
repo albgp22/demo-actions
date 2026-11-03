@@ -79,7 +79,7 @@ El cifrado *simétrico* usa la misma clave para cifrar y descifrar: es rápido y
 
 == AWS KMS y sus tipos de clave
 
-*AWS Key Management Service (KMS)* crea y guarda claves criptográficas —las *claves KMS*— en HSM gestionados por AWS. Nunca ves el material de la clave: llamas a la API (`Encrypt`, `Decrypt`, `GenerateDataKey`, `Sign`…) y KMS opera dentro del HSM y te devuelve el resultado. Cada clave vive en una región y se usa a través del endpoint de KMS de esa región.
+*AWS Key Management Service (KMS)* crea y guarda claves criptográficas —las *claves KMS*— en HSM gestionados por AWS. Nunca ves el material de la clave: llamas a la API (`Encrypt`, `Decrypt`, `GenerateDataKey`, `Sign`…) y KMS opera dentro del HSM y te devuelve el resultado. Cada clave vive en una región y se usa a través del endpoint de KMS de esa región. (En exámenes y textos antiguos verás *CMK*, _customer master key_: hoy se dice *clave KMS*.)
 
 #ficha("AWS KMS", "Key Management Service: crea, guarda y usa claves criptográficas en HSM gestionados por AWS",
   ("Tipo", [Servicio gestionado y regional; pago por clave al mes y por petición]),
@@ -87,14 +87,12 @@ El cifrado *simétrico* usa la misma clave para cifrar y descifrar: es rápido y
   ("Control de acceso", [Key policy (obligatoria) + políticas IAM + grants]),
   ("Auditoría", [Cada uso de una clave queda registrado en CloudTrail]))
 
-#datos(("4 KB", [Máximo que cifra Encrypt de una vez]), ("1", [Key policy por clave, siempre]), ("365 días", [Periodo de rotación por defecto]), ("7–30 días", [Espera antes de borrar una clave]))
-
 === ¿De quién es la clave?
 
 La primera clasificación responde a quién crea y controla la clave; DynamoDB, por ejemplo, te deja elegir entre las tres.
 
 #tabla(("", "AWS owned", "AWS managed", "Customer managed"), columnas: (1.3fr, 1fr, 1.15fr, 1.35fr), tamano: 8pt,
-  [Qué es], [Claves de AWS que un servicio usa en muchas cuentas (cifrado por defecto de DynamoDB)], [Las crea un servicio en tu cuenta al usarlo: `aws/s3`, `aws/ebs`, `aws/rds`…], [Las creas y administras tú (`alias/app-pagos`)],
+  [Qué es], [Del servicio, compartidas entre cuentas (p. ej., DynamoDB por defecto)], [Las crea un servicio en tu cuenta: `aws/s3`, `aws/ebs`…], [Las creas y administras tú],
   [Visible y auditada en tu cuenta (CloudTrail)], no, si, si,
   [¿Editas su key policy?], no, [#no (solo lectura)], si,
   [¿La usas desde tu código?], no, [#no (solo vía el servicio)], si,
@@ -103,7 +101,7 @@ La primera clasificación responde a quién crea y controla la clave; DynamoDB, 
   [Coste], [Gratis], [Sin cuota mensual; pagas las peticiones], [Cuota mensual por clave + peticiones],
 )
 
-#examen[En exámenes y textos antiguos verás *CMK* (_customer master key_); hoy se dice *clave KMS*. Si el enunciado pide editar la key policy, rotar a voluntad, compartir con otra cuenta o poder borrar la clave, la respuesta es una *customer managed*.]
+#examen[Si el enunciado pide editar la key policy, rotar a voluntad, compartir la clave con otra cuenta o poder borrarla, la respuesta es una *customer managed*.]
 
 === ¿Qué criptografía? Simétricas, asimétricas y HMAC
 
@@ -123,13 +121,8 @@ El *uso* de una clave (cifrar, firmar, generar MAC…) se fija al crearla y no s
 
 == Quién puede usar una clave: key policies, IAM y grants
 
-En casi todo AWS, una política IAM basta para acceder a un recurso de tu cuenta (capítulo de IAM (II)). KMS es la excepción: *la key policy manda*. Nadie —ni siquiera el usuario raíz— puede usar ni administrar una clave si su key policy no lo permite, directamente o delegando en IAM.
+En casi todo AWS, una política IAM basta para acceder a un recurso de tu cuenta (capítulo de IAM (II)). KMS es la excepción: *la key policy manda*. Nadie —ni siquiera el usuario raíz— puede usar ni administrar una clave si su key policy no lo permite, directamente o delegando en IAM. Hay tres mecanismos: la *key policy* (obligatoria: toda clave tiene *exactamente una*), las *políticas IAM* (solo cuentan si la key policy delega en la cuenta) y los *grants* (permisos puntuales que se crean y revocan por API).
 
-#nb(tarjetas(columnas: 3,
-  tarjeta("Key policy", subtitulo: "política de recursos de la clave")[Obligatoria: toda clave tiene *exactamente una*. Dice quién la administra, quién la usa y si se delega en IAM.],
-  tarjeta("Políticas IAM", color: col.iam, subtitulo: "políticas de identidad")[Conceden acciones `kms:` a usuarios y roles, pero *solo cuentan si la key policy delega en la cuenta*.],
-  tarjeta("Grants", color: col.neutro, subtitulo: "permisos programáticos")[Permisos puntuales que se crean y revocan por API (`CreateGrant`). Solo permiten. Los usan sobre todo los servicios.],
-))
 
 === Una key policy, comentada
 
@@ -146,7 +139,8 @@ Si creas una clave sin indicar política, KMS le asigna la *política por defect
       "Principal": { "AWS": "arn:aws:iam::111122223333:role/AdminClaves" },
       "Action": [ "kms:Create*", "kms:Describe*", "kms:Enable*", "kms:List*",
         "kms:Put*", "kms:Update*", "kms:Revoke*", "kms:Disable*", "kms:Get*",
-        "kms:Delete*", "kms:ScheduleKeyDeletion", "kms:CancelKeyDeletion" ], "Resource": "*" },
+        "kms:Delete*", "kms:ScheduleKeyDeletion", "kms:CancelKeyDeletion" ],
+      "Resource": "*" },
     { "Sid": "Uso por la app solo via S3", "Effect": "Allow",
       "Principal": { "AWS": "arn:aws:iam::111122223333:role/AppPagos" },
       "Action": [ "kms:GenerateDataKey", "kms:Decrypt" ], "Resource": "*",
@@ -322,11 +316,11 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
   [*Lambda*], [Variables de entorno], [Clave AWS managed (`aws/lambda`)], [Customer managed si quieres decidir quién puede descifrarlas],
 )
 
-*S3: SSE-S3 frente a SSE-KMS.* Con SSE-S3, el cifrado por defecto, S3 gestiona las claves sin coste ni configuración, pero no controlas ni auditas su uso. Con SSE-KMS hay doble llave (permiso de S3 *y* de KMS) y cada uso queda en CloudTrail. (Existen también DSSE-KMS, con doble capa, y SSE-C, con tu propia clave en cada petición.) El problema de SSE-KMS es el volumen: una clave de datos por objeto escrito y un `Decrypt` por lectura. Con *S3 Bucket Keys*, S3 obtiene de KMS una clave de vida corta a nivel de bucket y deriva de ella las de muchos objetos, así que las llamadas a KMS caen en picado (AWS habla de hasta un 99 % menos de coste de peticiones). Más en el capítulo de Almacenamiento.
+*S3.* Con SSE-S3 (el cifrado por defecto) S3 gestiona las claves sin coste, pero no controlas ni auditas su uso; con SSE-KMS hay doble llave (permiso de S3 *y* de KMS) y cada uso queda en CloudTrail. Existen también DSSE-KMS (doble capa) y SSE-C (tu propia clave en cada petición). El problema de SSE-KMS es el volumen: una clave de datos por objeto escrito y un `Decrypt` por lectura. Con *S3 Bucket Keys*, S3 obtiene de KMS una clave de vida corta a nivel de bucket y deriva de ella las de muchos objetos: las llamadas a KMS caen en picado (AWS habla de hasta un 99 % menos de coste de peticiones).
 
 #cuidado[Con SSE-KMS, `s3:GetObject` no basta: quien lee necesita `kms:Decrypt` sobre la clave, y quien sube, `kms:GenerateDataKey` (y `kms:Decrypt` en las subidas multiparte). Es la causa número uno de _Access Denied_ «misteriosos» con objetos cifrados.]
 
-*EBS y RDS: cifrar lo que ya existe.* Con el *cifrado por defecto de EBS* activado en una región, todos los volúmenes nuevos y las copias de snapshots se cifran sin que nadie tenga que acordarse; un volumen existente se cifra creando uno nuevo a partir de su snapshot. En RDS, el cifrado se decide al crear la instancia y *no se puede activar en caliente* (ni desactivar). El camino, detallado en el capítulo de Bases de datos:
+*EBS y RDS.* Con el *cifrado por defecto de EBS* activado en la región, todo volumen nuevo y toda copia de snapshot se cifran sin que nadie tenga que acordarse; un volumen existente se cifra creando otro desde su snapshot. En RDS, el cifrado se decide al crear la instancia y *no se activa en caliente* (capítulo de Bases de datos):
 
 #nb(pasos(
   [Crea un snapshot manual de la instancia sin cifrar y *cópialo activando el cifrado* con la clave KMS elegida.],
@@ -399,27 +393,13 @@ resp = sm.get_secret_value(SecretId="prod/pagos/db")      # versión AWSCURRENT
 cred = json.loads(resp["SecretString"])                   # usuario, contraseña, host
 ```
 
-*Rotación.* Según la programación (cada N días o una expresión `rate`/`cron`), Secrets Manager invoca la función de rotación, que sigue cuatro pasos: `createSecret` genera la contraseña nueva como versión `AWSPENDING`, `setSecret` la cambia en la base de datos, `testSecret` comprueba que funciona y `finishSecret` le mueve la etiqueta `AWSCURRENT` (la anterior pasa a `AWSPREVIOUS`). Quien lee `AWSCURRENT` obtiene la nueva sin redesplegar.
+*Rotación.* Según la programación (cada N días o una expresión `rate`/`cron`), Secrets Manager invoca la función de rotación, que sigue cuatro pasos: `createSecret` genera la contraseña nueva como versión `AWSPENDING`, `setSecret` la cambia en la base de datos, `testSecret` comprueba que funciona y `finishSecret` le mueve la etiqueta `AWSCURRENT` (la anterior pasa a `AWSPREVIOUS`). Quien lee `AWSCURRENT` obtiene la nueva sin redesplegar. Cachea el secreto (en Lambda, la extensión _AWS Parameters and Secrets Lambda Extension_ lo hace por ti), pero reléelo si la conexión falla por credenciales.
 
 ```bash
 aws secretsmanager rotate-secret --secret-id prod/pagos/db \
     --rotation-lambda-arn arn:aws:lambda:eu-west-1:111122223333:function:rotar \
     --rotation-rules AutomaticallyAfterDays=30
 ```
-
-#diagrama(pie: [Rotación de un secreto de base de datos. La aplicación siempre lee la versión AWSCURRENT, así que no hay que redesplegarla.])[
-  #fila(espacio: 3pt,
-    svc("App", "Aplicación", sub: "ECS, Lambda, EC2…", color: col.computo),
-    flecha(etiqueta: "GetSecretValue", largo: 1.7cm),
-    svc("SM", "Secrets Manager", sub: "AWSCURRENT · AWSPENDING", color: col.seguridad),
-    flecha(etiqueta: "invoca · actualiza", largo: 1.7cm, doble: true),
-    svc("λ", "Función de rotación", sub: "create · set · test · finish", color: col.serverless),
-    flecha(etiqueta: "nueva contraseña", largo: 1.6cm),
-    svc("RDS", "Base de datos", sub: "RDS, Aurora…", color: col.datos),
-  )
-]
-
-#consejo[Cachea el secreto (en Lambda, la extensión _AWS Parameters and Secrets Lambda Extension_ lo hace por ti), pero vuelve a leerlo si la conexión falla por credenciales: tras una rotación, la contraseña en caché puede no valer.]
 
 #examen[¿Credenciales que deben rotar solas? *Secrets Manager*. ¿Configuración o un secreto sin rotación al menor coste? *Parameter Store* con `SecureString`. Ambos se referencian desde CloudFormation (`{{resolve:secretsmanager:...}}`, `{{resolve:ssm-secure:...}}`, capítulo de IaC) y desde las tareas de ECS.]
 
@@ -438,7 +418,7 @@ aws secretsmanager rotate-secret --secret-id prod/pagos/db \
 
 ACM se integra con ELB (ALB y NLB), CloudFront, API Gateway, App Runner y otros servicios. Los certificados son *regionales*: el de un ALB debe estar en la región del ALB.
 
-#cuidado[*CloudFront solo acepta certificados de ACM de us-east-1* (Norte de Virginia), porque es un servicio global, aunque tu origen esté en otra región. Lo mismo ocurre con las API _edge-optimized_ de API Gateway. Si no ves tu certificado en la distribución, casi seguro lo creaste en otra región.]
+#nb(cuidado[*CloudFront solo acepta certificados de ACM de us-east-1* (Norte de Virginia), porque es un servicio global, aunque tu origen esté en otra región. Lo mismo ocurre con las API _edge-optimized_ de API Gateway. Si no ves tu certificado en la distribución, casi seguro lo creaste en otra región.])
 
 *¿Y en mi propia EC2?* Un certificado público estándar de ACM no se puede instalar en tu servidor: ACM no deja exportar su clave privada, solo usarlo a través de los servicios integrados. Lo habitual es poner delante un ALB o CloudFront (terminan TLS con el certificado de ACM), usar _ACM for Nitro Enclaves_ o recurrir a otra CA. Desde 2025 ACM ofrece también certificados públicos *exportables*, instalables donde quieras, pero tienen coste y hay que redesplegarlos tras cada renovación.
 
@@ -626,7 +606,7 @@ Ante una alarma seria —una instancia hablando con un servidor de mando y contr
   ([¿Por qué S3 no envía tus objetos a KMS para cifrarlos?],
    [Porque usa cifrado envolvente: `Encrypt` admite como máximo 4 KB y enviar los datos sería lento y caro. KMS solo genera y descifra la clave de datos; los datos se cifran en local.]),
   ([Debes compartir con la cuenta de auditoría un snapshot de RDS cifrado con `aws/rds`. ¿Cómo?],
-   [Las AWS managed no se comparten: copia el snapshot cifrándolo con una customer managed, permite a la otra cuenta en su key policy y comparte el snapshot. En destino, una política IAM debe conceder el uso de la clave.]),
+   [Las AWS managed no se comparten: copia el snapshot cifrándolo con una customer managed, permite a la otra cuenta en su key policy y comparte el snapshot (en destino, IAM debe conceder el uso de la clave).]),
   ([Hay que cifrar una base de datos RDS de producción creada sin cifrado. ¿Qué haces?],
    [Snapshot → copia cifrada con la clave elegida → restaurar una instancia nueva → cambiar el endpoint de la aplicación (o replicar antes con DMS para reducir la parada).]),
   ([Activas la rotación automática de una clave. ¿Qué pasa con los datos ya cifrados?],

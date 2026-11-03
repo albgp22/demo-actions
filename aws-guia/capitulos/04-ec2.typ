@@ -5,15 +5,6 @@
 // ---------------------------------------------------------------------
 #let gf = rgb("#7A8699") // gris de las flechas del tema
 
-// Las cajas destacadas de este capítulo son cortas: que no se partan entre páginas
-#let _entera(f) = (titulo: none, body) => block(breakable: false, f(titulo: titulo, body))
-#let nota = _entera(nota)
-#let consejo = _entera(consejo)
-#let cuidado = _entera(cuidado)
-#let examen = _entera(examen)
-#let coste = _entera(coste)
-#let practica = _entera(practica)
-#let analogia = _entera(analogia)
 
 // Segmento recto y punta de flecha para diagramas dibujados sobre un lienzo
 #let seg(x1, y1, x2, y2, color: gf) = place(line(start: (x1, y1), end: (x2, y2), stroke: 1.2pt + color))
@@ -95,14 +86,14 @@ Da igual que lances la instancia desde la consola, la CLI, CloudFormation o un g
 
 Una *Amazon Machine Image (AMI)* es la plantilla de la que nace el disco raíz: sistema operativo, software preinstalado y configuración. Por dentro, una AMI respaldada por EBS es una o varias *snapshots* más los permisos de lanzamiento (qué cuentas pueden usarla) y el *block device mapping* (qué volúmenes crear). Las AMI son *regionales*: el mismo sistema tiene un ID `ami-...` distinto en cada región, y para llevar una AMI propia a otra región hay que copiarla.
 
-#block(breakable: false, tarjetas(
+#tarjetas(
   tarjeta("Públicas", subtitulo: "AWS, editores y comunidad")[Amazon Linux 2023, Ubuntu, Windows Server, RHEL... Cualquiera puede publicar _community AMIs_: comprueba siempre el propietario.],
   tarjeta("AWS Marketplace", subtitulo: "Software de terceros listo para usar")[Firewalls, bases de datos o sistemas endurecidos; la licencia se suma a tu factura de EC2, normalmente por hora.],
-))
-#block(breakable: false, above: -2pt, tarjetas(
+)
+#tarjetas(
   tarjeta("Propias", subtitulo: "Creadas por ti")[Desde una instancia configurada (`create-image`), con EC2 Image Builder o con Packer. Privadas por defecto; puedes compartirlas con otras cuentas.],
   tarjeta("Golden AMI", subtitulo: "La imagen oficial de la empresa")[AMI propia endurecida, parcheada, con los agentes corporativos y versionada. Todas las instancias parten de ella: arranques rápidos y homogéneos.],
-))
+)
 
 #diagrama(pie: [Canalización de una _golden AMI_. EC2 Image Builder automatiza construcción, pruebas y distribución, y puede repetirla periódicamente para incorporar parches.])[
   #fila(
@@ -200,10 +191,10 @@ Dentro de cada familia, el nombre completo no es arbitrario: se lee por partes.
 
 Las instancias *T* son baratas porque no garantizan el 100 % de la CPU: tienen una *línea base* (el 10 % por vCPU en una `t3.micro`) y acumulan *créditos de CPU* mientras trabajan por debajo; en los picos los gastan. Un crédito es una vCPU al 100 % durante un minuto.
 
-#block(breakable: false, tarjetas(
+#tarjetas(
   tarjeta("Modo standard", subtitulo: "Por defecto en T2")[Sin créditos, la CPU queda limitada a la línea base: barato y predecible, pero la aplicación se ralentiza.],
   tarjeta("Modo unlimited", color: col.balanceo, subtitulo: "Por defecto en T3, T3a y T4g")[Puedes superar la línea base sin créditos; si la media de 24 h la excede, pagas un recargo por los créditos excedentes.],
-))
+)
 
 #cuidado[Una T con CPU alta sostenida en modo _unlimited_ acaba costando más que una M equivalente. Si `CPUCreditBalance` vive en cero o `CPUSurplusCreditsCharged` crece, cambia de familia.]
 
