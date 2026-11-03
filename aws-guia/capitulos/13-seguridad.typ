@@ -323,7 +323,7 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
 
 *EBS y RDS.* Con el *cifrado por defecto de EBS* activado en la región, todo volumen nuevo y toda copia de snapshot se cifran sin que nadie tenga que acordarse; un volumen existente se cifra creando otro desde su snapshot. En RDS, el cifrado se decide al crear la instancia y *no se activa en caliente*: crea un snapshot manual, *cópialo activando el cifrado* con la clave KMS elegida, restaura desde la copia una instancia nueva y apunta a ella la aplicación (si la parada es inaceptable, replica antes los datos, por ejemplo con AWS DMS).
 
-== KMS frente a CloudHSM, cifrado en cliente y costes
+== BYOK, CloudHSM, cifrado en cliente y costes
 
 Con KMS, AWS genera y custodia el material de tus claves. Si una normativa exige más control, hay tres escalones:
 

@@ -84,25 +84,13 @@ La transferencia es la partida que más sorprende, porque no aparece en ningún 
   [*Trusted Advisor* y *Cost Optimization Hub*], [Comprobaciones de recursos ociosos o infrautilizados (las de coste requieren soporte Business o superior) y un panel que reúne todas las recomendaciones de ahorro.],
 )
 
-#consejo[El primer día en una cuenta nueva: un presupuesto mensual con alertas al 80 % del gasto real y al 100 % del previsto, y Cost Anomaly Detection activado. Cinco minutos que evitan sustos.]
+Configúralo el primer día en cada cuenta nueva: un presupuesto mensual con alertas al 80 % del gasto real y al 100 % del previsto, y Cost Anomaly Detection activado.
 
 === Etiquetas de asignación de costes
 
 Las etiquetas (_tags_) responden a «¿cuánto cuesta este proyecto?». Define un esquema común —`Proyecto`, `Entorno`, `Equipo`, `CentroDeCoste`—, aplícalo desde la IaC (con `default_tags`, como en el capítulo de Infraestructura como código) y hazlo obligatorio con *tag policies* de Organizations o SCP que denieguen crear recursos sin etiquetas. Las *Cost Categories* agrupan cuentas, servicios y etiquetas en categorías de negocio.
 
 #cuidado[Tus etiquetas no aparecen en Cost Explorer ni en Data Exports hasta que las *activas* como etiquetas de asignación de costes en la consola de facturación (en la cuenta de administración). Y no todo el gasto es etiquetable: el plan de soporte, por ejemplo, no lleva etiquetas.]
-
-== Modelos de compra
-
-Los modelos y la estrategia habitual —*compromisos* para la base que nunca baja, *On-Demand* para los picos y *Spot* para lo interrumpible— se explican en el capítulo «EC2: cómputo en la nube». Aquí importa a qué servicios llega cada descuento; los Savings Plans, un compromiso de gasto en \$/hora, se aplican solos a lo elegible:
-
-#tabla(("Modelo", "Descuento", "Plazo", "A qué se aplica"), columnas: (1.35fr, 0.85fr, 0.8fr, 3.3fr), tamano: 8pt,
-  [*Compute Savings Plans*], [hasta 66 %], [1 o 3 años], [EC2 de cualquier familia, tamaño, región o SO, además de *Fargate* y *Lambda*. El más flexible.],
-  [*EC2 Instance Savings Plans*], [hasta 72 %], [1 o 3 años], [Una familia de instancias EC2 en una región (cualquier tamaño, SO o AZ).],
-  [*Database Savings Plans*], [hasta 35 %], [1 año], [Bases de datos gestionadas: Aurora, RDS, DynamoDB, ElastiCache… (desde diciembre de 2025).],
-  [*Reserved Instances*], [hasta 72 %], [1 o 3 años], [EC2 y también RDS, ElastiCache, OpenSearch y Redshift.],
-  [*Spot*], [hasta 90 %], [—], [Capacidad sobrante de EC2 (y Fargate Spot) que AWS recupera con 2 minutos de aviso.],
-)
 
 == Estrategias de optimización
 
@@ -117,15 +105,27 @@ Los modelos y la estrategia habitual —*compromisos* para la base que nunca baj
 
 Súmales las palancas de la transferencia (endpoints de VPC en lugar de NAT, caché en CloudFront) y la retención de logs, que verás entre las trampas.
 
+== Modelos de compra
+
+Con los recursos ya ajustados, toca comprometer el uso estable. Los modelos y la estrategia —*compromisos* para la base que nunca baja, *On-Demand* para los picos y *Spot* para lo interrumpible— se explican en el capítulo «EC2: cómputo en la nube»; aquí importa a qué servicios llega cada descuento (los Savings Plans, un compromiso de gasto en \$/hora, se aplican solos):
+
+#tabla(("Modelo", "Descuento", "Plazo", "A qué se aplica"), columnas: (1.75fr, 0.85fr, 0.8fr, 3.3fr), tamano: 8pt,
+  [*Compute Savings Plans*], [hasta 66 %], [1 o 3 años], [EC2 (cualquier familia, región o SO), *Fargate* y *Lambda*],
+  [*EC2 Instance Savings Plans*], [hasta 72 %], [1 o 3 años], [Una familia de EC2 en una región (cualquier tamaño, SO o AZ)],
+  [*Database Savings Plans*], [hasta 35 %], [1 año], [Aurora, RDS, DynamoDB, ElastiCache… (desde diciembre de 2025)],
+  [*Reserved Instances*], [hasta 72 %], [1 o 3 años], [EC2 y también RDS, ElastiCache, OpenSearch y Redshift],
+  [*Spot*], [hasta 90 %], [—], [Capacidad sobrante de EC2 y Fargate; 2 minutos de aviso],
+)
+
 == Trampas comunes
 
 #tabla(("Trampa", "Por qué cuesta", "Cómo evitarla"), columnas: (1.2fr, 2.5fr, 2.3fr), tamano: 8pt,
   [*NAT Gateway*], [Hora por cada AZ más cada GB procesado, incluido el tráfico a S3, DynamoDB o ECR.], [Endpoints de gateway (y de interfaz si compensa); VPC Flow Logs para ver quién lo usa.],
-  [*IPv4 públicas y Elastic IPs*], [Desde febrero de 2024 cada IPv4 pública se cobra por hora (instancias, balanceadores, NAT), y una Elastic IP sin asociar también.], [Subredes privadas tras un balanceador, IPv6 donde se pueda, liberar EIPs e inventario con VPC IPAM.],
+  [*IPv4 públicas y Elastic IPs*], [Desde febrero de 2024 cada IPv4 pública se cobra por hora (instancias, balanceadores, NAT), también las EIP sin asociar.], [Subredes privadas tras un balanceador, IPv6 donde se pueda, liberar EIP; inventario con VPC IPAM.],
   [*Logs sin retención*], [Los GB almacenados se acumulan mes a mes, para siempre.], [Retención por grupo de logs; archivo en S3.],
   [*Snapshots y AMIs huérfanos*], [Se pagan por GB-mes aunque el volumen original ya no exista.], [Data Lifecycle Manager o AWS Backup con retención.],
   [*EBS sin adjuntar*], [Un volumen en estado _available_ cuesta lo mismo que uno en uso.], [Revisión periódica: snapshot si hace falta y borrar.],
-  [*Tráfico entre AZ*], [Microservicios «habladores» o lecturas de réplicas en otra AZ pagan cada GB en ambos sentidos.], [Afinidad por AZ, cachés locales y compresión.],
+  [*Tráfico entre AZ*], [Microservicios «habladores» o réplicas en otra AZ pagan cada GB en ambos sentidos.], [Afinidad por AZ, cachés locales y compresión.],
   [*Recursos olvidados*], [Entornos de prueba, balanceadores o clústeres en otra región siguen facturando.], [Etiquetas obligatorias, presupuestos y limpieza automática.],
 )
 
@@ -150,13 +150,12 @@ La métrica más útil es el *coste unitario* (por cliente, por pedido, por mill
 - Los grandes conductores son cómputo, almacenamiento y *transferencia*: entrar es gratis, salir y cruzar AZ o regiones cuesta, y el NAT Gateway cobra por GB procesado.
 - Cost Explorer analiza, Budgets avisa (y actúa), Data Exports da el detalle, Anomaly Detection vigila y Compute Optimizer recomienda tamaños.
 - Las etiquetas de asignación de costes solo cuentan una vez *activadas*; hazlas obligatorias desde la IaC y las políticas de Organizations.
-- Cubre la base con Savings Plans o RI, los picos con On-Demand y lo interrumpible con Spot (capítulo de EC2); Compute Savings Plans llega también a Fargate y Lambda, y Database Savings Plans a las bases de datos gestionadas.
+- Cubre la base con Savings Plans o RI, los picos con On-Demand y lo interrumpible con Spot (capítulo de EC2); Compute SP llega también a Fargate y Lambda.
 - Palancas rápidas: rightsizing, apagar dev de noche, Graviton, gp3, lifecycle de S3, retención de logs y endpoints de VPC.
 ]
 
 #repaso(
   ([¿Qué tráfico de datos no se cobra?], [La entrada desde Internet, el tráfico dentro de la misma AZ con IPs privadas, el acceso a S3 o DynamoDB por un endpoint de gateway en la misma región y la transferencia de un origen de AWS a CloudFront.]),
-  ([¿Qué diferencia hay entre Compute Savings Plans y EC2 Instance Savings Plans?], [Compute SP (hasta 66 %) vale para cualquier familia, región o SO de EC2 y para Fargate y Lambda; EC2 Instance SP (hasta 72 %) se limita a una familia en una región.]),
   ([Has etiquetado todo, pero las etiquetas no salen en Cost Explorer. ¿Por qué?], [Hay que activarlas como etiquetas de asignación de costes en la consola de facturación; hasta entonces no aparecen en los informes.]),
   ([Una instancia de desarrollo funciona 24/7 al 3 % de CPU. ¿Por qué cuesta lo mismo que si fuera al 90 % y qué haces?], [Porque se paga lo aprovisionado, no lo usado. Baja de talla con las recomendaciones de Compute Optimizer y apágala fuera de horario (EventBridge Scheduler o Instance Scheduler); si la carga es intermitente, valora un servicio serverless.]),
   ([La partida de NAT Gateway se ha disparado. ¿Qué revisas?], [Qué tráfico pasa por él (VPC Flow Logs); llevar S3 y DynamoDB a endpoints de gateway y valorar endpoints de interfaz para servicios como ECR o CloudWatch.]),
