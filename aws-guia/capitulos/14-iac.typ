@@ -6,9 +6,6 @@
 #let verde = rgb("#2F9E44")
 #let rojo = rgb("#E03131")
 
-// Sin ligaduras de código: que `--`, `->` o `~>` se lean tal cual
-#show raw: set text(features: (calt: 0))
-
 // Barra de reparto de tráfico entre versión actual (gris) y nueva (color)
 #let barra(p, ancho: 2.1cm) = columna(espacio: 2pt,
   box(width: ancho, height: 0.4cm, radius: 2pt, clip: true, stroke: 0.5pt + gris.lighten(45%), {
@@ -38,7 +35,7 @@
     [Plantillas y funciones de CloudFormation],
     [Change sets, rollback y políticas de borrado],
     [CDK, SAM y Terraform: cuándo usar cada uno],
-    [CI/CD con CodePipeline, CodeBuild y CodeDeploy],
+    [CodePipeline, CodeBuild y CodeDeploy],
     [Rolling, blue/green, canary y feature flags],
   ),
   servicios: ("CloudFormation", "AWS CDK", "AWS SAM", "Terraform", "CodePipeline", "CodeBuild", "CodeDeploy", "AppConfig"))
@@ -283,11 +280,11 @@ output "arn_bucket" { value = aws_s3_bucket.subidas.arn }
 
 La *integración continua* (CI) compila y prueba cada cambio en cuanto llega al repositorio; la *entrega* o *despliegue continuo* (CD) lleva ese artefacto ya probado hasta los entornos sin pasos manuales. AWS ofrece tres piezas gestionadas:
 
-#block(breakable: false, tarjetas(columnas: 3,
+#tarjetas(columnas: 3,
   tarjeta("CodePipeline", subtitulo: "el orquestador")[Etapas (Source → Build → Deploy), aprobaciones manuales y despliegues con CloudFormation, ECS, CodeDeploy o S3.],
   tarjeta("CodeBuild", subtitulo: "compilar y probar")[Contenedores efímeros que ejecutan tu `buildspec.yml` y publican artefactos e informes de tests. Pagas por tiempo de compilación.],
   tarjeta("CodeDeploy", subtitulo: "desplegar con seguridad")[EC2 u on-premises (_in-place_ o blue/green), Lambda y ECS (canary, lineal), con rollback por alarmas.],
-))
+)
 
 #nota(titulo: "¿Dónde vive el código?")[AWS cerró *CodeCommit* (repositorios Git) a nuevos clientes a mediados de 2024 y lo reabrió en noviembre de 2025. Aun así, lo habitual es usar GitHub, GitLab o Bitbucket conectados a CodePipeline con *AWS CodeConnections* (antes CodeStar Connections), o el CI del proveedor autenticándose en AWS con OIDC.]
 

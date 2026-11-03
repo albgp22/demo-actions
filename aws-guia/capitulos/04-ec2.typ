@@ -329,7 +329,7 @@ El *instance store* son discos (normalmente NVMe) físicamente conectados al hos
 #ficha("Amazon EFS", "Sistema de ficheros NFS elástico y totalmente gestionado",
   ("Protocolo", [NFS v4.0 y v4.1 para clientes Linux; miles de instancias, contenedores o funciones Lambda a la vez]),
   ("Ámbito", [Regional (datos en varias AZ) u One Zone; un _mount target_ por AZ con Security Group (puerto 2049)]),
-  ("Capacidad", [Crece y decrece sola; pagas por GB almacenado. Las clases IA y Archive abaratan lo que no se lee; el modo de rendimiento Elastic se ajusta solo]))
+  ("Capacidad", [Crece y decrece sola; pagas por GB almacenado. Las clases IA y Archive abaratan lo que no se lee; el modo de _throughput_ Elastic se ajusta solo]))
 
 Para otros protocolos o rendimiento extremo existe *Amazon FSx*: para Windows File Server (SMB y Active Directory), Lustre (HPC y ML, integrado con S3), NetApp ONTAP (NFS, SMB e iSCSI) y OpenZFS. Lo veremos junto a S3 en el capítulo de Almacenamiento.
 

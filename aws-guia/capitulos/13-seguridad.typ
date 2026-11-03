@@ -21,7 +21,7 @@
   place(center + bottom, rect(width: 8pt, height: 5.4pt, radius: 1.2pt, fill: color))
 })
 
-#capitulo("Seguridad: cifrado con KMS, secretos y protección", color: col.seguridad,
+#capitulo(text(hyphenate: false)[Seguridad: cifrado con KMS, secretos y protección], color: col.seguridad,
   subtitulo: [Cifra tus datos con claves que controlas, saca los secretos del código y levanta defensas en cada capa: del borde de la red a la respuesta ante incidentes.],
   objetivos: (
     [Cifrado en reposo y en tránsito; simétrico y asimétrico],
@@ -53,6 +53,8 @@ La primera parte del capítulo explica el cifrado y *AWS KMS* desde cero; la seg
 El cifrado *simétrico* usa la misma clave para cifrar y descifrar: es rápido y sirve para cualquier volumen de datos, pero hay que hacer llegar la clave, con seguridad, a quien descifra (el estándar es AES-256). El *asimétrico* usa un par de claves: lo que cifra la *pública*, que se reparte sin miedo, solo lo descifra la *privada*, que no sale de su dueño. Es mucho más lento, así que se usa para intercambiar claves y para *firmas digitales* (RSA, curvas elípticas o ECC). TLS combina ambos: acuerda con criptografía asimétrica una clave simétrica de sesión y cifra el tráfico con ella.
 
 #diagrama(pie: [Cifrado simétrico (una clave compartida) frente a asimétrico (un par de claves pública y privada).])[
+  #set text(hyphenate: false)
+  #set par(justify: false)
   #grid(columns: (2.5cm, auto), row-gutter: 12pt, column-gutter: 8pt, align: (left + horizon, center + horizon),
     [#text(9pt, weight: "bold", fill: col.seguridad)[Simétrico] \ #text(7pt, fill: gris)[una clave compartida \ AES-256]],
     fila(espacio: 3pt,
@@ -164,14 +166,16 @@ Si creas una clave sin indicar política, KMS le asigna la *política por defect
 KMS combina los tres mecanismos con la lógica que conoces de IAM (II): un _Deny_ explícito gana siempre y, para permitir, basta uno de los tres caminos. Por encima siguen aplicando las SCP y RCP de AWS Organizations y las políticas de los endpoints de VPC.
 
 #diagrama(pie: [Cómo decide KMS una petición (por ejemplo, AppPagos llama a kms:Decrypt). Un _Deny_ explícito deniega; para permitir basta uno de los tres caminos.])[
-  #let decision(t) = caja(box(width: 100%, height: 1.25cm, align(center + horizon, t)), color: col.seguridad, ancho: 2.55cm)
+  #set text(hyphenate: false)
+  #set par(justify: false)
+  #let decision(t) = caja(box(width: 100%, height: 1.25cm, align(center + horizon, t)), color: col.seguridad, ancho: 2.75cm)
   #let permitido = caja([*PERMITIDO*], color: col.almacenamiento, relleno: col.almacenamiento.lighten(85%), ancho: 2.3cm)
   #let denegado(t) = caja(t, color: col.iam, relleno: col.iam.lighten(85%), ancho: 2.2cm)
-  #grid(columns: (2.6cm, 0.65cm, 2.6cm, 0.65cm, 2.6cm, 0.65cm, 2.6cm, 0.65cm, 2.2cm), align: center + horizon, row-gutter: 1pt,
-    decision([¿Algún _Deny_ explícito? (key policy, IAM, SCP, RCP…)]), flecha(etiqueta: "no", largo: 0.65cm),
-    decision([#num(1) ¿La *key policy* lo permite a ese principal?]), flecha(etiqueta: "no", largo: 0.65cm),
-    decision([#num(2) ¿La key policy delega en la cuenta *y* IAM lo permite?]), flecha(etiqueta: "no", largo: 0.65cm),
-    decision([#num(3) ¿Algún *grant* lo permite?]), flecha(etiqueta: "no", largo: 0.65cm),
+  #grid(columns: (2.8cm, 0.5cm, 2.8cm, 0.5cm, 2.8cm, 0.5cm, 2.8cm, 0.5cm, 2.2cm), align: center + horizon, row-gutter: 1pt,
+    decision([¿Hay un _Deny_ explícito en alguna política?]), flecha(etiqueta: "no", largo: 0.5cm),
+    decision([#num(1) ¿La *key policy* lo permite a ese principal?]), flecha(etiqueta: "no", largo: 0.5cm),
+    decision([#num(2) ¿La key policy delega en la cuenta *y* IAM lo permite?]), flecha(etiqueta: "no", largo: 0.5cm),
+    decision([#num(3) ¿Algún *grant* lo permite?]), flecha(etiqueta: "no", largo: 0.5cm),
     denegado([*DENEGADO* \ (implícito)]),
     flecha-v(etiqueta: "sí", largo: 0.55cm), [], flecha-v(etiqueta: "sí", largo: 0.55cm), [],
     flecha-v(etiqueta: "sí", largo: 0.55cm), [], flecha-v(etiqueta: "sí", largo: 0.55cm), [], [],
@@ -186,6 +190,8 @@ Un *grant* da a un principal concreto ciertas operaciones sobre una clave, sin t
 Para que la cuenta B use una clave de la cuenta A hace falta permiso *en los dos lados*: la key policy (en A) debe permitir a la cuenta B o a un rol suyo, y una política IAM (en B) debe conceder a ese rol las acciones sobre el ARN de la clave. Si falta uno, se deniega. Desde B, la clave se indica por su *ARN completo* (el alias corto solo funciona en su cuenta), y solo se comparten operaciones de uso, nunca las de administración.
 
 #diagrama(pie: [Acceso entre cuentas: la propietaria lo permite en la key policy y la consumidora lo concede con IAM. Hacen falta las dos.])[
+  #set text(hyphenate: false)
+  #set par(justify: false)
   #fila(espacio: 6pt,
     zona("Cuenta B · 444455556666 · consumidora", color: col.iam)[
       #fila(espacio: 6pt,
@@ -219,6 +225,8 @@ Si KMS nunca deja salir sus claves, ¿cómo cifra S3 un objeto de 5 GB? No envi�
 )
 
 #diagrama(pie: [Cifrado envolvente. La clave KMS no sale de KMS: lo que viaja y se guarda junto a los datos es la clave de datos cifrada.])[
+  #set text(hyphenate: false)
+  #set par(justify: false)
   #let lbl(t, al) = box(width: 2.5cm, align(al, text(6.6pt, fill: tinta, t)))
   #let par-flechas(izq, der) = fila(espacio: 3pt, lbl(izq, right), flecha-v(arriba: true, largo: 1cm), h(8pt), flecha-v(largo: 1cm), lbl(der, left))
   #let guardado = fila(espacio: 0pt,
@@ -230,7 +238,7 @@ Si KMS nunca deja salir sus claves, ¿cómo cifra S3 un objeto de 5 GB? No envi�
         svc("KMS", "AWS KMS", sub: "la clave KMS no sale del HSM", color: col.seguridad),
         par-flechas([#num(1) GenerateDataKey], [#num(2) clave de datos en claro + cifrada]),
         svc("App", "Tu aplicación", sub: "o S3, EBS, RDS…", color: col.computo),
-        flecha-v(etiqueta: [#num(3) cifra en local \ #num(4) borra la clave en claro \ #num(5) guarda ambos juntos], largo: 1cm),
+        flecha-v(etiqueta: [#num(3) cifra en local \ #num(4) borra la clave en claro \ #num(5) guarda ambos juntos], largo: 1.45cm),
         guardado,
       )
     ],
@@ -239,7 +247,7 @@ Si KMS nunca deja salir sus claves, ¿cómo cifra S3 un objeto de 5 GB? No envi�
         svc("KMS", "AWS KMS", sub: "comprueba permisos y contexto", color: col.seguridad),
         par-flechas([#num(6) Decrypt (clave de datos cifrada)], [clave de datos en claro]),
         svc("App", "Tu aplicación", sub: "descifra en local y borra la clave", color: col.computo),
-        flecha-v(etiqueta: [lee ambos], largo: 1cm, arriba: true),
+        flecha-v(etiqueta: [lee ambos], largo: 1.45cm, arriba: true),
         guardado,
       )
     ],
@@ -285,22 +293,26 @@ KMS limita las peticiones por segundo por cuenta y región. Las operaciones crip
 Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la clave y la key policy decide si el servicio puede usarla en tu nombre.
 
 #diagrama(pie: [Los servicios integrados piden a KMS claves de datos en tu nombre; la key policy, IAM y los grants deciden si pueden, y CloudTrail registra cada llamada.])[
-  #zona("Servicios integrados: aplican el cifrado envolvente por ti", color: col.neutro, relleno: white)[
-    #fila(espacio: 3pt,
-      svc("S3", "Amazon S3", sub: "SSE-KMS", color: col.almacenamiento),
-      svc("EBS", "Amazon EBS", sub: "volúmenes y snapshots", color: col.computo),
-      svc("RDS", "RDS y Aurora", sub: "datos, backups, réplicas", color: col.datos),
-      svc("SM", "Secrets Manager", sub: "cada secreto", color: col.seguridad),
-      svc("λ", "AWS Lambda", sub: "variables de entorno", color: col.serverless),
-    )
-  ]
-  #flecha-v(etiqueta: [GenerateDataKey · Decrypt (en tu nombre)], largo: 0.8cm, doble: true)
-  #fila(espacio: 4pt,
-    caja([*Key policy, IAM y grants* \ deciden quién puede usarla], color: col.iam, ancho: 3cm),
-    flecha(etiqueta: "autorizan", largo: 1.1cm),
-    svc("KMS", "AWS KMS", sub: "claves en HSM", color: col.seguridad),
-    flecha(etiqueta: "cada llamada", largo: 1.5cm),
-    svc("CT", "AWS CloudTrail", sub: "quién, qué, cuándo", color: col.observabilidad),
+  #set text(hyphenate: false)
+  #set par(justify: false)
+  #columna(espacio: 2pt,
+    zona("Servicios integrados: aplican el cifrado envolvente por ti", color: col.neutro, relleno: white)[
+      #fila(espacio: 3pt,
+        svc("S3", "Amazon S3", sub: "SSE-KMS", color: col.almacenamiento),
+        svc("EBS", "Amazon EBS", sub: "volúmenes y snapshots", color: col.computo),
+        svc("RDS", "RDS y Aurora", sub: "datos, backups, réplicas", color: col.datos),
+        svc("SM", "Secrets Manager", sub: "cada secreto", color: col.seguridad),
+        svc("λ", "AWS Lambda", sub: "variables de entorno", color: col.serverless),
+      )
+    ],
+    flecha-v(etiqueta: [GenerateDataKey, Decrypt], largo: 0.8cm, doble: true),
+    fila(espacio: 4pt,
+      caja([*Key policy, IAM y grants* \ deciden quién puede usarla], color: col.iam, ancho: 3cm),
+      flecha(etiqueta: "autorizan", largo: 1.1cm),
+      svc("KMS", "AWS KMS", sub: "claves en HSM", color: col.seguridad),
+      flecha(etiqueta: "cada llamada", largo: 1.5cm),
+      svc("CT", "AWS CloudTrail", sub: "quién, qué, cuándo", color: col.observabilidad),
+    ),
   )
 ]
 
@@ -313,7 +325,7 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
   [*Lambda*], [Variables de entorno], [Clave AWS managed (`aws/lambda`)], [Customer managed si quieres decidir quién puede descifrarlas],
 )
 
-*S3.* Con SSE-S3 (el cifrado por defecto) S3 gestiona las claves sin coste, pero no controlas ni auditas su uso; con SSE-KMS hay doble llave (permiso de S3 *y* de KMS) y cada uso queda en CloudTrail. Existen también DSSE-KMS (doble capa) y SSE-C (tu propia clave en cada petición). El problema de SSE-KMS es el volumen: una clave de datos por objeto escrito y un `Decrypt` por lectura. Con *S3 Bucket Keys*, S3 obtiene de KMS una clave de vida corta a nivel de bucket y deriva de ella las de muchos objetos: las llamadas a KMS caen en picado (AWS habla de hasta un 99 % menos de coste de peticiones).
+*S3.* Con SSE-S3 (el cifrado por defecto) S3 gestiona las claves sin coste, pero no controlas ni auditas su uso; con SSE-KMS hay doble llave (permiso de S3 *y* de KMS) y cada uso queda en CloudTrail. Existen también DSSE-KMS (doble capa) y SSE-C (tu clave en cada petición). El problema de SSE-KMS es el volumen: una petición a KMS por objeto escrito y otra por lectura. Con *S3 Bucket Keys*, S3 obtiene de KMS una clave de vida corta a nivel de bucket y deriva de ella las de muchos objetos: las llamadas a KMS caen en picado (AWS habla de hasta un 99 % menos de coste de peticiones).
 
 #cuidado[Con SSE-KMS, `s3:GetObject` no basta: quien lee necesita `kms:Decrypt` sobre la clave, y quien sube, `kms:GenerateDataKey` (y `kms:Decrypt` en las subidas multiparte). Es la causa número uno de _Access Denied_ «misteriosos» con objetos cifrados.]
 
@@ -334,15 +346,15 @@ Los servicios integrados aplican el cifrado envolvente por ti: tú eliges la cla
   [Integración con servicios], [#si Nativa con la mayoría], [#parcial Indirecta, como custom key store de KMS],
   [Interfaces], [API de AWS (SDK, CLI) y permisos de IAM], [Estándares: PKCS\#11, JCE, OpenSSL, CNG/KSP],
   [Precio], [Por clave y por petición: poco dinero al mes], [Por HSM y hora: del orden de mil dólares al mes por HSM],
-  [Casos de uso], [Cifrar datos en los servicios de AWS y en tus aplicaciones], [Normativa que exige HSM dedicado, descarga de TLS, TDE de bases de datos en EC2, claves de una CA propia],
+  [Casos de uso], [Cifrar datos en los servicios de AWS y en tus aplicaciones], [Normativa de HSM dedicado, descarga de TLS, TDE en EC2, CA propia],
 )
 
-*Cifrado del lado del cliente.* Si quieres que AWS solo vea texto cifrado, cifra antes de enviar. El *AWS Encryption SDK* (Java, Python, JavaScript, .NET, C, CLI…) implementa el cifrado envolvente con buenas prácticas: claves de datos de KMS, la clave cifrada junto a los datos en un formato portable, varias claves de envoltura y caché de claves de datos. Hay además clientes específicos para S3 y para bases de datos (AWS Database Encryption SDK).
+*Cifrado del lado del cliente.* Si quieres que AWS solo vea texto cifrado, cifra antes de enviar. El *AWS Encryption SDK* (para varios lenguajes y CLI) implementa el cifrado envolvente con buenas prácticas: claves de datos de KMS, la clave cifrada junto a los datos en un formato portable y caché de claves de datos. Hay clientes específicos para S3 y para bases de datos.
 
 #coste[Importes orientativos, que varían por región:
 - *Customer managed:* del orden de un dólar al mes por clave, prorrateado por horas; las primeras rotaciones lo incrementan, con un tope. Cada réplica multi-región cuenta como clave.
 - *Peticiones:* del orden de céntimos por cada 10 000 simétricas (las asimétricas, más), con capa gratuita mensual; también las de claves AWS managed, que no tienen cuota mensual.
-- La factura grande suele venir de las peticiones: un bucket con SSE-KMS y millones de lecturas sin Bucket Keys es el ejemplo clásico.]
+- La factura grande suele venir de las peticiones, no de las claves.]
 
 === KMS desde la línea de comandos
 
@@ -382,6 +394,8 @@ Una contraseña escrita en el código, en un fichero de configuración o en una 
   [Úsalo para], [Credenciales de bases de datos, claves de API que rotan, acceso entre cuentas o regiones], [URLs, _feature flags_, IDs de AMI, configuración por entorno, secretos que no rotan],
 )
 
+Leer un secreto desde Python es una sola llamada, y programar su rotación desde la CLI, otra:
+
 ```python
 import json, boto3
 
@@ -390,13 +404,13 @@ resp = sm.get_secret_value(SecretId="prod/pagos/db")      # versión AWSCURRENT
 cred = json.loads(resp["SecretString"])                   # usuario, contraseña, host
 ```
 
-*Rotación.* Según la programación (cada N días o una expresión `rate`/`cron`), Secrets Manager invoca la función de rotación, que sigue cuatro pasos: `createSecret` genera la contraseña nueva como versión `AWSPENDING`, `setSecret` la cambia en la base de datos, `testSecret` comprueba que funciona y `finishSecret` le mueve la etiqueta `AWSCURRENT` (la anterior pasa a `AWSPREVIOUS`). Quien lee `AWSCURRENT` obtiene la nueva sin redesplegar. Cachea el secreto (en Lambda, la extensión _AWS Parameters and Secrets Lambda Extension_ lo hace por ti), pero reléelo si la conexión falla por credenciales.
-
 ```bash
 aws secretsmanager rotate-secret --secret-id prod/pagos/db \
     --rotation-lambda-arn arn:aws:lambda:eu-west-1:111122223333:function:rotar \
     --rotation-rules AutomaticallyAfterDays=30
 ```
+
+*Rotación.* Según la programación (cada N días o una expresión `rate`/`cron`), Secrets Manager invoca la función de rotación, que sigue cuatro pasos: `createSecret` genera la contraseña nueva como versión `AWSPENDING`, `setSecret` la cambia en la base de datos, `testSecret` comprueba que funciona y `finishSecret` le mueve la etiqueta `AWSCURRENT` (la anterior pasa a `AWSPREVIOUS`). Quien lee `AWSCURRENT` obtiene la nueva sin redesplegar. Cachea el secreto (en Lambda, la extensión _AWS Parameters and Secrets Lambda Extension_ lo hace por ti), pero reléelo si la conexión falla por credenciales.
 
 #examen[¿Credenciales que deben rotar solas? *Secrets Manager*. ¿Configuración o un secreto sin rotación al menor coste? *Parameter Store* con `SecureString`. Ambos se referencian desde CloudFormation (`{{resolve:secretsmanager:...}}`, `{{resolve:ssm-secure:...}}`, capítulo de IaC) y desde las tareas de ECS.]
 
@@ -419,23 +433,25 @@ ACM se integra con ELB (ALB y NLB), CloudFront, API Gateway, App Runner y otros 
 
 *¿Y en mi propia EC2?* Un certificado público estándar de ACM no se puede instalar en tu servidor: ACM no deja exportar su clave privada, solo usarlo a través de los servicios integrados. Lo habitual es poner delante un ALB o CloudFront (terminan TLS con el certificado de ACM), usar _ACM for Nitro Enclaves_ o recurrir a otra CA. Desde 2025 ACM ofrece también certificados públicos *exportables*, instalables donde quieras, pero tienen coste y hay que redesplegarlos tras cada renovación.
 
-== Protección perimetral: WAF, Shield, Firewall Manager y Network Firewall
+== Protección perimetral: WAF, Shield y firewalls
 
 Los Security Groups y las NACL (capítulo de Redes) filtran por IP, puerto y protocolo, pero no entienden lo que viaja dentro: una inyección SQL entra por el puerto 443 como cualquier otra petición. Para eso están estos servicios.
 
 #diagrama(pie: [Dónde actúa cada servicio de protección perimetral en el camino de una petición. Firewall Manager gobierna las políticas en todas las cuentas.])[
+  #set text(hyphenate: false)
+  #set par(justify: false)
   #let banda(t, c) = block(width: 100%, fill: c.lighten(88%), stroke: 0.8pt + c, radius: 4pt, inset: (x: 8pt, y: 5pt),
     align(center, text(7.2pt, fill: c.darken(30%), t)))
   #let desc(t) = box(width: 2.5cm, align(center, {
     set par(justify: false, leading: 0.4em)
     text(6.5pt, fill: gris.darken(25%), t)
   }))
-  #grid(columns: (1.8cm, 0.75cm, 2.6cm, 0.75cm, 2.6cm, 0.75cm, 2.6cm, 0.75cm, 2.6cm), align: center + horizon, row-gutter: 6pt,
+  #grid(columns: (2.15cm, 0.7cm, 2.6cm, 0.7cm, 2.6cm, 0.7cm, 2.6cm, 0.7cm, 2.6cm), align: center + horizon, row-gutter: 6pt,
     grid.cell(colspan: 9, banda([*AWS Firewall Manager* · define estas protecciones una vez y las aplica, y audita, en todas las cuentas de la organización], col.seguridad)),
-    internet(etiqueta: "Internet"), flecha(largo: 0.75cm),
-    svc("CF", "CloudFront", sub: "+ web ACL de WAF", color: col.edge), flecha(largo: 0.75cm),
-    svc("NFW", "Network Firewall", sub: "en la VPC", color: col.redes), flecha(largo: 0.75cm),
-    svc("ALB", "ALB", sub: "+ web ACL de WAF", color: col.balanceo), flecha(largo: 0.75cm),
+    internet(etiqueta: "Internet"), flecha(largo: 0.7cm),
+    svc("CF", "CloudFront", sub: "+ web ACL de WAF", color: col.edge), flecha(largo: 0.7cm),
+    svc("NFW", "Network Firewall", sub: "en la VPC", color: col.redes), flecha(largo: 0.7cm),
+    svc("ALB", "ALB", sub: "+ web ACL de WAF", color: col.balanceo), flecha(largo: 0.7cm),
     svc("EC2", "Instancias", sub: "+ Security Groups", color: col.computo),
     [], [], desc[Capa 7: inyección SQL, XSS, bots, límites de tasa, países], [],
     desc[Capas 3 a 7: IPS con firmas, filtrado por dominio], [],
@@ -470,7 +486,7 @@ Shield protege frente a ataques de denegación de servicio distribuida (DDoS). T
 
 *AWS Network Firewall* es un firewall gestionado y con estado para tus VPC: filtra de la capa 3 a la 7, con reglas compatibles con Suricata (IPS), listas de dominios permitidos para la salida e inspección de TLS. Se despliega en subredes dedicadas y el tráfico llega a sus endpoints por las tablas de rutas; con Transit Gateway, una VPC central inspecciona el de muchas otras. Se paga por hora de endpoint y por GB procesado.
 
-== Detección y respuesta: GuardDuty, Security Hub y compañía
+== Detección y respuesta: GuardDuty, Security Hub y más
 
 Prevenir no basta: algo acabará escapándose. Estos servicios vigilan cuentas, cargas y datos, y generan *hallazgos* (_findings_) cuando detectan algo sospechoso. Son regionales, se activan con pocos clics y se gestionan para toda la organización desde una cuenta de *administrador delegado*.
 
@@ -482,9 +498,23 @@ Prevenir no basta: algo acabará escapándose. Estos servicios vigilan cuentas, 
   [*Detective*], [Ayuda a investigar el origen y el alcance], [CloudTrail, Flow Logs, hallazgos de GuardDuty, logs de EKS → grafo de comportamiento], [Todas las llamadas e IP de un rol sospechoso en las últimas horas],
 )
 
-En 2025 AWS renombró las comprobaciones de postura de Security Hub como *Security Hub CSPM* y amplió Security Hub para correlacionar hallazgos y priorizar riesgos, pero el patrón no cambia: los detectores envían hallazgos a un punto central, de ahí pasan a *EventBridge* (capítulo de Mensajería) y una regla dispara la respuesta automática.
+En 2025 AWS renombró las comprobaciones de postura de Security Hub como *Security Hub CSPM* y amplió Security Hub para correlacionar hallazgos y priorizar riesgos, pero el patrón no cambia: los detectores envían hallazgos a un punto central, de ahí pasan a *EventBridge* (capítulo de Mensajería) y una regla dispara la respuesta automática, como resume la figura de más abajo.
+
+Por ejemplo, este patrón de EventBridge captura los hallazgos de GuardDuty de severidad alta o crítica para enviarlos a una función que aísle la instancia:
+
+```json
+{
+  "source": ["aws.guardduty"],
+  "detail-type": ["GuardDuty Finding"],
+  "detail": { "severity": [{ "numeric": [">=", 7] }] }
+}
+```
+
+#practica[Activa GuardDuty y Security Hub en *todas* las cuentas y regiones, también las que no usas: con credenciales robadas, un atacante suele lanzar instancias justo donde nadie mira. Con un administrador delegado en AWS Organizations, las cuentas nuevas quedan cubiertas solas.]
 
 #diagrama(pie: [Detección y respuesta automatizada: los hallazgos convergen en Security Hub, EventBridge los enruta y Lambda, SSM o SNS responden. Detective ayuda a investigar.])[
+  #set text(hyphenate: false)
+  #set par(justify: false)
   #fila(espacio: 3pt,
     zona("Detección", color: col.seguridad)[
       #columna(espacio: 1pt,
@@ -513,31 +543,21 @@ En 2025 AWS renombró las comprobaciones de postura de Security Hub como *Securi
   )
 ]
 
-Por ejemplo, este patrón de EventBridge captura los hallazgos de GuardDuty de severidad alta o crítica para enviarlos a una función que aísle la instancia:
-
-```json
-{
-  "source": ["aws.guardduty"],
-  "detail-type": ["GuardDuty Finding"],
-  "detail": { "severity": [{ "numeric": [">=", 7] }] }
-}
-```
-
-#practica[Activa GuardDuty y Security Hub en *todas* las cuentas y regiones, también las que no usas: con credenciales robadas, un atacante suele lanzar instancias justo donde nadie mira. Con un administrador delegado en AWS Organizations, las cuentas nuevas quedan cubiertas solas.]
-
 == Defensa en profundidad
 
 Ningún control es perfecto, así que se apilan: si una capa falla, la siguiente frena el ataque. La figura resume en qué capa actúa cada servicio de este capítulo y de los anteriores.
 
 #diagrama(pie: [Defensa en profundidad: cada capa frena lo que la anterior dejó pasar; la identidad es transversal y la detección vigila todas las capas.])[
+  #set text(hyphenate: false)
+  #set par(justify: false)
   #let alto = 0.95cm
   #let capas-dd = (
-    ("Borde", "lo primero que toca el tráfico", col.edge, ("CloudFront", "AWS WAF", "AWS Shield", "Route 53")),
-    ("Red", "qué puede hablar con qué", col.redes, ("Subredes privadas", "Security Groups", "NACL", "Network Firewall", "VPC endpoints")),
-    ("Cómputo", "instancias, contenedores, funciones", col.computo, ("Inspector", "Patch Manager", "IMDSv2", "AMI endurecidas")),
-    ("Aplicación", "el código y sus dependencias", col.balanceo, ("Reglas L7 de WAF", "Cognito", "Secrets Manager", "TLS con ACM")),
-    ("Datos", "lo que de verdad hay que proteger", col.datos, ("KMS", "Cifrado de S3, EBS y RDS", "Block Public Access", "Macie", "AWS Backup")),
-    ("Identidad", "transversal: quién hace qué", col.iam, ("IAM", "Identity Center", "MFA", "SCP y RCP", "Access Analyzer")),
+    ("Borde", "primer contacto", col.edge, ("CloudFront", "AWS WAF", "AWS Shield", "Route 53")),
+    ("Red", "qué habla con qué", col.redes, ("Subredes privadas", "Security Groups", "NACL", "Network Firewall")),
+    ("Cómputo", "instancias y SO", col.computo, ("Inspector", "Patch Manager", "IMDSv2", "AMI endurecidas")),
+    ("Aplicación", "tu código y tus API", col.balanceo, ("Reglas L7 de WAF", "Cognito", "Secrets Manager", "TLS con ACM")),
+    ("Datos", "lo que se protege", col.datos, ("KMS", "Cifrado S3/EBS/RDS", "Block Public Access", "Macie")),
+    ("Identidad", "transversal a todo", col.iam, ("IAM", "Identity Center", "MFA", "SCP y RCP", "Access Analyzer")),
   )
   #let fila-dd((nombre, desc, c, ss)) = (
     block(width: 100%, height: alto, fill: gradient.linear(c, c.darken(20%)), radius: 4pt, inset: (x: 8pt, y: 5pt),
@@ -553,7 +573,7 @@ Ningún control es perfecto, así que se apilan: si una capa falla, la siguiente
         ss.map(s => pill(s, color: c, relleno: white)).join(h(3pt))
       })),
   )
-  #let deteccion = block(width: 100%, height: 6 * alto + 5 * 4pt, fill: col.seguridad.lighten(92%), stroke: (paint: col.seguridad, thickness: 0.9pt, dash: "dashed"), radius: 4pt, inset: 7pt,
+  #let deteccion = block(width: 100%, height: 6 * alto + 5 * 4pt, fill: col.seguridad.lighten(92%), stroke: (paint: col.seguridad, thickness: 0.9pt, dash: "dashed"), radius: 4pt, inset: (x: 5pt, y: 7pt),
     align(center + horizon, {
       set par(justify: false, leading: 0.4em)
       text(8.2pt, weight: "bold", fill: col.seguridad.darken(15%), "Detección y respuesta")
@@ -565,7 +585,7 @@ Ningún control es perfecto, así que se apilan: si una capa falla, la siguiente
       }
     }))
   #let filas = capas-dd.map(fila-dd)
-  #grid(columns: (2.9cm, 1fr, 2.7cm), column-gutter: 4pt, row-gutter: 4pt,
+  #grid(columns: (2.7cm, 1fr, 2.75cm), column-gutter: 4pt, row-gutter: 4pt,
     ..filas.at(0), grid.cell(rowspan: 6, deteccion),
     ..filas.slice(1).flatten(),
   )
@@ -575,13 +595,13 @@ Ningún control es perfecto, así que se apilan: si una capa falla, la siguiente
 
 Ante una alarma seria —una instancia hablando con un servidor de mando y control, unas claves usadas desde un país inesperado—, improvisar es lo peor. Prepárate antes: GuardDuty y Security Hub activos, un _trail_ organizativo de CloudTrail en una cuenta de logs protegida, roles de respuesta listos y _runbooks_ ensayados. Después, el esqueleto básico es este:
 
-#pasos(
+#block(breakable: false, width: 100%, above: 1em, below: 1.1em, pasos(
   [*Aislar.* Cambia el Security Group de la instancia por uno sin reglas y sácala del Auto Scaling group y del balanceador. Desactiva las claves de acceso comprometidas y revoca las sesiones activas del rol.],
   [*Preservar evidencias:* snapshots de los volúmenes EBS, captura de memoria si procede, etiquetas con el número de incidente y copia de los logs en un bucket con S3 Object Lock de otra cuenta.],
   [*Rotar credenciales:* claves de acceso, secretos, contraseñas y tokens a los que pudo llegar el atacante.],
   [*Investigar con CloudTrail* (y Detective): qué llamadas hizo la identidad comprometida, desde qué IP y qué creó o modificó (usuarios, roles, instancias en otras regiones…).],
   [*Recuperar y aprender:* reconstruye desde una AMI o una plantilla de IaC limpias, corrige la causa raíz, escribe un post-mortem sin culpables y automatiza la respuesta.],
-)
+))
 
 #cuidado[Terminar la instancia comprometida parece lo más rápido, pero destruye las evidencias (memoria, procesos, discos efímeros) que necesitas para entender qué pasó. Aísla primero; termina después.]
 

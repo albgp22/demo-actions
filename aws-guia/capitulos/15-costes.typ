@@ -72,11 +72,11 @@ En AWS no compras servidores: pagas por segundo, por hora, por GB o por petició
 
 == Los grandes conductores de coste
 
-#block(breakable: false, tarjetas(columnas: 3,
+#tarjetas(columnas: 3,
   tarjeta("Cómputo", subtitulo: "suele ser la mayor partida")[EC2 y RDS por tiempo de instancia; Lambda por petición y GB-segundo; Fargate por vCPU y GB.],
   tarjeta("Almacenamiento", subtitulo: "crece en silencio")[GB-mes de S3 (y peticiones), EBS aprovisionado (y sus IOPS), snapshots, backups y logs.],
   tarjeta("Transferencia de datos", subtitulo: "la gran olvidada")[Salida a Internet, tráfico entre AZ y regiones, y procesamiento del NAT Gateway.],
-))
+)
 
 La transferencia es la partida que más sorprende, porque no aparece en ningún «recurso» de la consola. La regla: *entrar es gratis y salir cuesta*; *cruzar zonas de disponibilidad cuesta en los dos sentidos*; *entre regiones paga la de origen*; y lo que atraviesa un *NAT Gateway* paga además su procesamiento por GB, vaya a Internet o a S3. Dentro de una AZ, con IPs privadas, es gratis, y servir contenido por CloudFront suele salir más barato que hacerlo desde EC2 o S3.
 
@@ -158,15 +158,15 @@ La estrategia habitual es cubrir con *compromisos* la base de uso que nunca baja
 == Estrategias de optimización
 
 #tarjetas(columnas: 3,
-  block(breakable: false, tarjeta("Rightsizing", subtitulo: "ajustar el tamaño")[Compute Optimizer y CloudWatch delatan lo sobredimensionado. Baja de talla *antes* de comprometerte.]),
-  block(breakable: false, tarjeta("Apagar fuera de horario", subtitulo: "dev y test")[Sin noches ni fines de semana eliminas casi dos tercios de las horas (EventBridge Scheduler, Instance Scheduler).]),
-  block(breakable: false, tarjeta("Graviton", subtitulo: "procesadores Arm de AWS")[Más baratas por hora que sus equivalentes x86 y con mejor relación precio-rendimiento; también en Lambda, Fargate y RDS.]),
-  block(breakable: false, tarjeta("Clases de S3 y lifecycle", subtitulo: "datos fríos, precio frío")[Reglas que mueven a Standard-IA o Glacier, Intelligent-Tiering, y expirar versiones antiguas y multipart incompletos.]),
-  block(breakable: false, tarjeta("gp3 en lugar de gp2", subtitulo: "EBS")[Más barato por GB, con 3 000 IOPS y 125 MB/s de base sea cual sea el tamaño; se cambia en caliente.]),
-  block(breakable: false, tarjeta("Retención de logs", subtitulo: "CloudWatch Logs")[Por defecto los logs no caducan nunca: fija la retención y archiva en S3 lo que debas conservar.]),
-  block(breakable: false, tarjeta("Endpoints de VPC", subtitulo: "esquivar el NAT")[S3 y DynamoDB por endpoint de gateway: gratis. Por NAT: cada GB paga procesamiento.]),
-  block(breakable: false, tarjeta("Serverless si es intermitente", subtitulo: "pagar por actividad")[Lambda, DynamoDB on-demand o Aurora Serverless v2 (que puede bajar a 0 ACU) no cobran cómputo en reposo.]),
-  block(breakable: false, tarjeta("Caché con CloudFront", subtitulo: "menos origen, menos salida")[Menos carga en el origen y salida más barata; del origen de AWS a CloudFront no se paga transferencia.]),
+  tarjeta("Rightsizing", subtitulo: "ajustar el tamaño")[Compute Optimizer y CloudWatch delatan lo sobredimensionado. Baja de talla *antes* de comprometerte.],
+  tarjeta("Apagar fuera de horario", subtitulo: "dev y test")[Sin noches ni fines de semana eliminas casi dos tercios de las horas (EventBridge Scheduler, Instance Scheduler).],
+  tarjeta("Graviton", subtitulo: "procesadores Arm de AWS")[Más baratas por hora que sus equivalentes x86 y con mejor relación precio-rendimiento; también en Lambda, Fargate y RDS.],
+  tarjeta("Clases de S3 y lifecycle", subtitulo: "datos fríos, precio frío")[Reglas que mueven a Standard-IA o Glacier, Intelligent-Tiering, y expirar versiones antiguas y multipart incompletos.],
+  tarjeta("gp3 en lugar de gp2", subtitulo: "EBS")[Más barato por GB, con 3 000 IOPS y 125 MB/s de base sea cual sea el tamaño; se cambia en caliente.],
+  tarjeta("Retención de logs", subtitulo: "CloudWatch Logs")[Por defecto los logs no caducan nunca: fija la retención y archiva en S3 lo que debas conservar.],
+  tarjeta("Endpoints de VPC", subtitulo: "esquivar el NAT")[S3 y DynamoDB por endpoint de gateway: gratis. Por NAT: cada GB paga procesamiento.],
+  tarjeta("Serverless si es intermitente", subtitulo: "pagar por actividad")[Lambda, DynamoDB on-demand o Aurora Serverless v2 (que puede bajar a 0 ACU) no cobran cómputo en reposo.],
+  tarjeta("Caché con CloudFront", subtitulo: "menos origen, menos salida")[Menos carga en el origen y salida más barata; del origen de AWS a CloudFront no se paga transferencia.],
 )
 
 == Trampas comunes
@@ -197,7 +197,7 @@ La estrategia habitual es cubrir con *compromisos* la base de uso que nunca baja
 
 La métrica más útil es el *coste unitario* (por cliente, por pedido, por millón de peticiones): si la factura crece pero el coste unitario baja, el negocio escala bien.
 
-#block(breakable: false)[#nota(titulo: "Cambios recientes en la forma de pagar")[Desde el 15 de julio de 2025, las cuentas nuevas ya no reciben la antigua capa gratuita de 12 meses: obtienen créditos promocionales y pueden elegir un *plan gratuito* de hasta seis meses, y se mantienen las cuotas «siempre gratuitas» de servicios como Lambda o DynamoDB. Desde noviembre de 2025, CloudFront ofrece además *planes de tarifa plana* mensual, sin cargos por exceso, que agrupan CDN, WAF, protección DDoS y DNS de Route 53: interesantes para webs con tráfico previsible.]]
+#nota(titulo: "Cambios recientes en la forma de pagar")[Desde el 15 de julio de 2025, las cuentas nuevas ya no reciben la antigua capa gratuita de 12 meses: obtienen créditos promocionales y pueden elegir un *plan gratuito* de hasta seis meses, y se mantienen las cuotas «siempre gratuitas» de servicios como Lambda o DynamoDB. Desde noviembre de 2025, CloudFront ofrece además *planes de tarifa plana* mensual, sin cargos por exceso, que agrupan CDN, WAF, protección DDoS y DNS de Route 53: interesantes para webs con tráfico previsible.]
 
 #resumen[
 - Pagas por lo que *aprovisionas*: un recurso ocioso cuesta lo mismo que uno ocupado.

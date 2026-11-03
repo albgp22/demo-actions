@@ -78,9 +78,9 @@
 #let nodo(titulo, pods) = zona(titulo, color: col.computo)[
   #columna(espacio: 3pt,
     fila(espacio: 3pt,
-      comp("kubelet", color: col.computo, ancho: 1.3cm),
-      comp("kube-proxy", color: col.computo, ancho: 1.3cm),
-      comp("containerd", color: col.computo, ancho: 1.3cm)),
+      comp("kubelet", color: col.computo, ancho: 1.75cm),
+      comp("kube-proxy", color: col.computo, ancho: 1.75cm),
+      comp("containerd", color: col.computo, ancho: 1.75cm)),
     fila(espacio: 3pt, ..pods.map(p => pod(t: p))),
   )
 ]
@@ -111,7 +111,7 @@ En el capítulo de Contenedores (ECS, Fargate y ECR) viste cómo ejecutar aplica
 
 Kubernetes es *declarativo*: no le das órdenes («arranca tres contenedores»), sino que describes el resultado («que siempre haya tres copias de esta imagen») en un fichero YAML llamado *manifiesto*. Kubernetes guarda ese *estado deseado* y unos procesos llamados *controladores* lo comparan sin descanso con el *estado actual*; si difieren, actúan para igualarlos. Es el *bucle de reconciliación*.
 
-#analogia[Un termostato. Fijas 21 °C (estado deseado); él mide la temperatura (estado actual) y enciende o apaga la calefacción hasta igualarlas, también cuando alguien abre una ventana. No le dices «enciende la caldera diez minutos», sino el resultado que quieres. Si un nodo muere con un contenedor dentro, Kubernetes «nota el frío» y lo recrea en otro nodo, sin intervención humana.]
+#analogia[Un termostato. Fijas 21 °C (estado deseado); él mide la temperatura (estado actual) y enciende o apaga la calefacción hasta igualarlas, también si alguien abre una ventana. No le dices «enciende la caldera diez minutos», sino el resultado. Si un nodo muere con un contenedor dentro, Kubernetes «nota el frío» y lo recrea en otro nodo.]
 
 #diagrama(pie: [El bucle de reconciliación: el controlador compara sin descanso el estado deseado con el actual y actúa hasta igualarlos.])[
   #fila(espacio: 2pt,
@@ -125,7 +125,7 @@ Kubernetes es *declarativo*: no le das órdenes («arranca tres contenedores»),
       )
     ],
     flecha(etiqueta: "lee", largo: 1cm),
-    box(width: 3cm, fill: white, stroke: 1.2pt + k8s, radius: 6pt, inset: 7pt, align(center, {
+    box(width: 3.35cm, fill: white, stroke: 1.2pt + k8s, radius: 6pt, inset: 7pt, align(center, {
       set par(justify: false, leading: 0.45em)
       text(7.6pt, weight: "bold", fill: k8s.darken(30%), "Controlador")
       v(1pt)
@@ -143,7 +143,7 @@ Kubernetes es *declarativo*: no le das órdenes («arranca tres contenedores»),
       #columna(espacio: 5pt,
         fila(espacio: 4pt, pod(t: "web"), pod(t: "web"), pod(t: "✘ web", caido: true)),
         fila(espacio: 4pt, text(6.3pt, fill: gris, [nodo caído:]), pod(t: "nuevo", punteado: true)),
-        text(6.3pt, fill: gris, [el pod perdido se recrea en otro nodo]),
+        text(6.3pt, fill: gris, [se recrea en otro nodo]),
       )
     ],
   )
@@ -163,28 +163,30 @@ Un *clúster* tiene dos partes: el *control plane* (plano de control), el cerebr
 / Container runtime: ejecuta los contenedores; normalmente *containerd*, a través de la interfaz CRI.
 
 #diagrama(pie: [Arquitectura de un clúster. Todos los componentes se comunican a través del API server, y solo él lee y escribe en etcd.])[
-  #fila(espacio: 4pt,
-    actor(etiqueta: "Tú"),
-    flecha(etiqueta: "kubectl (HTTPS)", largo: 1.5cm),
-    zona("Control plane", color: col.fundamentos, punteada: false, relleno: white)[
-      #fila(espacio: 2pt,
-        svc("etcd", "etcd", sub: "el estado del clúster", color: col.datos),
-        flecha(doble: true, largo: 0.8cm),
-        svc("API", "kube-apiserver", sub: "la puerta de entrada", color: k8s),
-        flecha(doble: true, largo: 0.8cm),
-        columna(espacio: 3pt,
-          comp("kube-scheduler"),
-          comp("kube-controller-manager"),
-          comp("cloud-controller-manager"),
-        ),
-      )
-    ],
-  )
-  #flecha-v(etiqueta: "kubelet y kube-proxy ⇄ API server", doble: true, largo: 0.75cm)
-  #fila(espacio: 8pt,
-    nodo("Nodo 1 · EC2", ("web", "web", "api")),
-    nodo("Nodo 2 · EC2", ("web", "api", "logs")),
-    nodo("Nodo 3 · EC2", ("api", "db-0", "logs")),
+  #columna(espacio: 2pt,
+    fila(espacio: 4pt,
+      actor(etiqueta: "Tú"),
+      flecha(etiqueta: "kubectl", largo: 1.5cm),
+      zona("Control plane", color: col.fundamentos, punteada: false, relleno: white)[
+        #fila(espacio: 2pt,
+          svc("etcd", "etcd", sub: "el estado del clúster", color: col.datos),
+          flecha(doble: true, largo: 0.8cm),
+          svc("API", "kube-apiserver", sub: "la puerta de entrada", color: k8s),
+          flecha(doble: true, largo: 0.8cm),
+          columna(espacio: 3pt,
+            comp("kube-scheduler", ancho: 3.6cm),
+            comp("kube-controller-manager", ancho: 3.6cm),
+            comp("cloud-controller-manager", ancho: 3.6cm),
+          ),
+        )
+      ],
+    ),
+    flecha-v(etiqueta: "kubelet y kube-proxy ⇄ API server", doble: true, largo: 0.75cm),
+    fila(espacio: 8pt,
+      nodo("Nodo 1 · EC2", ("web", "web", "api")),
+      nodo("Nodo 2 · EC2", ("api", "db-0", "logs")),
+      text(16pt, weight: "bold", fill: gris, "···"),
+    ),
   )
 ]
 
@@ -245,11 +247,12 @@ Un *Service* da a un grupo de pods, elegidos por su *selector* de labels, una IP
 === Configuración, organización y recursos
 
 / ConfigMap y Secret: configuración no sensible y sensible (contraseñas, tokens), fuera de la imagen; llegan al pod como variables de entorno o como ficheros.
+
+#cuidado[Un Secret solo va codificado en Base64, que *no* es cifrado: quien pueda leerlo con la API lo ve en claro. Limita su lectura con RBAC y guarda lo crítico en AWS Secrets Manager, que llega al pod con el Secrets Store CSI Driver o External Secrets Operator.]
+
 / Namespace: partición lógica para equipos o entornos, con sus propios permisos (RBAC) y cuotas. No aísla la red por sí solo.
 / Labels y selectors: etiquetas clave-valor (`app: web`) y consultas sobre ellas, el pegamento de Kubernetes: Services y Deployments encuentran sus pods por selector, nunca por nombre.
 / Requests y limits: las requests son lo reservado (el scheduler busca un nodo con ese hueco); los limits, el máximo: por encima del de CPU se frena al contenedor (_throttling_) y por encima del de memoria se le mata (`OOMKilled`). `250m` es un cuarto de vCPU.
-
-#cuidado[Un Secret solo está codificado en Base64, que *no* es cifrado: quien pueda leerlo con la API lo ve en claro. Restringe su lectura con RBAC y guarda los secretos críticos en AWS Secrets Manager, llevándolos al pod con el Secrets Store CSI Driver o con External Secrets Operator.]
 
 Las *probes* son las comprobaciones de salud que kubelet hace a cada contenedor (por HTTP, TCP, gRPC o con un comando):
 
@@ -305,7 +308,6 @@ kubectl get pods -n tienda -o wide        # pods con su nodo y su IP
 kubectl describe pod web-7d4b9            # detalle y eventos (¿por qué Pending?)
 kubectl logs web-7d4b9 -f                 # logs (--previous: del que se cayó)
 kubectl exec -it web-7d4b9 -- sh          # shell dentro del contenedor
-kubectl rollout status deploy/web         # progreso de un despliegue
 kubectl port-forward svc/web 8080:80      # prueba un Service desde tu equipo
 kubectl auth can-i delete pods -n tienda  # ¿me lo permite RBAC?
 ```
@@ -324,7 +326,7 @@ Completan el kit *Kustomize* (`kubectl apply -k`) y *GitOps*: Argo CD o Flux rec
 
 Kubernetes escala en dos niveles: más pods cuando sube la carga y más nodos cuando los pods ya no caben.
 
-/ HorizontalPodAutoscaler (HPA): ajusta las réplicas para mantener una métrica objetivo, como la CPU respecto a las requests (requiere Metrics Server): `kubectl autoscale deployment web --cpu-percent=60 --min=3 --max=20`.
+/ HorizontalPodAutoscaler (HPA): ajusta las réplicas para mantener una métrica objetivo, como la CPU respecto a las requests (requiere Metrics Server): \ `kubectl autoscale deployment web --cpu-percent=60 --min=3 --max=20`
 / VerticalPodAutoscaler (VPA): recalcula las requests de cada pod según su consumo real; no lo combines con un HPA sobre la misma métrica.
 / KEDA: escala por eventos, como los mensajes pendientes en una cola SQS, incluso hasta cero.
 
@@ -332,12 +334,14 @@ Los pods que no caben en ningún nodo quedan en `Pending`: el HPA decide *cuánt
 
 #tarjetas(
   tarjeta("Cluster Autoscaler", subtitulo: "El clásico, basado en grupos de nodos")[Sube o baja la capacidad deseada del Auto Scaling group de cada node group. Cada grupo usa tipos de instancia similares: si un pod necesita GPU, debe existir un grupo para ello.],
-  tarjeta("Karpenter", color: col.computo, subtitulo: "Nodos a la medida · open source, creado por AWS")[Lanza directamente, sin Auto Scaling groups, las instancias EC2 que mejor encajan con los pods pendientes (On-Demand o Spot) y *consolida* nodos para ahorrar. Es el motor de EKS Auto Mode y la opción recomendable en clústeres nuevos.],
+  tarjeta("Karpenter", color: col.computo, subtitulo: "Nodos a la medida · open source, creado por AWS")[Lanza directamente, sin Auto Scaling groups, las instancias EC2 (On-Demand o Spot) que mejor encajan con los pods pendientes y *consolida* nodos para ahorrar. Es el motor de EKS Auto Mode y lo recomendable en clústeres nuevos.],
 )
 
 == Amazon EKS: Kubernetes gestionado
 
-Operar Kubernetes por tu cuenta obliga a cuidar etcd, la alta disponibilidad del API server, los certificados y las actualizaciones. *Amazon Elastic Kubernetes Service (EKS)* te da un control plane estándar, certificado por la CNCF, en el que tus manifiestos y herramientas funcionan como en cualquier Kubernetes. AWS lo ejecuta en una VPC propia, con al menos dos instancias del API server y tres de etcd en tres AZ, y lo conecta con tus nodos mediante interfaces de red (ENI) en tus subredes; su endpoint puede ser público (restringible por CIDR), privado o ambos.
+Operar Kubernetes por tu cuenta obliga a cuidar etcd, la alta disponibilidad del API server, los certificados y las actualizaciones. *Amazon Elastic Kubernetes Service (EKS)* te da un control plane estándar, certificado por la CNCF, que AWS ejecuta en una VPC propia con al menos dos instancias del API server y tres de etcd en tres AZ. Se conecta con tus nodos mediante interfaces de red (ENI) en tus subredes, y su endpoint puede ser público (restringible por CIDR), privado o ambos.
+
+#coste[Orientativamente, 0,10 USD por clúster y hora en soporte estándar (unos 73 USD al mes) y 0,60 USD/h en soporte extendido; consulta los precios de tu región. Súmale el cómputo (EC2; en Fargate, vCPU y memoria por pod; en Auto Mode, EC2 más un recargo por instancia), balanceadores, volúmenes EBS, NAT Gateway, IPv4 públicas y tráfico entre AZ. Por esa tarifa fija, en entornos pequeños suele salir más barato compartir un clúster con namespaces que tener muchos.]
 
 #ficha("Amazon EKS", "Kubernetes gestionado: AWS opera el control plane y tú decides dónde corren los pods",
   ("Ámbito", [Regional; control plane repartido en tres zonas de disponibilidad]),
@@ -346,22 +350,23 @@ Operar Kubernetes por tu cuenta obliga a cuidar etcd, la alta disponibilidad del
   ("Facturación", [Por clúster y hora, más el cómputo y los recursos que uses]),
   ("Fuera de AWS", [EKS Anywhere y EKS Hybrid Nodes (nodos propios unidos a un clúster EKS)]))
 
-#coste[Orientativamente, 0,10 USD por clúster y hora en soporte estándar (unos 73 USD al mes) y 0,60 USD/h en soporte extendido; consulta los precios de tu región. Súmale el cómputo (EC2; en Fargate, vCPU y memoria por pod; en Auto Mode, EC2 más un recargo por instancia), balanceadores, volúmenes EBS, NAT Gateway, IPv4 públicas y tráfico entre AZ. Por esa tarifa fija, en entornos pequeños suele salir más barato compartir un clúster con namespaces que tener muchos.]
-
 === ¿Dónde se ejecutan tus pods? Opciones de data plane
 
-#tabla(("Opción", "Quién opera los nodos", "Escalado de nodos", "DaemonSets", "Pagas", "Encaja si..."),
-  columnas: (1.15fr, 2fr, 1.3fr, 0.85fr, 1.05fr, 1.3fr), tamano: 7.9pt,
+#[
+#set text(hyphenate: false)
+#tabla(("Opción", "Quién opera los nodos", "Escalado", "DaemonSets", "Pagas", "Encaja si..."),
+  columnas: (1.3fr, 1.9fr, 1.3fr, 0.95fr, 1.05fr, 1.25fr), tamano: 7.9pt,
   [*Managed node groups*], [AWS gestiona el Auto Scaling group y renueva los nodos cuando se lo pides], [Cluster Autoscaler o Karpenter], si, [EC2], [Quieres EC2 con poco esfuerzo],
   [*Nodos autogestionados*], [Tú: grupo, AMI, arranque y parches], [Cluster Autoscaler o Karpenter], si, [EC2], [Necesitas algo muy a medida],
   [*Fargate*], [AWS: cada pod en su propia micro-VM; no ves nodos], [Implícito, pod a pod], no, [vCPU y memoria por pod], [Cargas pequeñas o esporádicas],
   [*Karpenter* (lo instalas tú)], [Tú operas Karpenter; él lanza y retira instancias EC2], [A la medida de los pods pendientes], si, [EC2 (On-Demand o Spot)], [Cargas variadas, Spot],
-  [*EKS Auto Mode*], [AWS: nodos, sistema operativo, parches y add-ons clave], [Karpenter gestionado], si, [EC2 + recargo], [EC2 sin operar nodos],
+  [*EKS Auto Mode*], [AWS: nodos, sistema operativo, parches y add‑ons clave], [Karpenter gestionado], si, [EC2 + recargo], [EC2 sin operar nodos],
 )
+]
 
-#cuidado(titulo: "Fargate en EKS: lo que no puedes hacer")[Los *perfiles de Fargate* (por namespace y labels) deciden qué pods van a Fargate. Como cada pod tiene su propia micro-VM, no hay DaemonSets (los agentes van como sidecar; para logs hay un router integrado basado en Fluent Bit), ni contenedores privilegiados, GPU, `hostNetwork`, volúmenes EBS (sí EFS) o EKS Pod Identity (usa IRSA). Solo admite subredes privadas, y los balanceadores deben apuntar a la IP del pod.]
+#cuidado(titulo: "Fargate en EKS: lo que no puedes hacer")[Los *perfiles de Fargate* (por namespace y labels) eligen qué pods van a Fargate. Cada pod tiene su propia micro-VM, así que no hay DaemonSets (los agentes van como sidecar; para logs hay un router integrado basado en Fluent Bit), ni contenedores privilegiados, GPU, `hostNetwork`, volúmenes EBS (sí EFS) o Pod Identity (usa IRSA). Solo admite subredes privadas, y los balanceadores deben apuntar a la IP del pod.]
 
-*EKS Auto Mode* (2024) es lo más «llave en mano» sin renunciar a EC2: un Karpenter gestionado aprovisiona nodos con AMI inmutables basadas en Bottlerocket (sin SSH ni SSM), renovados como máximo cada 21 días, y AWS se ocupa de la red de los pods, el DNS, el almacenamiento en bloque y los balanceadores. Las opciones se combinan: por ejemplo, Fargate para un namespace y Karpenter para el resto.
+*EKS Auto Mode* (2024) es lo más «llave en mano» sin renunciar a EC2: un Karpenter gestionado aprovisiona nodos con AMI inmutables basadas en Bottlerocket (sin SSH ni SSM), renovados como máximo cada 21 días, y AWS se ocupa de la red de pods, el DNS, el almacenamiento en bloque y los balanceadores. Las opciones se combinan (por ejemplo, Fargate para un solo namespace).
 
 === Crear tu primer clúster
 
@@ -386,7 +391,7 @@ aws eks update-kubeconfig --region eu-west-1 --name prod
 kubectl get nodes                         # tres nodos en estado Ready
 ```
 
-`aws eks update-kubeconfig` añade el clúster a tu `~/.kube/config` (eksctl ya lo hace) para que `kubectl` se autentique con tus credenciales de IAM. Para Auto Mode, cambia `managedNodeGroups` por `autoModeConfig: { enabled: true }`. En producción lo habitual es Terraform (como el módulo `terraform-aws-modules/eks`) o AWS CDK (capítulo de IaC).
+`aws eks update-kubeconfig` añade el clúster a tu `~/.kube/config` (eksctl ya lo hace) para que `kubectl` use tus credenciales de IAM. Para Auto Mode, cambia `managedNodeGroups` por `autoModeConfig: { enabled: true }`. En producción se suele usar Terraform o AWS CDK (capítulo de IaC).
 
 == Redes en EKS
 
@@ -404,7 +409,7 @@ Con *Security Groups for Pods* puedes asignar Security Groups a pods concretos (
 
 === AWS Load Balancer Controller
 
-El *AWS Load Balancer Controller* es otro controlador (otro bucle de reconciliación) que traduce objetos de Kubernetes en los balanceadores del capítulo de Balanceo y Auto Scaling. Un *Ingress* de clase `alb` se convierte en un *Application Load Balancer* con reglas por host y ruta (varios Ingress pueden compartirlo con una *IngressGroup*), y un *Service* `LoadBalancer`, en un *Network Load Balancer*. En modo de destino `ip`, el balanceador envía el tráfico directamente a la IP de cada pod gracias a la VPC CNI (obligatorio en Fargate); en modo `instance`, al NodePort de los nodos, con un salto extra por kube-proxy. Necesita permisos IAM (Pod Identity o IRSA) y localiza las subredes por sus etiquetas: `kubernetes.io/role/elb` en las públicas y `kubernetes.io/role/internal-elb` en las privadas. Sin él, Kubernetes recurre al proveedor heredado, que crea Classic Load Balancers; en Auto Mode ya viene integrado.
+El *AWS Load Balancer Controller* es otro controlador (otro bucle de reconciliación) que traduce objetos de Kubernetes en balanceadores (capítulo de Balanceo y Auto Scaling): un *Ingress* de clase `alb`, en un *Application Load Balancer* con reglas por host y ruta (varios Ingress pueden compartirlo con una *IngressGroup*), y un *Service* `LoadBalancer`, en un *Network Load Balancer*. En modo de destino `ip` el balanceador envía el tráfico directamente a la IP de cada pod, gracias a la VPC CNI (obligatorio en Fargate); en modo `instance`, al NodePort de los nodos, con un salto extra. Necesita permisos IAM (Pod Identity o IRSA) y localiza las subredes por sus etiquetas: `kubernetes.io/role/elb` en las públicas y `kubernetes.io/role/internal-elb` en las privadas. Sin él, Kubernetes recurre al proveedor heredado, que crea Classic Load Balancers; en Auto Mode viene integrado.
 
 #diagrama(pie: [Tráfico de entrada en EKS: el ALB, con nodos en las subredes públicas de dos AZ, envía cada petición directamente a la IP de un pod (modo IP) en las subredes privadas. A la derecha, cómo el controlador crea y mantiene el ALB a partir del Ingress.])[
   #fila(espacio: 8pt,
@@ -414,20 +419,24 @@ El *AWS Load Balancer Controller* es otro controlador (otro bucle de reconciliac
       zona("VPC 10.0.0.0/16", color: col.redes, punteada: false, relleno: white)[
         #fila(espacio: 10pt,
           ..("a", "b").map(az => zona("AZ " + az, color: col.neutro, ancho: 5.5cm)[
-            #zona("Subred pública", color: col.almacenamiento)[
-              #insignia("ALB", [Application Load Balancer \ #text(fill: gris, weight: "regular")[nodo en la AZ #az]], color: col.balanceo)
-            ]
-            #flecha-v(etiqueta: "a la IP del pod", largo: 0.6cm)
-            #zona("Privada 10.0." + (if az == "a" { "32" } else { "64" }) + ".0/19 · nodos EC2", color: col.datos)[
-              #fila(espacio: 4pt,
-                pod(t: "web\n10.0." + (if az == "a" { "32.14" } else { "64.9" }), ancho: 1.35cm),
-                pod(t: "web\n10.0." + (if az == "a" { "33.7" } else { "65.21" }), ancho: 1.35cm))
-            ]
+            #columna(espacio: 0pt,
+              zona("Subred pública", color: col.almacenamiento, ancho: 4.7cm)[
+                #insignia("ALB", [Application Load Balancer \ #text(fill: gris, weight: "regular")[nodo en la AZ #az]], color: col.balanceo)
+              ],
+              flecha-v(etiqueta: "a la IP del pod", largo: 0.6cm),
+              zona("Subred privada 10.0." + (if az == "a" { "32" } else { "64" }) + ".0/19", color: col.datos, ancho: 4.7cm)[
+                #columna(espacio: 3pt,
+                  fila(espacio: 4pt,
+                    pod(t: "web\n10.0." + (if az == "a" { "32.14" } else { "64.9" }), ancho: 1.35cm),
+                    pod(t: "web\n10.0." + (if az == "a" { "33.7" } else { "65.21" }), ancho: 1.35cm)),
+                  text(6pt, fill: gris, [pods en nodos EC2, con IP de la subred]))
+              ],
+            )
           ]))
       ],
     ),
     columna(espacio: 2pt,
-      caja([Ingress \ `ingressClassName: alb`], color: k8s, ancho: 3cm),
+      caja([Ingress \ de clase «alb»], color: k8s, ancho: 3cm),
       flecha-v(etiqueta: "observa", largo: 0.7cm, punteada: true),
       insignia("LBC", [AWS Load \ Balancer \ Controller], color: k8s),
       flecha-v(etiqueta: "API de ELB", largo: 0.7cm, punteada: true),
@@ -435,6 +444,8 @@ El *AWS Load Balancer Controller* es otro controlador (otro bucle de reconciliac
     ),
   )
 ]
+
+#cuidado[Antes de borrar un clúster, elimina sus Ingress y Services de tipo LoadBalancer. Esos balanceadores los creó el controlador, no tu plantilla: si el clúster desaparece primero, quedan huérfanos, siguen facturando e impiden borrar la VPC.]
 
 == Almacenamiento en EKS
 
@@ -487,7 +498,7 @@ Kubernetes autoriza cada petición a su API con *RBAC* (Role-Based Access Contro
   [*A quién*: usuarios, grupos o ServiceAccounts], [`RoleBinding`], [`ClusterRoleBinding`],
 )
 
-Un RoleBinding puede apuntar a un ClusterRole para concederlo en un solo namespace (así se reutilizan los roles integrados `view`, `edit` y `admin`). RBAC es solo aditivo, sin denegaciones, a diferencia de IAM (capítulo IAM (II)). Y Kubernetes no tiene objetos «usuario»: confía en que alguien externo autentique a quien llama; en EKS, ese alguien es IAM.
+Un RoleBinding puede apuntar a un ClusterRole para concederlo en un solo namespace (así se reutilizan los roles integrados `view`, `edit` y `admin`). RBAC es solo aditivo, a diferencia de IAM (capítulo IAM (II)), y no tiene objetos «usuario»: confía en que alguien externo autentique a quien llama. En EKS, ese alguien es IAM.
 
 === Dirección A: quién puede usar el clúster
 
@@ -503,13 +514,13 @@ kubectl create rolebinding devs-ven-tienda -n tienda \
   --clusterrole=view --group=desarrolladores
 ```
 
-#cuidado(titulo: "Adiós al ConfigMap aws-auth")[Antes, el acceso se daba editando a mano el ConfigMap `aws-auth` de `kube-system`, y un error de formato podía dejar a todos fuera. Las access entries (2023) lo sustituyen: se gestionan con la API de EKS o tu IaC y quedan en CloudTrail. El clúster admite los modos de autenticación `CONFIG_MAP`, `API_AND_CONFIG_MAP` (para migrar) y `API`, el recomendado. La identidad que crea el clúster recibe acceso de administrador por defecto: no dependas de ella.]
-
 #examen[*Unauthorized* en `kubectl` significa que EKS no te reconoce (falta tu access entry); *Forbidden*, que te reconoce pero RBAC no permite la acción. Los permisos IAM sobre la API de EKS (como `eks:DescribeCluster`) no dan acceso a los objetos de Kubernetes.]
+
+#cuidado(titulo: "Adiós al ConfigMap aws-auth")[Antes, el acceso se daba editando a mano el ConfigMap `aws-auth` de `kube-system`, y un error de formato podía dejar a todos fuera. Las access entries (2023) lo sustituyen: se gestionan con la API de EKS o tu IaC y quedan en CloudTrail. El clúster admite los modos de autenticación `CONFIG_MAP`, `API_AND_CONFIG_MAP` (para migrar) y `API`, el recomendado. La identidad que crea el clúster recibe acceso de administrador por defecto: no dependas de ella.]
 
 === Dirección B: qué pueden hacer los pods en AWS
 
-Una aplicación que lee de S3 o escribe en DynamoDB nunca debe usar claves de acceso guardadas en un Secret ni el rol IAM del nodo: este lo heredan todos los pods del nodo, así que un contenedor comprometido tendría los permisos de todos. Lo correcto es asociar un rol IAM a la *ServiceAccount* del pod (su identidad en Kubernetes), de una de estas dos formas:
+Una aplicación que usa S3 o DynamoDB nunca debe tirar de claves de acceso en un Secret ni del rol IAM del nodo, que heredan todos sus pods (un contenedor comprometido tendría los permisos de todos). Lo correcto es asociar un rol IAM a la *ServiceAccount* del pod, su identidad en Kubernetes, de una de estas dos formas:
 
 #tabla(("", "IRSA (IAM Roles for Service Accounts)", "EKS Pod Identity"), columnas: (1.15fr, 1.75fr, 1.75fr), tamano: 8.2pt,
   [*Cómo funciona*], [Proveedor OIDC del clúster en IAM; el SDK canjea el token del pod con `AssumeRoleWithWebIdentity`], [Un agente en cada nodo (add-on) entrega al pod credenciales del rol asociado],
@@ -520,11 +531,11 @@ Una aplicación que lee de S3 o escribe en DynamoDB nunca debe usar claves de ac
   [*Fargate y Kubernetes fuera de EKS*], si, no,
 )
 
-#practica[Usa EKS Pod Identity por defecto en nodos EC2 (e IRSA en Fargate), con un rol por aplicación. La asociación se crea con `aws eks create-pod-identity-association` (clúster, namespace, ServiceAccount y rol), y la trust policy del rol solo permite `sts:AssumeRole` y `sts:TagSession` a `pods.eks.amazonaws.com`. Bloquea además el acceso de los pods al servicio de metadatos (IMDS, capítulo de EC2): IMDSv2 con un límite de saltos (_hop limit_) de 1 en los nodos impide que un contenedor obtenga las credenciales del rol del nodo.]
+#practica[Usa EKS Pod Identity por defecto en EC2 (IRSA en Fargate), con un rol por aplicación: la asociación se crea con `aws eks create-pod-identity-association` (clúster, namespace, ServiceAccount y rol) y la trust policy del rol solo permite `sts:AssumeRole` y `sts:TagSession` a `pods.eks.amazonaws.com`. Y bloquea el servicio de metadatos (IMDS, capítulo de EC2): con IMDSv2 y un límite de saltos (_hop limit_) de 1 en los nodos, ningún contenedor obtiene las credenciales del rol del nodo.]
 
 == Operación del clúster
 
-*Add-ons gestionados.* EKS ofrece como add-ons el software que el clúster necesita y que no es tu aplicación: AWS publica versiones probadas y compatibles con cada versión de Kubernetes, con sus parches, y tú decides cuándo instalarlas o actualizarlas. Los imprescindibles son *VPC CNI*, *CoreDNS* y *kube-proxy*; les siguen *EKS Pod Identity Agent*, los drivers CSI (*EBS*, *EFS*, *Mountpoint for S3*) y *CloudWatch Observability*.
+*Add-ons gestionados.* EKS ofrece como add-ons el software que el clúster necesita además de tus aplicaciones, en versiones probadas, compatibles y parcheadas por AWS que tú decides cuándo instalar o actualizar. Los imprescindibles son *VPC CNI*, *CoreDNS* y *kube-proxy*; les siguen *EKS Pod Identity Agent*, los drivers CSI (*EBS*, *EFS*, *Mountpoint for S3*) y *CloudWatch Observability*.
 
 *Versiones y actualizaciones.* Kubernetes publica unas tres versiones menores al año; EKS da a cada una un *soporte estándar* de algo más de un año y, después, un *soporte extendido* de aproximadamente otro año, con tarifa más alta. Al agotarse el soporte, EKS actualiza solo el control plane; con la *política de actualización* en `STANDARD`, lo hará al acabar el estándar, sin pasar por el extendido. Mejor adelantarse:
 
@@ -535,12 +546,14 @@ Una aplicación que lee de S3 o escribe en DynamoDB nunca debe usar claves de ac
   [*Nodos*: AMI nueva en los managed node groups; Karpenter reemplaza los desfasados (_drift_); en Fargate, reinicia los pods; Auto Mode lo hace solo. Los nodos pueden ir por detrás del control plane, nunca por delante.],
 )
 
-*Observabilidad* (capítulo de Observabilidad). *Container Insights* (CloudWatch, con su add-on) recoge métricas y logs de clúster, nodos, pods y contenedores; *Amazon Managed Service for Prometheus* almacena métricas de Prometheus sin servidores que operar (con un recolector gestionado sin agentes) y *Amazon Managed Grafana* las muestra en paneles; *Fluent Bit*, un DaemonSet ligero, envía los logs a CloudWatch Logs, S3 u OpenSearch. Los *logs del control plane* (API server, auditoría, autenticador, scheduler, controller manager) van a CloudWatch Logs, pero están desactivados por defecto: activa al menos el de auditoría.
+*Observabilidad* (capítulo de Observabilidad). *Container Insights* (CloudWatch, con su add-on) recoge métricas y logs de clúster, nodos, pods y contenedores; *Amazon Managed Service for Prometheus* guarda métricas de Prometheus sin servidores que operar y *Amazon Managed Grafana* las muestra en paneles; *Fluent Bit*, un DaemonSet ligero, envía los logs a CloudWatch Logs, S3 u OpenSearch. Los *logs del control plane* (API server, auditoría, autenticador, scheduler, controller manager) van a CloudWatch Logs, pero vienen desactivados: activa al menos el de auditoría.
 
 *Cifrado de los Secrets con KMS.* Desde marzo de 2025, EKS cifra por defecto todos los datos de la API de Kubernetes, Secrets incluidos, en clústeres 1.28 o posteriores, con *cifrado de sobre* (_envelope encryption_): cada objeto se cifra con una clave de datos protegida por una clave de KMS propiedad de AWS, sin coste adicional. Para controlar tú esa clave (política, rotación, auditoría, revocación), usa una *customer managed key* de KMS (capítulo de Seguridad).
 
 == Buenas prácticas y errores comunes
 
+#[
+#set text(hyphenate: false)
 #tarjetas(columnas: 3,
   tarjeta("Fiabilidad", subtitulo: "Que nada se caiga")[
     - Dos o más réplicas repartidas entre AZ.
@@ -558,6 +571,7 @@ Una aplicación que lee de S3 o escribe en DynamoDB nunca debe usar claves de ac
     - Versiones en soporte estándar; todo en Git (IaC y GitOps).
   ],
 )
+]
 
 #tabla(("Síntoma", "Causa habitual", "Por dónde empezar"), columnas: (1.05fr, 2.2fr, 1.45fr), tamano: 8.2pt,
   [`Pending`], [Ningún nodo tiene hueco para sus requests o cumple sus afinidades, o su volumen EBS está en otra AZ], [`kubectl describe pod` y el autoscaler de nodos],
@@ -567,13 +581,10 @@ Una aplicación que lee de S3 o escribe en DynamoDB nunca debe usar claves de ac
   [Service sin respuesta], [El selector no coincide con las labels o la readiness probe falla], [`kubectl get endpointslices`],
 )
 
-#cuidado[Antes de borrar un clúster, elimina los Ingress y los Services de tipo LoadBalancer. Esos balanceadores los creó un controlador, no tu plantilla: si el clúster desaparece primero, quedan huérfanos, siguen facturando e impiden borrar la VPC.]
-
 #resumen[
 - Kubernetes es *declarativo*: describes el estado deseado y los controladores lo reconcilian sin descanso con el actual.
 - El *control plane* (API server, etcd, scheduler, controller manager, cloud controller manager) decide; los *nodos* (kubelet, kube-proxy, runtime) ejecutan. Solo el API server habla con etcd.
-- *Pods* gestionados por Deployment, StatefulSet, DaemonSet o Job; *Services* con IP y DNS estables por selector; Ingress y Gateway API para HTTP; requests, limits y probes para recursos y salud; PVC, PV y StorageClass para los datos.
-- El HPA escala pods; Karpenter (o Cluster Autoscaler), nodos.
+- *Pods* gestionados por Deployment, StatefulSet, DaemonSet o Job; *Services* con IP y DNS estables por selector; Ingress y Gateway API para HTTP; requests, limits y probes; PVC, PV y StorageClass para los datos. El HPA escala pods; Karpenter, nodos.
 - *EKS* opera un control plane multi-AZ por una tarifa por clúster y hora (más cara en soporte extendido); los pods corren en managed node groups, nodos propios, Fargate, Karpenter o *Auto Mode*.
 - La *VPC CNI* da a cada pod una IP de la VPC (vigila el agotamiento) y el *AWS Load Balancer Controller* crea ALB y NLB, mejor en modo IP.
 - IAM va en dos direcciones: *access entries* + RBAC para entrar al clúster; *Pod Identity* o IRSA para que los pods usen AWS, nunca el rol del nodo. Y actualiza una versión menor cada vez.
