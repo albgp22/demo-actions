@@ -486,7 +486,7 @@
   block(width: 100%, inset: (y: 4pt), below: 1.4em, {
     text(9pt, weight: "bold", fill: color, tracking: 3pt, "APÉNDICE " + letra)
     v(-4pt)
-    heading(level: 1, numbering: none, outlined: true, titulo)
+    heading(level: 1, numbering: none, outlined: true, supplement: [#letra], titulo)
     if subtitulo != none { text(11pt, fill: gris, subtitulo) }
     v(2pt)
     box(width: 100%, height: 2pt, fill: gradient.linear(color, color.lighten(80%)))
@@ -626,7 +626,7 @@
 // ---------------------------------------------------------------------
 //  Índice
 // ---------------------------------------------------------------------
-#let indice() = {
+#let indice(columnas: 2) = {
   set page(header: none)
   block(below: 1.2em, {
     text(9pt, weight: "bold", fill: acento, tracking: 3pt, "CONTENIDO")
@@ -634,29 +634,33 @@
     text(30pt, weight: "extrabold", fill: marino, "Índice")
   })
   show outline.entry.where(level: 1): it => {
-    v(9pt, weak: true)
-    block(sticky: true, link(it.element.location(), grid(
-      columns: (26pt, 1fr, auto), align: (left + horizon, left + horizon, right + horizon),
-      if it.element.numbering != none {
-        box(width: 20pt, height: 18pt, radius: 4pt, fill: marino,
-          align(center + horizon, text(8.5pt, weight: "bold", fill: white,
-            numbering("1", counter(heading).at(it.element.location()).first()))))
-      } else {
-        box(width: 20pt, height: 18pt, radius: 4pt, fill: acento,
-          align(center + horizon, text(8.5pt, weight: "bold", fill: white, "A")))
+    v(11pt, weak: true)
+    block(sticky: true, below: 5pt, link(it.element.location(), grid(
+      columns: (23pt, 1fr, auto), column-gutter: (0pt, 8pt), align: (left + horizon, left + horizon, right + horizon),
+      {
+        let es-cap = it.element.numbering != none
+        box(width: 18pt, height: 17pt, radius: 3.5pt, fill: if es-cap { marino } else { acento },
+          align(center + horizon, text(8pt, weight: "bold", fill: white,
+            if es-cap { numbering("1", counter(heading).at(it.element.location()).first()) }
+            else { it.element.supplement })))
       },
-      text(10.5pt, weight: "bold", fill: marino, it.element.body),
-      text(10pt, weight: "bold", fill: marino, it.page()),
+      {
+        set par(justify: false, leading: 0.4em)
+        text(9.4pt, weight: "bold", fill: marino, hyphenate: false, it.element.body)
+      },
+      text(9pt, weight: "bold", fill: marino, it.page()),
     )))
   }
   show outline.entry.where(level: 2): it => {
-    block(above: 3.5pt, below: 3.5pt, link(it.element.location(), grid(
-      columns: (26pt, 26pt, 1fr, auto), align: (left, left, left, right),
-      [],
-      text(8.5pt, fill: gris, numbering("1.1", ..counter(heading).at(it.element.location()))),
-      text(8.8pt, fill: tinta, [#it.element.body #box(width: 1fr, repeat(text(fill: gris-claro, " . ")))]),
-      text(8.8pt, fill: gris, it.page()),
+    block(above: 2.8pt, below: 2.8pt, link(it.element.location(), grid(
+      columns: (23pt, 1fr, auto), column-gutter: (0pt, 4pt), align: (left + top, left + top, right + bottom),
+      text(7.4pt, fill: gris, numbering("1.1", ..counter(heading).at(it.element.location()))),
+      {
+        set par(justify: false, leading: 0.4em)
+        text(8pt, fill: tinta, hyphenate: false, [#it.element.body #box(width: 1fr, repeat(text(fill: gris-claro, " . ")))])
+      },
+      text(8pt, fill: gris, it.page()),
     )))
   }
-  columns(1, outline(title: none, depth: 2, indent: 0pt))
+  columns(columnas, gutter: 0.9cm, outline(title: none, depth: 2, indent: 0pt))
 }

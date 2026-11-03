@@ -128,30 +128,28 @@ Los permisos se expresan con *políticas*: documentos JSON que se adjuntan a ide
 
 Esta política permite leer el bucket `facturas`, pero solo desde la red de la oficina. Recorre sus elementos en orden:
 
-#grid(columns: (0.95fr, 1fr), column-gutter: 14pt,
+#grid(columns: (1.08fr, 1fr), column-gutter: 14pt,
   [
 ```json
 {
   "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "LeerFacturas",
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:ListBucket"
-      ],
-      "Resource": [
-        "arn:aws:s3:::facturas",
-        "arn:aws:s3:::facturas/*"
-      ],
-      "Condition": {
-        "IpAddress": {
-          "aws:SourceIp": "203.0.113.0/24"
-        }
+  "Statement": [{
+    "Sid": "LeerFacturas",
+    "Effect": "Allow",
+    "Action": [
+      "s3:GetObject",
+      "s3:ListBucket"
+    ],
+    "Resource": [
+      "arn:aws:s3:::facturas",
+      "arn:aws:s3:::facturas/*"
+    ],
+    "Condition": {
+      "IpAddress": {
+        "aws:SourceIp": "203.0.113.0/24"
       }
     }
-  ]
+  }]
 }
 ```
   ],
@@ -217,7 +215,7 @@ No todas las políticas hacen lo mismo. Unas *conceden* permisos y otras solo *l
 Las políticas de identidad, a su vez, pueden ser de tres clases:
 
 #tarjetas(columnas: 3,
-  tarjeta("Gestionada por AWS", subtitulo: "AdministratorAccess, ReadOnlyAccess…")[Las crea y mantiene AWS; cómodas para empezar y para funciones típicas (`PowerUserAccess`, `SecurityAudit`, `ViewOnlyAccess`). Son amplias, y AWS las amplía cuando lanza servicios nuevos.],
+  tarjeta("Gestionada por AWS", subtitulo: "p. ej. ReadOnlyAccess")[Las crea y mantiene AWS; cómodas para empezar y para funciones típicas (administrador, solo lectura, auditoría). Son amplias, y AWS las amplía cuando lanza servicios nuevos.],
   tarjeta("Gestionada por el cliente", subtitulo: "reutilizable y versionada")[La creas tú, la adjuntas a varias identidades y guarda hasta cinco versiones para volver atrás. Es la opción recomendada para el mínimo privilegio.],
   tarjeta("Inline", subtitulo: "pegada a una sola identidad")[Vive dentro de un usuario, grupo o rol y se borra con él. Útil para una relación estricta uno a uno; difícil de auditar si abusas de ella.],
 )
@@ -238,9 +236,9 @@ Cuando aplican varias, los permisos efectivos son la *intersección* de lo que c
 
 == Cómo decide AWS: la lógica de evaluación
 
-Para cada petición, AWS reúne el *contexto* (principal, acción, recurso, datos del entorno y etiquetas) y todas las políticas que aplican, y sigue siempre el mismo razonamiento:
+Para cada petición, AWS reúne el *contexto* (principal, acción, recurso, datos del entorno y etiquetas) y todas las políticas que aplican, y sigue siempre el mismo razonamiento, que resume el diagrama de flujo de esta sección.
 
-#diagrama(pie: [Lógica de evaluación de una petición dentro de una cuenta (simplificada). (\*) Entre cuentas, además, debe permitirlo la política de identidad del principal.])[
+#place(auto, float: true, clearance: 1.2em, diagrama(pie: [Lógica de evaluación de una petición dentro de una cuenta (simplificada). (\*) Entre cuentas, además, debe permitirlo la política de identidad del principal.])[
   #grid(columns: (6.9cm, 1.9cm, 3.2cm), align: center + horizon,
     _decision([¿Hay un *Deny explícito* en *cualquiera* de las políticas aplicables?]), flecha(etiqueta: "Sí", largo: 1.7cm, color: _rojo), _final([DENEGADO \ deny explícito], _rojo),
     _bajar("No"), [], [],
@@ -256,7 +254,7 @@ Para cada petición, AWS reúne el *contexto* (principal, acción, recurso, dato
     _bajar("Sí"), [], [],
     _final([PERMITIDO], _verde), [], [],
   )
-]
+])
 
 Dos matices importantes. Primero, en la misma cuenta, un Allow en una política de recurso puede bastar aunque la identidad no tenga ninguna política que lo permita (la interacción con boundaries y session policies tiene detalles adicionales que recoge la documentación). Segundo, hay dos excepciones en las que la política de recurso es *obligatoria*: la *trust policy* de un rol (nadie puede asumirlo si no lo permite) y la *key policy* de una clave KMS (las políticas de IAM solo funcionan si la key policy lo delega en la cuenta).
 
@@ -266,7 +264,7 @@ Dos matices importantes. Primero, en la misma cuenta, un Allow en una política 
 
 Cuando el principal y el recurso están en *cuentas distintas*, la regla cambia: hacen falta *dos* Allow, uno en cada lado. La cuenta del principal debe permitir la acción en su política de identidad (y sus SCP no deben impedirlo), y la cuenta del recurso debe permitirla en la política del recurso (y sus RCP no deben impedirlo).
 
-#diagrama(pie: [Acceso entre cuentas con una política de recurso: cada cuenta controla su lado y hacen falta los dos permisos.])[
+#place(auto, float: true, clearance: 1.2em, diagrama(pie: [Acceso entre cuentas con una política de recurso: cada cuenta controla su lado y hacen falta los dos permisos.])[
   #fila(espacio: 6pt,
     zona("Cuenta A (quien pide)", color: col.iam)[
       #columna(espacio: 4pt,
@@ -282,7 +280,7 @@ Cuando el principal y el recurso están en *cuentas distintas*, la regla cambia:
         caja([Las RCP de B no lo impiden], ancho: 4.4cm, color: col.neutro))
     ],
   )
-]
+])
 
 #tabla(("Política de identidad del principal", "Política del recurso", "Misma cuenta", "Entre cuentas"), columnas: (1.6fr, 1.6fr, 1fr, 1fr),
   [Allow], [No dice nada], [#si Permitido], [#no Denegado],
@@ -358,12 +356,12 @@ El modelo clásico (RBAC, por roles) obliga a escribir una política por equipo 
       columna(espacio: 2pt, actor(etiqueta: "Lucía", color: col.iam), pill("Equipo = pagos", color: col.iam)),
       flecha(etiqueta: "ec2:StopInstances", largo: 2.6cm, color: _verde),
       columna(espacio: 2pt, svc("EC2", "i-pagos-01", color: col.computo), pill("Equipo = pagos", color: col.iam)),
-      box(width: 3cm, text(8pt, weight: "bold", fill: _verde)[#si las etiquetas coinciden])),
+      box(width: 2.6cm, text(8pt, weight: "bold", fill: _verde)[#si coinciden])),
     fila(espacio: 6pt,
       columna(espacio: 2pt, actor(etiqueta: "Marco", color: col.datos), pill("Equipo = web", color: col.datos)),
       flecha(etiqueta: "ec2:StopInstances", largo: 2.6cm, color: _rojo),
       columna(espacio: 2pt, svc("EC2", "i-pagos-01", color: col.computo), pill("Equipo = pagos", color: col.iam)),
-      box(width: 3cm, text(8pt, weight: "bold", fill: _rojo)[#no no coinciden])),
+      box(width: 2.6cm, text(8pt, weight: "bold", fill: _rojo)[#no no coinciden])),
   )
 ]
 
@@ -446,29 +444,29 @@ La política de los desarrolladores solo les deja crear roles *si llevan el boun
 
 *AWS Organizations* agrupa tus cuentas en una jerarquía: una *raíz* (_root_), *unidades organizativas* (OU) que pueden anidarse y *cuentas miembro*, todas gobernadas desde la *cuenta de gestión*, que paga la factura consolidada (con descuentos por volumen compartidos) y aplica las políticas de la organización. Las dos más importantes para IAM son las SCP y las RCP.
 
-#diagrama(pie: [Una organización típica. Las SCP se adjuntan a la raíz, a las OU o a las cuentas y se heredan hacia abajo; no afectan a la cuenta de gestión.])[
+#place(auto, float: true, clearance: 1.2em, diagrama(pie: [Una organización típica. Las SCP se adjuntan a la raíz, a las OU o a las cuentas y se heredan hacia abajo; no afectan a la cuenta de gestión.])[
   #columna(espacio: 0pt,
     caja([*Raíz de la organización*], ancho: 5cm, color: col.fundamentos),
     flecha-v(largo: 0.5cm),
-    fila(espacio: 6pt,
-      caja([*Cuenta de gestión* \ facturación, Organizations, Identity Center \ (las SCP no la afectan)], ancho: 3.1cm, color: col.fundamentos),
+    fila(espacio: 4pt,
+      caja([*Cuenta de gestión* \ facturación, Identity Center \ (sin SCP)], ancho: 2.6cm, color: col.fundamentos),
       zona("OU Security", color: col.seguridad)[
-        #columna(espacio: 4pt, pill("SCP: proteger CloudTrail", color: col.seguridad),
+        #columna(espacio: 4pt, pill("SCP: CloudTrail", color: col.seguridad),
           caja([Log Archive], ancho: 2.3cm, color: col.seguridad), caja([Security Tooling], ancho: 2.3cm, color: col.seguridad))
       ],
       zona("OU Workloads", color: col.iam)[
-        #columna(espacio: 4pt, pill("SCP: solo regiones de la UE", color: col.iam),
+        #columna(espacio: 4pt, pill("SCP: solo regiones UE", color: col.iam),
           fila(espacio: 5pt,
             zona("OU Prod", color: col.iam)[#caja([tienda-prod], ancho: 2cm, color: col.iam)],
             zona("OU Dev", color: col.iam)[#caja([tienda-dev], ancho: 2cm, color: col.iam)]))
       ],
       zona("OU Sandbox", color: col.computo)[
-        #columna(espacio: 4pt, pill("SCP: tipos de instancia", color: col.computo),
-          caja([sandbox-ana], ancho: 2.3cm, color: col.computo))
+        #columna(espacio: 4pt, pill("SCP: tipos de EC2", color: col.computo),
+          caja([sandbox-ana], ancho: 2.5cm, color: col.computo))
       ],
     ),
   )
-]
+])
 
 #_concepto("SCP", "los guardarraíles de los principals de una cuenta",
   [Una política de Organizations que fija el *máximo* de lo que pueden hacer los usuarios y roles de las cuentas a las que se aplica, incluido su usuario root.],
@@ -597,7 +595,7 @@ El principio de *mínimo privilegio* dice que cada identidad debe tener solo los
   )
 ]
 
-Para revisar periódicamente tienes el *informe de credenciales* (`aws iam generate-credential-report`: un CSV con el estado de contraseñas, MFA y access keys de cada usuario), la *información de último acceso* (qué servicios, y en algunos casos qué acciones, ha usado cada identidad y cuándo) y los hallazgos de acceso sin usar de Access Analyzer.
+Para revisar periódicamente tienes el *informe de credenciales*, un CSV con el estado de contraseñas, MFA y access keys de cada usuario que se obtiene con `aws iam generate-credential-report`; la *información de último acceso*, que muestra qué servicios (y en algunos casos qué acciones) ha usado cada identidad y cuándo; y los hallazgos de acceso sin usar de Access Analyzer.
 
 #tarjetas(
   tarjeta("Haz", color: _verde)[
