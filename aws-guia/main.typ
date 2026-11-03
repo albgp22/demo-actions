@@ -66,9 +66,9 @@
     text(30pt, weight: "extrabold", fill: marino, "Cómo leer esta guía")
   })
 
-  Esta guía recorre los servicios y conceptos de AWS que aparecen una y otra vez en cualquier proyecto real: identidad y permisos, redes, cómputo, contenedores, *serverless*, almacenamiento, bases de datos, mensajería, entrega de contenido, observabilidad, seguridad, infraestructura como código y costes. Cada capítulo empieza por el *porqué* de cada servicio, construye los conceptos paso a paso y termina con un resumen y preguntas de repaso.
+  Esta guía recorre los servicios y conceptos de AWS que aparecen una y otra vez en cualquier proyecto real: identidad y permisos, redes, cómputo, contenedores y Kubernetes, *serverless*, almacenamiento, bases de datos, mensajería, entrega de contenido, observabilidad, seguridad y cifrado, infraestructura como código y costes. Cada capítulo empieza por el *porqué* de cada servicio, construye los conceptos paso a paso y termina con un resumen y preguntas de repaso.
 
-  Puedes leerla de principio a fin —el orden está pensado para que cada capítulo se apoye en los anteriores— o saltar directamente al servicio que necesites. Los capítulos de *Fundamentos*, *IAM* y *Redes* son la base de todo lo demás: si eres nuevo en AWS, empieza por ellos.
+  Puedes leerla de principio a fin —el orden está pensado para que cada capítulo se apoye en los anteriores— o saltar directamente al servicio que necesites. Los capítulos de *Fundamentos*, *IAM* y *Redes* son la base de todo lo demás: si eres nuevo en AWS, empieza por ellos. IAM ocupa dos capítulos a propósito: el primero responde a *quién* (usuarios, grupos, roles y *permission sets*) y el segundo a *qué puede hacer* (políticas y evaluación de permisos). Es el tema que más dudas genera y el que más conviene dominar.
 
   #v(4pt)
   #text(11pt, weight: "bold", fill: marino, "Cajas que encontrarás a lo largo del texto")
@@ -145,11 +145,13 @@
 #counter(page).update(1)
 
 #include "capitulos/01-fundamentos.typ"
-#include "capitulos/02-iam.typ"
+#include "capitulos/02a-iam-identidades.typ"
+#include "capitulos/02b-iam-permisos.typ"
 #include "capitulos/03-redes.typ"
 #include "capitulos/04-ec2.typ"
 #include "capitulos/05-balanceo.typ"
 #include "capitulos/06-contenedores.typ"
+#include "capitulos/06b-kubernetes.typ"
 #include "capitulos/07-serverless.typ"
 #include "capitulos/08-almacenamiento.typ"
 #include "capitulos/09-bases-datos.typ"
