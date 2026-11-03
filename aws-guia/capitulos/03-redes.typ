@@ -246,7 +246,7 @@ Otros targets habituales: Internet Gateway (`igw-`), Egress-only IGW (`eigw-`), 
 
 El *Internet Gateway* (IGW) conecta la VPC con Internet. Es gestionado, redundante y escala solo: no es un cuello de botella ni un punto único de fallo, y no tiene coste propio. Cada VPC admite uno como máximo. Para IPv4 traduce 1:1 la IP privada de la instancia a su IP pública: el sistema operativo solo ve la privada. Y si quieres un freno de emergencia, *VPC Block Public Access* (2024) bloquea por cuenta y región el tráfico de los Internet Gateways, con exclusiones para las VPC o subredes que deban ser públicas.
 
-¿Qué hace *pública* a una subred? Solo una cosa: que su tabla de rutas tenga una ruta `0.0.0.0/0` (o `::/0`) hacia un IGW. No existe ninguna casilla «subred pública», y el nombre que le pongas no cambia nada. Una subred *privada* es, sencillamente, la que no tiene esa ruta: nada de lo que vive en ella es alcanzable desde Internet, aunque tuviera IP pública. Para que una instancia sea accesible desde Internet deben cumplirse cuatro condiciones:
+¿Qué hace *pública* a una subred? Solo una cosa: que su tabla de rutas tenga una ruta `0.0.0.0/0` (o `::/0`) hacia un IGW. No existe ninguna casilla «subred pública», y el nombre que le pongas no cambia nada. Una subred *privada* es, sencillamente, la que no tiene esa ruta: nada de lo que vive en ella es alcanzable directamente desde Internet, aunque tuviera IP pública. Para que una instancia sea accesible desde Internet deben cumplirse cuatro condiciones:
 
 #pasos(
   [La tabla de rutas de su subred tiene una ruta hacia el Internet Gateway.],

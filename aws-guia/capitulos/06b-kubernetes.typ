@@ -392,7 +392,7 @@ Con *Security Groups for Pods* puedes asignar Security Groups a pods concretos (
 
 === AWS Load Balancer Controller
 
-El *AWS Load Balancer Controller* es otro controlador (otro bucle de reconciliación) que convierte objetos de Kubernetes en balanceadores (capítulo de Balanceo de carga y Auto Scaling): un *Ingress* de clase `alb`, en un *Application Load Balancer* con reglas por host y ruta (varios Ingress pueden compartirlo con una *IngressGroup*), y un *Service* `LoadBalancer`, en un *Network Load Balancer*. En modo de destino `ip` el balanceador envía el tráfico directamente a la IP de cada pod, gracias a la VPC CNI (obligatorio en Fargate); en modo `instance`, al NodePort de los nodos, con un salto extra. Necesita permisos IAM (Pod Identity o IRSA) y localiza las subredes por sus etiquetas: `kubernetes.io/role/elb` en las públicas y `kubernetes.io/role/internal-elb` en las privadas. En Auto Mode viene integrado; sin él, el controlador heredado de Kubernetes crea Classic Load Balancers.
+El *AWS Load Balancer Controller* es otro controlador (otro bucle de reconciliación) que convierte objetos de Kubernetes en balanceadores (capítulo de Balanceo de carga y Auto Scaling): un *Ingress* de clase `alb`, en un *Application Load Balancer* con reglas por host y ruta (varios Ingress pueden compartirlo con una *IngressGroup*), y un *Service* `LoadBalancer`, en un *Network Load Balancer*. En modo de destino `ip` el balanceador envía el tráfico directamente a la IP de cada pod, gracias a la VPC CNI (obligatorio en Fargate); en modo `instance`, al NodePort de los nodos, con un salto extra. Necesita permisos IAM (Pod Identity o IRSA) y localiza las subredes por sus etiquetas: `kubernetes.io/role/elb` en las públicas y `kubernetes.io/role/internal-elb` en las privadas. En Auto Mode viene integrado; sin él, los Services `LoadBalancer` los atiende el controlador heredado de Kubernetes, que crea Classic Load Balancers.
 
 #diagrama(pie: [Tráfico de entrada en EKS: el ALB, con nodos en las subredes públicas de dos AZ, envía cada petición directamente a la IP de un pod (modo IP) en las subredes privadas. A la derecha, cómo el controlador crea y mantiene el ALB a partir del Ingress.])[
   #fila(espacio: 8pt,
@@ -450,7 +450,7 @@ En EKS conviven dos sistemas de permisos: *IAM*, que protege las API de AWS, y e
 #set text(hyphenate: false)
 #tabla(("", "A · De fuera hacia dentro", "B · De dentro hacia fuera"), columnas: (0.95fr, 2fr, 2fr), tamano: 8.2pt,
   [*Pregunta*], [¿Quién puede usar el clúster y qué puede hacer en él?], [¿Qué puede hacer un pod en los servicios de AWS?],
-  [*Quién actúa, y contra qué API*], [Personas y pipelines con una identidad IAM (usuario, rol o permission set), contra la API de Kubernetes (`kubectl`, Helm...)], [El código de un pod, identificado por su *ServiceAccount* (su identidad en Kubernetes), contra las API de AWS (S3, SQS...)],
+  [*Quién actúa, y contra qué API*], [Personas y pipelines con una identidad IAM (un usuario o un rol, incluido el que crea un permission set), contra la API de Kubernetes (`kubectl`, Helm...)], [El código de un pod, identificado por su *ServiceAccount* (su identidad en Kubernetes), contra las API de AWS (S3, SQS...)],
   [*Quién decide*], [IAM autentica; RBAC o una access policy de EKS autoriza], [La política IAM del rol asociado a la ServiceAccount],
   [*Cómo se configura*], [Access entry + RoleBinding (o access policy)], [Asociación de EKS Pod Identity (o IRSA)],
   [*Si falla*], [`Unauthorized` o `Forbidden` en `kubectl`], [`AccessDenied` en la llamada a AWS],

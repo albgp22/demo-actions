@@ -44,14 +44,7 @@
 
 Crear recursos haciendo clic en la consola —la llamada _ClickOps_— sirve para aprender, pero no escala: nadie recuerda qué casillas marcó hace seis meses, replicar un entorno en otra región es un proyecto y los cambios se aplican sin revisión. Con *infraestructura como código* (IaC) describes la infraestructura en ficheros de texto, los guardas en Git junto a la aplicación y una herramienta crea, modifica o borra recursos hasta que la cuenta coincide con lo escrito.
 
-#tarjetas(columnas: 4,
-  tarjeta("Reproducible", subtitulo: "mismo resultado")[Dev, staging y producción salen de la misma plantilla.],
-  tarjeta("Revisable", subtitulo: "pull requests")[Antes de aplicar ves qué se creará, cambiará o borrará.],
-  tarjeta("Trazable", subtitulo: "historial de Git")[Quién cambió qué, cuándo y por qué; y vuelta atrás.],
-  tarjeta("Sin drift", subtitulo: "una fuente de verdad")[Los cambios manuales se detectan como diferencias.],
-)
-
-El *drift* (deriva) es la diferencia entre lo que declara tu código y lo que existe de verdad en la cuenta. Suele nacer de un cambio manual «urgente» que nadie llevó al código, y el siguiente despliegue puede deshacerlo sin avisar.
+Así la infraestructura se vuelve *reproducible* (dev, staging y producción salen de la misma plantilla), *revisable* (antes de aplicar ves qué se creará, cambiará o borrará) y *trazable* (Git guarda quién cambió qué, cuándo y por qué, y permite volver atrás). Y tiene una única fuente de verdad, que destapa el *drift* (deriva): la diferencia entre lo que declara tu código y lo que existe de verdad en la cuenta. Suele nacer de un cambio manual «urgente» que nadie llevó al código, y el siguiente despliegue puede deshacerlo sin avisar.
 
 #diagrama(pie: [Flujo de trabajo con IaC: el repositorio es la fuente de verdad y solo el pipeline modifica las cuentas. Un cambio manual en la consola aparece como _drift_.])[
   #grid(columns: 7, align: center + horizon,
@@ -105,10 +98,7 @@ Esta plantilla crea un bucket y una función Lambda que procesa sus objetos. Es 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  Entorno:
-    Type: String
-    AllowedValues: [dev, prod]
-    Default: dev
+  Entorno: { Type: String, AllowedValues: [dev, prod], Default: dev }
 Mappings:
   PorEntorno:
     dev:  { Memoria: 256 }
@@ -186,7 +176,7 @@ Si falla la creación de un stack, CloudFormation borra lo que había creado; si
 
 #tabla(("Mecanismo", "Qué es", "Cuándo usarlo"), columnas: (1.15fr, 2.5fr, 2.2fr), tamano: 8pt,
   [*Nested stacks*], [Un stack padre incluye plantillas hijas (recurso `AWS::CloudFormation::Stack`); se despliegan juntos, como una unidad.], [Reutilizar componentes estándar (un ALB, una VPC tipo) dentro de una aplicación.],
-  [*Exports + `!ImportValue`*], [Un stack exporta salidas y otros las importan. No puedes borrar ni cambiar un export mientras alguien lo importe.], [Compartir valores (VPC, subredes) entre stacks independientes de la misma cuenta y región. Alternativa menos acoplada: Parameter Store y `{{resolve:ssm:...}}`.],
+  [*Exports + `!ImportValue`*], [Un stack exporta salidas y otros las importan; no puedes borrar ni cambiar un export mientras alguien lo importe.], [Compartir valores (VPC, subredes) entre stacks de la misma cuenta y región. Menos acoplado: Parameter Store y `{{resolve:ssm:...}}`.],
   [*StackSets*], [Despliega el mismo stack en muchas cuentas y regiones; integrado con Organizations, cubre automáticamente las cuentas nuevas de una OU.], [Línea base de seguridad en toda la organización: roles de auditoría, reglas de Config, alarmas.],
 )
 
@@ -194,11 +184,9 @@ Si falla la creación de un stack, CloudFormation borra lo que había creado; si
 
 El *AWS Cloud Development Kit* (CDK) define la infraestructura con TypeScript, JavaScript, Python, Java, C\# o Go: bucles, funciones, clases, tipos, autocompletado y tests. Por debajo no hay magia: tu programa (una *App* con uno o más *Stacks*) *sintetiza* plantillas de CloudFormation y es CloudFormation quien las despliega, así que heredas change sets, rollback y drift. Es gratuito y de código abierto. Las piezas se llaman *constructs* y tienen tres niveles:
 
-#tarjetas(columnas: 3,
-  tarjeta("L1 · Cfn*", subtitulo: "1:1 con CloudFormation")[`CfnBucket`, `CfnFunction`… Control total y ningún valor por defecto.],
-  tarjeta("L2 · curados", subtitulo: "lo más usado")[`s3.Bucket`, `lambda.Function`… Valores por defecto sensatos y ayudas como `grantRead()`.],
-  tarjeta("L3 · patrones", subtitulo: "arquitecturas completas")[Módulo `ecs_patterns`: un servicio Fargate tras un ALB, con clúster, roles y logs.],
-)
+/ L1 (`Cfn*`): equivalen 1:1 a los recursos de CloudFormation (`CfnBucket`, `CfnFunction`…): control total, sin valores por defecto.
+/ L2 (curados): los más usados (`s3.Bucket`, `lambda.Function`…), con valores por defecto sensatos y ayudas como `grantRead()`.
+/ L3 (patrones): arquitecturas completas; el módulo `ecs_patterns`, por ejemplo, crea un servicio Fargate tras un ALB con clúster, roles y logs.
 
 ```typescript
 import { App, Stack, Duration, RemovalPolicy } from 'aws-cdk-lib';
@@ -257,7 +245,6 @@ provider "aws" {
   default_tags { tags = { Proyecto = "subidas" } }   # etiquetas en todo
 }
 resource "aws_s3_bucket" "subidas" { bucket = "miempresa-subidas-prod" }
-output "arn_bucket" { value = aws_s3_bucket.subidas.arn }
 ```
 
 #block(breakable: false, tabla(("", "CloudFormation", "AWS CDK", "Terraform"), columnas: (1.1fr, 1.3fr, 1.3fr, 1.5fr), tamano: 8pt,
@@ -265,9 +252,8 @@ output "arn_bucket" { value = aws_s3_bucket.subidas.arn }
   [*Estado*], [Lo guarda AWS (el stack)], [Lo guarda AWS (vía CloudFormation)], [Fichero de estado que gestionas tú],
   [*Vista previa*], [Change sets], [`cdk diff`], [`terraform plan`],
   [*Rollback automático*], si, [#si vía CloudFormation], [#no se corrige y se vuelve a aplicar],
+  [*Elígelo si…*], [Quieres plantillas sin dependencias externas], [Todo está en AWS y tu equipo programa], [Usas varios proveedores (o *OpenTofu*, su fork abierto desde 2023)],
 ))
-
-#consejo[¿Cuál elegir? Todo en AWS y un equipo que programa: CDK. Plantillas sin dependencias: CloudFormation. Varios proveedores: Terraform u *OpenTofu*, su fork abierto desde 2023.]
 
 == CI/CD en AWS
 
@@ -308,11 +294,9 @@ La *integración continua* (CI) compila y prueba cada cambio en cuanto llega al 
 ]
 
 
-#nota(titulo: "¿Dónde vive el código?")[*AWS CodeCommit*, el servicio de repositorios Git de AWS, dejó de aceptar clientes nuevos en julio de 2024 y volvió a abrirse a ellos el 25 de noviembre de 2025. Aun así, lo habitual es usar GitHub, GitLab o Bitbucket conectados a CodePipeline con *AWS CodeConnections* (antes CodeStar Connections), o el CI del propio proveedor.]
+#nota(titulo: "¿Dónde vive el código?")[*AWS CodeCommit*, el servicio de repositorios Git de AWS, dejó de aceptar clientes nuevos en julio de 2024 y volvió a abrirse a ellos el 25 de noviembre de 2025. Aun así, lo habitual es usar GitHub, GitLab o Bitbucket conectados a CodePipeline con *AWS CodeConnections* (antes CodeStar Connections), o el CI del propio proveedor. Si usas GitHub Actions, no guardes claves de acceso en el repositorio: federación OIDC con un rol que solo acepte tu repositorio y rama (capítulo «IAM (I): identidades — usuarios, grupos, roles y permission sets»).]
 
-Si tu CI vive en GitHub Actions, no guardes claves de acceso en el repositorio: usa la federación OIDC con un rol que solo acepte tokens de tu repositorio y rama, como se explica paso a paso en el capítulo «IAM (I): identidades — usuarios, grupos, roles y permission sets».
-
-Un `buildspec.yml` típico para una aplicación en contenedores ejecuta los tests, construye la imagen, la sube a ECR y genera el `imagedefinitions.json` que consume la acción de despliegue en ECS:
+Este `buildspec.yml` ejecuta los tests, construye la imagen, la sube a ECR y genera el `imagedefinitions.json` que consume la acción de despliegue en ECS:
 
 ```yaml
 version: 0.2
@@ -358,18 +342,15 @@ Desplegar *todo a la vez* es lo más simple, pero implica corte y una vuelta atr
 
 == Entornos y buenas prácticas
 
-#practica[
-  - *Una cuenta por entorno* (dev, staging, prod); el pipeline vive en una cuenta de herramientas y asume roles de despliegue (en CDK, `cdk bootstrap --trust`). Más en el capítulo de Arquitecturas de referencia.
-  - *El mismo artefacto y la misma plantilla en todos los entornos*; solo cambian los parámetros. Los secretos, en Secrets Manager o Parameter Store.
-  - Consola de *solo lectura* en producción, stacks *pequeños y por ciclo de vida* y el change set o `plan` revisado en la _pull request_.
-  - Mínimo privilegio para el pipeline, OIDC en lugar de claves y etiquetas desde el código (lo agradecerá el capítulo de Costes).
-]
+- *Una cuenta por entorno* (dev, staging, prod), con el pipeline en una cuenta de herramientas que asume roles de despliegue (en CDK, `cdk bootstrap --trust`); la estructura completa, en el capítulo de Arquitecturas de referencia.
+- *El mismo artefacto y la misma plantilla en todos los entornos*: solo cambian los parámetros, y los secretos se leen de Secrets Manager o Parameter Store.
+- Consola de *solo lectura* en producción, stacks *pequeños y por ciclo de vida*, y el change set o el `plan` revisados en la _pull request_.
+- Mínimo privilegio para el pipeline, OIDC en lugar de claves y etiquetas desde el código (lo agradecerá el capítulo de Costes).
 
 #resumen[
 - La IaC hace la infraestructura *reproducible, revisable y trazable* y destapa el *drift* de los cambios manuales.
 - Una plantilla de CloudFormation tiene `Parameters`, `Mappings`, `Conditions`, `Resources` (la única obligatoria) y `Outputs`; `!Ref`, `!GetAtt`, `!Sub` e `!ImportValue` conectan las piezas.
-- Los *change sets* muestran el impacto antes de ejecutar y, si algo falla, hay *rollback*; `DeletionPolicy` y `UpdateReplacePolicy` protegen los datos.
-- *Nested stacks* reutilizan, *exports* comparten y *StackSets* llegan a muchas cuentas y regiones.
+- Los *change sets* muestran el impacto antes de ejecutar y, si algo falla, hay *rollback*; `DeletionPolicy` y `UpdateReplacePolicy` protegen los datos. *Nested stacks*, *exports* y *StackSets* reutilizan, comparten y llevan stacks a muchas cuentas.
 - CDK genera CloudFormation desde código (constructs L1, L2, L3); Terraform gestiona varios proveedores con un *fichero de estado* en S3 con bloqueo (`use_lockfile`).
 - CodePipeline orquesta, CodeBuild prueba y CodeDeploy o ECS despliegan (rolling, blue/green, canary); AppConfig da feature flags.
 ]

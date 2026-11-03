@@ -252,6 +252,7 @@
     )),
     align(center, box(width: 2.4cm, align(center, {
       set par(justify: false, leading: 0.4em)
+      set text(hyphenate: false)
       text(7.3pt, weight: "semibold", fill: tinta, etiqueta)
       if sub != none { linebreak(); text(6.3pt, fill: gris, sub) }
     }))),
@@ -279,7 +280,7 @@
   inset: (x: 7pt, y: 5pt),
   align(center, {
     set par(justify: false, leading: 0.4em)
-    text(7.3pt, weight: "medium", fill: tinta, contenido)
+    text(7.3pt, weight: "medium", fill: tinta, hyphenate: false, contenido)
   }),
 )
 
@@ -300,7 +301,7 @@
       // dos líneas, nunca pisa la flecha.
       place(center + bottom, dy: -1.3em - 3pt, box(width: largo + 0.8cm, align(center, {
         set par(justify: false, leading: 0.3em)
-        text(6.4pt, fill: color.darken(25%), weight: "medium", etiqueta)
+        text(6.4pt, fill: color.darken(25%), weight: "medium", hyphenate: false, etiqueta)
       })))
     }
   },
@@ -318,7 +319,7 @@
     if down { place(center + bottom, polygon(fill: color, (0pt, 0pt), (7pt, 0pt), (3.5pt, 7pt))) }
     if up { place(center + top, polygon(fill: color, (3.5pt, 0pt), (7pt, 7pt), (0pt, 7pt))) }
     if etiqueta != none {
-      place(left + horizon, dx: 11pt, box(width: 4cm, text(6.4pt, fill: color.darken(25%), weight: "medium", etiqueta)))
+      place(left + horizon, dx: 11pt, box(width: 4cm, text(6.4pt, fill: color.darken(25%), weight: "medium", hyphenate: false, etiqueta)))
     }
   },
 )

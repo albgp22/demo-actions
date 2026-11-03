@@ -319,13 +319,7 @@ Encadenar funciones que se llaman entre sí produce código frágil: ¿quién re
   [Casos típicos], [Procesos largos, aprobaciones, ETL], [Eventos de alto volumen (más de 100~000 ejecuciones/s)],
 )
 
-/ Task: hace el trabajo: invoca una Lambda, llama a un servicio de AWS o a una API HTTPS, o espera un _callback_.
-/ Choice, Parallel, Map: bifurcan según los datos, ejecutan ramas en paralelo o recorren una lista; el Map *distribuido* procesa millones de objetos de S3 con hasta 10~000 ejecuciones hijas a la vez.
-/ Wait, Pass, Succeed, Fail: esperan (sin pagar cómputo), transforman datos o terminan.
-
-Cada Task, Parallel o Map puede declarar *Retry* (qué errores reintentar, cuántas veces y con qué _backoff_) y *Catch* (a qué estado saltar al agotar los reintentos). Los errores se identifican por nombre: los tuyos o predefinidos como `States.Timeout`, `States.TaskFailed` o el comodín `States.ALL`.
-
-#place(auto, float: true, clearance: 1.2em, grid(columns: (1.12fr, 1fr), column-gutter: 10pt,
+#place(bottom, float: true, clearance: 1.2em, grid(columns: (1.12fr, 1fr), column-gutter: 10pt,
   [
     #show raw.line: set text(size: 7.2pt)
     ```json
@@ -371,6 +365,13 @@ Cada Task, Parallel o Map puede declarar *Retry* (qué errores reintentar, cuán
     )
   ],
 ))
+
+/ Task: hace el trabajo: invoca una Lambda, llama a un servicio de AWS o a una API HTTPS, o espera un _callback_.
+/ Choice, Parallel, Map: bifurcan según los datos, ejecutan ramas en paralelo o recorren una lista; el Map *distribuido* procesa millones de objetos de S3 con hasta 10~000 ejecuciones hijas a la vez.
+/ Wait, Pass, Succeed, Fail: esperan (sin pagar cómputo), transforman datos o terminan.
+
+Cada Task, Parallel o Map puede declarar *Retry* (qué errores reintentar, cuántas veces y con qué _backoff_) y *Catch* (a qué estado saltar al agotar los reintentos). Los errores se identifican por nombre: los tuyos o predefinidos como `States.Timeout`, `States.TaskFailed` o el comodín `States.ALL`.
+
 
 Step Functions no necesita Lambda para todo: con las *integraciones optimizadas* (DynamoDB, SQS, SNS, ECS/Fargate, Batch, Glue, EventBridge, Bedrock…) y las del *AWS SDK* (`arn:aws:states:::aws-sdk:servicio:acción`, más de 200 servicios) llama a las APIs directamente, de tres maneras:
 
