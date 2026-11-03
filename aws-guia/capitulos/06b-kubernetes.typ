@@ -43,21 +43,6 @@
   }),
 ))
 
-// Flecha hacia la izquierda (espejo de `flecha` del tema)
-#let flecha-izq(etiqueta: none, largo: 1.4cm, color: gf, punteada: false) = box(
-  width: largo, height: 2.6em, {
-    let st = (paint: color, thickness: 1.2pt, dash: if punteada { "dashed" } else { none })
-    place(right + horizon, line(length: largo - 5pt, stroke: st))
-    place(left + horizon, polygon(fill: color, (7pt, 0pt), (0pt, 3.5pt), (7pt, 7pt)))
-    if etiqueta != none {
-      place(center + top, dy: -1pt, box(width: largo + 0.8cm, align(center, {
-        set par(justify: false, leading: 0.3em)
-        text(6.4pt, fill: color.darken(25%), weight: "medium", etiqueta)
-      })))
-    }
-  },
-)
-
 // Bifurcación: una entrada arriba y dos flechas hacia abajo separadas `sep`
 #let bifurca(sep, alto: 0.8cm, color: gf, etiqueta: none) = box(width: sep + 8pt, height: alto, {
   let st = (paint: color, thickness: 1.2pt)
@@ -138,7 +123,7 @@ Kubernetes es *declarativo*: no le das órdenes («arranca tres contenedores»),
     })),
     columna(espacio: 0pt,
       flecha(etiqueta: "actúa", largo: 1.25cm),
-      flecha-izq(etiqueta: "observa", largo: 1.25cm)),
+      flecha(izquierda: true, etiqueta: "observa", largo: 1.25cm)),
     zona("Estado actual", color: k8s, punteada: false, relleno: white, ancho: 4cm)[
       #columna(espacio: 5pt,
         fila(espacio: 4pt, pod(t: "web"), pod(t: "web"), pod(t: "✘ web", caido: true)),
@@ -212,7 +197,7 @@ Todo en Kubernetes es un *objeto* de la API descrito en YAML, con un tipo (`kind
       zona("Pods con label app=web", color: k8s, punteada: false, relleno: white)[
         #fila(espacio: 4pt, pod(t: "web"), pod(t: "web"), pod(t: "web"))
       ],
-      flecha-izq(etiqueta: "se montan", largo: 1.2cm),
+      flecha(izquierda: true, etiqueta: "se montan", largo: 1.2cm),
       columna(espacio: 3pt,
         comp("ConfigMap", desc: "configuración", color: col.iac, ancho: 2.4cm),
         comp("Secret", desc: "contraseñas, tokens", color: col.seguridad, ancho: 2.4cm),

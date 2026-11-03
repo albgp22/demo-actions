@@ -233,7 +233,7 @@ bucket.grantRead(fn);                        // política IAM de mínimo privile
   #caja([*cdk bootstrap* (stack CDKToolkit, una vez por cuenta y región): bucket de assets, repositorio ECR y roles IAM], color: col.neutro, relleno: gris-claro.lighten(50%))
 ]
 
-*AWS SAM* (_Serverless Application Model_) es una extensión de CloudFormation para lo visto en el capítulo de Serverless: con `Transform: AWS::Serverless-2016-10-31` usas tipos abreviados como `AWS::Serverless::Function`, que se expanden en rol, permisos, API y eventos. La SAM CLI añade `sam build`, `sam deploy --guided` y pruebas locales con Docker (`sam local invoke`).
+*AWS SAM*, presentado en el capítulo de Serverless, es la otra gran extensión de CloudFormation: una macro (`Transform: AWS::Serverless-2016-10-31`) que expande tipos abreviados como `AWS::Serverless::Function` en función, rol, permisos, API y eventos, con su propia CLI (`sam build`, `sam local invoke`, `sam deploy`).
 
 == Terraform
 
@@ -279,33 +279,6 @@ La *integración continua* (CI) compila y prueba cada cambio en cuanto llega al 
   tarjeta("CodeDeploy", subtitulo: "desplegar con seguridad")[EC2 u on-premises (_in-place_ o blue/green), Lambda y ECS (canary, lineal), con rollback por alarmas.],
 )
 
-#nota(titulo: "¿Dónde vive el código?")[AWS cerró *CodeCommit* (repositorios Git) a nuevos clientes a mediados de 2024 y lo reabrió en noviembre de 2025. Aun así, lo habitual es usar GitHub, GitLab o Bitbucket conectados a CodePipeline con *AWS CodeConnections* (antes CodeStar Connections), o el CI del proveedor autenticándose en AWS con OIDC.]
-
-Si tu CI vive en GitHub Actions, no guardes claves de acceso en el repositorio: registra GitHub como *proveedor de identidad OIDC* en IAM y crea un rol cuya política de confianza solo acepte tokens de tu repositorio y rama (condición sobre `token.actions.githubusercontent.com:sub`, p. ej. `repo:miorg/subidas:ref:refs/heads/main`). El workflow declara `id-token: write` y usa `aws-actions/configure-aws-credentials`; STS le da credenciales temporales.
-
-Un `buildspec.yml` típico para una aplicación en contenedores ejecuta los tests, construye la imagen, la sube a ECR y genera el `imagedefinitions.json` que consume la acción de despliegue en ECS:
-
-```yaml
-version: 0.2
-env:
-  variables:
-    REPO: 111111111111.dkr.ecr.eu-west-1.amazonaws.com/api
-phases:
-  pre_build:
-    commands:
-      - npm ci && npm test
-      - aws ecr get-login-password | docker login -u AWS --password-stdin ${REPO%/*}
-      - TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-7)
-  build:
-    commands:
-      - docker build -t $REPO:$TAG . && docker push $REPO:$TAG
-  post_build:
-    commands:
-      - printf '[{"name":"api","imageUri":"%s"}]' $REPO:$TAG > imagedefinitions.json
-artifacts:
-  files: [imagedefinitions.json]
-```
-
 #let cols-pipe = (0.5cm, 2.2cm, 0.5cm, 2.2cm, 0.5cm, 2.2cm, 0.5cm, 2.2cm, 0.5cm, 2.2cm, 0.5cm)
 #let etapa(t, d) = caja(ancho: 2.2cm, [*#t*\ #text(6.2pt, fill: gris)[#d]], color: col.iac)
 
@@ -333,6 +306,34 @@ artifacts:
     [],
   )
 ]
+
+
+#nota(titulo: "¿Dónde vive el código?")[*AWS CodeCommit*, el servicio de repositorios Git de AWS, dejó de aceptar clientes nuevos en julio de 2024 y volvió a abrirse a ellos el 25 de noviembre de 2025. Aun así, lo habitual es usar GitHub, GitLab o Bitbucket conectados a CodePipeline con *AWS CodeConnections* (antes CodeStar Connections), o el CI del propio proveedor.]
+
+Si tu CI vive en GitHub Actions, no guardes claves de acceso en el repositorio: usa la federación OIDC con un rol que solo acepte tokens de tu repositorio y rama, como se explica paso a paso en el capítulo «IAM (I): identidades — usuarios, grupos, roles y permission sets».
+
+Un `buildspec.yml` típico para una aplicación en contenedores ejecuta los tests, construye la imagen, la sube a ECR y genera el `imagedefinitions.json` que consume la acción de despliegue en ECS:
+
+```yaml
+version: 0.2
+env:
+  variables:
+    REPO: 111111111111.dkr.ecr.eu-west-1.amazonaws.com/api
+phases:
+  pre_build:
+    commands:
+      - npm ci && npm test
+      - aws ecr get-login-password | docker login -u AWS --password-stdin ${REPO%/*}
+      - TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-7)
+  build:
+    commands:
+      - docker build -t $REPO:$TAG . && docker push $REPO:$TAG
+  post_build:
+    commands:
+      - printf '[{"name":"api","imageUri":"%s"}]' $REPO:$TAG > imagedefinitions.json
+artifacts:
+  files: [imagedefinitions.json]
+```
 
 == Estrategias de despliegue
 

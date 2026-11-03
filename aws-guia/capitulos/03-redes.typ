@@ -103,23 +103,11 @@
   )
 ]
 
-// Flecha hacia la izquierda (espejo de `flecha` del tema)
-#let _flecha-izq(etiqueta: none, largo: 1.4cm, color: rgb("#7A8699")) = box(width: largo, height: 2.6em, {
-  place(right + horizon, line(length: largo - 5pt, stroke: 1.2pt + color))
-  place(left + horizon, polygon(fill: color, (7pt, 0pt), (0pt, 3.5pt), (7pt, 7pt)))
-  if etiqueta != none {
-    place(center + top, dy: -1pt, box(width: largo + 0.8cm, align(center, {
-      set par(justify: false, leading: 0.3em)
-      text(6.4pt, fill: color.darken(25%), weight: "medium", etiqueta)
-    })))
-  }
-})
-
 // Casilla de comprobación de un cortafuegos (diagrama del recorrido de un paquete)
 #let _chk(c, cuerpo) = box(width: 4.05cm, fill: c.lighten(91%), stroke: 0.9pt + c, radius: 4pt,
   inset: (x: 5pt, y: 4.5pt), align(left, {
     set par(justify: false, leading: 0.4em)
-    text(6.7pt, fill: tinta, cuerpo)
+    text(6.7pt, fill: tinta, hyphenate: false, cuerpo)
   }))
 
 // =====================================================================
@@ -344,11 +332,11 @@ AWS te da dos cortafuegos complementarios que actúan en puntos distintos del ca
     _chk(col.seguridad)[*Entrada*: ¿alguna regla permite TCP 443? #si],
     flecha(largo: 0.7cm),
     grid.cell(rowspan: 2, svc("EC2", "Servidor web", color: col.computo)),
-    _flecha-izq(etiqueta: "respuesta :51234", largo: 1.9cm),
+    flecha(izquierda: true, etiqueta: "respuesta :51234", largo: 1.9cm),
     _chk(col.redes)[*Salida*: necesita su propia regla para los puertos efímeros (1024–65535); sin ella, la respuesta se descarta],
-    _flecha-izq(largo: 0.7cm),
+    flecha(izquierda: true, largo: 0.7cm),
     _chk(col.seguridad)[*Salida*: sin regla; recuerda la conexión y deja pasar la respuesta #si],
-    _flecha-izq(largo: 0.7cm),
+    flecha(izquierda: true, largo: 0.7cm),
   )
 ]
 
@@ -496,7 +484,7 @@ Un *VPC Peering* une dos VPC de forma privada, como si fueran una sola red, aunq
 Con decenas de VPC más conexiones a tu centro de datos, la malla de peerings se vuelve inmanejable. *AWS Transit Gateway* (TGW) es un router regional gestionado con topología _hub-and-spoke_: cada VPC, VPN o Direct Connect se conecta una sola vez al TGW (un *attachment*) y este enruta entre todos de forma transitiva.
 
 #diagrama(pie: [Transit Gateway como hub: cada red se conecta una sola vez y las tablas de rutas del TGW deciden quién llega a quién.])[
-  #let red(t, cidr) = caja([*#t* \ #_m(cidr)], color: col.redes, ancho: 3.4cm)
+  #let red(t, cidr) = caja([*#t* \ #_m(cidr)], color: col.redes, ancho: 3.8cm)
   #grid(columns: (1fr, 1fr, 1fr), row-gutter: 3pt, align: center + horizon,
     red("VPC producción", "10.0.0.0/16"), red("VPC desarrollo", "10.1.0.0/16"), red("Servicios compartidos", "10.100.0.0/16"),
     flecha-v(doble: true, largo: 0.6cm), flecha-v(doble: true, largo: 0.6cm), flecha-v(doble: true, largo: 0.6cm),
