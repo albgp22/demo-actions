@@ -28,7 +28,7 @@
     }))
   })
 
-#capitulo(text(hyphenate: false)[Infraestructura como código y DevOps], color: col.iac,
+#capitulo("Infraestructura como código y DevOps", color: col.iac,
   subtitulo: [Describe tu infraestructura en ficheros versionados y despliégala con pipelines automáticos, revisables y repetibles.],
   objetivos: (
     [Por qué usar IaC y qué es el drift],

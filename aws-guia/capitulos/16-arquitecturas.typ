@@ -54,7 +54,7 @@
 // Elemento de checklist que no se parte entre líneas
 #let chk(t) = box[#si #t]
 
-#capitulo(text(hyphenate: false)[Arquitecturas de referencia], color: col.arquitectura,
+#capitulo("Arquitecturas de referencia", color: col.arquitectura,
   subtitulo: [Ocho diseños que verás una y otra vez, explicados pieza a pieza: el punto de partida para tus propias arquitecturas.],
   objetivos: (
     [Web de tres capas altamente disponible],

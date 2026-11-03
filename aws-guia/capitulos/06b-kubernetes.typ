@@ -100,7 +100,7 @@
 
 == ¿Qué problema resuelve Kubernetes?
 
-En el capítulo de Contenedores (ECS, Fargate y ECR) viste cómo ejecutar aplicaciones en contenedores. Con cientos de ellos repartidos entre decenas de máquinas surgen preguntas difíciles: ¿dónde coloco cada uno?, ¿quién lo reinicia si se cae?, ¿cómo actualizo sin cortar el servicio?, ¿cómo se encuentran entre sí si sus IP cambian? Responderlas es *orquestar*, y *Kubernetes* («timonel» en griego, abreviado *K8s*) es el orquestador de código abierto más extendido: nació en Google a partir de Borg, su sistema interno, se liberó en 2014, lo custodia la Cloud Native Computing Foundation (CNCF) y funciona igual en tu portátil, en tu centro de datos o en cualquier nube. Se encarga de:
+En el capítulo de Contenedores viste cómo ejecutar aplicaciones con ECS y Fargate, y cuándo conviene EKS. Con cientos de ellos repartidos entre decenas de máquinas surgen preguntas difíciles: ¿dónde coloco cada uno?, ¿quién lo reinicia si se cae?, ¿cómo actualizo sin cortar el servicio?, ¿cómo se encuentran entre sí si sus IP cambian? Responderlas es *orquestar*, y *Kubernetes* («timonel» en griego, abreviado *K8s*) es el orquestador de código abierto más extendido: nació en Google a partir de Borg, su sistema interno, se liberó en 2014, lo custodia la Cloud Native Computing Foundation (CNCF) y funciona igual en tu portátil, en tu centro de datos o en cualquier nube. Se encarga de:
 
 - *Planificar*: decide en qué máquina (*nodo*) corre cada contenedor, según los recursos que pide.
 - *Autorreparar*: reinicia lo que falla y recrea en otro nodo lo que corría en un nodo caído.
@@ -371,9 +371,8 @@ Operar Kubernetes por tu cuenta obliga a cuidar etcd, la alta disponibilidad del
 
 === Crear tu primer clúster
 
-La vía más rápida es *eksctl*, la CLI oficial de EKS: a partir de un fichero declarativo crea, con CloudFormation por debajo, la VPC, el clúster, los add-ons y los nodos.
+La vía más rápida es *eksctl*, la CLI oficial de EKS: a partir de un fichero declarativo crea, con CloudFormation por debajo, la VPC, el clúster, los add-ons y los nodos. En producción se suele usar Terraform o AWS CDK (capítulo de IaC), pero la idea es la misma: describir el clúster como código. Para un clúster solo con Auto Mode, el fichero llevaría `autoModeConfig: { enabled: true }` en lugar de `managedNodeGroups` y de los add-ons básicos, que Auto Mode ya incluye.
 
-#block(breakable: false)[
 ```yaml
 # cluster.yaml
 apiVersion: eksctl.io/v1alpha5
@@ -386,7 +385,6 @@ managedNodeGroups:                          # nodos en subredes privadas
   - { name: general, instanceTypes: ["m7i.large", "m6i.large"],
       minSize: 2, desiredCapacity: 3, maxSize: 6, privateNetworking: true }
 ```
-]
 
 ```bash
 eksctl create cluster -f cluster.yaml     # VPC, clúster, add-ons y nodos
@@ -394,7 +392,7 @@ aws eks update-kubeconfig --region eu-west-1 --name prod
 kubectl get nodes                         # tres nodos en estado Ready
 ```
 
-`aws eks update-kubeconfig` añade el clúster a tu `~/.kube/config` (eksctl ya lo hace) para que `kubectl` use tus credenciales de IAM. Para Auto Mode, cambia `managedNodeGroups` por `autoModeConfig: { enabled: true }`. En producción se suele usar Terraform o AWS CDK (capítulo de IaC).
+`aws eks update-kubeconfig` añade el clúster a tu `~/.kube/config` (eksctl ya lo hace por ti) para que `kubectl` use tus credenciales de IAM.
 
 == Redes en EKS
 
@@ -412,7 +410,7 @@ Con *Security Groups for Pods* puedes asignar Security Groups a pods concretos (
 
 === AWS Load Balancer Controller
 
-El *AWS Load Balancer Controller* es otro controlador (otro bucle de reconciliación) que traduce objetos de Kubernetes en balanceadores (capítulo de Balanceo y Auto Scaling): un *Ingress* de clase `alb`, en un *Application Load Balancer* con reglas por host y ruta (varios Ingress pueden compartirlo con una *IngressGroup*), y un *Service* `LoadBalancer`, en un *Network Load Balancer*. En modo de destino `ip` el balanceador envía el tráfico directamente a la IP de cada pod, gracias a la VPC CNI (obligatorio en Fargate); en modo `instance`, al NodePort de los nodos, con un salto extra. Necesita permisos IAM (Pod Identity o IRSA) y localiza las subredes por sus etiquetas: `kubernetes.io/role/elb` en las públicas y `kubernetes.io/role/internal-elb` en las privadas. Sin él, Kubernetes recurre al proveedor heredado, que crea Classic Load Balancers; en Auto Mode viene integrado.
+El *AWS Load Balancer Controller* es otro controlador (otro bucle de reconciliación) que traduce objetos de Kubernetes en balanceadores (capítulo de Balanceo y Auto Scaling): un *Ingress* de clase `alb`, en un *Application Load Balancer* con reglas por host y ruta (varios Ingress pueden compartirlo con una *IngressGroup*), y un *Service* `LoadBalancer`, en un *Network Load Balancer*. En modo de destino `ip` el balanceador envía el tráfico directamente a la IP de cada pod, gracias a la VPC CNI (obligatorio en Fargate); en modo `instance`, al NodePort de los nodos, con un salto extra. Necesita permisos IAM (Pod Identity o IRSA) y localiza las subredes por sus etiquetas: `kubernetes.io/role/elb` en las públicas y `kubernetes.io/role/internal-elb` en las privadas. Sin él, actúa el controlador heredado del proveedor de nube, que crea Classic Load Balancers; en Auto Mode viene integrado.
 
 #diagrama(pie: [Tráfico de entrada en EKS: el ALB, con nodos en las subredes públicas de dos AZ, envía cada petición directamente a la IP de un pod (modo IP) en las subredes privadas. A la derecha, cómo el controlador crea y mantiene el ALB a partir del Ingress.])[
   #fila(espacio: 8pt,
@@ -456,11 +454,11 @@ Los PVC se convierten en almacenamiento de AWS gracias a los drivers *CSI* (Cont
 
 #tabla(("Driver CSI", "Servicio", "Acceso", "Ámbito", "Úsalo para"), columnas: (1.35fr, 1fr, 1.4fr, 0.95fr, 1.45fr),
   [*EBS CSI driver*], [Amazon EBS (`gp3`, `io2`...)], [`ReadWriteOnce`: un nodo], [Una AZ], [Bases de datos y otros StatefulSets],
-  [*EFS CSI driver*], [Amazon EFS], [`ReadWriteMany`: muchos pods y nodos], [Regional (varias AZ)], [Ficheros compartidos; la opción persistente en Fargate],
-  [*Mountpoint for Amazon S3 CSI driver*], [Amazon S3], [Lectura masiva y escritura secuencial], [Regional], [Datasets de ML, contenido de solo lectura],
+  [*EFS CSI driver*], [Amazon EFS], [`ReadWriteMany`: muchos pods y nodos], [Regional (varias AZ)], [Ficheros compartidos; persistencia en Fargate],
+  [*Mountpoint for S3 CSI driver*], [Amazon S3], [Lectura masiva y escritura secuencial], [Regional], [Datasets de ML, contenido de solo lectura],
 )
 
-#cuidado[Un volumen EBS vive en una sola AZ: si su pod se reprograma en otra, no puede montarlo y queda en `Pending`. Usa una StorageClass con `volumeBindingMode: WaitForFirstConsumer` (el disco se crea en la AZ del pod) y, para alta disponibilidad, replica en la aplicación (una réplica por AZ) o usa EFS. Y ojo con la política `Retain`: conserva el disco al borrar el PVC, y sigue facturando.]
+#cuidado[Un volumen EBS vive en una sola AZ: si su pod se reprograma en otra, queda en `Pending`. Usa `volumeBindingMode: WaitForFirstConsumer` en la StorageClass (crea el disco en la AZ del pod) y, para alta disponibilidad, replica en la aplicación o usa EFS. Ojo con `Retain`: conserva el disco (y su factura) al borrar el PVC.]
 
 == IAM y EKS: dos direcciones que no debes confundir
 
@@ -501,11 +499,11 @@ Kubernetes autoriza cada petición a su API con *RBAC* (Role-Based Access Contro
   [*A quién*: usuarios, grupos o ServiceAccounts], [`RoleBinding`], [`ClusterRoleBinding`],
 )
 
-Un RoleBinding puede apuntar a un ClusterRole para concederlo en un solo namespace (así se reutilizan los roles integrados `view`, `edit` y `admin`). RBAC es solo aditivo, a diferencia de IAM (capítulo IAM (II)), y no tiene objetos «usuario»: confía en que alguien externo autentique a quien llama. En EKS, ese alguien es IAM.
+Un RoleBinding puede apuntar a un ClusterRole para concederlo en un solo namespace (así se reutilizan los roles integrados `view`, `edit` y `admin`). RBAC es solo aditivo, sin las denegaciones de IAM (capítulo «IAM (II)»), y no tiene objetos «usuario»: confía en que alguien externo autentique a quien llama. En EKS, ese alguien es IAM.
 
 === Dirección A: quién puede usar el clúster
 
-Para cada petición, `kubectl` obtiene con `aws eks get-token` un token firmado con tus credenciales de IAM. EKS verifica tu identidad y busca la *access entry* (entrada de acceso) de tu ARN, que fija con qué usuario y grupos de Kubernetes entras. Los permisos llegan por grupos vinculados con tus RoleBinding o por *access policies* de EKS (`AmazonEKSClusterAdminPolicy`, `AmazonEKSAdminPolicy`, `AmazonEKSEditPolicy`, `AmazonEKSViewPolicy`) asociadas al clúster o a ciertos namespaces con `aws eks associate-access-policy`. Con IAM Identity Center, la entrada apunta al rol que crea el permission set (capítulo IAM (I)).
+Al ejecutar `kubectl`, tu kubeconfig obtiene con `aws eks get-token` un token firmado con tus credenciales de IAM. EKS verifica tu identidad y busca la *access entry* (entrada de acceso) de tu ARN, que fija con qué usuario y grupos de Kubernetes entras. Los permisos llegan por grupos vinculados con tus RoleBinding o por *access policies* de EKS (`AmazonEKSClusterAdminPolicy`, `AmazonEKSAdminPolicy`, `AmazonEKSEditPolicy`, `AmazonEKSViewPolicy`) asociadas al clúster o a ciertos namespaces con `aws eks associate-access-policy`. Con IAM Identity Center, la entrada apunta al rol que crea el permission set (capítulo «IAM (I)»).
 
 ```bash
 # 1) El rol IAM entra al clúster con el grupo de Kubernetes "desarrolladores"
@@ -534,13 +532,13 @@ Una aplicación que usa S3 o DynamoDB nunca debe tirar de claves de acceso en un
   [*Fargate y Kubernetes fuera de EKS*], si, no,
 )
 
-#practica[Usa EKS Pod Identity por defecto en EC2 (IRSA en Fargate), con un rol por aplicación: la asociación se crea con `aws eks create-pod-identity-association` (clúster, namespace, ServiceAccount y rol) y la trust policy del rol solo permite `sts:AssumeRole` y `sts:TagSession` a `pods.eks.amazonaws.com`. Y bloquea el servicio de metadatos (IMDS, capítulo de EC2): con IMDSv2 y un límite de saltos (_hop limit_) de 1 en los nodos, ningún contenedor obtiene las credenciales del rol del nodo.]
+#practica[Usa EKS Pod Identity por defecto en EC2 (IRSA en Fargate), con un rol por aplicación: se asocia con `aws eks create-pod-identity-association`, y la trust policy del rol solo admite `sts:AssumeRole` y `sts:TagSession` de `pods.eks.amazonaws.com`. Y bloquea el IMDS (capítulo de EC2): con IMDSv2 y un _hop limit_ de 1 en los nodos, ningún contenedor obtiene las credenciales del rol del nodo.]
 
 == Operación del clúster
 
 *Add-ons gestionados.* EKS ofrece como add-ons el software que el clúster necesita además de tus aplicaciones, en versiones probadas, compatibles y parcheadas por AWS que tú decides cuándo instalar o actualizar. Los imprescindibles son *VPC CNI*, *CoreDNS* y *kube-proxy*; les siguen *EKS Pod Identity Agent*, los drivers CSI (*EBS*, *EFS*, *Mountpoint for S3*) y *CloudWatch Observability*.
 
-*Versiones y actualizaciones.* Kubernetes publica unas tres versiones menores al año. EKS da a cada una algo más de un año de *soporte estándar* y, después, alrededor de otro año de *soporte extendido*, más caro; al agotarse, actualiza solo el control plane (con la *política de actualización* en `STANDARD`, lo hace al acabar el estándar). Mejor adelantarse:
+*Versiones y actualizaciones.* Kubernetes publica unas tres versiones menores al año. EKS da a cada una algo más de un año de *soporte estándar* y, después, alrededor de otro año de *soporte extendido*, más caro; al agotarse, EKS actualiza automáticamente el control plane (con la *política de actualización* en `STANDARD`, lo hace al acabar el estándar). Mejor adelantarse:
 
 #pasos(
   [*Prepara*: notas de la versión y *EKS Cluster Insights*, que detecta, entre otras cosas, el uso de APIs que desaparecen.],
